@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#root {
+    width: 2220px;
+    height: 1080px;
+    max-width: 2220px;
+    max-height: 1080px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+@font-face {
+    font-family: 'NeoDunggeunmoPro-Regular';
+    font-weight: normal;
+    src: url('../../fonts/NeoDunggeunmoPro-Regular.ttf') format('truetype');
+}
+
+body {
+    font-family: 'NeoDunggeunmoPro-Regular';
+}
