@@ -1,12 +1,24 @@
 import { useState } from 'react';
 import TradeModal from './modal/TradeModal';
+import FacilityModal from './modal/FacilityModal';
+import InfoSeasonModal from './modal/InfoSeasonModal';
+import InfoNotConnectModal from './modal/InfoNotConnectModal';
 
 export default function GameComponent() {
     const [tradeFlag, setTradeFlag] = useState<boolean>(false);
+    const [facilityFlag, setFacilityFlag] = useState<boolean>(false);
+    const [infoSeasonFlag, setInfoSeasonFlag] = useState<boolean>(true);
+    const [infoNotConnectFlag, setInfoNotConnectFlag] = useState<boolean>(true);
 
     const openTradeElement = () => {
         setTradeFlag(true);
+        setFacilityFlag(false);
     };
+    const openFacilityElement = () => {
+        setFacilityFlag(true);
+        setTradeFlag(false);
+    };
+
     return (
         <section
             className="relative w-full h-full flex flex-col justify-center items-center"
@@ -79,19 +91,22 @@ export default function GameComponent() {
                             backgroundImage:
                                 'url(/src/assets/images/icon/ui-icon-facility.png)',
                         }}
+                        onClick={() => {
+                            openFacilityElement();
+                        }}
+                    />
+                    <div
+                        className="w-28 h-36 bg-no-repeat cursor-pointer"
+                        style={{
+                            backgroundImage:
+                                'url(/src/assets/images/icon/ui-icon-inventory.png)',
+                        }}
                     />
                     <div
                         className="w-28 h-36 bg-no-repeat cursor-pointer"
                         style={{
                             backgroundImage:
                                 'url(/src/assets/images/icon/ui-icon-newspaper.png)',
-                        }}
-                    />
-                    <div
-                        className="w-28 h-36 bg-no-repeat cursor-pointer ms-4"
-                        style={{
-                            backgroundImage:
-                                'url(/src/assets/images/icon/ui-icon-closet.png)',
                         }}
                     />
                     <div
@@ -108,6 +123,13 @@ export default function GameComponent() {
             <div className="absolute bottom-[2%] right-[1%]">
                 <div className="flex items-center justify-center">
                     <div
+                        className="w-28 h-36 bg-no-repeat cursor-pointer ms-4"
+                        style={{
+                            backgroundImage:
+                                'url(/src/assets/images/icon/ui-icon-closet.png)',
+                        }}
+                    />
+                    <div
                         className="w-28 h-40 bg-no-repeat cursor-pointer"
                         style={{
                             backgroundImage:
@@ -123,7 +145,30 @@ export default function GameComponent() {
                     />
                 </div>
             </div>
-            {tradeFlag ? <TradeModal /> : <></>}
+            <div
+                className="w-80 h-40 absolute bottom-[20%]"
+                style={{
+                    backgroundImage: 'url(/src/assets/images/etc/yadon.png)',
+                }}
+            ></div>
+            {tradeFlag ? <TradeModal setTradeFlag={setTradeFlag} /> : <></>}
+            {facilityFlag ? (
+                <FacilityModal setFacilityFlag={setFacilityFlag} />
+            ) : (
+                <></>
+            )}
+            {infoSeasonFlag ? (
+                <InfoSeasonModal setInfoSeasonFlag={setInfoSeasonFlag} />
+            ) : (
+                <></>
+            )}
+            {infoNotConnectFlag ? (
+                <InfoNotConnectModal
+                    setInfoNotConnectFlag={setInfoNotConnectFlag}
+                />
+            ) : (
+                <></>
+            )}
         </section>
     );
 }
