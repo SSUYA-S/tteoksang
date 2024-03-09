@@ -3,12 +3,16 @@ import TradeModal from './modal/TradeModal';
 import FacilityModal from './modal/FacilityModal';
 import InfoSeasonModal from './modal/InfoSeasonModal';
 import InfoNotConnectModal from './modal/InfoNotConnectModal';
+import InfoResultModal from './modal/InfoResultModal';
+import SettingModal from './modal/SettingModal';
 
 export default function GameComponent() {
     const [tradeFlag, setTradeFlag] = useState<boolean>(false);
     const [facilityFlag, setFacilityFlag] = useState<boolean>(false);
     const [infoSeasonFlag, setInfoSeasonFlag] = useState<boolean>(true);
     const [infoNotConnectFlag, setInfoNotConnectFlag] = useState<boolean>(true);
+    const [infoResultFlag, setInfoResultFlag] = useState<boolean>(true);
+    const [settingFlag, setSettingFlag] = useState<boolean>(false);
 
     const openTradeElement = () => {
         setTradeFlag(true);
@@ -17,6 +21,9 @@ export default function GameComponent() {
     const openFacilityElement = () => {
         setFacilityFlag(true);
         setTradeFlag(false);
+    };
+    const openSettingElement = () => {
+        setSettingFlag(true);
     };
 
     return (
@@ -135,6 +142,7 @@ export default function GameComponent() {
                             backgroundImage:
                                 'url(/src/assets/images/icon/ui-icon-setting.png)',
                         }}
+                        onClick={() => openSettingElement()}
                     />
                     <div
                         className="w-28 h-40 bg-no-repeat cursor-pointer"
@@ -166,6 +174,16 @@ export default function GameComponent() {
                 <InfoNotConnectModal
                     setInfoNotConnectFlag={setInfoNotConnectFlag}
                 />
+            ) : (
+                <></>
+            )}
+            {infoResultFlag ? (
+                <InfoResultModal setInfoResultFlag={setInfoResultFlag} />
+            ) : (
+                <></>
+            )}
+            {settingFlag ? (
+                <SettingModal setSettingFlag={setSettingFlag} />
             ) : (
                 <></>
             )}

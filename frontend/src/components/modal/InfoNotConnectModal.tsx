@@ -20,7 +20,7 @@ export default function InfoNotConnectModal(props: infoSeasonType) {
         );
     };
     return (
-        <div className="absolute w-[50%] h-[60%] flex items-center justify-center color-text-textcolor border-8 color-border-brown1 color-bg-main z-10">
+        <div className="absolute w-[50%] h-[60%] flex items-center justify-center color-text-textcolor border-8 color-border-brown1 color-bg-main z-50">
             <div className="w-[50%] h-full flex flex-col items-center">
                 <div className="w-[90%] h-[15%] flex flex-col justify-end">
                     <p className="text-4xl">미접속 결산</p>
