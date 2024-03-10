@@ -8,13 +8,14 @@ services:
     environment:
       - REDIS_REPLICATION_MODE=master
       - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PORT_NUMBER=6379
     volumes:
       - redis-data:/data
     networks:
       - TteoksangNetwork
     ports:
       - "6379:6379"
-    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}", "--appendonly", "yes", "--appendfilename", "redis1.aof", "--auto-aof-rewrite-percentage", "100", "--auto-aof-rewrite-min-size", "64mb", "--save", ""]
+    command: ["redis-server", "--port", "6379", "--requirepass", "${REDIS_PASSWORD}", "--appendonly", "yes", "--appendfilename", "redis1.aof", "--auto-aof-rewrite-percentage", "100", "--auto-aof-rewrite-min-size", "64mb", "--save", ""]
 
   redis2:
     image: redis:7.2.4
@@ -24,15 +25,16 @@ services:
       - REDIS_REPLICATION_MODE=slave
       - REDIS_MASTER_HOST=redis1
       - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PORT_NUMBER=6380
     ports:
-      - "6380:6379"
+      - "6380:6380"
     volumes:
       - redis-data:/data
     networks:
       - TteoksangNetwork
     depends_on:
       - redis1
-    command: ["redis-server", "--masterauth", "${REDIS_PASSWORD}", "--replicaof", "redis1", "6379", "--requirepass", "${REDIS_PASSWORD}", "--appendonly", "yes", "--appendfilename", "redis2.aof", "--auto-aof-rewrite-percentage", "100", "--auto-aof-rewrite-min-size", "64mb", "--save", ""]
+    command: ["redis-server", "--port", "6380", "--masterauth", "${REDIS_PASSWORD}", "--replicaof", "redis1", "6379", "--requirepass", "${REDIS_PASSWORD}", "--appendonly", "yes", "--appendfilename", "redis2.aof", "--auto-aof-rewrite-percentage", "100", "--auto-aof-rewrite-min-size", "64mb", "--save", ""]
 
   redis3:
     image: redis:7.2.4
@@ -42,28 +44,31 @@ services:
       - REDIS_REPLICATION_MODE=slave
       - REDIS_MASTER_HOST=redis1
       - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PORT_NUMBER=6381
     ports:
-      - "6381:6379"
+      - "6381:6381"
     volumes:
       - redis-data:/data
     networks:
       - TteoksangNetwork
     depends_on:
       - redis1
-    command: ["redis-server", "--masterauth", "${REDIS_PASSWORD}", "--replicaof", "redis1", "6379", "--requirepass", "${REDIS_PASSWORD}", "--appendonly", "yes", "--appendfilename", "redis3.aof", "--auto-aof-rewrite-percentage", "100", "--auto-aof-rewrite-min-size", "64mb", "--save", ""]
+    command: ["redis-server", "--port", "6381", "--masterauth", "${REDIS_PASSWORD}", "--replicaof", "redis1", "6379", "--requirepass", "${REDIS_PASSWORD}", "--appendonly", "yes", "--appendfilename", "redis3.aof", "--auto-aof-rewrite-percentage", "100", "--auto-aof-rewrite-min-size", "64mb", "--save", ""]
 
-  redis-sentinel:
+  redis-sentinel1:
     image: bitnami/redis-sentinel:7.0.15
-    container_name: TteoksangRedisSentinel
+    container_name: TteoksangRedisSentinel1
     restart: always
     environment:
       - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=3000
-      - REDIS_MASTER_HOST=redis1
+      - REDIS_MASTER_HOST=localhost
       - REDIS_MASTER_PORT_NUMBER=6379
-      - REDIS_MASTER_SET=mymaster
+      - REDIS_MASTER_SET=${REDIS_MASTER}
+      - REDIS_MASTER_PASSWORD=${REDIS_PASSWORD}
       - REDIS_SENTINEL_QUORUM=2
+      - REDIS_SENTINEL_PORT_NUMBER=26379
     ports:
-      - '26379-26381:26379'
+      - '26379:26379'
     networks:
       - TteoksangNetwork
     depends_on:
@@ -71,6 +76,47 @@ services:
       - redis2
       - redis3
 
+  redis-sentinel2:
+    image: bitnami/redis-sentinel:7.0.15
+    container_name: TteoksangRedisSentinel2
+    restart: always
+    environment:
+      - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=3000
+      - REDIS_MASTER_HOST=localhost
+      - REDIS_MASTER_PORT_NUMBER=6379
+      - REDIS_MASTER_SET=${REDIS_MASTER}
+      - REDIS_MASTER_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_SENTINEL_QUORUM=2
+      - REDIS_SENTINEL_PORT_NUMBER=26380
+    ports:
+      - '26380:26380'
+    networks:
+      - TteoksangNetwork
+    depends_on:
+      - redis1
+      - redis2
+      - redis3
+
+  redis-sentinel3:
+    image: bitnami/redis-sentinel:7.0.15
+    container_name: TteoksangRedisSentinel3
+    restart: always
+    environment:
+      - REDIS_SENTINEL_DOWN_AFTER_MILLISECONDS=3000
+      - REDIS_MASTER_HOST=localhost
+      - REDIS_MASTER_PORT_NUMBER=6379
+      - REDIS_MASTER_SET=${REDIS_MASTER}
+      - REDIS_MASTER_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_SENTINEL_QUORUM=2
+      - REDIS_SENTINEL_PORT_NUMBER=26381
+    ports:
+      - '26381:26381'
+    networks:
+      - TteoksangNetwork
+    depends_on:
+      - redis1
+      - redis2
+      - redis3
 
   mariaDB:
     image: mariadb:10.11.7
@@ -79,6 +125,8 @@ services:
     volumes:
       - mariadb-data:/lib/var/mysql
       - ./initdb.d:/docker-entrypoint-initdb.d
+    ports:
+      - "3306:3306"
     networks:
       - TteoksangNetwork
     command:
