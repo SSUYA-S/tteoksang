@@ -1,0 +1,38 @@
+[
+    {
+        "userNickname": "제노",
+        "message": "안녕하세요^^",
+        "profileIconId": 2,
+        "profileFrameId": 1
+    },
+    {
+        "userNickname": "소상공인",
+        "message": "안녕하세요.",
+        "profileIconId": 1,
+        "profileFrameId": 1
+    },
+    {
+        "userNickname": "[예언가]",
+        "message": "이번에 딸기 가격 무조건 떡상합니다. 저를 믿으세요.",
+        "profileIconId": 1,
+        "profileFrameId": 3
+    },
+    {
+        "userNickname": "제노",
+        "message": "딸기는 겨울이 제철 아닌가요?",
+        "profileIconId": 2,
+        "profileFrameId": 1
+    },
+    {
+        "userNickname": "딸기조아",
+        "message": "님들 딸기 사세요. 꼭 사세요. 딸기 맛있어요.",
+        "profileIconId": 3,
+        "profileFrameId": 3
+    },
+    {
+        "userNickname": "떡상가즈아",
+        "message": "저분 또 왔네",
+        "profileIconId": 2,
+        "profileFrameId": 2
+    }
+]

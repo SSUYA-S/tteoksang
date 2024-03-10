@@ -1,0 +1,18 @@
+[
+    {
+        "maximumSell": [
+            { "name": "제노", "price": 1000000 },
+            { "name": "나무", "price": 900000 },
+            { "name": "헬로", "price": 800000 }
+        ],
+        "singleTransaction": [
+            { "name": "제노", "price": 10000 },
+            { "name": "나무", "price": 9000 },
+            { "name": "헬로", "price": 800 }
+        ],
+        "myRank": {
+            "maximumSell": { "rank": 24, "percent": 21, "price": 200000 },
+            "singleTransaction": { "rank": 124, "percent": 26, "price": 200 }
+        }
+    }
+]

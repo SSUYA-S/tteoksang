@@ -1,0 +1,202 @@
+{
+    "product": [
+        "",
+        "사과",
+        "딸기",
+        "키위",
+        "복숭아",
+        "파인애플",
+        "바나나",
+        "쌀",
+        "보리"
+    ],
+    "warehouse": [
+        { "name": "", "size": 0, "introduction": "" },
+        {
+            "name": "집 창고",
+            "size": 100,
+            "introduction": "좁아터진 우리집 창고"
+        },
+        {
+            "name": "작은 창고",
+            "size": 200,
+            "introduction": "집 마당 작은 창고"
+        },
+        {
+            "name": "그냥 창고",
+            "size": 300,
+            "introduction": "드디어 구매한 창고"
+        },
+        { "name": "큰 창고", "size": 400, "introduction": "이제 좀 크네" },
+        {
+            "name": "매우 큰 창고",
+            "size": 500,
+            "introduction": "이쯤이면 거상인듯"
+        },
+        { "name": "역삼 HUB", "size": 600, "introduction": "쿠팡 물류센터급" },
+        {
+            "name": "부산항급 창고",
+            "size": 700,
+            "introduction": "정부에서 관리할듯"
+        }
+    ],
+    "vehicle": [
+        { "name": "", "size": 0, "introduction": "" },
+        { "name": "맨손", "size": 100, "introduction": "몸으로 때우자" },
+        {
+            "name": "장바구니",
+            "size": 200,
+            "introduction": "근처 마트에서 산 값싼 장바구니"
+        },
+        {
+            "name": "자전거",
+            "size": 300,
+            "introduction": "드디어 탈 것이 생겼다."
+        },
+        { "name": "자동차", "size": 400, "introduction": "자차 보유" },
+        {
+            "name": "1톤 트럭",
+            "size": 500,
+            "introduction": "우리의 든든한 친구"
+        },
+        {
+            "name": "대형 트레일러",
+            "size": 600,
+            "introduction": "트레일러는 낭만이다."
+        },
+        {
+            "name": "자가용 비행기",
+            "size": 700,
+            "introduction": "솔직히 이정도는 되어야 장사하지"
+        }
+    ],
+    "broker": [
+        { "name": "", "charge": 0, "introduction": "" },
+        {
+            "name": "구멍 가게",
+            "charge": 0.2,
+            "introduction": "집 근처 구멍 가게"
+        },
+        {
+            "name": "슈퍼 마켓",
+            "charge": 0.17,
+            "introduction": "우리 동네 슈퍼 마켓"
+        },
+        {
+            "name": "대형 마트",
+            "charge": 0.14,
+            "introduction": "우리 도시 대형 마트"
+        },
+        {
+            "name": "마트 체인",
+            "charge": 0.1,
+            "introduction": "드디어 체인을 뚫었다."
+        },
+        {
+            "name": "전국 도매상",
+            "charge": 0.07,
+            "introduction": "전국이 나의 거래처"
+        },
+        {
+            "name": "아마존",
+            "charge": 0.04,
+            "introduction": "세계가 나의 거래처"
+        },
+        {
+            "name": "우주 도매상",
+            "charge": 0.01,
+            "introduction": "화성, 갈끄니까~~~"
+        }
+    ],
+    "specialEvent": [
+        { "name": "", "effect": "" },
+        {
+            "name": "태풍",
+            "effect": "물류 타격으로 모든 농작물 가격이 상승합니다."
+        },
+        {
+            "name": "수확",
+            "effect": "공급량 증가로 개별 구매 가능 수량이 증가합니다."
+        },
+        {
+            "name": "장마",
+            "effect": "농사 실패로 모든 농작물 가격이 하락합니다."
+        },
+        {
+            "name": "FTA",
+            "effect": "외국 농산물 유입으로 모든 농작물 가격이 하락합니다."
+        },
+        {
+            "name": "폭염",
+            "effect": "폭염으로 인한 수요 증가로 열대과일 가격이 상승합니다."
+        }
+    ],
+    "privateEvent": [
+        { "name": "", "effect": "" },
+        {
+            "name": "도둑이야!",
+            "effect": "도둑이 들어 당신의 재산이 200골드 줄었습니다."
+        },
+        {
+            "name": "로또 당첨",
+            "effect": "로또 당첨으로 10억 골드가 들어옵니다."
+        },
+        {
+            "name": "신차 장만 이벤트",
+            "effect": "오늘만 탈 것 업그레이드 가격이 20% 감소합니다."
+        },
+        {
+            "name": "연말 정산",
+            "effect": "연말 정산입니다. 랜덤한 금액이 들어오거나 나갑니다."
+        },
+        {
+            "name": "주식 떡상",
+            "effect": "산 주식이 떡상해서 100만 골드가 들어옵니다."
+        }
+    ],
+    "title": [
+        { "name": "" },
+        { "name": "사과의 제왕" },
+        { "name": "바나나의 제왕" },
+        { "name": "감자의 제왕" },
+        { "name": "고구마의 제왕" },
+        { "name": "뿌리채소의 제왕" },
+        { "name": "과일의 신" }
+    ],
+    "achievements": [
+        { "name": "", "introduction": "" },
+        {
+            "name": "로마인의 식탁",
+            "introduction": "게임 한 판 내 밀 500개 이상 구매"
+        },
+        { "name": "3점슛", "introduction": "3가지 이상의 작물을 동시에 구입" },
+        {
+            "name": "인프라는 중요하다",
+            "introduction": "모든 시설물을 최대 레벨까지 업그레이드"
+        },
+        { "name": "대체 왜?", "introduction": "오늘 산 작물을 바로 팔기" },
+        { "name": "올인", "introduction": "보유한 코인을 모두 사용하기" },
+        {
+            "name": "산타인줄 알았는데...",
+            "introduction": "12월에 도둑이야! 이벤트를 만나기"
+        }
+    ],
+    "icons": [
+        { "name": "" },
+        { "name": "기본 아이콘" },
+        { "name": "여우귀" },
+        { "name": "고양이귀" },
+        { "name": "강아지귀" },
+        { "name": "토끼귀" },
+        { "name": "사슴뿔" }
+    ],
+    "frames": [
+        { "name": "" },
+        { "name": "기본 프레임" },
+        { "name": "파란 테두리" },
+        { "name": "초록 테두리" },
+        { "name": "고인물 테두리" },
+        { "name": "왕의 테두리" },
+        { "name": "슈퍼 반짝 테두리" }
+    ]
+}
