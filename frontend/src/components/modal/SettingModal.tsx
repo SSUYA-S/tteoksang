@@ -1,7 +1,24 @@
+import { useDispatch, useSelector } from 'react-redux';
+import { bgmState, themeState } from '../../util/counter-slice';
+
 type settingType = {
     setSettingFlag: React.Dispatch<React.SetStateAction<boolean>>;
 };
 export default function SettingModal(props: settingType) {
+    const bgmSetting = useSelector((state: any) => state.reduxFlag.bgmFlag);
+    const themeSetting = useSelector((state: any) => state.reduxFlag.themeType);
+    const dispatch = useDispatch();
+
+    const onBgm = () => {
+        dispatch(bgmState(true));
+    };
+    const offBgm = () => {
+        dispatch(bgmState(false));
+    };
+    const settingTheme = (prop: string) => {
+        dispatch(themeState(prop));
+    };
+
     const closeResultModal = () => {
         props.setSettingFlag(false);
     };
@@ -13,30 +30,100 @@ export default function SettingModal(props: settingType) {
                 </div>
                 <div className="w-[90%] h-[85%] text-2xl flex flex-col items-start">
                     <p className="text-3xl my-3">소리 설정</p>
-                    <div className="flex w-60 justify-between px-4 my-2">
-                        <p className="">BGM</p>
-                        <p className="w-20 py-1 px-2 rounded-2xl color-bg-orange1 text-white">
+                    <div className="flex w-80 justify-between px-4 my-2">
+                        <p className="w-40 text-left">BGM</p>
+                        <p
+                            className={
+                                'w-20 py-1 px-2 rounded-2xl cursor-pointer text-white ' +
+                                (bgmSetting
+                                    ? 'color-bg-orange1'
+                                    : 'color-bg-gray')
+                            }
+                            onClick={() => {
+                                onBgm();
+                            }}
+                        >
                             ON
                         </p>
+                        <p
+                            className={
+                                'w-20 py-1 px-2 ml-4 rounded-2xl cursor-pointer text-white ' +
+                                (!bgmSetting
+                                    ? 'color-bg-orange1'
+                                    : 'color-bg-gray')
+                            }
+                            onClick={() => {
+                                offBgm();
+                            }}
+                        >
+                            OFF
+                        </p>
                     </div>
-                    <div className="flex w-60 justify-between px-4 my-2">
-                        <p>효과음</p>
-                        <p className="w-20 py-1 px-2 rounded-2xl color-bg-orange1 text-white color-bg-gray">
+                    <div className="flex w-80 justify-between px-4 my-2">
+                        <p className="w-40 text-left">효과음</p>
+                        <p
+                            className={
+                                'w-20 py-1 px-2 rounded-2xl cursor-pointer text-white color-bg-orange1'
+                            }
+                        >
+                            ON
+                        </p>
+                        <p className="w-20 py-1 px-2 ml-4 rounded-2xl cursor-pointer text-white color-bg-gray">
                             OFF
                         </p>
                     </div>
                     <p className="text-3xl my-3">화면</p>
                     <div className="w-full flex justify-between my-2">
-                        <p className="w-[20%] py-1 border color-border-orange1 rounded-3xl text-white color-bg-orange1 cursor-pointer">
+                        <p
+                            className={
+                                'w-[20%] py-1 border color-border-orange1 rounded-3xl cursor-pointer ' +
+                                (themeSetting === 'morning'
+                                    ? 'color-bg-orange1 text-white'
+                                    : 'bg-white color-text-orange1')
+                            }
+                            onClick={() => {
+                                settingTheme('morning');
+                            }}
+                        >
                             시간따라
                         </p>
-                        <p className="w-[20%] py-1 border color-border-orange1 rounded-3xl bg-white color-text-orange1 cursor-pointer">
+                        <p
+                            className={
+                                'w-[20%] py-1 border color-border-orange1 rounded-3xl cursor-pointer ' +
+                                (themeSetting === 'morning'
+                                    ? 'color-bg-orange1 text-white'
+                                    : 'bg-white color-text-orange1')
+                            }
+                            onClick={() => {
+                                settingTheme('morning');
+                            }}
+                        >
                             낮
                         </p>
-                        <p className="w-[20%] py-1 border color-border-orange1 rounded-3xl bg-white color-text-orange1 cursor-pointer">
+                        <p
+                            className={
+                                'w-[20%] py-1 border color-border-orange1 rounded-3xl  cursor-pointer ' +
+                                (themeSetting === 'evening'
+                                    ? 'color-bg-orange1 text-white'
+                                    : 'bg-white color-text-orange1')
+                            }
+                            onClick={() => {
+                                settingTheme('evening');
+                            }}
+                        >
                             저녁
                         </p>
-                        <p className="w-[20%] py-1 border color-border-orange1 rounded-3xl bg-white color-text-orange1 cursor-pointer">
+                        <p
+                            className={
+                                'w-[20%] py-1 border color-border-orange1 rounded-3xl  cursor-pointer ' +
+                                (themeSetting === 'night'
+                                    ? 'color-bg-orange1 text-white'
+                                    : 'bg-white color-text-orange1')
+                            }
+                            onClick={() => {
+                                settingTheme('night');
+                            }}
+                        >
                             밤
                         </p>
                     </div>
