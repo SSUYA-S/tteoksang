@@ -1,0 +1,27 @@
+{
+    "warehouseLevel": 2,
+    "vehicleLevel": 3,
+    "brokerLevel": 1,
+    "productList": [
+        {
+            "productId": 1,
+            "productQuantity": 20,
+            "productTotalCost": 1500
+        },
+        {
+            "productId": 3,
+            "productQuantity": 10,
+            "productTotalCost": 500
+        },
+        {
+            "productId": 5,
+            "productQuantity": 50,
+            "productTotalCost": 6000
+        },
+        {
+            "productId": 6,
+            "productQuantity": 2,
+            "productTotalCost": 200
+        }
+    ]
+}
