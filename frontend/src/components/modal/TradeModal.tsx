@@ -17,7 +17,9 @@ export default function TradeModal(props: tradeType) {
     const [tradeTab, setTradeTab] = useState<Number>(0);
 
     //구매, 판매 물품 리스트
-    const [sellingProductList, setSellingProductList] = useState<Product[]>([]);
+    const [sellingProductList, setSellingProductList] = useState<SellInfo[]>(
+        []
+    );
     const [buyableProduct, setBuyableProduct] = useState<BuyInfo[]>([]);
     const [totalNumber, setTotalNumber] = useState<number>(0);
 
@@ -28,6 +30,7 @@ export default function TradeModal(props: tradeType) {
     );
 
     useEffect(() => {
+        //구매 품목 관련 로드
         const buyable: BuyInfo[] = [];
         publicEvent.buyableProductIdList.map((id: number) => {
             //내 보유 품목 조회
@@ -63,6 +66,28 @@ export default function TradeModal(props: tradeType) {
             buyable.push(product);
         });
         setBuyableProduct(buyable);
+
+        //판매 품목 관련 로드
+        const myList: SellInfo[] = [];
+        warehouseInfo.productList.map((product) => {
+            const id = product.productId;
+            const productName = gameInfo.product[id];
+            const productInfo = publicEvent.productInfoList[id];
+            const sellingInfo: Product = {
+                productId: id,
+                productQuantity: 0,
+                productTotalCost: 0,
+            };
+
+            const result: SellInfo = {
+                productName: productName,
+                productInfo: productInfo,
+                myProduct: product,
+                sellingInfo: sellingInfo,
+            };
+            myList.push(result);
+        });
+        setSellingProductList(myList);
     }, []);
 
     const changeTab = (prop: Number) => {
@@ -104,6 +129,28 @@ export default function TradeModal(props: tradeType) {
 
         setTotalNumber(total);
         setBuyableProduct(newList);
+    };
+
+    const updateSellingList = (
+        id: number,
+        changedValue: number,
+        changedCost: number
+    ) => {
+        const newList: SellInfo[] = [];
+        let total = 0;
+        sellingProductList.map((product) => {
+            const newProductInfo = { ...product };
+            const sellingInfo = newProductInfo.sellingInfo;
+            if (sellingInfo.productId === id) {
+                sellingInfo.productQuantity = changedValue;
+                sellingInfo.productTotalCost = changedCost;
+            }
+            total += sellingInfo.productQuantity;
+            newList.push(newProductInfo);
+        });
+
+        setTotalNumber(total);
+        setSellingProductList(newList);
     };
 
     /**렌더링 모달
@@ -172,8 +219,15 @@ export default function TradeModal(props: tradeType) {
                             </div>
                         </div>
                         <div className="flex h-[80%] m-4 flex-wrap">
-                            <TradeSellCard />
-                            <TradeSellCard />
+                            {sellingProductList.map((product) => {
+                                return (
+                                    <TradeSellCard
+                                        key={product.productInfo.productId}
+                                        sellInfo={product}
+                                        updateSellingList={updateSellingList}
+                                    />
+                                );
+                            })}
                         </div>
                     </div>
                     <div className="w-[28%] h-full p-4">
