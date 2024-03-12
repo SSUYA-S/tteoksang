@@ -18,6 +18,8 @@
     --color-yellowbg: #fffacf;
     --color-ivory: #fff6e5;
     --color-strawberry: #fff5f5;
+    --color-red1: #ff0000;
+    --color-green1: #1f9b2b;
 }
 .color-bg-black {
     background-color: var(--color-black);
@@ -186,4 +188,10 @@
 }
 .color-text-textcolor {
     color: var(--color-text);
+}
+.color-text-red1 {
+    color: var(--color-red1);
+}
+.color-text-green1 {
+    color: var(--color-green1);
 }

@@ -1,16 +1,30 @@
 interface Product {
-    productId: Number;
-    productQuantity: Number;
-    productTotalCost: Number;
+    productId: number;
+    productQuantity: number;
+    productTotalCost: number;
 }
 
 interface ProductInfo {
-    productId: Number;
-    productCost: Number;
-    productLimit: Number;
-    productFluctuation: Number;
+    productId: number;
+    productCost: number;
+    productLimit: number;
+    productFluctuation: number;
 }
 
 interface Article {
-    articleHeadline: String;
+    articleHeadline: string;
+}
+
+interface BuyInfo {
+    productName: string;
+    productInfo: ProductInfo;
+    myProduct: Product;
+    buyingInfo: Product;
+}
+
+interface SellInfo {
+    productName: string;
+    productInfo: ProductInfo;
+    myProduct: Product;
+    sellingInfo: Product;
 }
