@@ -21,3 +21,10 @@ interface BuyInfo {
     myProduct: Product;
     buyingInfo: Product;
 }
+
+interface SellInfo {
+    productName: string;
+    productInfo: ProductInfo;
+    myProduct: Product;
+    sellingInfo: Product;
+}

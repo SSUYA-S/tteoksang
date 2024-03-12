@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 interface BuyCardProps {
     buyableInfo: BuyInfo;
-    updateBuyingList: (number, number, number) => void;
+    updateBuyingList: (x: number, y: number, z: number) => void;
 }
 
 export default function TradeBuyCard({
