@@ -8,6 +8,7 @@ import TradeSellReceipt from '../section/TradeSellReceipt';
 import gameInfo from '../../dummy-data/game-info.json';
 import publicEvent from '../../dummy-data/public-event.json';
 import warehouseInfo from '../../dummy-data/warehouse-info.json';
+import totalInfo from '../../dummy-data/total-info.json';
 
 type tradeType = {
     setTradeFlag: React.Dispatch<React.SetStateAction<boolean>>;
@@ -23,11 +24,15 @@ export default function TradeModal(props: tradeType) {
     const [buyableProduct, setBuyableProduct] = useState<BuyInfo[]>([]);
     const [totalNumber, setTotalNumber] = useState<number>(0);
 
-    //구매 가능 검증용 변수, 창고에 있는 재고 불러와 계산하는 로직 추가 요함
-    const maximumBuyableAmount = Math.min(
+    //구매 가능 검증용 변수, 창고에 있는 재고 불러와 계산하는 로직 추가
+    let maximumBuyableAmount = Math.min(
         gameInfo.warehouse[warehouseInfo.warehouseLevel].size,
         gameInfo.vehicle[warehouseInfo.vehicleLevel].size
     );
+    maximumBuyableAmount -= totalInfo.purchasedQuantity; //나중에 고민해보자.(purchasedQuantity를 어떻게 관리할 지)
+
+    //현재 창고 내 재고
+    let [nowStock, setNowStock] = useState<number>(0);
 
     useEffect(() => {
         //구매 품목 관련 로드
@@ -68,6 +73,8 @@ export default function TradeModal(props: tradeType) {
         setBuyableProduct(buyable);
 
         //판매 품목 관련 로드
+        let stock = 0; //현재 창고 내 재고 조사
+
         const myList: SellInfo[] = [];
         warehouseInfo.productList.map((product) => {
             const id = product.productId;
@@ -86,8 +93,12 @@ export default function TradeModal(props: tradeType) {
                 sellingInfo: sellingInfo,
             };
             myList.push(result);
+
+            stock += product.productQuantity;
         });
         setSellingProductList(myList);
+        setTotalNumber(stock);
+        setNowStock(stock);
     }, []);
 
     const changeTab = (prop: Number) => {
@@ -109,7 +120,7 @@ export default function TradeModal(props: tradeType) {
         changedCost: number
     ) => {
         const newList: BuyInfo[] = [];
-        let total = 0;
+        let totalBuyNum = 0;
         buyableProduct.map((product) => {
             const newProductInfo = { ...product };
             const buyingInfo = newProductInfo.buyingInfo;
@@ -117,27 +128,44 @@ export default function TradeModal(props: tradeType) {
                 buyingInfo.productQuantity = changedValue;
                 buyingInfo.productTotalCost = changedCost;
             }
-            total += buyingInfo.productQuantity;
+            totalBuyNum += buyingInfo.productQuantity;
             newList.push(newProductInfo);
         });
 
+        //구매 가능 수량 초과
+        if (totalBuyNum > maximumBuyableAmount) {
+            console.log('구매 가능 초과');
+            return;
+        }
+
+        // 현재 창고 내 재고 반영
+        totalBuyNum = nowStock + totalBuyNum;
+
         //용량 초과시 반영 안함
-        if (total > maximumBuyableAmount) {
+        if (
+            totalBuyNum > gameInfo.warehouse[warehouseInfo.warehouseLevel].size
+        ) {
             console.log('용량 초과!'); //모달로 대체
             return;
         }
 
-        setTotalNumber(total);
+        setTotalNumber(totalBuyNum);
         setBuyableProduct(newList);
     };
 
+    /** udpateSellingList(id, changedValue, changedCost)
+     *  물건 판매 모달
+     * @param id
+     * @param changedValue
+     * @param changedCost
+     */
     const updateSellingList = (
         id: number,
         changedValue: number,
         changedCost: number
     ) => {
         const newList: SellInfo[] = [];
-        let total = 0;
+        let totalSellNum = 0;
         sellingProductList.map((product) => {
             const newProductInfo = { ...product };
             const sellingInfo = newProductInfo.sellingInfo;
@@ -145,9 +173,11 @@ export default function TradeModal(props: tradeType) {
                 sellingInfo.productQuantity = changedValue;
                 sellingInfo.productTotalCost = changedCost;
             }
-            total += sellingInfo.productQuantity;
+            totalSellNum += sellingInfo.productQuantity;
             newList.push(newProductInfo);
         });
+
+        const total = nowStock - totalSellNum;
 
         setTotalNumber(total);
         setSellingProductList(newList);
@@ -231,7 +261,13 @@ export default function TradeModal(props: tradeType) {
                         </div>
                     </div>
                     <div className="w-[28%] h-full p-4">
-                        <TradeSellReceipt />
+                        <TradeSellReceipt
+                            sellableInfoList={sellingProductList}
+                            fee={
+                                gameInfo.broker[warehouseInfo.brokerLevel]
+                                    .charge
+                            }
+                        />
                     </div>
                 </>
             );
