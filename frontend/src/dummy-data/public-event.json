@@ -1,53 +1,54 @@
 {
     "ingameTime": "2024-03-17T12:32:50",
     "productInfoList": [
+        {},
         {
             "productId": 1,
             "productCost": 100,
             "productLimit": 100,
-            "productFluctuation": 0.12
+            "productFluctuation": 50
         },
         {
             "productId": 2,
             "productCost": 300,
             "productLimit": 200,
-            "productFluctuation": 0.15
+            "productFluctuation": 0
         },
         {
             "productId": 3,
             "productCost": 20,
             "productLimit": 100,
-            "productFluctuation": -0.1
+            "productFluctuation": -10
         },
         {
             "productId": 4,
             "productCost": 50,
             "productLimit": 100,
-            "productFluctuation": 0.12
+            "productFluctuation": 30
         },
         {
             "productId": 5,
             "productCost": 120,
             "productLimit": 20,
-            "productFluctuation": 0.2
+            "productFluctuation": 20
         },
         {
             "productId": 6,
             "productCost": 150,
             "productLimit": 50,
-            "productFluctuation": -0.2
+            "productFluctuation": -5
         },
         {
             "productId": 7,
             "productCost": 1000,
             "productLimit": 10,
-            "productFluctuation": 0.4
+            "productFluctuation": 100
         },
         {
             "productId": 8,
             "productCost": 70,
             "productLimit": 200,
-            "productFluctuation": -0.3
+            "productFluctuation": -30
         }
     ],
     "buyableProductIdList": [1, 2, 4, 6],
