@@ -125,7 +125,7 @@ export default function FacilityModal(props: facilityType) {
         }
     };
     return (
-        <section className="relative w-[80%] h-[80%] flex justify-center items-center border-8 color-border-sublight color-bg-main rounded-xl z-50">
+        <section className="relative w-[80%] h-[80%] flex justify-center items-center border-8 color-border-sublight color-bg-main rounded-xl z-50 animation-modal ">
             <div
                 className="relative w-[94%] h-[90%]"
                 style={{
