@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { themeState } from '../../util/counter-slice';
 
 interface CircularTimerProps {
     duration: number;
+    setTurnTimer: React.Dispatch<React.SetStateAction<number>>;
 }
 
-const CircularTimer: React.FC<CircularTimerProps> = ({ duration }) => {
+const CircularTimer: React.FC<CircularTimerProps> = ({
+    duration,
+    setTurnTimer,
+}) => {
     const [timer, setTimer] = useState<number>(duration);
     const [percent, setPercent] = useState<number>(100);
-
     useEffect(() => {
         const intervalId = setInterval(() => {
             setTimer((prevTimer) => {
@@ -15,10 +20,15 @@ const CircularTimer: React.FC<CircularTimerProps> = ({ duration }) => {
                 const newPercent = (newTimer / duration) * 100;
                 setPercent(newPercent >= 0 ? newPercent : 0);
 
+                //배경 바꾸기 (오토여야함)
+                console.log(newTimer);
+                if (newTimer % 5 === 0) {
+                    setTurnTimer(newTimer);
+                }
+
                 if (newTimer === 0) {
                     newTimer = duration;
                 }
-
                 return newTimer;
             });
         }, 1000);
