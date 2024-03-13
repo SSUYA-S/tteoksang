@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import TradeModal from './modal/TradeModal';
-import FacilityModal from './modal/FacilityModal';
+import InfraType from './modal/InfraModal';
 import InfoSeasonModal from './modal/InfoSeasonModal';
 import InfoNotConnectModal from './modal/InfoNotConnectModal';
 import InfoResultModal from './modal/InfoResultModal';
@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import CircularTimer from './section/CircularTimer';
 import MyPageModal from './modal/MyPageModal';
 import NewsModal from './modal/NewsModal';
+import LottieRain from './lottie-animation/LottieRain';
 
 export default function GameComponent() {
     const [tradeFlag, setTradeFlag] = useState<boolean>(false);
@@ -19,6 +20,13 @@ export default function GameComponent() {
     const [settingFlag, setSettingFlag] = useState<boolean>(false);
     const [mypageFlag, setMyPageFlag] = useState<boolean>(false);
     const [newsFlag, setNewsFlag] = useState<boolean>(false);
+
+    //턴 시간
+    const [ingameTurn, setIngameTurn] = useState<number>(0);
+    const [ingameTime, setIngameTime] = useState<String>('00:03:00');
+    const [gameYear, setGameYear] = useState<number>(0);
+    const [gameMonth, setGameMonth] = useState<number>(3);
+    const [gameDay, setGameDay] = useState<number>(1);
 
     const [playing, setPlaying] = useState<boolean>(false);
     const [audio, setAudio] = useState(
@@ -37,6 +45,13 @@ export default function GameComponent() {
     const profileFrame = useSelector(
         (state: any) => state.reduxFlag.profileFrame
     );
+
+    // 인게임 시간 설정
+    useEffect(() => {
+        setGameDay((ingameTurn % 30) + 1);
+        setGameMonth(((Math.floor(ingameTurn / 30) + 2) % 12) + 1);
+        setGameYear(Math.floor((ingameTurn + 60) / 360));
+    }, [ingameTurn]);
 
     // 테마 설정
     useEffect(() => {
@@ -107,6 +122,10 @@ export default function GameComponent() {
                 src={`/src/assets/images/background/bg-${profileTheme}-morning.png`}
                 className="bg-image -z-10"
             />
+            <div className="absolute top-0 w-[60%] h-[100%]">
+                {/* <LottieRain /> */}
+            </div>
+
             {/* 좌측 상단 ui */}
             <div className="absolute top-[4%] left-[2%]">
                 <div className="flex items-center justify-center">
@@ -139,7 +158,9 @@ export default function GameComponent() {
             {/* 우측 상단 ui */}
             <div className="absolute top-[5%] right-[3%] flex items-center justify-center">
                 <div className="relative w-[320px] h-[100px] py-2 flex flex-col items-center justify-around color-bg-main border-4 color-border-subbold rounded-xl color-text-textcolor left-12 z-0">
-                    <p className="text-xl">2023년 4월 12일</p>
+                    <p className="text-2xl">
+                        {gameYear}년 {gameMonth}월 {gameDay}일
+                    </p>
                     <div className="flex items-center justify-center">
                         <img
                             src="/src/assets/images/icon/ui-icon-coin.png"
@@ -149,7 +170,11 @@ export default function GameComponent() {
                     </div>
                 </div>
                 <div className="flex items-center justify-center rounded-full border-8 color-border-subbold z-10">
-                    <CircularTimer duration={180} setTurnTimer={setTurnTimer} />
+                    <CircularTimer
+                        duration={180}
+                        setTurnTimer={setTurnTimer}
+                        setIngameTurn={setIngameTurn}
+                    />
                     <div className="timerwrap flex items-center justify-center">
                         <div
                             className="w-full h-full z-20 bg-no-repeat bg-center"
@@ -279,7 +304,7 @@ export default function GameComponent() {
 
             {tradeFlag ? <TradeModal setTradeFlag={setTradeFlag} /> : <></>}
             {facilityFlag ? (
-                <FacilityModal setFacilityFlag={setFacilityFlag} />
+                <InfraType setFacilityFlag={setFacilityFlag} />
             ) : (
                 <></>
             )}

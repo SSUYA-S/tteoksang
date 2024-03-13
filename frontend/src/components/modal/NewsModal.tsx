@@ -34,8 +34,18 @@ export default function NewsModal(props: NewsType) {
                 </div>
 
                 <div className="relative w-[90%] h-[65%] flex bg-slate-200">
-                    <div className="w-[60%] h-[40%] bg-red-200">asd</div>
-                    <div className="w-[40%] bg-blue-200">asd</div>
+                    <div className="w-[60%] h-full">
+                        <div className="w-full h-[50%]  text-start text-7xl">
+                            <p>중국에서 황사 발생</p>
+                        </div>
+                        <div className="w-full h-[40%]  text-start text-4xl">
+                            <div>게임회사 어서오-십조, KOSPI 상장</div>
+                        </div>
+                    </div>
+
+                    <div className="w-[40%] h-[90%] b text-start text-5xl">
+                        한미 FTA체결
+                    </div>
                 </div>
             </div>
         </div>

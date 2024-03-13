@@ -77,3 +77,9 @@ body {
         opacity: 1;
     }
 }
+.lottie-start-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* 세로축 기준 시작점 정렬 */
+    transform: scaleY(2.6);
+}

@@ -5,11 +5,13 @@ import { themeState } from '../../util/counter-slice';
 interface CircularTimerProps {
     duration: number;
     setTurnTimer: React.Dispatch<React.SetStateAction<number>>;
+    setIngameTurn: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const CircularTimer: React.FC<CircularTimerProps> = ({
     duration,
     setTurnTimer,
+    setIngameTurn,
 }) => {
     const [timer, setTimer] = useState<number>(duration);
     const [percent, setPercent] = useState<number>(100);
@@ -28,6 +30,7 @@ const CircularTimer: React.FC<CircularTimerProps> = ({
 
                 if (newTimer === 0) {
                     newTimer = duration;
+                    setIngameTurn((prev) => prev + 1);
                 }
                 return newTimer;
             });
