@@ -10,6 +10,23 @@
     margin: 0 auto;
     text-align: center;
 }
+.timerwrap {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 4px solid white;
+    position: absolute;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url('/src/assets/images/icon/ui-icon-timeCircle.png');
+}
+.bg-image {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity 10s ease-in-out;
+}
 
 @font-face {
     font-family: 'NeoDunggeunmoPro-Regular';
@@ -19,4 +36,44 @@
 
 body {
     font-family: 'NeoDunggeunmoPro-Regular';
+}
+
+.animation-modal {
+    animation: modal-animation 0.3s;
+}
+
+.animation-push {
+    animation: push-animation 0.2s ease;
+}
+.animation-item {
+    animation: item-animation 1s ease;
+}
+
+@keyframes modal-animation {
+    0% {
+        transform: scale(0.9);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes push-animation {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(0.9);
+    }
+}
+@keyframes item-animation {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
