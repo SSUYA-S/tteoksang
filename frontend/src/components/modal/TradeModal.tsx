@@ -69,7 +69,7 @@ export default function TradeModal(props: tradeType) {
         }
     };
     return (
-        <section className="relative w-[80%] h-[80%] flex justify-center items-center border-8 color-border-sublight color-bg-main rounded-xl z-50">
+        <section className="relative w-[80%] h-[80%] flex justify-center items-center border-8 color-border-sublight color-bg-main rounded-xl z-50 animation-modal ">
             <div className="w-[12%] h-full">
                 <div className="h-[15%]" />
                 <div className="flex flex-col items-center ">

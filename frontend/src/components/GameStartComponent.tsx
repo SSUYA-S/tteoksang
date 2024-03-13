@@ -1,15 +1,35 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 type startType = {
     setStartFlag: React.Dispatch<React.SetStateAction<boolean>>;
 };
 export default function GameStartComponent(props: startType) {
     const [loginFlag, setLoginFlag] = useState<boolean>(false);
+    const [playing, setPlaying] = useState<boolean>(false);
+    const [audio, setAudio] = useState(
+        new Audio('/src/assets/bgm/start_theme_bgm.mp3')
+    );
+    const bgmSetting = useSelector((state: any) => state.reduxFlag.bgmFlag);
+
+    useEffect(() => {
+        playing ? audio.play() : audio.pause();
+    }, [playing, audio]);
+
+    useEffect(() => {
+        audio.addEventListener('ended', () => setPlaying(false));
+        return () => {
+            audio.removeEventListener('ended', () => setPlaying(false));
+        };
+    }, [audio]);
+
+    const toggle = () => setPlaying(bgmSetting);
 
     const onClickLogin = () => {
         setLoginFlag(true);
     };
     const onReady = () => {
+        audio.pause();
         props.setStartFlag(true);
     };
 
@@ -40,6 +60,7 @@ export default function GameStartComponent(props: startType) {
                 <div
                     className="bg-white border border-gray-300 rounded-full flex items-center justify-center my-24 px-4 py-2 text-2xl font-bold cursor-pointer hover:bg-slate-100"
                     onClick={() => {
+                        toggle();
                         onClickLogin();
                     }}
                 >
@@ -72,6 +93,11 @@ export default function GameStartComponent(props: startType) {
                     src="/src/assets/images/icon/ui-icon-mypage.png"
                     alt=""
                 />
+                <div>
+                    <button onClick={toggle}>
+                        {playing ? 'Pause' : 'Play'}
+                    </button>
+                </div>
             </div>
             <div className="flex flex-col justify-center items-center">
                 <img src="/src/assets/images/etc/text-start-title.png" alt="" />
