@@ -3,11 +3,11 @@ import { useState } from 'react';
 import gameInfo from '../../dummy-data/game-info.json';
 import warehouseInfo from '../../dummy-data/warehouse-info.json';
 
-type facilityType = {
+type InfraType = {
     setFacilityFlag: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function FacilityModal(props: facilityType) {
+export default function FacilityModal(props: InfraType) {
     const [facilityType, setFacilityType] = useState<Number>(0);
     const closeFacilityModal = () => {
         props.setFacilityFlag(false);
