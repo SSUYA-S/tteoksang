@@ -3,11 +3,13 @@ import gameInfo from '../../dummy-data/game-info.json';
 interface BuyReceiptProps {
     buyableInfoList: BuyInfo[];
     maximumBuyable: number;
+    updateNowMoney: (a: number) => void;
 }
 
 export default function TradeBuyReceipt({
     buyableInfoList,
     maximumBuyable,
+    updateNowMoney,
 }: BuyReceiptProps) {
     let totalNumber = 0;
     let totalCost = 0;
@@ -60,7 +62,10 @@ export default function TradeBuyReceipt({
                     <p>총 결재 금액</p>
                     <p>{totalCost.toLocaleString()}</p>
                 </div>
-                <div className="my-4 py-2 border-4 color-border-subbold">
+                <div
+                    className="my-4 py-2 border-4 color-border-subbold cursor-pointer"
+                    onClick={() => updateNowMoney(-1 * totalCost)}
+                >
                     구매
                 </div>
             </div>

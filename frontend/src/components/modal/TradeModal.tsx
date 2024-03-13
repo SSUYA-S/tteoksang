@@ -12,6 +12,8 @@ import totalInfo from '../../dummy-data/total-info.json';
 
 type tradeType = {
     setTradeFlag: React.Dispatch<React.SetStateAction<boolean>>;
+    updateNowMoney: (a: number) => void;
+    nowMoney: number;
 };
 
 export default function TradeModal(props: tradeType) {
@@ -34,6 +36,7 @@ export default function TradeModal(props: tradeType) {
     //현재 창고 내 재고
     let [nowStock, setNowStock] = useState<number>(0);
 
+    /**초기 로딩 */
     useEffect(() => {
         //구매 품목 관련 로드
         const buyable: BuyInfo[] = [];
@@ -101,9 +104,67 @@ export default function TradeModal(props: tradeType) {
         setNowStock(stock);
     }, []);
 
+    /** 구매, 판매 정보 초기화*/
+    useEffect(() => {
+        //새 구매 정보
+        const newBuyList: BuyInfo[] = [];
+        buyableProduct.map((product) => {
+            const myProduct = {
+                productId: product.myProduct.productId,
+                productQuantity: product.myProduct.productQuantity,
+                productTotalCost: product.myProduct.productTotalCost,
+            };
+            const buyingInfo = {
+                productId: product.buyingInfo.productId,
+                productQuantity: 0,
+                productTotalCost: 0,
+            };
+            const prodId = product.productInfo.productId;
+
+            //깊은 복사
+            const newProductInfo: BuyInfo = {
+                productName: gameInfo.product[prodId],
+                productInfo: publicEvent.productInfoList[prodId],
+                myProduct: myProduct,
+                buyingInfo: buyingInfo,
+            };
+            newBuyList.push(newProductInfo);
+        });
+        setBuyableProduct(newBuyList);
+
+        //새 판매 정보
+        const newSellingList: SellInfo[] = [];
+        sellingProductList.map((product) => {
+            const myProduct = {
+                productId: product.myProduct.productId,
+                productQuantity: product.myProduct.productQuantity,
+                productTotalCost: product.myProduct.productTotalCost,
+            };
+            const sellingInfo = {
+                productId: product.sellingInfo.productId,
+                productQuantity: 0,
+                productTotalCost: 0,
+            };
+            const prodId = product.productInfo.productId;
+
+            //깊은 복사
+            const newProductInfo: SellInfo = {
+                productName: gameInfo.product[prodId],
+                productInfo: publicEvent.productInfoList[prodId],
+                myProduct: myProduct,
+                sellingInfo: sellingInfo,
+            };
+
+            newSellingList.push(newProductInfo);
+        });
+        setSellingProductList(newSellingList);
+
+        setTotalNumber(nowStock);
+    }, [tradeTab]);
+
     const changeTab = (prop: Number) => {
         setTradeTab(prop);
-        console.log(tradeTab);
+        // console.log(tradeTab);
     };
     const closeTradeModal = () => {
         props.setTradeFlag(false);
@@ -121,19 +182,41 @@ export default function TradeModal(props: tradeType) {
     ) => {
         const newList: BuyInfo[] = [];
         let totalBuyNum = 0;
+        let totalBuyCost = 0;
         buyableProduct.map((product) => {
-            const newProductInfo = { ...product };
-            const buyingInfo = newProductInfo.buyingInfo;
+            const myProduct = {
+                productId: product.myProduct.productId,
+                productQuantity: product.myProduct.productQuantity,
+                productTotalCost: product.myProduct.productTotalCost,
+            };
+            const buyingInfo = {
+                productId: product.buyingInfo.productId,
+                productQuantity: product.buyingInfo.productQuantity,
+                productTotalCost: product.buyingInfo.productTotalCost,
+            };
+            const prodId = product.productInfo.productId;
+
+            //깊은 복사
+            const newProductInfo: BuyInfo = {
+                productName: gameInfo.product[prodId],
+                productInfo: publicEvent.productInfoList[prodId],
+                myProduct: myProduct,
+                buyingInfo: buyingInfo,
+            };
             if (buyingInfo.productId === id) {
                 buyingInfo.productQuantity = changedValue;
                 buyingInfo.productTotalCost = changedCost;
             }
             totalBuyNum += buyingInfo.productQuantity;
+            totalBuyCost += buyingInfo.productTotalCost;
             newList.push(newProductInfo);
         });
 
         //구매 가능 수량 초과
-        if (totalBuyNum > maximumBuyableAmount) {
+        if (
+            totalBuyNum > maximumBuyableAmount ||
+            totalBuyCost > props.nowMoney
+        ) {
             console.log('구매 가능 초과');
             return;
         }
@@ -147,10 +230,10 @@ export default function TradeModal(props: tradeType) {
         ) {
             console.log('용량 초과!'); //모달로 대체
             return;
+        } else {
+            setTotalNumber(totalBuyNum);
+            setBuyableProduct(newList);
         }
-
-        setTotalNumber(totalBuyNum);
-        setBuyableProduct(newList);
     };
 
     /** udpateSellingList(id, changedValue, changedCost)
@@ -167,8 +250,26 @@ export default function TradeModal(props: tradeType) {
         const newList: SellInfo[] = [];
         let totalSellNum = 0;
         sellingProductList.map((product) => {
-            const newProductInfo = { ...product };
-            const sellingInfo = newProductInfo.sellingInfo;
+            const myProduct = {
+                productId: product.myProduct.productId,
+                productQuantity: product.myProduct.productQuantity,
+                productTotalCost: product.myProduct.productTotalCost,
+            };
+            const sellingInfo = {
+                productId: product.sellingInfo.productId,
+                productQuantity: product.sellingInfo.productQuantity,
+                productTotalCost: product.sellingInfo.productTotalCost,
+            };
+            const prodId = product.productInfo.productId;
+
+            //깊은 복사
+            const newProductInfo: SellInfo = {
+                productName: gameInfo.product[prodId],
+                productInfo: publicEvent.productInfoList[prodId],
+                myProduct: myProduct,
+                sellingInfo: sellingInfo,
+            };
+
             if (sellingInfo.productId === id) {
                 sellingInfo.productQuantity = changedValue;
                 sellingInfo.productTotalCost = changedCost;
@@ -180,6 +281,48 @@ export default function TradeModal(props: tradeType) {
         const total = nowStock - totalSellNum;
 
         setTotalNumber(total);
+        setSellingProductList(newList);
+    };
+
+    const sellProduct = (value: number) => {
+        //판매 금액 표시
+        props.updateNowMoney(value);
+
+        let total = 0;
+
+        const newList: SellInfo[] = [];
+        sellingProductList.map((product) => {
+            let avgCost =
+                product.myProduct.productTotalCost /
+                product.myProduct.productQuantity;
+
+            const newQuantity =
+                product.myProduct.productQuantity -
+                product.sellingInfo.productQuantity;
+
+            total += newQuantity;
+
+            //없으면 추가 안함
+            if (newQuantity !== 0) {
+                const newSellInfo: SellInfo = {
+                    productName: product.productName,
+                    productInfo: product.productInfo,
+                    myProduct: {
+                        productId: product.myProduct.productId,
+                        productQuantity: newQuantity,
+                        productTotalCost: newQuantity * avgCost,
+                    },
+                    sellingInfo: {
+                        productId: product.myProduct.productId,
+                        productQuantity: 0,
+                        productTotalCost: 0,
+                    },
+                };
+
+                newList.push(newSellInfo);
+            }
+        });
+        setNowStock(total);
         setSellingProductList(newList);
     };
 
@@ -224,6 +367,7 @@ export default function TradeModal(props: tradeType) {
                         <TradeBuyReceipt
                             buyableInfoList={buyableProduct}
                             maximumBuyable={maximumBuyableAmount}
+                            updateNowMoney={props.updateNowMoney}
                         />
                     </div>
                 </>
@@ -267,6 +411,8 @@ export default function TradeModal(props: tradeType) {
                                 gameInfo.broker[warehouseInfo.brokerLevel]
                                     .charge
                             }
+                            updateNowMoney={props.updateNowMoney}
+                            sellProduct={sellProduct}
                         />
                     </div>
                 </>
@@ -274,7 +420,7 @@ export default function TradeModal(props: tradeType) {
         }
     };
     return (
-        <section className="relative w-[80%] h-[80%] flex justify-center items-center border-8 color-border-sublight color-bg-main rounded-xl z-50 animation-modal ">
+        <section className="relative w-[80%] h-[80%] flex justify-center items-center border-8 color-border-sublight color-bg-main rounded-xl z-50 animation-modal mt-10">
             <div className="w-[12%] h-full">
                 <div className="h-[15%]" />
                 <div className="flex flex-col items-center ">

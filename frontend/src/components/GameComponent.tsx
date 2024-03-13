@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import CircularTimer from './section/CircularTimer';
 import MyPageModal from './modal/MyPageModal';
 import NewsModal from './modal/NewsModal';
+import totalInfo from '../dummy-data/total-info.json';
 
 export default function GameComponent() {
     const [tradeFlag, setTradeFlag] = useState<boolean>(false);
@@ -26,6 +27,8 @@ export default function GameComponent() {
     );
     const [theme, setTheme] = useState<String>();
     const [turnTimer, setTurnTimer] = useState<number>(-1);
+    const [nowMoney, setNowMoney] = useState<number>(0);
+
     const bgmSetting = useSelector((state: any) => state.reduxFlag.bgmFlag);
     const themeSetting = useSelector((state: any) => state.reduxFlag.themeType);
     const profileTheme = useSelector(
@@ -37,6 +40,11 @@ export default function GameComponent() {
     const profileFrame = useSelector(
         (state: any) => state.reduxFlag.profileFrame
     );
+
+    /**초기정보 세팅 */
+    useEffect(() => {
+        setNowMoney(totalInfo.gold);
+    }, []);
 
     // 테마 설정
     useEffect(() => {
@@ -84,6 +92,13 @@ export default function GameComponent() {
     };
     const openMypageElement = () => {
         setMyPageFlag(true);
+    };
+
+    /**updateNowMoney(value)
+     * 현재 nowMoney값을 value만큼 업데이트
+     */
+    const updateNowMoney = (value: number) => {
+        setNowMoney(nowMoney + value);
     };
 
     return (
@@ -137,7 +152,7 @@ export default function GameComponent() {
             </div>
 
             {/* 우측 상단 ui */}
-            <div className="absolute top-[5%] right-[3%] flex items-center justify-center">
+            <div className="absolute top-[1%] right-[3%] flex items-center justify-center">
                 <div className="relative w-[320px] h-[100px] py-2 flex flex-col items-center justify-around color-bg-main border-4 color-border-subbold rounded-xl color-text-textcolor left-12 z-0">
                     <p className="text-xl">2023년 4월 12일</p>
                     <div className="flex items-center justify-center">
@@ -145,7 +160,9 @@ export default function GameComponent() {
                             src="/src/assets/images/icon/ui-icon-coin.png"
                             alt=""
                         />
-                        <p className="ml-2 text-3xl">1,000,000</p>
+                        <p className="ml-2 text-3xl">
+                            {nowMoney.toLocaleString()}
+                        </p>
                     </div>
                 </div>
                 <div className="flex items-center justify-center rounded-full border-8 color-border-subbold z-10">
@@ -277,7 +294,15 @@ export default function GameComponent() {
             )}
             {/* 포켓몬 */}
 
-            {tradeFlag ? <TradeModal setTradeFlag={setTradeFlag} /> : <></>}
+            {tradeFlag ? (
+                <TradeModal
+                    setTradeFlag={setTradeFlag}
+                    updateNowMoney={updateNowMoney}
+                    nowMoney={nowMoney}
+                />
+            ) : (
+                <></>
+            )}
             {facilityFlag ? (
                 <FacilityModal setFacilityFlag={setFacilityFlag} />
             ) : (
