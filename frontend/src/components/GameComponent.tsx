@@ -10,6 +10,15 @@ import CircularTimer from './section/CircularTimer';
 import MyPageModal from './modal/MyPageModal';
 import NewsModal from './modal/NewsModal';
 import LottieRain from './lottie-animation/LottieRain';
+import totalInfo from '../dummy-data/total-info.json';
+
+import {
+    myProductState,
+    warehouseLevelState,
+    brokerLevelState,
+    vehicleLevelState,
+} from '../util/myproduct-slice';
+import InventoryModal from './modal/InventoryModal';
 
 export default function GameComponent() {
     const [tradeFlag, setTradeFlag] = useState<boolean>(false);
@@ -20,6 +29,7 @@ export default function GameComponent() {
     const [settingFlag, setSettingFlag] = useState<boolean>(false);
     const [mypageFlag, setMyPageFlag] = useState<boolean>(false);
     const [newsFlag, setNewsFlag] = useState<boolean>(false);
+    const [inventoryFlag, setInventoryFlag] = useState<boolean>(false);
 
     //턴 시간
     const [duration, setDuration] = useState<number>(180);
@@ -35,17 +45,36 @@ export default function GameComponent() {
     );
     const [theme, setTheme] = useState<String>();
     const [turnTimer, setTurnTimer] = useState<number>(-1);
-    const bgmSetting = useSelector((state: any) => state.reduxFlag.bgmFlag);
-    const themeSetting = useSelector((state: any) => state.reduxFlag.themeType);
+    const [nowMoney, setNowMoney] = useState<number>(0);
+
+    const bgmSetting = useSelector(
+        (state: any) => state.reduxFlag.reduxSlice.bgmFlag
+    );
+    const themeSetting = useSelector(
+        (state: any) => state.reduxFlag.reduxSlice.themeType
+    );
     const profileTheme = useSelector(
-        (state: any) => state.reduxFlag.profileTheme
+        (state: any) => state.reduxFlag.reduxSlice.profileTheme
     );
     const profileIcon = useSelector(
-        (state: any) => state.reduxFlag.profileIcon
+        (state: any) => state.reduxFlag.reduxSlice.profileIcon
     );
     const profileFrame = useSelector(
-        (state: any) => state.reduxFlag.profileFrame
+        (state: any) => state.reduxFlag.reduxSlice.profileFrame
     );
+
+    const dispatch = useDispatch();
+
+    /**초기정보 세팅 */
+    useEffect(() => {
+        setNowMoney(totalInfo.gold);
+
+        //myProductList
+        dispatch(myProductState(totalInfo.productList));
+        dispatch(warehouseLevelState(totalInfo.warehouseLevel));
+        dispatch(vehicleLevelState(totalInfo.vehicleLevel));
+        dispatch(brokerLevelState(totalInfo.brokerLevel));
+    }, []);
 
     // 인게임 시간 설정
     useEffect(() => {
@@ -103,6 +132,17 @@ export default function GameComponent() {
         setMyPageFlag(true);
     };
 
+    const openInventoryElement = () => {
+        setInventoryFlag(true);
+    };
+
+    /**updateNowMoney(value)
+     * 현재 nowMoney값을 value만큼 업데이트
+     */
+    const updateNowMoney = (value: number) => {
+        setNowMoney(nowMoney + value);
+    };
+
     return (
         <section className="mainBackground relative w-full h-full flex flex-col justify-center items-center">
             <img
@@ -158,7 +198,7 @@ export default function GameComponent() {
             </div>
 
             {/* 우측 상단 ui */}
-            <div className="absolute top-[5%] right-[3%] flex items-center justify-center">
+            <div className="absolute top-[1%] right-[3%] flex items-center justify-center">
                 <div className="relative w-[320px] h-[100px] py-2 flex flex-col items-center justify-around color-bg-main border-4 color-border-subbold rounded-xl color-text-textcolor left-12 z-0">
                     <p className="text-2xl">
                         {gameYear}년 {gameMonth}월 {gameDay}일
@@ -168,7 +208,9 @@ export default function GameComponent() {
                             src="/src/assets/images/icon/ui-icon-coin.png"
                             alt=""
                         />
-                        <p className="ml-2 text-3xl">1,000,000</p>
+                        <p className="ml-2 text-3xl">
+                            {nowMoney.toLocaleString()}
+                        </p>
                     </div>
                 </div>
                 <div className="flex items-center justify-center rounded-full border-8 color-border-subbold z-10">
@@ -217,6 +259,9 @@ export default function GameComponent() {
                         style={{
                             backgroundImage:
                                 'url(/src/assets/images/icon/ui-icon-inventory.png)',
+                        }}
+                        onClick={() => {
+                            openInventoryElement();
                         }}
                     />
                     <div
@@ -304,9 +349,21 @@ export default function GameComponent() {
             )}
             {/* 포켓몬 */}
 
-            {tradeFlag ? <TradeModal setTradeFlag={setTradeFlag} /> : <></>}
+            {tradeFlag ? (
+                <TradeModal
+                    setTradeFlag={setTradeFlag}
+                    updateNowMoney={updateNowMoney}
+                    nowMoney={nowMoney}
+                />
+            ) : (
+                <></>
+            )}
             {facilityFlag ? (
                 <InfraType setFacilityFlag={setFacilityFlag} />
+                <FacilityModal
+                    setFacilityFlag={setFacilityFlag}
+                    updateNowMoney={updateNowMoney}
+                />
             ) : (
                 <></>
             )}
@@ -334,6 +391,11 @@ export default function GameComponent() {
             )}
             {mypageFlag ? <MyPageModal setMypageFlag={setMyPageFlag} /> : <></>}
             {newsFlag ? <NewsModal setNewsFlag={setNewsFlag} /> : <></>}
+            {inventoryFlag ? (
+                <InventoryModal setInventoryFlag={setInventoryFlag} />
+            ) : (
+                <></>
+            )}
         </section>
     );
 }

@@ -84,11 +84,12 @@ export default function TradeBuyCard({
                             </p>
                             <p className="color-text-subbold">
                                 {buyableInfo.myProduct.productQuantity !== 0
-                                    ? `${
+                                    ? `${Math.floor(
                                           buyableInfo.myProduct
                                               .productTotalCost /
-                                          buyableInfo.myProduct.productQuantity
-                                      }G`
+                                              buyableInfo.myProduct
+                                                  .productQuantity
+                                      ).toLocaleString()}G`
                                     : '미구매'}
                             </p>
                         </div>

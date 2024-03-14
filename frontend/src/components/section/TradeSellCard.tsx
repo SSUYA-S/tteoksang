@@ -7,10 +7,17 @@ export default function TradeSellCard({
     sellInfo,
     updateSellingList,
 }: SellCardProps) {
-    const myAvg =
-        sellInfo.myProduct.productTotalCost /
-        sellInfo.myProduct.productQuantity;
-    const profit = sellInfo.productInfo.productCost - myAvg;
+    let myAvg = 0;
+    if (sellInfo.myProduct.productQuantity !== 0) {
+        myAvg =
+            sellInfo.myProduct.productTotalCost /
+            sellInfo.myProduct.productQuantity;
+        myAvg = Math.floor(myAvg).toLocaleString();
+    }
+
+    const profit = Math.floor(
+        sellInfo.productInfo.productCost - myAvg
+    ).toLocaleString();
 
     const productNumber = sellInfo.sellingInfo.productQuantity;
     const productCost = sellInfo.sellingInfo.productTotalCost;
@@ -110,28 +117,28 @@ export default function TradeSellCard({
                     </div>
                     <div className="w-full h-[20%] flex justify-center items-center">
                         <div
-                            className="flex py-1 px-2 text-2xl mx-1 color-text-orange1 rounded-lg color-bg-yellow1"
+                            className="flex py-1 px-2 text-2xl mx-1 color-text-orange1 rounded-lg color-bg-yellow1 cursor-pointer"
                             onClick={() => changeProductNumber(-10)}
                         >
                             ◀
                         </div>
                         <div
-                            className="flex py-1 px-2 text-2xl mx-1 color-text-orange1 rounded-lg color-bg-yellow1"
+                            className="flex py-1 px-2 text-2xl mx-1 color-text-orange1 rounded-lg color-bg-yellow1 cursor-pointer"
                             onClick={() => changeProductNumber(-1)}
                         >
                             ◀
                         </div>
-                        <div className="py-2 px-8 mx-2 text-3xl text-white color-bg-orange1 rounded-xl">
+                        <div className="py-2 px-8 mx-2 text-3xl text-white color-bg-orange1 rounded-xl cursor-default">
                             {productNumber}
                         </div>
                         <div
-                            className="flex py-1 px-2 text-2xl mx-1 color-text-orange1 rounded-lg color-bg-yellow1"
+                            className="flex py-1 px-2 text-2xl mx-1 color-text-orange1 rounded-lg color-bg-yellow1 cursor-pointer"
                             onClick={() => changeProductNumber(1)}
                         >
                             ▶
                         </div>
                         <div
-                            className="flex py-1 px-2 text-2xl mx-1 color-text-orange1 rounded-lg color-bg-yellow1"
+                            className="flex py-1 px-2 text-2xl mx-1 color-text-orange1 rounded-lg color-bg-yellow1 cursor-pointer"
                             onClick={() => changeProductNumber(10)}
                         >
                             ▶
@@ -141,15 +148,15 @@ export default function TradeSellCard({
             </div>
             <div className="h-[25%] flex items-center justify-center">
                 <div
-                    className="h-[70%] py-1 px-4 flex items-center text-2xl mx-1 color-bg-orange1 rounded-lg text-white"
+                    className="h-[70%] py-1 px-4 flex items-center text-2xl mx-1 color-bg-orange1 rounded-lg text-white cursor-pointer"
                     onClick={() => changeProductNumber(productNumber * -1)}
                 >
                     최소
                 </div>
-                <div className="h-[70%] py-1 px-4 flex items-center text-2xl mx-1 color-bg-orange1 rounded-lg text-white">
+                <div className="h-[70%] py-1 px-4 flex items-center text-2xl mx-1 color-bg-orange1 rounded-lg text-white cursor-pointer">
                     최대
                 </div>
-                <div className="w-[60%] h-[70%] py-1 px-4 flex items-center justify-center text-5xl mx-1 color-bg-orange1 rounded-lg text-white">
+                <div className="w-[60%] h-[70%] py-1 px-4 flex items-center justify-center text-5xl mx-1 color-bg-orange1 rounded-lg text-white cursor-default">
                     {productCost}
                 </div>
             </div>
