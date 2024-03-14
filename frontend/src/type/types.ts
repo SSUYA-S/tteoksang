@@ -1,30 +1,38 @@
-interface Product {
+import { SettingState } from '../util/counter-slice';
+import { myState } from '../util/myproduct-slice';
+
+export interface Product {
     productId: number;
     productQuantity: number;
     productTotalCost: number;
 }
 
-interface ProductInfo {
+export interface ProductInfo {
     productId: number;
     productCost: number;
     productLimit: number;
     productFluctuation: number;
 }
 
-interface Article {
+export interface Article {
     articleHeadline: string;
 }
 
-interface BuyInfo {
+export interface BuyInfo {
     productName: string;
     productInfo: ProductInfo;
     myProduct: Product;
     buyingInfo: Product;
 }
 
-interface SellInfo {
+export interface SellInfo {
     productName: string;
     productInfo: ProductInfo;
     myProduct: Product;
     sellingInfo: Product;
+}
+
+export interface RootSliceState {
+    reduxSlice: SettingState;
+    myProductSlice: myState;
 }
