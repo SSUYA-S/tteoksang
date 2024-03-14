@@ -13,7 +13,7 @@ type InfraType = {
     updateNowMoney: (a: number) => void;
 };
 
-export default function FacilityModal(props: InfraType) {
+export default function InfraModal(props: InfraType) {
     const [facilityType, setFacilityType] = useState<Number>(0);
     const [nowLevel, setNowLevel] = useState<number>(0);
     const [urlFacilityName, setURLFacilityName] = useState<string>('');
@@ -49,7 +49,7 @@ export default function FacilityModal(props: InfraType) {
         }
     };
 
-    const checkMaxLevel: boolean = () => {
+    const checkMaxLevel = () => {
         if (facilityType === 1) {
             return nowLevel < gameInfo.vehicle.length - 1;
         } else if (facilityType === 2) {
@@ -60,7 +60,7 @@ export default function FacilityModal(props: InfraType) {
     };
 
     const upgradeFacility = () => {
-        let upgradeFee = 0;
+        let upgradeFee: number = 0;
         if (facilityType === 1) {
             upgradeFee = gameInfo.vehicle[nowLevel].upgradefee;
             dispatch(vehicleLevelState(nowLevel + 1));

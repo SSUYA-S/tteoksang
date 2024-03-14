@@ -11,7 +11,7 @@
         "보리"
     ],
     "warehouse": [
-        { "name": "", "size": 0, "introduction": "" },
+        { "name": "", "size": 0, "introduction": "", "upgradefee": 0 },
         {
             "name": "작은 창고",
             "size": 100,
@@ -68,7 +68,7 @@
         }
     ],
     "vehicle": [
-        { "name": "", "size": 0, "introduction": "" },
+        { "name": "", "size": 0, "introduction": "", "upgradefee": 0 },
         {
             "name": "손수레",
             "size": 100,
@@ -125,7 +125,7 @@
         }
     ],
     "broker": [
-        { "name": "", "charge": 0, "introduction": "" },
+        { "name": "", "charge": 0, "introduction": "", "upgradefee": 0 },
         {
             "name": "낡은 구멍 가게",
             "charge": 0.2,
