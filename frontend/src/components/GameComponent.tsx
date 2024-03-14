@@ -22,7 +22,7 @@ export default function GameComponent() {
     const [newsFlag, setNewsFlag] = useState<boolean>(false);
 
     //턴 시간
-    const [duration, setDuration] = useState<number>(180);
+    const [duration, setDuration] = useState<number>(20);
     const [ingameTurn, setIngameTurn] = useState<number>(1);
     const [ingameTime, setIngameTime] = useState<String>('00:03:00');
     const [gameYear, setGameYear] = useState<number>(0);
