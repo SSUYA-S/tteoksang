@@ -11,6 +11,14 @@ import MyPageModal from './modal/MyPageModal';
 import NewsModal from './modal/NewsModal';
 import totalInfo from '../dummy-data/total-info.json';
 
+import {
+    myProductState,
+    warehouseLevelState,
+    brokerLevelState,
+    vehicleLevelState,
+} from '../util/myproduct-slice';
+import InventoryModal from './modal/InventoryModal';
+
 export default function GameComponent() {
     const [tradeFlag, setTradeFlag] = useState<boolean>(false);
     const [facilityFlag, setFacilityFlag] = useState<boolean>(false);
@@ -20,6 +28,7 @@ export default function GameComponent() {
     const [settingFlag, setSettingFlag] = useState<boolean>(false);
     const [mypageFlag, setMyPageFlag] = useState<boolean>(false);
     const [newsFlag, setNewsFlag] = useState<boolean>(false);
+    const [inventoryFlag, setInventoryFlag] = useState<boolean>(false);
 
     const [playing, setPlaying] = useState<boolean>(false);
     const [audio, setAudio] = useState(
@@ -29,21 +38,33 @@ export default function GameComponent() {
     const [turnTimer, setTurnTimer] = useState<number>(-1);
     const [nowMoney, setNowMoney] = useState<number>(0);
 
-    const bgmSetting = useSelector((state: any) => state.reduxFlag.bgmFlag);
-    const themeSetting = useSelector((state: any) => state.reduxFlag.themeType);
+    const bgmSetting = useSelector(
+        (state: any) => state.reduxFlag.reduxSlice.bgmFlag
+    );
+    const themeSetting = useSelector(
+        (state: any) => state.reduxFlag.reduxSlice.themeType
+    );
     const profileTheme = useSelector(
-        (state: any) => state.reduxFlag.profileTheme
+        (state: any) => state.reduxFlag.reduxSlice.profileTheme
     );
     const profileIcon = useSelector(
-        (state: any) => state.reduxFlag.profileIcon
+        (state: any) => state.reduxFlag.reduxSlice.profileIcon
     );
     const profileFrame = useSelector(
-        (state: any) => state.reduxFlag.profileFrame
+        (state: any) => state.reduxFlag.reduxSlice.profileFrame
     );
+
+    const dispatch = useDispatch();
 
     /**초기정보 세팅 */
     useEffect(() => {
         setNowMoney(totalInfo.gold);
+
+        //myProductList
+        dispatch(myProductState(totalInfo.productList));
+        dispatch(warehouseLevelState(totalInfo.warehouseLevel));
+        dispatch(vehicleLevelState(totalInfo.vehicleLevel));
+        dispatch(brokerLevelState(totalInfo.brokerLevel));
     }, []);
 
     // 테마 설정
@@ -92,6 +113,10 @@ export default function GameComponent() {
     };
     const openMypageElement = () => {
         setMyPageFlag(true);
+    };
+
+    const openInventoryElement = () => {
+        setInventoryFlag(true);
     };
 
     /**updateNowMoney(value)
@@ -208,6 +233,9 @@ export default function GameComponent() {
                             backgroundImage:
                                 'url(/src/assets/images/icon/ui-icon-inventory.png)',
                         }}
+                        onClick={() => {
+                            openInventoryElement();
+                        }}
                     />
                     <div
                         className="w-28 h-36 bg-no-repeat cursor-pointer"
@@ -304,7 +332,10 @@ export default function GameComponent() {
                 <></>
             )}
             {facilityFlag ? (
-                <FacilityModal setFacilityFlag={setFacilityFlag} />
+                <FacilityModal
+                    setFacilityFlag={setFacilityFlag}
+                    updateNowMoney={updateNowMoney}
+                />
             ) : (
                 <></>
             )}
@@ -332,6 +363,11 @@ export default function GameComponent() {
             )}
             {mypageFlag ? <MyPageModal setMypageFlag={setMyPageFlag} /> : <></>}
             {newsFlag ? <NewsModal setNewsFlag={setNewsFlag} /> : <></>}
+            {inventoryFlag ? (
+                <InventoryModal setInventoryFlag={setInventoryFlag} />
+            ) : (
+                <></>
+            )}
         </section>
     );
 }

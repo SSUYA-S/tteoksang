@@ -1,5 +1,6 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import reduxSlice from './counter-slice';
+import myProductSlice from './myproduct-slice';
 import storage from 'redux-persist/lib/storage';
 import { persistReducer, persistStore } from 'redux-persist';
 
@@ -9,7 +10,12 @@ const persistConfig = {
     blacklist: ['reduxflag'],
 };
 
-const persistedReducer = persistReducer(persistConfig, reduxSlice);
+const rootSlice = combineReducers({
+    reduxSlice,
+    myProductSlice,
+});
+
+const persistedReducer = persistReducer(persistConfig, rootSlice);
 
 const store = configureStore({
     reducer: {

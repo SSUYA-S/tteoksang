@@ -12,9 +12,12 @@ export default function TradeSellCard({
         myAvg =
             sellInfo.myProduct.productTotalCost /
             sellInfo.myProduct.productQuantity;
+        myAvg = Math.floor(myAvg).toLocaleString();
     }
 
-    const profit = sellInfo.productInfo.productCost - myAvg;
+    const profit = Math.floor(
+        sellInfo.productInfo.productCost - myAvg
+    ).toLocaleString();
 
     const productNumber = sellInfo.sellingInfo.productQuantity;
     const productCost = sellInfo.sellingInfo.productTotalCost;
