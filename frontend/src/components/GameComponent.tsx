@@ -22,7 +22,8 @@ export default function GameComponent() {
     const [newsFlag, setNewsFlag] = useState<boolean>(false);
 
     //턴 시간
-    const [ingameTurn, setIngameTurn] = useState<number>(0);
+    const [duration, setDuration] = useState<number>(180);
+    const [ingameTurn, setIngameTurn] = useState<number>(1);
     const [ingameTime, setIngameTime] = useState<String>('00:03:00');
     const [gameYear, setGameYear] = useState<number>(0);
     const [gameMonth, setGameMonth] = useState<number>(3);
@@ -48,19 +49,20 @@ export default function GameComponent() {
 
     // 인게임 시간 설정
     useEffect(() => {
-        setGameDay((ingameTurn % 30) + 1);
-        setGameMonth(((Math.floor(ingameTurn / 30) + 2) % 12) + 1);
-        setGameYear(Math.floor((ingameTurn + 60) / 360));
+        const date = ingameTurn - 1;
+        setGameDay((date % 30) + 1);
+        setGameMonth(((Math.floor(date / 30) + 2) % 12) + 1);
+        setGameYear(Math.floor((date + 60) / 360));
     }, [ingameTurn]);
 
     // 테마 설정
     useEffect(() => {
         if (themeSetting === 'auto') {
-            if (turnTimer <= 180 && turnTimer > 90) {
+            if (turnTimer <= duration && turnTimer > duration / 2) {
                 setTheme('morning');
-            } else if (turnTimer <= 90 && turnTimer > 45) {
+            } else if (turnTimer <= duration / 2 && turnTimer > duration / 4) {
                 setTheme('evening');
-            } else if (turnTimer <= 45 && turnTimer > 0) {
+            } else if (turnTimer <= duration / 4 && turnTimer > 0) {
                 setTheme('night');
             } else {
                 setTheme('morning');
@@ -171,7 +173,7 @@ export default function GameComponent() {
                 </div>
                 <div className="flex items-center justify-center rounded-full border-8 color-border-subbold z-10">
                     <CircularTimer
-                        duration={180}
+                        duration={duration}
                         setTurnTimer={setTurnTimer}
                         setIngameTurn={setIngameTurn}
                     />
