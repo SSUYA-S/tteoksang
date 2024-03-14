@@ -13,99 +13,172 @@
     "warehouse": [
         { "name": "", "size": 0, "introduction": "" },
         {
-            "name": "집 창고",
-            "size": 100,
-            "introduction": "좁아터진 우리집 창고"
-        },
-        {
             "name": "작은 창고",
+            "size": 100,
+            "introduction": "낡고 좁아터진 창고",
+            "upgradefee": 100
+        },
+        {
+            "name": "최신 작은 창고",
             "size": 200,
-            "introduction": "집 마당 작은 창고"
+            "introduction": "낡지는 않았다.",
+            "upgradefee": 200
         },
         {
-            "name": "그냥 창고",
+            "name": "2층 창고",
             "size": 300,
-            "introduction": "드디어 구매한 창고"
+            "introduction": "층이 2배인 창고",
+            "upgradefee": 300
         },
-        { "name": "큰 창고", "size": 400, "introduction": "이제 좀 크네" },
         {
-            "name": "매우 큰 창고",
+            "name": "최신 2층 창고",
+            "size": 400,
+            "introduction": "냉장, 냉동 완비",
+            "upgradefee": 400
+        },
+        {
+            "name": "매우 큰 2층 창고",
             "size": 500,
-            "introduction": "이쯤이면 거상인듯"
+            "introduction": "뒤에 공간 있음",
+            "upgradefee": 500
         },
-        { "name": "역삼 HUB", "size": 600, "introduction": "쿠팡 물류센터급" },
         {
-            "name": "부산항급 창고",
+            "name": "Cyberpunk 물류",
+            "size": 600,
+            "introduction": "쿠팡 물류센터급",
+            "upgradefee": 600
+        },
+        {
+            "name": "중국 창고",
             "size": 700,
-            "introduction": "정부에서 관리할듯"
+            "introduction": "크다",
+            "upgradefee": 700
+        },
+        {
+            "name": "일본 창고",
+            "size": 800,
+            "introduction": "짱크다",
+            "upgradefee": 800
+        },
+        {
+            "name": "나만의 창고",
+            "size": 900,
+            "introduction": "세들어 살지 말자",
+            "upgradefee": 900
         }
     ],
     "vehicle": [
         { "name": "", "size": 0, "introduction": "" },
-        { "name": "맨손", "size": 100, "introduction": "몸으로 때우자" },
         {
-            "name": "장바구니",
-            "size": 200,
-            "introduction": "근처 마트에서 산 값싼 장바구니"
+            "name": "손수레",
+            "size": 100,
+            "introduction": "몸으로 때우자",
+            "upgradefee": 100
         },
         {
             "name": "자전거",
+            "size": 200,
+            "introduction": "싸구려 자전거",
+            "upgradefee": 200
+        },
+        {
+            "name": "트랙터",
             "size": 300,
-            "introduction": "드디어 탈 것이 생겼다."
+            "introduction": "드디어 자동차가 생겼다.",
+            "upgradefee": 300
         },
-        { "name": "자동차", "size": 400, "introduction": "자차 보유" },
         {
-            "name": "1톤 트럭",
+            "name": "1935년식 자동차",
+            "size": 400,
+            "introduction": "어디서 구한거야",
+            "upgradefee": 400
+        },
+        {
+            "name": "1950년식 자동차",
             "size": 500,
-            "introduction": "우리의 든든한 친구"
+            "introduction": "우리의 든든한 친구",
+            "upgradefee": 500
         },
         {
-            "name": "대형 트레일러",
+            "name": "물류 트럭",
             "size": 600,
-            "introduction": "트레일러는 낭만이다."
+            "introduction": "트레일러는 낭만이다.",
+            "upgradefee": 600
         },
         {
-            "name": "자가용 비행기",
+            "name": "10톤 트럭",
             "size": 700,
-            "introduction": "솔직히 이정도는 되어야 장사하지"
+            "introduction": "솔직히 이정도는 되어야 장사하지",
+            "upgradefee": 700
+        },
+        {
+            "name": "2020년식 트럭",
+            "size": 800,
+            "introduction": "낭만",
+            "upgradefee": 800
+        },
+        {
+            "name": "푸드 트럭",
+            "size": 900,
+            "introduction": "가공과 판매를 동시에",
+            "upgradefee": 900
         }
     ],
     "broker": [
         { "name": "", "charge": 0, "introduction": "" },
         {
-            "name": "구멍 가게",
+            "name": "낡은 구멍 가게",
             "charge": 0.2,
-            "introduction": "집 근처 구멍 가게"
+            "introduction": "집 근처 낡은 구멍 가게",
+            "upgradefee": 100
         },
         {
-            "name": "슈퍼 마켓",
-            "charge": 0.17,
-            "introduction": "우리 동네 슈퍼 마켓"
+            "name": "구멍 가게",
+            "charge": 0.18,
+            "introduction": "우리 동네 구멍 가게",
+            "upgradefee": 200
         },
         {
-            "name": "대형 마트",
+            "name": "2층 구멍 가게",
+            "charge": 0.16,
+            "introduction": "조금 큰 구멍가게",
+            "upgradefee": 300
+        },
+        {
+            "name": "슈퍼마켓",
             "charge": 0.14,
-            "introduction": "우리 도시 대형 마트"
+            "introduction": "동네 슈퍼마켓",
+            "upgradefee": 400
         },
         {
-            "name": "마트 체인",
+            "name": "슈퍼 체인",
+            "charge": 0.12,
+            "introduction": "슈퍼 체인점",
+            "upgradefee": 500
+        },
+        {
+            "name": "고급 슈퍼",
             "charge": 0.1,
-            "introduction": "드디어 체인을 뚫었다."
+            "introduction": "유기농 제품 팔아요",
+            "upgradefee": 600
         },
         {
-            "name": "전국 도매상",
-            "charge": 0.07,
-            "introduction": "전국이 나의 거래처"
+            "name": "슈퍼 고급 슈퍼",
+            "charge": 0.08,
+            "introduction": "프리미엄 제품만 취급",
+            "upgradefee": 700
         },
         {
-            "name": "아마존",
+            "name": "마트",
+            "charge": 0.06,
+            "introduction": "매우 크다",
+            "upgradefee": 800
+        },
+        {
+            "name": "외국 마트",
             "charge": 0.04,
-            "introduction": "세계가 나의 거래처"
-        },
-        {
-            "name": "우주 도매상",
-            "charge": 0.01,
-            "introduction": "화성, 갈끄니까~~~"
+            "introduction": "월드 와이드",
+            "upgradefee": 900
         }
     ],
     "specialEvent": [
