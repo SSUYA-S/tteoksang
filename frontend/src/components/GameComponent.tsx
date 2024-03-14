@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import TradeModal from './modal/TradeModal';
-import InfraType from './modal/InfraModal';
 import InfoSeasonModal from './modal/InfoSeasonModal';
 import InfoNotConnectModal from './modal/InfoNotConnectModal';
 import InfoResultModal from './modal/InfoResultModal';
@@ -19,6 +18,7 @@ import {
     vehicleLevelState,
 } from '../util/myproduct-slice';
 import InventoryModal from './modal/InventoryModal';
+import InfraModal from './modal/InfraModal';
 
 export default function GameComponent() {
     const [tradeFlag, setTradeFlag] = useState<boolean>(false);
@@ -359,8 +359,7 @@ export default function GameComponent() {
                 <></>
             )}
             {facilityFlag ? (
-                <InfraType setFacilityFlag={setFacilityFlag} />
-                <FacilityModal
+                <InfraModal
                     setFacilityFlag={setFacilityFlag}
                     updateNowMoney={updateNowMoney}
                 />
