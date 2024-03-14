@@ -12,7 +12,7 @@ import totalInfo from '../../dummy-data/total-info.json';
 
 import { myProductState } from '../../util/myproduct-slice';
 import { useDispatch, useSelector } from 'react-redux';
-import NewsModal from './NewsModal';
+import { BuyInfo, SellInfo, Product } from '../../type/types';
 
 type tradeType = {
     setTradeFlag: React.Dispatch<React.SetStateAction<boolean>>;
@@ -21,7 +21,7 @@ type tradeType = {
 };
 
 export default function TradeModal(props: tradeType) {
-    const [tradeTab, setTradeTab] = useState<Number>(0);
+    const [tradeTab, setTradeTab] = useState<number>(0);
 
     //구매, 판매 물품 리스트
     const [sellingProductList, setSellingProductList] = useState<SellInfo[]>(
@@ -90,7 +90,7 @@ export default function TradeModal(props: tradeType) {
         let stock = 0; //현재 창고 내 재고 조사
 
         const myList: SellInfo[] = [];
-        myProductList.map((product) => {
+        myProductList.map((product: Product) => {
             const id = product.productId;
             const productName = gameInfo.product[id];
             const productInfo = publicEvent.productInfoList[id];
@@ -175,7 +175,7 @@ export default function TradeModal(props: tradeType) {
     //     }
     // }, [tradeTab]);
 
-    const changeTab = (prop: Number) => {
+    const changeTab = (prop: number) => {
         setTradeTab(prop);
         // console.log(tradeTab);
     };
@@ -306,7 +306,7 @@ export default function TradeModal(props: tradeType) {
         const newList: SellInfo[] = [];
         const myNewProductList: Product[] = [];
         sellingProductList.map((product) => {
-            let avgCost =
+            const avgCost =
                 product.myProduct.productTotalCost /
                 product.myProduct.productQuantity;
 
@@ -346,7 +346,7 @@ export default function TradeModal(props: tradeType) {
         const myNewProductList: Product[] = [];
 
         //함수 복사
-        myProductList.map((product) => {
+        myProductList.map((product: Product) => {
             myNewProductList.push({
                 productId: product.productId,
                 productQuantity: product.productQuantity,
@@ -427,7 +427,7 @@ export default function TradeModal(props: tradeType) {
                                 </p>
                             </div>
                         </div>
-                        <div className="flex h-[80%] m-4 flex-wrap">
+                        <div className="flex h-[80%] m-4 flex-wrap overflow-y-auto">
                             {buyableProduct.map((product) => {
                                 return (
                                     <TradeBuyCard
@@ -468,7 +468,7 @@ export default function TradeModal(props: tradeType) {
                                 </p>
                             </div>
                         </div>
-                        <div className="flex h-[80%] m-4 flex-wrap">
+                        <div className="flex h-[80%] m-4 flex-wrap overflow-y-auto">
                             {sellingProductList.map((product) => {
                                 return (
                                     <TradeSellCard

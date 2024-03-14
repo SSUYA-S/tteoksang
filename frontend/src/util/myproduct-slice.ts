@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { Product } from '../type/types';
 
-interface myState {
+export interface myState {
     myProductList: Product[];
     warehouseLevel: number;
     vehicleLevel: number;
@@ -19,16 +20,16 @@ export const myProductSlice = createSlice({
     initialState,
     reducers: {
         //내 product 설정
-        myProductState: (state, action) => {
+        myProductState: (state: myState, action) => {
             state.myProductList = action.payload;
         },
-        warehouseLevelState: (state, action) => {
+        warehouseLevelState: (state: myState, action) => {
             state.warehouseLevel = action.payload;
         },
-        vehicleLevelState: (state, action) => {
+        vehicleLevelState: (state: myState, action) => {
             state.vehicleLevel = action.payload;
         },
-        brokerLevelState: (state, action) => {
+        brokerLevelState: (state: myState, action) => {
             state.brokerLevel = action.payload;
         },
     },

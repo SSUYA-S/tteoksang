@@ -1,7 +1,12 @@
 {
     "ingameTime": "2024-03-17T12:32:50",
     "productInfoList": [
-        { "productId": 0 },
+        {
+            "productId": 0,
+            "productCost": 0,
+            "productLimit": 0,
+            "productFluctuation": 0
+        },
         {
             "productId": 1,
             "productCost": 100,
