@@ -82,6 +82,7 @@ public class SecurityConfig {
     http
         .authorizeHttpRequests((auth) -> auth
             .requestMatchers("/auth/**").permitAll()  // 인증 및 토큰 재발급 허용
+            .requestMatchers("/resource/**").permitAll() //리소스 불러오기 허용
             .requestMatchers("/ws/**").permitAll() // 웹소켓 허용
             .anyRequest().authenticated());
 
