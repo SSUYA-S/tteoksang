@@ -2,6 +2,7 @@ package com.welcome.tteoksang.config;
 
 import com.welcome.tteoksang.auth.jwt.JWTFilter;
 import com.welcome.tteoksang.auth.jwt.JWTUtil;
+import com.welcome.tteoksang.oauth2.CustomAuthorizationRequestResolver;
 import com.welcome.tteoksang.oauth2.CustomClientRegistrationRepo;
 import com.welcome.tteoksang.oauth2.OAuth2MemberFailureHandler;
 import com.welcome.tteoksang.oauth2.OAuth2MemberSuccessHandler;
@@ -11,6 +12,7 @@ import com.welcome.tteoksang.redis.RedisService;
 import com.welcome.tteoksang.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,6 +24,7 @@ import org.springframework.security.config.annotation.web.configurers.CsrfConfig
 import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -44,8 +47,13 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomClientRegistrationRepo customClientRegistrationRepo;
     private final AuthenticationEntryPoint authenticationEntryPoint;
+    private final ClientRegistrationRepository clientRegistrationRepository;
     private final CustomOAuth2AuthorizedClientService customOAuth2AuthorizedClientService;
     private final JdbcTemplate jdbcTemplate;
+
+    // 로그인 후 이동할 URL
+    @Value("${auth-redirect-url}")
+    String mainPage;
 
     //AuthenticationManager Bean 등록
     @Bean
@@ -65,9 +73,13 @@ public class SecurityConfig {
         // 소셜 로그인 등록
         http
                 .oauth2Login(oauth2 -> oauth2
-                        //.loginPage("/login")
-                        .successHandler(new OAuth2MemberSuccessHandler(userRepository, jwtUtil, redisService))
+//                        .loginPage("auth/login")
+                        .successHandler(new OAuth2MemberSuccessHandler(userRepository, jwtUtil, redisService, mainPage))
                         .failureHandler(new OAuth2MemberFailureHandler())
+                        .authorizationEndpoint(authorizationEndpointConfig -> authorizationEndpointConfig
+                                .authorizationRequestResolver(
+                                        new CustomAuthorizationRequestResolver(clientRegistrationRepository))
+                        )
                         .clientRegistrationRepository(
                                 customClientRegistrationRepo.clientRegistrationRepository())
                         .authorizedClientService(
@@ -82,7 +94,7 @@ public class SecurityConfig {
 
         // 시큐리티 기반 로그인 페이지 경로
         // http://localhost:8080/oauth2/authorization/google 여기로 로그인 요청을 보내면 된다.
-        // 로그인 이후 돌아오는 url은 http://localhost:8080/로 설정하였다.
+        // url에 맞게 auth/login으로 수정
 
         // 인증 경로 설정
         http

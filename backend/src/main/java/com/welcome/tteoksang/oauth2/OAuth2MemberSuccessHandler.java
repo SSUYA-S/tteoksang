@@ -26,6 +26,8 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
     private final UserRepository userRepository;
     private final JWTUtil jwtUtil;
     private final RedisService redisService;
+    private final String mainPage;
+
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -51,8 +53,9 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
                         1000 * 60 * 60 * 24 * 7L)
                         : jwtUtil.createJwt(user.getUserId(), 1000 * 60 * 60 * 24 * 14L);
 
-        //Redis에 refreshToken 저장
+        //Redis에 refreshToken 저장 - key는 "loginRefresh:jwt값"
         redisService.setValues(key, refreshToken);
+        log.debug("RefreshToken: {}", redisService.getValues(key));
 
         //response에 토큰 담아서 반환
         ObjectMapper objectMapper = new ObjectMapper();
@@ -69,7 +72,8 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         String result = objectMapper.writeValueAsString(loginRes);
 
         response.getWriter().write(result);
-
+        // 리다이렉트 사용x
+//        response.sendRedirect(mainPage);
     }
 }
 
