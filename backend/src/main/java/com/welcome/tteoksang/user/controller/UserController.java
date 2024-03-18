@@ -26,7 +26,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @PutMapping
+    @PutMapping("/nickname")
     public ResponseEntity<Void> updateUser(@RequestBody UpdateUserReq updateUserReq,
                                            @AuthenticationPrincipal User user) {
         userService.updateUser(updateUserReq, user);
@@ -52,4 +52,5 @@ public class UserController {
                                 .build()
                 );
     }
+
 }
