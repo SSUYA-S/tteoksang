@@ -1,0 +1,68 @@
+{
+    "eventList": [
+        {
+            "eventId": 1,
+            "eventName": "태풍",
+            "eventType": "SUMMER",
+            "eventDescription": "태풍으로 물류량이 감소합니다. 농산물 가격이 상승합니다.",
+            "eventEffectValue": 10,
+            "eventUnit": "%"
+        },
+        {
+            "eventId": 2,
+            "eventName": "FTA",
+            "eventType": "SPECIAL",
+            "eventDescription": "FTA 체결로 외국산 농산물이 들어옵니다. 농산물 가격이 하락합니다.",
+            "eventEffectValue": -20,
+            "eventUnit": "%"
+        },
+        {
+            "eventId": 3,
+            "eventName": "꽃샘추위",
+            "eventType": "SPRING",
+            "eventDescription": "꽃샘 추위로 농산물 농사가 잘 안됩니다. 농산물 가격이 상승합니다.",
+            "eventEffectValue": 5,
+            "eventUnit": "%"
+        },
+        {
+            "eventId": 4,
+            "eventName": "수확",
+            "eventType": "FALL",
+            "eventDescription": "수확철이라 농산물 공급이 폭등합니다. 농산물 구매 가능 개수가 늘어납니다.",
+            "eventEffectValue": 10,
+            "eventUnit": "%"
+        },
+        {
+            "eventId": 5,
+            "eventName": "폭설",
+            "eventType": "WINTER",
+            "eventDescription": "폭설로 물류량이 감소합니다. 농산물 구매 가능 개수가 하락합니다.",
+            "eventEffectValue": -20,
+            "eventUnit": "%"
+        },
+        {
+            "eventId": 6,
+            "eventName": "도둑이야!",
+            "eventType": "PRIVATE",
+            "eventDescription": "도둑이 들어 당신의 재산이 1,000 골드 줄었습니다.",
+            "eventEffectValue": -1000,
+            "eventUnit": "G"
+        },
+        {
+            "eventId": 7,
+            "eventName": "로또 당첨",
+            "eventType": "PRIVATE",
+            "eventDescription": "로또 당첨으로 10억 골드가 들어옵니다.",
+            "eventEffectValue": 1000000000,
+            "eventUnit": "G"
+        },
+        {
+            "eventId": 8,
+            "eventName": "신차 장만 이벤트",
+            "eventType": "PRIVATE",
+            "eventDescription": "오늘만 탈 것 업그레이드 가격이 20% 감소합니다.",
+            "eventEffectValue": -20,
+            "eventUnit": "%"
+        }
+    ]
+}

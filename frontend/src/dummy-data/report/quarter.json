@@ -1,0 +1,21 @@
+{
+    "turn": 451,
+    "rentFeeInfo": {
+        "billType": "overdue",
+        "rentFee": 10000,
+        "productList": [
+            {
+                "productId": 2,
+                "productQuantity": 20
+            },
+            {
+                "productId": 3,
+                "productQuantity": 5
+            }
+        ]
+    },
+    "quarterProfit": 1000000,
+    "rentFee": 10000,
+    "inProductList": [3, 4, 5, 7, 8],
+    "titleId": 1
+}
