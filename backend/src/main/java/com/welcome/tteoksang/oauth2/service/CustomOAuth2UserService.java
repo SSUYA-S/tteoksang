@@ -10,7 +10,9 @@ import com.welcome.tteoksang.user.repository.ProfileFrameRepository;
 import com.welcome.tteoksang.user.repository.ProfileIconRepository;
 import com.welcome.tteoksang.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
+
 import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -31,6 +33,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     /**
      * 네이버나 구글의 사용자 정보를 파라미터로 받아오는 메서드
+     * DB에 초기 회원 조회 로직이 들어감
      */
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -42,8 +45,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         if (registrationId.equals("google")) {
             oAuth2Response = new GoogleResponse(oAuth2User.getAttributes());
-        }
-        else {
+        } else {
             return null;
         }
 
@@ -57,6 +59,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         //회원가입(첫 로그인)
         if (existData.isEmpty()) {
+            // 초기 프레임, 초기 아이콘 설정
             Optional<ProfileIcon> profileIcon = profileIconRepository.findByProfileIconId(1); // ID에 해당하는 ProfileIcon 조회
             Optional<ProfileFrame> profileFrame = profileFrameRepository.findByProfileFrameId(1); // ID에 해당하는 ProfileFrame 조회
 
