@@ -36,88 +36,88 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-  private final AuthenticationConfiguration authenticationConfiguration;
-  private final JWTUtil jwtUtil;
-  private final UserRepository userRepository;
-  private final RedisService redisService;
-  // OAuth2UserService가 정의된 서비스
-  private final CustomOAuth2UserService customOAuth2UserService;
-  private final CustomClientRegistrationRepo customClientRegistrationRepo;
-  private final AuthenticationEntryPoint authenticationEntryPoint;
-  private final CustomOAuth2AuthorizedClientService customOAuth2AuthorizedClientService;
-  private final JdbcTemplate jdbcTemplate;
+    private final AuthenticationConfiguration authenticationConfiguration;
+    private final JWTUtil jwtUtil;
+    private final UserRepository userRepository;
+    private final RedisService redisService;
+    // OAuth2UserService가 정의된 서비스
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final CustomClientRegistrationRepo customClientRegistrationRepo;
+    private final AuthenticationEntryPoint authenticationEntryPoint;
+    private final CustomOAuth2AuthorizedClientService customOAuth2AuthorizedClientService;
+    private final JdbcTemplate jdbcTemplate;
 
-  //AuthenticationManager Bean 등록
-  @Bean
-  public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
-      throws Exception {
-    return configuration.getAuthenticationManager();
-  }
+    //AuthenticationManager Bean 등록
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
+            throws Exception {
+        return configuration.getAuthenticationManager();
+    }
 
-  @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http
-        // csrf 보호는 세션 기반 인증에 활용하는 것을 추천
-        .csrf(CsrfConfigurer::disable)
-        .formLogin(FormLoginConfigurer::disable)
-        .httpBasic(HttpBasicConfigurer::disable);
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                // csrf 보호는 세션 기반 인증에 활용하는 것을 추천
+                .csrf(CsrfConfigurer::disable)
+                .formLogin(FormLoginConfigurer::disable)
+                .httpBasic(HttpBasicConfigurer::disable);
 
-    // 소셜 로그인 등록
-    http
-        .oauth2Login(oauth2 -> oauth2
-            //.loginPage("/login")
-            .successHandler(new OAuth2MemberSuccessHandler(userRepository, jwtUtil, redisService))
-            .failureHandler(new OAuth2MemberFailureHandler())
-            .clientRegistrationRepository(
-                customClientRegistrationRepo.clientRegistrationRepository())
-            .authorizedClientService(
-                customOAuth2AuthorizedClientService.oAuth2AuthorizedClientService(jdbcTemplate,
-                    customClientRegistrationRepo.clientRegistrationRepository()))
-            .userInfoEndpoint(
-                userInfoEndpointConfig -> userInfoEndpointConfig //data를 받을 수 있는 UserDetailsService를 등록해주는 endpoint
-                    .userService(customOAuth2UserService)))
-        .exceptionHandling(exceptionHandling -> exceptionHandling
-            .authenticationEntryPoint(authenticationEntryPoint)
-        );
+        // 소셜 로그인 등록
+        http
+                .oauth2Login(oauth2 -> oauth2
+                        //.loginPage("/login")
+                        .successHandler(new OAuth2MemberSuccessHandler(userRepository, jwtUtil, redisService))
+                        .failureHandler(new OAuth2MemberFailureHandler())
+                        .clientRegistrationRepository(
+                                customClientRegistrationRepo.clientRegistrationRepository())
+                        .authorizedClientService(
+                                customOAuth2AuthorizedClientService.oAuth2AuthorizedClientService(jdbcTemplate,
+                                        customClientRegistrationRepo.clientRegistrationRepository()))
+                        .userInfoEndpoint(
+                                userInfoEndpointConfig -> userInfoEndpointConfig //data를 받을 수 있는 UserDetailsService를 등록해주는 endpoint
+                                        .userService(customOAuth2UserService)))
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                );
 
-    // 시큐리티 기반 로그인 페이지 경로
-    // http://localhost:8080/oauth2/authorization/google 여기로 로그인 요청을 보내면 된다.
-    // 로그인 이후 돌아오는 url은 http://localhost:8080/로 설정하였다.
+        // 시큐리티 기반 로그인 페이지 경로
+        // http://localhost:8080/oauth2/authorization/google 여기로 로그인 요청을 보내면 된다.
+        // 로그인 이후 돌아오는 url은 http://localhost:8080/로 설정하였다.
 
-    // 인증 경로 설정
-    http
-        .authorizeHttpRequests((auth) -> auth
-            .requestMatchers("/auth/**").permitAll()  // 인증 및 토큰 재발급 허용
-            .requestMatchers("/ws/**").permitAll() // 웹소켓 허용
-            .anyRequest().authenticated());
+        // 인증 경로 설정
+        http
+                .authorizeHttpRequests((auth) -> auth
+                        .requestMatchers("/auth/**").permitAll()  // 인증 및 토큰 재발급 허용
+                        .requestMatchers("/ws/**").permitAll() // 웹소켓 허용
+                        .anyRequest().authenticated());
 
-    //JWTFilter 등록
-    http
-        .addFilterAfter(new JWTFilter(jwtUtil, userRepository), UsernamePasswordAuthenticationFilter.class);
+        //JWTFilter 등록
+        http
+                .addFilterAfter(new JWTFilter(jwtUtil, userRepository), UsernamePasswordAuthenticationFilter.class);
 
-    // session 설정
-    http
-        .sessionManagement((session) -> session
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        // session 설정
+        http
+                .sessionManagement((session) -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-    return http.build();
-  }
+        return http.build();
+    }
 
 
-  @Bean
-  public CorsConfigurationSource corsConfigurationSource() {
-    CorsConfiguration configuration = new CorsConfiguration();
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
 
-    configuration.addAllowedOriginPattern("*");
-    configuration.addAllowedHeader("*");
-    configuration.addAllowedMethod("*");
-    configuration.addAllowedMethod("PATCH");
-    configuration.setAllowCredentials(true);
+        configuration.addAllowedOriginPattern("*");
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
+        configuration.addAllowedMethod("PATCH");
+        configuration.setAllowCredentials(true);
 
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", configuration);
-    return source;
-  }
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 
 
 }
