@@ -1,5 +1,7 @@
 package com.welcome.tteoksang.oauth2.service;
 
+import com.welcome.tteoksang.title.dto.Title;
+import com.welcome.tteoksang.title.repository.TitleRepository;
 import com.welcome.tteoksang.oauth2.dto.CustomOAuth2User;
 import com.welcome.tteoksang.oauth2.dto.GoogleResponse;
 import com.welcome.tteoksang.oauth2.dto.OAuth2Response;

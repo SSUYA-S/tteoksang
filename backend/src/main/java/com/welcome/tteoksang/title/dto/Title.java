@@ -1,4 +1,4 @@
-package com.welcome.tteoksang.user.dto;
+package com.welcome.tteoksang.title.dto;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="title")
+@Table(name = "title")
 public class Title {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
