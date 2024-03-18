@@ -1,0 +1,32 @@
+{
+    "profileFrameList": [
+        {
+            "profileFrameId": 1,
+            "profileFrameName": "판타지 숲"
+        },
+        {
+            "profileFrameId": 2,
+            "profileFrameName": "숲"
+        },
+        {
+            "profileFrameId": 3,
+            "profileFrameName": "16bit"
+        },
+        {
+            "profileFrameId": 4,
+            "profileFrameName": "동물의 숲"
+        },
+        {
+            "profileFrameId": 5,
+            "profileFrameName": "네온1"
+        },
+        {
+            "profileFrameId": 6,
+            "profileFrameName": "네온2"
+        },
+        {
+            "profileFrameId": 7,
+            "profileFrameName": "네온3"
+        }
+    ]
+}

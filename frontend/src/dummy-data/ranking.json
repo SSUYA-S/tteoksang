@@ -1,18 +1,753 @@
-[
-    {
-        "maximumSell": [
-            { "name": "제노", "price": 1000000 },
-            { "name": "나무", "price": 900000 },
-            { "name": "헬로", "price": 800000 }
-        ],
-        "singleTransaction": [
-            { "name": "제노", "price": 10000 },
-            { "name": "나무", "price": 9000 },
-            { "name": "헬로", "price": 800 }
-        ],
-        "myRank": {
-            "maximumSell": { "rank": 24, "percent": 21, "price": 200000 },
-            "singleTransaction": { "rank": 124, "percent": 26, "price": 200 }
+{
+    "seasonRank": [
+        {
+            "season": 21,
+            "rankInfoList": [
+                {
+                    "rankName": "판매왕",
+                    "rankDescription": "가장 많은 순수익을 얻은 사람",
+                    "userInfoList": [
+                        {
+                            "userRank": 1,
+                            "userRecord": 120000000,
+                            "userNickname": "일론 머스크",
+                            "profileIconId": 3,
+                            "profileFrameId": 1
+                        },
+                        {
+                            "userRank": 2,
+                            "userRecord": 119000000,
+                            "userNickname": "콩진호",
+                            "profileIconId": 2,
+                            "profileFrameId": 2
+                        },
+                        {
+                            "userRank": 3,
+                            "userRecord": 118000000,
+                            "userNickname": "쓰리엠",
+                            "profileIconId": 3,
+                            "profileFrameId": 3
+                        }
+                    ],
+                    "myRank": 11,
+                    "myRecord": 11000000
+                },
+                {
+                    "rankName": "부자",
+                    "rankDescription": "현재 보유 금액",
+                    "userInfoList": [
+                        {
+                            "userRank": 1,
+                            "userRecord": 2000000000,
+                            "userNickname": "젠슨 황",
+                            "profileIconId": 2,
+                            "profileFrameId": 2
+                        },
+                        {
+                            "userRank": 2,
+                            "userRecord": 1180000000,
+                            "userNickname": "콩진호",
+                            "profileIconId": 2,
+                            "profileFrameId": 2
+                        },
+                        {
+                            "userRank": 3,
+                            "userRecord": 1160000000,
+                            "userNickname": "쓰리엠",
+                            "profileIconId": 3,
+                            "profileFrameId": 3
+                        }
+                    ],
+                    "myRank": 111,
+                    "myRecord": 100000000
+                },
+                {
+                    "rankName": "큰 손",
+                    "rankDescription": "한 번에 돈을 제일 많이 쓴 사람",
+                    "userInfoList": [
+                        {
+                            "userRank": 1,
+                            "userRecord": 2000000,
+                            "userNickname": "김flex",
+                            "profileIconId": 1,
+                            "profileFrameId": 1
+                        },
+                        {
+                            "userRank": 2,
+                            "userRecord": 1900000,
+                            "userNickname": "콩진호",
+                            "profileIconId": 2,
+                            "profileFrameId": 2
+                        },
+                        {
+                            "userRank": 3,
+                            "userRecord": 1850000,
+                            "userNickname": "쓰리엠",
+                            "profileIconId": 3,
+                            "profileFrameId": 3
+                        }
+                    ],
+                    "myRank": 3,
+                    "myRecord": 800000
+                },
+                {
+                    "rankName": "벼락부자",
+                    "rankDescription": "한 번에 제일 많은 돈을 번 사람",
+                    "userInfoList": [
+                        {
+                            "userRank": 1,
+                            "userRecord": 10000000,
+                            "userNickname": "단타 장인",
+                            "profileIconId": 3,
+                            "profileFrameId": 3
+                        },
+                        {
+                            "userRank": 2,
+                            "userRecord": 9900000,
+                            "userNickname": "콩진호",
+                            "profileIconId": 2,
+                            "profileFrameId": 2
+                        },
+                        {
+                            "userRank": 3,
+                            "userRecord": 9500000,
+                            "userNickname": "쓰리엠",
+                            "profileIconId": 3,
+                            "profileFrameId": 3
+                        }
+                    ],
+                    "myRank": 110,
+                    "myRecord": 5000000
+                },
+                {
+                    "rankName": "떡상",
+                    "rankDescription": "가장 높은 수익률",
+                    "userInfoList": [
+                        {
+                            "userRank": 1,
+                            "userRecord": 1200.3,
+                            "userNickname": "제노",
+                            "profileIconId": 1,
+                            "profileFrameId": 2
+                        },
+                        {
+                            "userRank": 2,
+                            "userRecord": 1192.2,
+                            "userNickname": "콩진호",
+                            "profileIconId": 2,
+                            "profileFrameId": 2
+                        },
+                        {
+                            "userRank": 3,
+                            "userRecord": 1188.8,
+                            "userNickname": "쓰리엠",
+                            "profileIconId": 3,
+                            "profileFrameId": 3
+                        }
+                    ],
+                    "myRank": 1,
+                    "myRecord": 1200.3
+                }
+            ]
+        },
+        {
+            "season": 20,
+            "rankInfoList": [
+                {
+                    "rankName": "판매왕",
+                    "rankDescription": "가장 많은 순수익을 얻은 사람",
+                    "userInfoList": [
+                        {
+                            "userRank": 1,
+                            "userRecord": 120000000,
+                            "userNickname": "일론 머스크",
+                            "profileIconId": 3,
+                            "profileFrameId": 1
+                        },
+                        {
+                            "userRank": 2,
+                            "userRecord": 119000000,
+                            "userNickname": "콩진호",
+                            "profileIconId": 2,
+                            "profileFrameId": 2
+                        },
+                        {
+                            "userRank": 3,
+                            "userRecord": 118000000,
+                            "userNickname": "쓰리엠",
+                            "profileIconId": 3,
+                            "profileFrameId": 3
+                        }
+                    ],
+                    "myRank": 11,
+                    "myRecord": 11000000
+                },
+                {
+                    "rankName": "부자",
+                    "rankDescription": "현재 보유 금액",
+                    "userInfoList": [
+                        {
+                            "userRank": 1,
+                            "userRecord": 2000000000,
+                            "userNickname": "젠슨 황",
+                            "profileIconId": 2,
+                            "profileFrameId": 2
+                        },
+                        {
+                            "userRank": 2,
+                            "userRecord": 1180000000,
+                            "userNickname": "콩진호",
+                            "profileIconId": 2,
+                            "profileFrameId": 2
+                        },
+                        {
+                            "userRank": 3,
+                            "userRecord": 1160000000,
+                            "userNickname": "쓰리엠",
+                            "profileIconId": 3,
+                            "profileFrameId": 3
+                        }
+                    ],
+                    "myRank": 111,
+                    "myRecord": 100000000
+                },
+                {
+                    "rankName": "큰 손",
+                    "rankDescription": "한 번에 돈을 제일 많이 쓴 사람",
+                    "userInfoList": [
+                        {
+                            "userRank": 1,
+                            "userRecord": 2000000,
+                            "userNickname": "김flex",
+                            "profileIconId": 1,
+                            "profileFrameId": 1
+                        },
+                        {
+                            "userRank": 2,
+                            "userRecord": 1900000,
+                            "userNickname": "콩진호",
+                            "profileIconId": 2,
+                            "profileFrameId": 2
+                        },
+                        {
+                            "userRank": 3,
+                            "userRecord": 1850000,
+                            "userNickname": "쓰리엠",
+                            "profileIconId": 3,
+                            "profileFrameId": 3
+                        }
+                    ],
+                    "myRank": 3,
+                    "myRecord": 800000
+                },
+                {
+                    "rankName": "벼락부자",
+                    "rankDescription": "한 번에 제일 많은 돈을 번 사람",
+                    "userInfoList": [
+                        {
+                            "userRank": 1,
+                            "userRecord": 10000000,
+                            "userNickname": "단타 장인",
+                            "profileIconId": 3,
+                            "profileFrameId": 3
+                        },
+                        {
+                            "userRank": 2,
+                            "userRecord": 9900000,
+                            "userNickname": "콩진호",
+                            "profileIconId": 2,
+                            "profileFrameId": 2
+                        },
+                        {
+                            "userRank": 3,
+                            "userRecord": 9500000,
+                            "userNickname": "쓰리엠",
+                            "profileIconId": 3,
+                            "profileFrameId": 3
+                        }
+                    ],
+                    "myRank": 110,
+                    "myRecord": 5000000
+                },
+                {
+                    "rankName": "떡상",
+                    "rankDescription": "가장 높은 수익률",
+                    "userInfoList": [
+                        {
+                            "userRank": 1,
+                            "userRecord": 1200.3,
+                            "userNickname": "제노",
+                            "profileIconId": 1,
+                            "profileFrameId": 2
+                        },
+                        {
+                            "userRank": 2,
+                            "userRecord": 1192.2,
+                            "userNickname": "콩진호",
+                            "profileIconId": 2,
+                            "profileFrameId": 2
+                        },
+                        {
+                            "userRank": 3,
+                            "userRecord": 1188.8,
+                            "userNickname": "쓰리엠",
+                            "profileIconId": 3,
+                            "profileFrameId": 3
+                        }
+                    ],
+                    "myRank": 1,
+                    "myRecord": 1200.3
+                }
+            ]
+        },
+        {
+            "season": 19,
+            "rankInfoList": [
+                {
+                    "rankName": "판매왕",
+                    "rankDescription": "가장 많은 순수익을 얻은 사람",
+                    "userInfoList": [
+                        {
+                            "userRank": 1,
+                            "userRecord": 120000000,
+                            "userNickname": "일론 머스크",
+                            "profileIconId": 3,
+                            "profileFrameId": 1
+                        },
+                        {
+                            "userRank": 2,
+                            "userRecord": 119000000,
+                            "userNickname": "콩진호",
+                            "profileIconId": 2,
+                            "profileFrameId": 2
+                        },
+                        {
+                            "userRank": 3,
+                            "userRecord": 118000000,
+                            "userNickname": "쓰리엠",
+                            "profileIconId": 3,
+                            "profileFrameId": 3
+                        }
+                    ],
+                    "myRank": 11,
+                    "myRecord": 11000000
+                },
+                {
+                    "rankName": "부자",
+                    "rankDescription": "현재 보유 금액",
+                    "userInfoList": [
+                        {
+                            "userRank": 1,
+                            "userRecord": 2000000000,
+                            "userNickname": "젠슨 황",
+                            "profileIconId": 2,
+                            "profileFrameId": 2
+                        },
+                        {
+                            "userRank": 2,
+                            "userRecord": 1180000000,
+                            "userNickname": "콩진호",
+                            "profileIconId": 2,
+                            "profileFrameId": 2
+                        },
+                        {
+                            "userRank": 3,
+                            "userRecord": 1160000000,
+                            "userNickname": "쓰리엠",
+                            "profileIconId": 3,
+                            "profileFrameId": 3
+                        }
+                    ],
+                    "myRank": 111,
+                    "myRecord": 100000000
+                },
+                {
+                    "rankName": "큰 손",
+                    "rankDescription": "한 번에 돈을 제일 많이 쓴 사람",
+                    "userInfoList": [
+                        {
+                            "userRank": 1,
+                            "userRecord": 2000000,
+                            "userNickname": "김flex",
+                            "profileIconId": 1,
+                            "profileFrameId": 1
+                        },
+                        {
+                            "userRank": 2,
+                            "userRecord": 1900000,
+                            "userNickname": "콩진호",
+                            "profileIconId": 2,
+                            "profileFrameId": 2
+                        },
+                        {
+                            "userRank": 3,
+                            "userRecord": 1850000,
+                            "userNickname": "쓰리엠",
+                            "profileIconId": 3,
+                            "profileFrameId": 3
+                        }
+                    ],
+                    "myRank": 3,
+                    "myRecord": 800000
+                },
+                {
+                    "rankName": "벼락부자",
+                    "rankDescription": "한 번에 제일 많은 돈을 번 사람",
+                    "userInfoList": [
+                        {
+                            "userRank": 1,
+                            "userRecord": 10000000,
+                            "userNickname": "단타 장인",
+                            "profileIconId": 3,
+                            "profileFrameId": 3
+                        },
+                        {
+                            "userRank": 2,
+                            "userRecord": 9900000,
+                            "userNickname": "콩진호",
+                            "profileIconId": 2,
+                            "profileFrameId": 2
+                        },
+                        {
+                            "userRank": 3,
+                            "userRecord": 9500000,
+                            "userNickname": "쓰리엠",
+                            "profileIconId": 3,
+                            "profileFrameId": 3
+                        }
+                    ],
+                    "myRank": 110,
+                    "myRecord": 5000000
+                },
+                {
+                    "rankName": "떡상",
+                    "rankDescription": "가장 높은 수익률",
+                    "userInfoList": [
+                        {
+                            "userRank": 1,
+                            "userRecord": 1200.3,
+                            "userNickname": "제노",
+                            "profileIconId": 1,
+                            "profileFrameId": 2
+                        },
+                        {
+                            "userRank": 2,
+                            "userRecord": 1192.2,
+                            "userNickname": "콩진호",
+                            "profileIconId": 2,
+                            "profileFrameId": 2
+                        },
+                        {
+                            "userRank": 3,
+                            "userRecord": 1188.8,
+                            "userNickname": "쓰리엠",
+                            "profileIconId": 3,
+                            "profileFrameId": 3
+                        }
+                    ],
+                    "myRank": 1,
+                    "myRecord": 1200.3
+                }
+            ]
+        },
+        {
+            "season": 18,
+            "rankInfoList": [
+                {
+                    "rankName": "판매왕",
+                    "rankDescription": "가장 많은 순수익을 얻은 사람",
+                    "userInfoList": [
+                        {
+                            "userRank": 1,
+                            "userRecord": 120000000,
+                            "userNickname": "일론 머스크",
+                            "profileIconId": 3,
+                            "profileFrameId": 1
+                        },
+                        {
+                            "userRank": 2,
+                            "userRecord": 119000000,
+                            "userNickname": "콩진호",
+                            "profileIconId": 2,
+                            "profileFrameId": 2
+                        },
+                        {
+                            "userRank": 3,
+                            "userRecord": 118000000,
+                            "userNickname": "쓰리엠",
+                            "profileIconId": 3,
+                            "profileFrameId": 3
+                        }
+                    ],
+                    "myRank": 0,
+                    "myRecord": 0
+                },
+                {
+                    "rankName": "부자",
+                    "rankDescription": "현재 보유 금액",
+                    "userInfoList": [
+                        {
+                            "userRank": 1,
+                            "userRecord": 2000000000,
+                            "userNickname": "젠슨 황",
+                            "profileIconId": 2,
+                            "profileFrameId": 2
+                        },
+                        {
+                            "userRank": 2,
+                            "userRecord": 1180000000,
+                            "userNickname": "콩진호",
+                            "profileIconId": 2,
+                            "profileFrameId": 2
+                        },
+                        {
+                            "userRank": 3,
+                            "userRecord": 1160000000,
+                            "userNickname": "쓰리엠",
+                            "profileIconId": 3,
+                            "profileFrameId": 3
+                        }
+                    ],
+                    "myRank": 0,
+                    "myRecord": 0
+                },
+                {
+                    "rankName": "큰 손",
+                    "rankDescription": "한 번에 돈을 제일 많이 쓴 사람",
+                    "userInfoList": [
+                        {
+                            "userRank": 1,
+                            "userRecord": 2000000,
+                            "userNickname": "김flex",
+                            "profileIconId": 1,
+                            "profileFrameId": 1
+                        },
+                        {
+                            "userRank": 2,
+                            "userRecord": 1900000,
+                            "userNickname": "콩진호",
+                            "profileIconId": 2,
+                            "profileFrameId": 2
+                        },
+                        {
+                            "userRank": 3,
+                            "userRecord": 1850000,
+                            "userNickname": "쓰리엠",
+                            "profileIconId": 3,
+                            "profileFrameId": 3
+                        }
+                    ],
+                    "myRank": 0,
+                    "myRecord": 0
+                },
+                {
+                    "rankName": "벼락부자",
+                    "rankDescription": "한 번에 제일 많은 돈을 번 사람",
+                    "userInfoList": [
+                        {
+                            "userRank": 1,
+                            "userRecord": 10000000,
+                            "userNickname": "단타 장인",
+                            "profileIconId": 3,
+                            "profileFrameId": 3
+                        },
+                        {
+                            "userRank": 2,
+                            "userRecord": 9900000,
+                            "userNickname": "콩진호",
+                            "profileIconId": 2,
+                            "profileFrameId": 2
+                        },
+                        {
+                            "userRank": 3,
+                            "userRecord": 9500000,
+                            "userNickname": "쓰리엠",
+                            "profileIconId": 3,
+                            "profileFrameId": 3
+                        }
+                    ],
+                    "myRank": 0,
+                    "myRecord": 0
+                },
+                {
+                    "rankName": "떡상",
+                    "rankDescription": "가장 높은 수익률",
+                    "userInfoList": [
+                        {
+                            "userRank": 1,
+                            "userRecord": 1200.3,
+                            "userNickname": "제노",
+                            "profileIconId": 1,
+                            "profileFrameId": 2
+                        },
+                        {
+                            "userRank": 2,
+                            "userRecord": 1192.2,
+                            "userNickname": "콩진호",
+                            "profileIconId": 2,
+                            "profileFrameId": 2
+                        },
+                        {
+                            "userRank": 3,
+                            "userRecord": 1188.8,
+                            "userNickname": "쓰리엠",
+                            "profileIconId": 3,
+                            "profileFrameId": 3
+                        }
+                    ],
+                    "myRank": 0,
+                    "myRecord": 0
+                }
+            ]
         }
+    ],
+    "totalRank": {
+        "rankInfoList": [
+            {
+                "rankName": "판매왕",
+                "rankDescription": "가장 많은 순수익을 얻은 사람",
+                "userInfoList": [
+                    {
+                        "userRank": 1,
+                        "userRecord": 300000000,
+                        "userNickname": "일론 머스크",
+                        "profileIconId": 3,
+                        "profileFrameId": 1
+                    },
+                    {
+                        "userRank": 2,
+                        "userRecord": 222222222,
+                        "userNickname": "콩진호",
+                        "profileIconId": 2,
+                        "profileFrameId": 2
+                    },
+                    {
+                        "userRank": 3,
+                        "userRecord": 130000000,
+                        "userNickname": "쓰리엠",
+                        "profileIconId": 3,
+                        "profileFrameId": 3
+                    }
+                ],
+                "myRank": 11,
+                "myRecord": 11000000
+            },
+            {
+                "rankName": "부자",
+                "rankDescription": "현재 보유 금액",
+                "userInfoList": [
+                    {
+                        "userRank": 1,
+                        "userRecord": 5000000000,
+                        "userNickname": "젠슨 황",
+                        "profileIconId": 2,
+                        "profileFrameId": 2
+                    },
+                    {
+                        "userRank": 2,
+                        "userRecord": 22222222222,
+                        "userNickname": "콩진호",
+                        "profileIconId": 2,
+                        "profileFrameId": 2
+                    },
+                    {
+                        "userRank": 3,
+                        "userRecord": 11111111111,
+                        "userNickname": "쓰리엠",
+                        "profileIconId": 3,
+                        "profileFrameId": 3
+                    }
+                ],
+                "myRank": 111,
+                "myRecord": 100000000
+            },
+            {
+                "rankName": "큰 손",
+                "rankDescription": "한 번에 돈을 제일 많이 쓴 사람",
+                "userInfoList": [
+                    {
+                        "userRank": 1,
+                        "userRecord": 3000000,
+                        "userNickname": "김flex",
+                        "profileIconId": 1,
+                        "profileFrameId": 1
+                    },
+                    {
+                        "userRank": 2,
+                        "userRecord": 22222222,
+                        "userNickname": "콩진호",
+                        "profileIconId": 2,
+                        "profileFrameId": 2
+                    },
+                    {
+                        "userRank": 3,
+                        "userRecord": 1900000,
+                        "userNickname": "쓰리엠",
+                        "profileIconId": 3,
+                        "profileFrameId": 3
+                    }
+                ],
+                "myRank": 3,
+                "myRecord": 800000
+            },
+            {
+                "rankName": "벼락부자",
+                "rankDescription": "한 번에 제일 많은 돈을 번 사람",
+                "userInfoList": [
+                    {
+                        "userRank": 1,
+                        "userRecord": 30000000,
+                        "userNickname": "단타 장인",
+                        "profileIconId": 3,
+                        "profileFrameId": 3
+                    },
+                    {
+                        "userRank": 2,
+                        "userRecord": 22222222,
+                        "userNickname": "콩진호",
+                        "profileIconId": 2,
+                        "profileFrameId": 2
+                    },
+                    {
+                        "userRank": 3,
+                        "userRecord": 10000000,
+                        "userNickname": "쓰리엠",
+                        "profileIconId": 3,
+                        "profileFrameId": 3
+                    }
+                ],
+                "myRank": 110,
+                "myRecord": 5000000
+            },
+            {
+                "rankName": "떡상",
+                "rankDescription": "가장 높은 수익률",
+                "userInfoList": [
+                    {
+                        "userRank": 1,
+                        "userRecord": 1250.3,
+                        "userNickname": "제노",
+                        "profileIconId": 1,
+                        "profileFrameId": 2
+                    },
+                    {
+                        "userRank": 2,
+                        "userRecord": 1222.2,
+                        "userNickname": "콩진호",
+                        "profileIconId": 2,
+                        "profileFrameId": 2
+                    },
+                    {
+                        "userRank": 3,
+                        "userRecord": 1188.8,
+                        "userNickname": "쓰리엠",
+                        "profileIconId": 3,
+                        "profileFrameId": 3
+                    }
+                ],
+                "myRank": 1,
+                "myRecord": 1250.3
+            }
+        ]
     }
-]
+}

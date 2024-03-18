@@ -1,0 +1,52 @@
+{
+    "profileIconList": [
+        {
+            "profileIconId": 1,
+            "profileIconName": "여자1"
+        },
+        {
+            "profileIconId": 2,
+            "profileIconName": "캐주얼1"
+        },
+        {
+            "profileIconId": 3,
+            "profileIconName": "고양이1"
+        },
+        {
+            "profileIconId": 4,
+            "profileIconName": "고양이2"
+        },
+        {
+            "profileIconId": 5,
+            "profileIconName": "고양이3"
+        },
+        {
+            "profileIconId": 6,
+            "profileIconName": "여우1"
+        },
+        {
+            "profileIconId": 7,
+            "profileIconName": "여자2"
+        },
+        {
+            "profileIconId": 8,
+            "profileIconName": "돼지1"
+        },
+        {
+            "profileIconId": 9,
+            "profileIconName": "돼지2"
+        },
+        {
+            "profileIconId": 10,
+            "profileIconName": "부유섬1"
+        },
+        {
+            "profileIconId": 11,
+            "profileIconName": "여자3"
+        },
+        {
+            "profileIconId": 12,
+            "profileIconName": "남자1"
+        }
+    ]
+}

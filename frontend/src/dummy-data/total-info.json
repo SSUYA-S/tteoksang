@@ -1,8 +1,9 @@
 {
-    "gold": 1000,
-    "privateEventId": 3,
+    "gold": 20000000,
+    "privateEventId": 6,
     "specialEventId": 2,
-    "ingameTime": "2024-03-17T12:32:50",
+    "ingameTime": "01-03-17T12:32:50",
+    "turn": 437,
     "productList": [
         {
             "productId": 1,

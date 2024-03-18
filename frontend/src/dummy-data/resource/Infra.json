@@ -1,0 +1,197 @@
+{
+    "warehouseInfoList": [
+        {
+            "warehouseName": "작은 창고",
+            "warehouseLevel": 1,
+            "warehouseUpgradeFee": 100,
+            "maxHoldingQuantity": 100,
+            "warehouseContent": "낡고 좁아터진 창고"
+        },
+        {
+            "warehouseName": "최신 작은 창고",
+            "warehouseLevel": 2,
+            "warehouseUpgradeFee": 200,
+            "maxHoldingQuantity": 200,
+            "warehouseContent": "낡지는 않았다."
+        },
+        {
+            "warehouseName": "2층 창고",
+            "warehouseLevel": 3,
+            "warehouseUpgradeFee": 300,
+            "maxHoldingQuantity": 300,
+            "warehouseContent": "층이 2배인 창고"
+        },
+        {
+            "warehouseName": "최신 2층 창고",
+            "warehouseLevel": 4,
+            "warehouseUpgradeFee": 400,
+            "maxHoldingQuantity": 400,
+            "warehouseContent": "냉장, 냉동 완비"
+        },
+        {
+            "warehouseName": "매우 큰 2층 창고",
+            "warehouseLevel": 5,
+            "warehouseUpgradeFee": 500,
+            "maxHoldingQuantity": 500,
+            "warehouseContent": "뒤에 공간 있음"
+        },
+        {
+            "warehouseName": "Cyberpunk 물류",
+            "warehouseLevel": 6,
+            "warehouseUpgradeFee": 600,
+            "maxHoldingQuantity": 600,
+            "warehouseContent": "쿠팡 물류센터급"
+        },
+        {
+            "warehouseName": "중국 창고",
+            "warehouseLevel": 7,
+            "warehouseUpgradeFee": 700,
+            "maxHoldingQuantity": 700,
+            "warehouseContent": "크다"
+        },
+        {
+            "warehouseName": "일본 창고",
+            "warehouseLevel": 8,
+            "warehouseUpgradeFee": 800,
+            "maxHoldingQuantity": 800,
+            "warehouseContent": "짱크다"
+        },
+        {
+            "warehouseName": "나만의 창고",
+            "warehouseLevel": 9,
+            "warehouseUpgradeFee": 900,
+            "maxHoldingQuantity": 900,
+            "warehouseContent": "세들어 살지 말자"
+        }
+    ],
+    "brokerInfoList": [
+        {
+            "brokerName": "낡은 구멍 가게",
+            "brokerLevel": 1,
+            "brokerUpgradeFee": 100,
+            "brokerFee": 0.2,
+            "brokerContent": "집 근처 낡은 구멍 가게"
+        },
+        {
+            "brokerName": "구멍 가게",
+            "brokerLevel": 2,
+            "brokerUpgradeFee": 200,
+            "brokerFee": 0.18,
+            "brokerContent": "우리 동네 구멍 가게"
+        },
+        {
+            "brokerName": "2층 구멍 가게",
+            "brokerLevel": 3,
+            "brokerUpgradeFee": 300,
+            "brokerFee": 0.16,
+            "brokerContent": "조금 큰 구멍가게"
+        },
+        {
+            "brokerName": "슈퍼마켓",
+            "brokerLevel": 4,
+            "brokerUpgradeFee": 400,
+            "brokerFee": 0.14,
+            "brokerContent": "동네 슈퍼마켓"
+        },
+        {
+            "brokerName": "슈퍼 체인점",
+            "brokerLevel": 5,
+            "brokerUpgradeFee": 500,
+            "brokerFee": 0.12,
+            "brokerContent": "슈퍼 체인점"
+        },
+        {
+            "brokerName": "고급 슈퍼",
+            "brokerLevel": 6,
+            "brokerUpgradeFee": 600,
+            "brokerFee": 0.1,
+            "brokerContent": "유기농 제품 팔아요"
+        },
+        {
+            "brokerName": "슈퍼 고급 슈퍼",
+            "brokerLevel": 7,
+            "brokerUpgradeFee": 700,
+            "brokerFee": 0.08,
+            "brokerContent": "프리미엄 제품만 취급"
+        },
+        {
+            "brokerName": "마트",
+            "brokerLevel": 8,
+            "brokerUpgradeFee": 800,
+            "brokerFee": 0.06,
+            "brokerContent": "매우 크다"
+        },
+        {
+            "brokerName": "외국 마트",
+            "brokerLevel": 9,
+            "brokerUpgradeFee": 900,
+            "brokerFee": 0.04,
+            "brokerContent": "월드 와이드"
+        }
+    ],
+    "vehicleInfoList": [
+        {
+            "vehicleName": "손수레",
+            "vehicleLevel": 1,
+            "vehicleUpgradeFee": 100,
+            "maxPurchaseQuantity": 100,
+            "vehicleContent": "몸으로 때우자"
+        },
+        {
+            "vehicleName": "자전거",
+            "vehicleLevel": 2,
+            "vehicleUpgradeFee": 200,
+            "maxPurchaseQuantity": 200,
+            "vehicleContent": "싸구려 자전거"
+        },
+        {
+            "vehicleName": "트랙터",
+            "vehicleLevel": 3,
+            "vehicleUpgradeFee": 300,
+            "maxPurchaseQuantity": 300,
+            "vehicleContent": "드디어 자동차가 생겼다."
+        },
+        {
+            "vehicleName": "1935년식 자동차",
+            "vehicleLevel": 4,
+            "vehicleUpgradeFee": 400,
+            "maxPurchaseQuantity": 400,
+            "vehicleContent": "어디서 구한거야"
+        },
+        {
+            "vehicleName": "1950년식 자동차",
+            "vehicleLevel": 5,
+            "vehicleUpgradeFee": 500,
+            "maxPurchaseQuantity": 500,
+            "vehicleContent": "우리의 든든한 친구"
+        },
+        {
+            "vehicleName": "물류 트럭",
+            "vehicleLevel": 6,
+            "vehicleUpgradeFee": 600,
+            "maxPurchaseQuantity": 600,
+            "vehicleContent": "트레일러는 낭만이다."
+        },
+        {
+            "vehicleName": "10톤 트럭",
+            "vehicleLevel": 7,
+            "vehicleUpgradeFee": 700,
+            "maxPurchaseQuantity": 700,
+            "vehicleContent": "솔직히 이정도는 되어야 장사하지"
+        },
+        {
+            "vehicleName": "2020년식 트럭",
+            "vehicleLevel": 8,
+            "vehicleUpgradeFee": 800,
+            "maxPurchaseQuantity": 800,
+            "vehicleContent": "낭만"
+        },
+        {
+            "vehicleName": "푸드 트럭",
+            "vehicleLevel": 9,
+            "vehicleUpgradeFee": 900,
+            "maxPurchaseQuantity": 900,
+            "vehicleContent": "가공과 판매를 동시에"
+        }
+    ]
+}
