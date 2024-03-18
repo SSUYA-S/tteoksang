@@ -1,20 +1,77 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+    warehouseLevelState,
+    vehicleLevelState,
+    brokerLevelState,
+} from '../../util/myproduct-slice';
 
 import gameInfo from '../../dummy-data/game-info.json';
-import warehouseInfo from '../../dummy-data/warehouse-info.json';
 
 type InfraType = {
     setFacilityFlag: React.Dispatch<React.SetStateAction<boolean>>;
+    updateNowMoney: (a: number) => void;
 };
 
-export default function FacilityModal(props: InfraType) {
+export default function InfraModal(props: InfraType) {
     const [facilityType, setFacilityType] = useState<Number>(0);
+    const [nowLevel, setNowLevel] = useState<number>(0);
+    const [urlFacilityName, setURLFacilityName] = useState<string>('');
     const closeFacilityModal = () => {
         props.setFacilityFlag(false);
     };
 
+    const warehouseLevel = useSelector(
+        (state: any) => state.reduxFlag.myProductSlice.warehouseLevel
+    );
+    const vehicleLevel = useSelector(
+        (state: any) => state.reduxFlag.myProductSlice.vehicleLevel
+    );
+    const brokerLevel = useSelector(
+        (state: any) => state.reduxFlag.myProductSlice.brokerLevel
+    );
+
+    useEffect(() => {}, [warehouseLevel, vehicleLevel, brokerLevel]);
+
+    const dispatch = useDispatch();
+
     const changeFailityType = (prop: Number) => {
         setFacilityType(prop);
+        if (prop === 1) {
+            setURLFacilityName('transport');
+            setNowLevel(vehicleLevel);
+        } else if (prop === 2) {
+            setURLFacilityName('warehouse');
+            setNowLevel(warehouseLevel);
+        } else if (prop === 3) {
+            setURLFacilityName('broker');
+            setNowLevel(brokerLevel);
+        }
+    };
+
+    const checkMaxLevel = () => {
+        if (facilityType === 1) {
+            return nowLevel < gameInfo.vehicle.length - 1;
+        } else if (facilityType === 2) {
+            return nowLevel < gameInfo.warehouse.length - 1;
+        } else if (facilityType === 3) {
+            return nowLevel < gameInfo.broker.length - 1;
+        }
+    };
+
+    const upgradeFacility = () => {
+        let upgradeFee: number = 0;
+        if (facilityType === 1) {
+            upgradeFee = gameInfo.vehicle[nowLevel].upgradefee;
+            dispatch(vehicleLevelState(nowLevel + 1));
+        } else if (facilityType === 2) {
+            upgradeFee = gameInfo.warehouse[nowLevel].upgradefee;
+            dispatch(warehouseLevelState(nowLevel + 1));
+        } else if (facilityType === 3) {
+            upgradeFee = gameInfo.broker[nowLevel].upgradefee;
+            dispatch(brokerLevelState(nowLevel + 1));
+        }
+        props.updateNowMoney(-1 * upgradeFee);
     };
 
     const facilityElement = () => {
@@ -35,15 +92,16 @@ export default function FacilityModal(props: InfraType) {
                             <div
                                 className="w-full h-full"
                                 style={{
-                                    backgroundImage:
-                                        'url(/src/assets/images/etc/facility-transport-1.png)',
+                                    backgroundImage: `url(
+                                        "/src/assets/images/facility/transport (${vehicleLevel}).png"
+                                    )`,
                                     backgroundRepeat: 'no-repeat',
                                     backgroundPositionX: 'center',
                                 }}
                             ></div>
                         </div>
                         <div
-                            className="w-[34%] h-[80%] cursor-pointer"
+                            className="w-[34%] h-[50%] cursor-pointer"
                             onClick={() => {
                                 changeFailityType(2);
                             }}
@@ -52,15 +110,14 @@ export default function FacilityModal(props: InfraType) {
                             <div
                                 className="w-full h-full"
                                 style={{
-                                    backgroundImage:
-                                        'url(/src/assets/images/etc/facility-warehouse-1.png)',
+                                    backgroundImage: `url("/src/assets/images/facility/warehouse (${warehouseLevel}).png")`,
                                     backgroundRepeat: 'no-repeat',
                                     backgroundPositionX: 'center',
                                 }}
                             ></div>
                         </div>
                         <div
-                            className="w-[33%] h-[70%] cursor-pointer"
+                            className="w-[33%] h-[50%] cursor-pointer"
                             onClick={() => {
                                 changeFailityType(3);
                             }}
@@ -69,8 +126,7 @@ export default function FacilityModal(props: InfraType) {
                             <div
                                 className="w-full h-full"
                                 style={{
-                                    backgroundImage:
-                                        'url(/src/assets/images/etc/facility-broker-1.png)',
+                                    backgroundImage: `url("/src/assets/images/facility/broker (${brokerLevel}).png")`,
                                     backgroundRepeat: 'no-repeat',
                                     backgroundPositionX: 'center',
                                 }}
@@ -79,36 +135,51 @@ export default function FacilityModal(props: InfraType) {
                     </div>
                 </>
             );
-        } else if (facilityType === 1) {
+        } else if (
+            facilityType === 1 ||
+            facilityType === 2 ||
+            facilityType === 3
+        ) {
             //운송수단 레벨 최대 아님
-            if (warehouseInfo.vehicleLevel < gameInfo.vehicle.length - 1) {
+            if (checkMaxLevel()) {
                 return (
                     <section className="w-full h-full flex flex-col items-center justify-center ">
-                        <div className="w-full h-[20%] text-4xl">
-                            운송수단 업그레이드
+                        <div className="w-full h-[20%] text-4xl flex items-center justify-center">
+                            {facilityType === 1
+                                ? '운송수단 업그레이드'
+                                : facilityType === 2
+                                ? '창고 업그레이드'
+                                : '중개소 업그레이드'}
                         </div>
                         <div className="relative w-[80%] h-[80%] flex items-end justify-around">
                             <div className="w-[33%] h-[50%]">
                                 <p className="text-3xl">
-                                    {
-                                        gameInfo.vehicle[
-                                            warehouseInfo.vehicleLevel
-                                        ].name
-                                    }
+                                    {facilityType === 1
+                                        ? gameInfo.vehicle[vehicleLevel].name
+                                        : facilityType === 2
+                                        ? gameInfo.warehouse[warehouseLevel]
+                                              .name
+                                        : gameInfo.broker[brokerLevel].name}
                                 </p>
                                 <p className="text-3xl">
-                                    {'탈 것 용량 : '}
-                                    {
-                                        gameInfo.vehicle[
-                                            warehouseInfo.vehicleLevel
-                                        ].size
-                                    }
+                                    {facilityType === 1
+                                        ? '탈 것 용량 : ' +
+                                          gameInfo.vehicle[vehicleLevel].size
+                                        : facilityType === 2
+                                        ? '창고 용량 : ' +
+                                          gameInfo.warehouse[warehouseLevel]
+                                              .size
+                                        : '중개소 수수료 : ' +
+                                          Math.round(
+                                              +gameInfo.broker[brokerLevel]
+                                                  .charge * 100
+                                          ) +
+                                          '%'}
                                 </p>
                                 <div
                                     className="w-full h-full"
                                     style={{
-                                        backgroundImage:
-                                            'url(/src/assets/images/etc/facility-transport-1.png)',
+                                        backgroundImage: `url("/src/assets/images/facility/${urlFacilityName} (${nowLevel}).png")`,
                                         backgroundRepeat: 'no-repeat',
                                         backgroundPositionX: 'center',
                                     }}
@@ -119,25 +190,36 @@ export default function FacilityModal(props: InfraType) {
                             </div>
                             <div className="w-[33%] h-[50%]">
                                 <p className="text-3xl">
-                                    {
-                                        gameInfo.vehicle[
-                                            warehouseInfo.vehicleLevel + 1
-                                        ].name
-                                    }
+                                    {facilityType === 1
+                                        ? gameInfo.vehicle[vehicleLevel + 1]
+                                              .name
+                                        : facilityType === 2
+                                        ? gameInfo.warehouse[warehouseLevel + 1]
+                                              .name
+                                        : gameInfo.broker[brokerLevel + 1].name}
                                 </p>
                                 <p className="text-3xl">
-                                    {'탈 것 용량 : '}
-                                    {
-                                        gameInfo.vehicle[
-                                            warehouseInfo.vehicleLevel + 1
-                                        ].size
-                                    }
+                                    {facilityType === 1
+                                        ? '탈 것 용량 : ' +
+                                          gameInfo.vehicle[vehicleLevel + 1]
+                                              .size
+                                        : facilityType === 2
+                                        ? '창고 용량 : ' +
+                                          gameInfo.warehouse[warehouseLevel + 1]
+                                              .size
+                                        : '중개소 수수료 : ' +
+                                          Math.round(
+                                              +gameInfo.broker[brokerLevel + 1]
+                                                  .charge * 100
+                                          ) +
+                                          '%'}
                                 </p>
                                 <div
                                     className="w-full h-full"
                                     style={{
-                                        backgroundImage:
-                                            'url(/src/assets/images/etc/facility-transport-1.png)',
+                                        backgroundImage: `url("/src/assets/images/facility/${urlFacilityName} (${
+                                            nowLevel + 1
+                                        }).png")`,
                                         backgroundRepeat: 'no-repeat',
                                         backgroundPositionX: 'center',
                                     }}
@@ -148,11 +230,28 @@ export default function FacilityModal(props: InfraType) {
                             className="absolute bottom-10 flex flex-col items-center justify-center py-3 px-28 color-bg-yellow2 color-border-yellow1 border-4 rounded-full cursor-pointer"
                             onClick={() => {
                                 //업그레이드 명령 내리고 창 닫기
+                                upgradeFacility();
                                 changeFailityType(0);
                             }}
                         >
                             <p className="text-4xl">업그레이드</p>
-                            <p className="text-3xl mt-2">1000 G</p>
+                            <p className="text-3xl mt-2">
+                                {facilityType === 1
+                                    ? gameInfo.vehicle[vehicleLevel].upgradefee
+                                    : facilityType === 2
+                                    ? gameInfo.warehouse[warehouseLevel]
+                                          .upgradefee
+                                    : gameInfo.broker[brokerLevel].upgradefee}
+                            </p>
+                        </div>
+                        <div
+                            className="absolute top-10 left-3 flex flex-col py-3 px-28 color-bg-yellow2 color-border-yellow1 border-4 rounded-full cursor-pointer"
+                            onClick={() => {
+                                //업그레이드 명령 내리고 창 닫기
+                                changeFailityType(0);
+                            }}
+                        >
+                            <p className="text-4xl">취소</p>
                         </div>
                     </section>
                 );
@@ -160,31 +259,42 @@ export default function FacilityModal(props: InfraType) {
                 //레벨 최대
                 return (
                     <section className="w-full h-full flex flex-col items-center justify-center ">
-                        <div className="w-full h-[20%] text-4xl">
-                            운송수단 레벨이 최대치 입니다.
+                        <div className="w-full h-[20%] text-4xl flex items-center justify-center">
+                            {facilityType === 1
+                                ? '운송수단 레벨이 최대치입니다.'
+                                : facilityType === 2
+                                ? '창고 레벨이 최대치입니다.'
+                                : '중개소 레벨이 최대치입니다.'}
                         </div>
                         <div className="relative w-[80%] h-[80%] flex items-end justify-around">
                             <div className="w-[33%] h-[50%]">
                                 <p className="text-3xl">
-                                    {
-                                        gameInfo.vehicle[
-                                            warehouseInfo.vehicleLevel
-                                        ].name
-                                    }
+                                    {facilityType === 1
+                                        ? gameInfo.vehicle[vehicleLevel].name
+                                        : facilityType === 2
+                                        ? gameInfo.warehouse[warehouseLevel]
+                                              .name
+                                        : gameInfo.broker[brokerLevel].name}
                                 </p>
                                 <p className="text-3xl">
-                                    창고 용량 :{' '}
-                                    {
-                                        gameInfo.vehicle[
-                                            warehouseInfo.vehicleLevel
-                                        ].size
-                                    }
+                                    {facilityType === 1
+                                        ? '탈 것 용량 : ' +
+                                          gameInfo.vehicle[vehicleLevel].size
+                                        : facilityType === 2
+                                        ? '창고 용량 : ' +
+                                          gameInfo.warehouse[warehouseLevel]
+                                              .size
+                                        : '중개소 수수료 : ' +
+                                          Math.round(
+                                              +gameInfo.broker[brokerLevel]
+                                                  .charge * 100
+                                          ) +
+                                          '%'}
                                 </p>
                                 <div
                                     className="w-full h-full"
                                     style={{
-                                        backgroundImage:
-                                            'url(/src/assets/images/etc/facility-transport-1.png)',
+                                        backgroundImage: `url("/src/assets/images/facility/${urlFacilityName} (${nowLevel}).png")`,
                                         backgroundRepeat: 'no-repeat',
                                         backgroundPositionX: 'center',
                                     }}
@@ -192,260 +302,17 @@ export default function FacilityModal(props: InfraType) {
                             </div>
                         </div>
                         <div
-                            className="absolute bottom-10 flex flex-col items-center justify-center py-3 px-28 color-bg-yellow2 color-border-yellow1 border-4 rounded-full cursor-pointer"
+                            className="absolute top-10 left-3 flex flex-col py-3 px-28 color-bg-yellow2 color-border-yellow1 border-4 rounded-full cursor-pointer"
                             onClick={() => {
                                 //업그레이드 명령 내리고 창 닫기
                                 changeFailityType(0);
                             }}
                         >
-                            <p className="text-4xl">창닫기</p>
-                        </div>
-                    </section>
-                );
-            }
-        } else if (facilityType === 2) {
-            //창고 레벨 최대 아님
-            if (warehouseInfo.warehouseLevel < gameInfo.warehouse.length - 1) {
-                return (
-                    <section className="w-full h-full flex flex-col items-center justify-center ">
-                        <div className="w-full h-[20%] text-4xl">
-                            창고 업그레이드
-                        </div>
-                        <div className="relative w-[80%] h-[80%] flex items-end justify-around">
-                            <div className="w-[33%] h-[50%]">
-                                <p className="text-3xl">
-                                    {
-                                        gameInfo.warehouse[
-                                            warehouseInfo.warehouseLevel
-                                        ].name
-                                    }
-                                </p>
-                                <p className="text-3xl">
-                                    {'창고 용량 : '}
-                                    {
-                                        gameInfo.warehouse[
-                                            warehouseInfo.warehouseLevel
-                                        ].size
-                                    }
-                                </p>
-                                <div
-                                    className="w-full h-full"
-                                    style={{
-                                        backgroundImage:
-                                            'url(/src/assets/images/etc/facility-transport-1.png)',
-                                        backgroundRepeat: 'no-repeat',
-                                        backgroundPositionX: 'center',
-                                    }}
-                                ></div>
-                            </div>
-                            <div className="w-[34%] h-[50%] text-5xl">
-                                다음단계
-                            </div>
-                            <div className="w-[33%] h-[50%]">
-                                <p className="text-3xl">
-                                    {
-                                        gameInfo.warehouse[
-                                            warehouseInfo.warehouseLevel + 1
-                                        ].name
-                                    }
-                                </p>
-                                <p className="text-3xl">
-                                    {'창고 용량 : '}
-                                    {
-                                        gameInfo.warehouse[
-                                            warehouseInfo.warehouseLevel + 1
-                                        ].size
-                                    }
-                                </p>
-                                <div
-                                    className="w-full h-full"
-                                    style={{
-                                        backgroundImage:
-                                            'url(/src/assets/images/etc/facility-transport-1.png)',
-                                        backgroundRepeat: 'no-repeat',
-                                        backgroundPositionX: 'center',
-                                    }}
-                                ></div>
-                            </div>
+                            <p className="text-4xl">취소</p>
                         </div>
                         <div
                             className="absolute bottom-10 flex flex-col items-center justify-center py-3 px-28 color-bg-yellow2 color-border-yellow1 border-4 rounded-full cursor-pointer"
                             onClick={() => {
-                                //업그레이드 명령 내리고 창 닫기
-                                changeFailityType(0);
-                            }}
-                        >
-                            <p className="text-4xl">업그레이드</p>
-                            <p className="text-3xl mt-2">1000 G</p>
-                        </div>
-                    </section>
-                );
-            } else {
-                //레벨 최대
-                return (
-                    <section className="w-full h-full flex flex-col items-center justify-center ">
-                        <div className="w-full h-[20%] text-4xl">
-                            창고 레벨이 최대치 입니다.
-                        </div>
-                        <div className="relative w-[80%] h-[80%] flex items-end justify-around">
-                            <div className="w-[33%] h-[50%]">
-                                <p className="text-3xl">
-                                    {
-                                        gameInfo.warehouse[
-                                            warehouseInfo.warehouseLevel
-                                        ].name
-                                    }
-                                </p>
-                                <p className="text-3xl">
-                                    창고 용량 :{' '}
-                                    {
-                                        gameInfo.warehouse[
-                                            warehouseInfo.warehouseLevel
-                                        ].size
-                                    }
-                                </p>
-                                <div
-                                    className="w-full h-full"
-                                    style={{
-                                        backgroundImage:
-                                            'url(/src/assets/images/etc/facility-transport-1.png)',
-                                        backgroundRepeat: 'no-repeat',
-                                        backgroundPositionX: 'center',
-                                    }}
-                                ></div>
-                            </div>
-                        </div>
-                        <div
-                            className="absolute bottom-10 flex flex-col items-center justify-center py-3 px-28 color-bg-yellow2 color-border-yellow1 border-4 rounded-full cursor-pointer"
-                            onClick={() => {
-                                //업그레이드 명령 내리고 창 닫기
-                                changeFailityType(0);
-                            }}
-                        >
-                            <p className="text-4xl">창닫기</p>
-                        </div>
-                    </section>
-                );
-            }
-        } else {
-            //중개소 레벨 최대 아님
-            if (warehouseInfo.brokerLevel < gameInfo.broker.length - 1) {
-                return (
-                    <section className="w-full h-full flex flex-col items-center justify-center ">
-                        <div className="w-full h-[20%] text-4xl">
-                            중개소 업그레이드
-                        </div>
-                        <div className="relative w-[80%] h-[80%] flex items-end justify-around">
-                            <div className="w-[33%] h-[50%]">
-                                <p className="text-3xl">
-                                    {
-                                        gameInfo.broker[
-                                            warehouseInfo.brokerLevel
-                                        ].name
-                                    }
-                                </p>
-                                <p className="text-3xl">
-                                    {'수수료 : '}
-                                    {Math.floor(
-                                        gameInfo.broker[
-                                            warehouseInfo.brokerLevel
-                                        ].charge * 100
-                                    )}
-                                    {'%'}
-                                </p>
-                                <div
-                                    className="w-full h-full"
-                                    style={{
-                                        backgroundImage:
-                                            'url(/src/assets/images/etc/facility-transport-1.png)',
-                                        backgroundRepeat: 'no-repeat',
-                                        backgroundPositionX: 'center',
-                                    }}
-                                ></div>
-                            </div>
-                            <div className="w-[34%] h-[50%] text-5xl">
-                                다음단계
-                            </div>
-                            <div className="w-[33%] h-[50%]">
-                                <p className="text-3xl">
-                                    {
-                                        gameInfo.broker[
-                                            warehouseInfo.brokerLevel + 1
-                                        ].name
-                                    }
-                                </p>
-                                <p className="text-3xl">
-                                    {'수수료 : '}
-                                    {Math.floor(
-                                        gameInfo.broker[
-                                            warehouseInfo.brokerLevel + 1
-                                        ].charge * 100
-                                    )}
-                                    {'%'}
-                                </p>
-                                <div
-                                    className="w-full h-full"
-                                    style={{
-                                        backgroundImage:
-                                            'url(/src/assets/images/etc/facility-transport-1.png)',
-                                        backgroundRepeat: 'no-repeat',
-                                        backgroundPositionX: 'center',
-                                    }}
-                                ></div>
-                            </div>
-                        </div>
-                        <div
-                            className="absolute bottom-10 flex flex-col items-center justify-center py-3 px-28 color-bg-yellow2 color-border-yellow1 border-4 rounded-full cursor-pointer"
-                            onClick={() => {
-                                //업그레이드 명령 내리고 창 닫기
-                                changeFailityType(0);
-                            }}
-                        >
-                            <p className="text-4xl">업그레이드</p>
-                            <p className="text-3xl mt-2">1000 G</p>
-                        </div>
-                    </section>
-                );
-            } else {
-                //레벨 최대
-                return (
-                    <section className="w-full h-full flex flex-col items-center justify-center ">
-                        <div className="w-full h-[20%] text-4xl">
-                            중개소 레벨이 최대치 입니다.
-                        </div>
-                        <div className="relative w-[80%] h-[80%] flex items-end justify-around">
-                            <div className="w-[33%] h-[50%]">
-                                <p className="text-3xl">
-                                    {
-                                        gameInfo.broker[
-                                            warehouseInfo.brokerLevel
-                                        ].name
-                                    }
-                                </p>
-                                <p className="text-3xl">
-                                    {'수수료: '}
-                                    {Math.floor(
-                                        gameInfo.broker[
-                                            warehouseInfo.brokerLevel
-                                        ].charge * 100
-                                    )}
-                                    {'%'}
-                                </p>
-                                <div
-                                    className="w-full h-full"
-                                    style={{
-                                        backgroundImage:
-                                            'url(/src/assets/images/etc/facility-transport-1.png)',
-                                        backgroundRepeat: 'no-repeat',
-                                        backgroundPositionX: 'center',
-                                    }}
-                                ></div>
-                            </div>
-                        </div>
-                        <div
-                            className="absolute bottom-10 flex flex-col items-center justify-center py-3 px-28 color-bg-yellow2 color-border-yellow1 border-4 rounded-full cursor-pointer"
-                            onClick={() => {
-                                //업그레이드 명령 내리고 창 닫기
                                 changeFailityType(0);
                             }}
                         >
