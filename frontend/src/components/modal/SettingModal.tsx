@@ -6,8 +6,12 @@ type settingType = {
     setSettingFlag: React.Dispatch<React.SetStateAction<boolean>>;
 };
 export default function SettingModal(props: settingType) {
-    const bgmSetting = useSelector((state: any) => state.reduxFlag.bgmFlag);
-    const themeSetting = useSelector((state: any) => state.reduxFlag.themeType);
+    const bgmSetting = useSelector(
+        (state: any) => state.reduxFlag.reduxSlice.bgmFlag
+    );
+    const themeSetting = useSelector(
+        (state: any) => state.reduxFlag.reduxSlice.themeType
+    );
     const dispatch = useDispatch();
 
     //animation 효과

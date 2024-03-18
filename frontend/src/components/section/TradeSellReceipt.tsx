@@ -1,11 +1,15 @@
 interface SellReceiptProps {
     sellableInfoList: SellInfo[];
     fee: number;
+    updateNowMoney: (a: number) => void;
+    sellProduct: (a: number) => void;
 }
 
 export default function TradeSellReceipt({
     sellableInfoList,
     fee,
+    updateNowMoney,
+    sellProduct,
 }: SellReceiptProps) {
     let totalCost = 0;
     sellableInfoList.map((product) => {
@@ -53,7 +57,10 @@ export default function TradeSellReceipt({
                     <p>총 판매 금액</p>
                     <p>{totalProfit.toLocaleString()}</p>
                 </div>
-                <div className="my-4 py-2 border-4 color-border-subbold">
+                <div
+                    className="my-4 py-2 border-4 color-border-subbold cursor-pointer"
+                    onClick={() => sellProduct(totalProfit)}
+                >
                     판매
                 </div>
             </div>

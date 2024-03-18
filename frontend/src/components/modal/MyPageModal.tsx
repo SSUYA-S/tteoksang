@@ -1,4 +1,4 @@
-import { SetStateAction, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     profileFrameState,
@@ -14,14 +14,20 @@ export default function MyPageModal(props: MyPageType) {
     const [littleMenu, setLittleMenu] = useState<number>(0);
     const dispatch = useDispatch();
     const profileTheme = useSelector(
-        (state: any) => state.reduxFlag.profileTheme
-    );
-    const profileFrame = useSelector(
-        (state: any) => state.reduxFlag.profileFrame
+        (state: any) => state.reduxFlag.reduxSlice.profileTheme
     );
     const profileIcon = useSelector(
-        (state: any) => state.reduxFlag.profileIcon
+        (state: any) => state.reduxFlag.reduxSlice.profileIcon
     );
+    const profileFrame = useSelector(
+        (state: any) => state.reduxFlag.reduxSlice.profileFrame
+    );
+
+    useEffect(() => {
+        console.log(profileTheme);
+        console.log(profileFrame);
+        console.log(profileIcon);
+    }, []);
 
     const changeMenu = (prop: number) => {
         setMenu(prop);
