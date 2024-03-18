@@ -1,8 +1,6 @@
 package com.welcome.tteoksang.user.dto;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
@@ -25,6 +23,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name="user")
 public class User implements UserDetails {
 
   @Id
@@ -32,20 +31,34 @@ public class User implements UserDetails {
   @Builder.Default
   private String userId = UUID.randomUUID().toString();
 
+  @Column(name="user_google_id", unique = true, nullable = false)
+  private String userGoogleId;
+
   @Email
-  @Column(name = "user_email", nullable = false)
+  @Column(name = "user_email", unique = true, nullable = false)
   private String userEmail;
 
   @NotBlank
-  @Column(name = "user_nickname", nullable = false)
+  @Column(name = "user_nickname", unique = true, nullable = false)
   private String userNickname;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_profile_icon_id")
+  private ProfileIcon profileIcon;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_profile_frame_id")
+  private ProfileFrame profileFrame;
 
   @CreationTimestamp(source = SourceType.DB)
   @Column(name = "created_at", nullable = false)
   private LocalDateTime createdAt;
 
-  @Column(name = "deleted_at", nullable = false)
+  @Column(name = "deleted_at")
   private LocalDateTime deletedAt;
+
+  @Column(name = "career")
+  private int career;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -24,6 +24,7 @@ import org.springframework.security.config.annotation.web.configurers.HttpBasicC
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -39,6 +40,7 @@ public class SecurityConfig {
   private final JWTUtil jwtUtil;
   private final UserRepository userRepository;
   private final RedisService redisService;
+  // OAuth2UserService가 정의된 서비스
   private final CustomOAuth2UserService customOAuth2UserService;
   private final CustomClientRegistrationRepo customClientRegistrationRepo;
   private final AuthenticationEntryPoint authenticationEntryPoint;
@@ -78,6 +80,10 @@ public class SecurityConfig {
             .authenticationEntryPoint(authenticationEntryPoint)
         );
 
+    // 시큐리티 기반 로그인 페이지 경로
+    // http://localhost:8080/oauth2/authorization/google 여기로 로그인 요청을 보내면 된다.
+    // 로그인 이후 돌아오는 url은 http://localhost:8080/로 설정하였다.
+
     // 인증 경로 설정
     http
         .authorizeHttpRequests((auth) -> auth
@@ -87,7 +93,7 @@ public class SecurityConfig {
 
     //JWTFilter 등록
     http
-        .addFilterAfter(new JWTFilter(jwtUtil, userRepository), LogoutFilter.class);
+        .addFilterAfter(new JWTFilter(jwtUtil, userRepository), UsernamePasswordAuthenticationFilter.class);
 
     // session 설정
     http
