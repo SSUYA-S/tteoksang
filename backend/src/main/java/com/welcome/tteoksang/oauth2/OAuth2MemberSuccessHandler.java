@@ -29,8 +29,10 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
   public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
       Authentication authentication) throws IOException, ServletException, IOException {
 
-    // 사용자 정보 가져오기
+    // 사용자 정보 가져오기 - 로그인이 완료된 인증 객체(OAuth2AuthenticationToken)에서 유저 정보 가져오기
     CustomOAuth2User oAuth2User = (CustomOAuth2User) authentication.getPrincipal();
+
+    // 사용자 이메일 가져오기
     String userEmail = oAuth2User.getUserEmail();
     User user = userRepository.findByUserEmailAndDeletedAtIsNull(userEmail).get();
     String userId = user.getUserId();
