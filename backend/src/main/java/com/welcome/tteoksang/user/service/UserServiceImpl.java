@@ -55,8 +55,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 new GoogleRepoId("google", user.getUserNickname()));
         if (entity.isPresent()) {
             String token = entity.get().getAccessTokenValue();
-            googleRepository.delete(entity.get()); //테이블에서 제거
-            googleRevokeService.revokeGoogleAccessToken(token);
+            googleRepository.delete(entity.get()); //OAuth2 인증 테이블에서 제거
+            googleRevokeService.revokeGoogleAccessToken(token); // 기존 토큰 만료
         }
 
         //관련 토큰 모두 레디스에서 제거
@@ -67,7 +67,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
         user.setDeletedAt(LocalDateTime.now());
         userRepository.save(user);
-
     }
 
 }
