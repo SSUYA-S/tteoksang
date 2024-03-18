@@ -3,12 +3,8 @@ package com.welcome.tteoksang.oauth2.service;
 import com.welcome.tteoksang.oauth2.dto.CustomOAuth2User;
 import com.welcome.tteoksang.oauth2.dto.GoogleResponse;
 import com.welcome.tteoksang.oauth2.dto.OAuth2Response;
-import com.welcome.tteoksang.user.dto.ProfileFrame;
-import com.welcome.tteoksang.user.dto.ProfileIcon;
-import com.welcome.tteoksang.user.dto.User;
-import com.welcome.tteoksang.user.repository.ProfileFrameRepository;
-import com.welcome.tteoksang.user.repository.ProfileIconRepository;
-import com.welcome.tteoksang.user.repository.UserRepository;
+import com.welcome.tteoksang.user.dto.*;
+import com.welcome.tteoksang.user.repository.*;
 import jakarta.transaction.Transactional;
 
 import java.util.Optional;
@@ -29,6 +25,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final UserRepository userRepository;
     private final ProfileFrameRepository profileFrameRepository;
     private final ProfileIconRepository profileIconRepository;
+    private final ThemeRepository themeRepository;
+    private final TitleRepository titleRepository;
 
 
     /**
@@ -61,6 +59,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             // 초기 프레임, 초기 아이콘 설정
             Optional<ProfileIcon> profileIcon = profileIconRepository.findByProfileIconId(1); // ID에 해당하는 ProfileIcon 조회
             Optional<ProfileFrame> profileFrame = profileFrameRepository.findByProfileFrameId(1); // ID에 해당하는 ProfileFrame 조회
+            Optional<Theme> theme = themeRepository.findByThemeId(1);
+            Optional<Title> title = titleRepository.findByTitleId(1);
 
             User user = User.builder()
                     .userGoogleId(oAuth2Response.getProviderId())
@@ -68,17 +68,18 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .userNickname(oAuth2Response.getName())
                     .profileIcon(profileIcon.get()) // 조회한 ProfileIcon 사용
                     .profileFrame(profileFrame.get()) // 조회한 ProfileFrame 사용
+                    .theme(theme.get())
+                    .title(title.get())
                     .career(0)
                     .build();
 
             userRepository.save(user);
         }
         //탈퇴한 회원
-        else if(existData.get().getDeletedAt() != null) {
+        else if (existData.get().getDeletedAt() != null) {
             User userToUpdate = existData.get();
             userToUpdate.setDeletedAt(null); // 업데이트할 값 설정
             userRepository.save(userToUpdate);
-
         }
 
         return new CustomOAuth2User(oAuth2Response);
