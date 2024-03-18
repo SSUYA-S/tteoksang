@@ -51,11 +51,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         // 구글에서 아이디 추출
         String userGoogleId = oAuth2Response.getProviderId();
-        Optional<User> existData = userRepository.findByUserGoogleIdAndDeletedAtIsNull(userGoogleId);
+        Optional<User> existData = userRepository.findByUserGoogleId(userGoogleId);
         // 구글에서 이메일 추출
         String userEmail = oAuth2Response.getEmail();
 //        Optional<User> existData = userRepository.findByUserEmailAndDeletedAtIsNull(userEmail);
-
 
         //회원가입(첫 로그인)
         if (existData.isEmpty()) {
@@ -73,6 +72,13 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .build();
 
             userRepository.save(user);
+        }
+        //탈퇴한 회원
+        else if(existData.get().getDeletedAt() != null) {
+            User userToUpdate = existData.get();
+            userToUpdate.setDeletedAt(null); // 업데이트할 값 설정
+            userRepository.save(userToUpdate);
+
         }
 
         return new CustomOAuth2User(oAuth2Response);
