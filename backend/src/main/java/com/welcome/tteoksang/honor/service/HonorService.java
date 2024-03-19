@@ -1,9 +1,9 @@
-package com.welcome.tteoksang.title.service;
+package com.welcome.tteoksang.honor.service;
 
 import java.util.List;
 
 
-public interface TitleService {
+public interface HonorService {
 
     public List<Integer> searchAllHonor(String userId);
 

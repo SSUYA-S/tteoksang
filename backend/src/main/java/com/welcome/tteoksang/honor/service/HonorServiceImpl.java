@@ -1,9 +1,6 @@
-package com.welcome.tteoksang.title.service;
+package com.welcome.tteoksang.honor.service;
 
-import com.welcome.tteoksang.title.repository.HonorRepository;
-import com.welcome.tteoksang.user.dto.User;
-import com.welcome.tteoksang.user.dto.req.UpdateUserReq;
-import com.welcome.tteoksang.user.exception.NicknameNullException;
+import com.welcome.tteoksang.honor.repository.HonorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +8,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class TitleServiceImpl implements TitleService {
+public class HonorServiceImpl implements HonorService {
 
     private final HonorRepository honorRepository;
 
