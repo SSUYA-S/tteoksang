@@ -1,0 +1,468 @@
+{
+    "rentFeeInfo": {
+        "billType": "basic",
+        "rentFee": 20000,
+        "productList": []
+    },
+    "season": 21,
+    "privateProductReportList": [
+        {
+            "year": 1,
+            "productList": [
+                {
+                    "productId": 1,
+                    "totalAccPrivateProductPurchaseQuantity": 200,
+                    "totalAccPrivateProductOutcome": 2000000,
+                    "totalAccPrivateProductSalesQuantity": 200,
+                    "totalAccPrivateProductIncome": 3000000,
+                    "totalAccPrivateProductProfit": 900000,
+                    "totalAccPrivateBrokerFee": 100000
+                },
+                {
+                    "productId": 2,
+                    "totalAccPrivateProductPurchaseQuantity": 200,
+                    "totalAccPrivateProductOutcome": 2000000,
+                    "totalAccPrivateProductSalesQuantity": 200,
+                    "totalAccPrivateProductIncome": 3000000,
+                    "totalAccPrivateProductProfit": 900000,
+                    "totalAccPrivateBrokerFee": 100000
+                },
+                {
+                    "productId": 3,
+                    "totalAccPrivateProductPurchaseQuantity": 200,
+                    "totalAccPrivateProductOutcome": 2000000,
+                    "totalAccPrivateProductSalesQuantity": 200,
+                    "totalAccPrivateProductIncome": 3000000,
+                    "totalAccPrivateProductProfit": 900000,
+                    "totalAccPrivateBrokerFee": 100000
+                }
+            ]
+        },
+        {
+            "year": 2,
+            "productList": [
+                {
+                    "productId": 1,
+                    "totalAccPrivateProductPurchaseQuantity": 200,
+                    "totalAccPrivateProductOutcome": 2000000,
+                    "totalAccPrivateProductSalesQuantity": 200,
+                    "totalAccPrivateProductIncome": 3000000,
+                    "totalAccPrivateProductProfit": 900000,
+                    "totalAccPrivateBrokerFee": 100000
+                },
+                {
+                    "productId": 2,
+                    "totalAccPrivateProductPurchaseQuantity": 200,
+                    "totalAccPrivateProductOutcome": 2000000,
+                    "totalAccPrivateProductSalesQuantity": 200,
+                    "totalAccPrivateProductIncome": 3000000,
+                    "totalAccPrivateProductProfit": 900000,
+                    "totalAccPrivateBrokerFee": 100000
+                },
+                {
+                    "productId": 3,
+                    "totalAccPrivateProductPurchaseQuantity": 200,
+                    "totalAccPrivateProductOutcome": 2000000,
+                    "totalAccPrivateProductSalesQuantity": 200,
+                    "totalAccPrivateProductIncome": 3000000,
+                    "totalAccPrivateProductProfit": 900000,
+                    "totalAccPrivateBrokerFee": 100000
+                }
+            ]
+        },
+        {
+            "year": 3,
+            "productList": [
+                {
+                    "productId": 1,
+                    "totalAccPrivateProductPurchaseQuantity": 200,
+                    "totalAccPrivateProductOutcome": 2000000,
+                    "totalAccPrivateProductSalesQuantity": 200,
+                    "totalAccPrivateProductIncome": 3000000,
+                    "totalAccPrivateProductProfit": 900000,
+                    "totalAccPrivateBrokerFee": 100000
+                },
+                {
+                    "productId": 2,
+                    "totalAccPrivateProductPurchaseQuantity": 200,
+                    "totalAccPrivateProductOutcome": 2000000,
+                    "totalAccPrivateProductSalesQuantity": 200,
+                    "totalAccPrivateProductIncome": 3000000,
+                    "totalAccPrivateProductProfit": 900000,
+                    "totalAccPrivateBrokerFee": 100000
+                },
+                {
+                    "productId": 3,
+                    "totalAccPrivateProductPurchaseQuantity": 200,
+                    "totalAccPrivateProductOutcome": 2000000,
+                    "totalAccPrivateProductSalesQuantity": 200,
+                    "totalAccPrivateProductIncome": 3000000,
+                    "totalAccPrivateProductProfit": 900000,
+                    "totalAccPrivateBrokerFee": 100000
+                }
+            ]
+        }
+    ],
+    "publicProductReportList": [
+        {
+            "year": 1,
+            "productList": [
+                {
+                    "productId": 1,
+                    "totalAccProductPurchaseQuantity": 10000000,
+                    "totalAccProductOutcome": 2000000000,
+                    "totalAccProductSalesQuantity": 9500000,
+                    "totalAccProductIncome": 3500000000,
+                    "totalAccProductProfit": 3300000000,
+                    "totalAccBrokerFee": 200000000,
+                    "maxProductPurchaseQuantityPerTurn": 300000,
+                    "maxProductSalesQuantityPerTurn": 360000
+                },
+                {
+                    "productId": 2,
+                    "totalAccProductPurchaseQuantity": 10000000,
+                    "totalAccProductOutcome": 2000000000,
+                    "totalAccProductSalesQuantity": 9500000,
+                    "totalAccProductIncome": 3500000000,
+                    "totalAccProductProfit": 3300000000,
+                    "totalAccBrokerFee": 200000000,
+                    "maxProductPurchaseQuantityPerTurn": 300000,
+                    "maxProductSalesQuantityPerTurn": 360000
+                },
+                {
+                    "productId": 3,
+                    "totalAccProductPurchaseQuantity": 10000000,
+                    "totalAccProductOutcome": 2000000000,
+                    "totalAccProductSalesQuantity": 9500000,
+                    "totalAccProductIncome": 3500000000,
+                    "totalAccProductProfit": 3300000000,
+                    "totalAccBrokerFee": 200000000,
+                    "maxProductPurchaseQuantityPerTurn": 300000,
+                    "maxProductSalesQuantityPerTurn": 360000
+                }
+            ]
+        },
+        {
+            "year": 2,
+            "productList": [
+                {
+                    "productId": 1,
+                    "totalAccProductPurchaseQuantity": 10000000,
+                    "totalAccProductOutcome": 2000000000,
+                    "totalAccProductSalesQuantity": 9500000,
+                    "totalAccProductIncome": 3500000000,
+                    "totalAccProductProfit": 3300000000,
+                    "totalAccBrokerFee": 200000000,
+                    "maxProductPurchaseQuantityPerTurn": 300000,
+                    "maxProductSalesQuantityPerTurn": 360000
+                },
+                {
+                    "productId": 2,
+                    "totalAccProductPurchaseQuantity": 10000000,
+                    "totalAccProductOutcome": 2000000000,
+                    "totalAccProductSalesQuantity": 9500000,
+                    "totalAccProductIncome": 3500000000,
+                    "totalAccProductProfit": 3300000000,
+                    "totalAccBrokerFee": 200000000,
+                    "maxProductPurchaseQuantityPerTurn": 300000,
+                    "maxProductSalesQuantityPerTurn": 360000
+                },
+                {
+                    "productId": 3,
+                    "totalAccProductPurchaseQuantity": 10000000,
+                    "totalAccProductOutcome": 2000000000,
+                    "totalAccProductSalesQuantity": 9500000,
+                    "totalAccProductIncome": 3500000000,
+                    "totalAccProductProfit": 3300000000,
+                    "totalAccBrokerFee": 200000000,
+                    "maxProductPurchaseQuantityPerTurn": 300000,
+                    "maxProductSalesQuantityPerTurn": 360000
+                }
+            ]
+        },
+        {
+            "year": 3,
+            "productList": [
+                {
+                    "productId": 1,
+                    "totalAccProductPurchaseQuantity": 10000000,
+                    "totalAccProductOutcome": 2000000000,
+                    "totalAccProductSalesQuantity": 9500000,
+                    "totalAccProductIncome": 3500000000,
+                    "totalAccProductProfit": 3300000000,
+                    "totalAccBrokerFee": 200000000,
+                    "maxProductPurchaseQuantityPerTurn": 300000,
+                    "maxProductSalesQuantityPerTurn": 360000
+                },
+                {
+                    "productId": 2,
+                    "totalAccProductPurchaseQuantity": 10000000,
+                    "totalAccProductOutcome": 2000000000,
+                    "totalAccProductSalesQuantity": 9500000,
+                    "totalAccProductIncome": 3500000000,
+                    "totalAccProductProfit": 3300000000,
+                    "totalAccBrokerFee": 200000000,
+                    "maxProductPurchaseQuantityPerTurn": 300000,
+                    "maxProductSalesQuantityPerTurn": 360000
+                },
+                {
+                    "productId": 3,
+                    "totalAccProductPurchaseQuantity": 10000000,
+                    "totalAccProductOutcome": 2000000000,
+                    "totalAccProductSalesQuantity": 9500000,
+                    "totalAccProductIncome": 3500000000,
+                    "totalAccProductProfit": 3300000000,
+                    "totalAccBrokerFee": 200000000,
+                    "maxProductPurchaseQuantityPerTurn": 300000,
+                    "maxProductSalesQuantityPerTurn": 360000
+                }
+            ]
+        }
+    ],
+    "privateRentReportList": [
+        {
+            "year": 1,
+            "totalAccPrivateRentFee": 100000
+        },
+        {
+            "year": 2,
+            "totalAccPrivateRentFee": 50000
+        },
+        {
+            "year": 3,
+            "totalAccPrivateRentFee": 1500000
+        }
+    ],
+    "warehouseLevel": 5,
+    "brokerLevel": 9,
+    "vehicleLevel": 7,
+    "privateUpgradeReportList": [
+        {
+            "year": 1,
+            "totalAccPrivateUpgradeFee": 120000
+        },
+        {
+            "year": 2,
+            "totalAccPrivateUpgradeFee": 200000
+        },
+        {
+            "year": 3,
+            "totalAccPrivateUpgradeFee": 80000
+        }
+    ],
+    "privateEventReportList": [
+        {
+            "year": 1,
+            "privateEventList": [
+                {
+                    "eventId": 6,
+                    "totalAccPrivateEventOccurCount": 2
+                }
+            ]
+        },
+        {
+            "year": 2,
+            "privateEventList": []
+        },
+        {
+            "year": 3,
+            "privateEventList": [
+                {
+                    "eventId": 6,
+                    "totalAccPrivateEventOccurCount": 2
+                },
+                {
+                    "eventId": 7,
+                    "totalAccPrivateEventOccurCount": 1
+                },
+                {
+                    "eventId": 8,
+                    "totalAccPrivateEventOccurCount": 3
+                }
+            ]
+        }
+    ],
+    "specialEventReportList": [
+        {
+            "year": 1,
+            "specialEventList": [
+                {
+                    "specialEventId": 1,
+                    "totalAccSpecialEventOccurCount": 1
+                },
+                {
+                    "specialEventId": 3,
+                    "totalAccSpecialEventOccurCount": 1
+                },
+                {
+                    "specialEventId": 4,
+                    "totalAccSpecialEventOccurCount": 1
+                }
+            ]
+        },
+        {
+            "year": 2,
+            "specialEventList": [
+                {
+                    "specialEventId": 2,
+                    "totalAccSpecialEventOccurCount": 1
+                },
+                {
+                    "specialEventId": 4,
+                    "totalAccSpecialEventOccurCount": 2
+                },
+                {
+                    "specialEventId": 5,
+                    "totalAccSpecialEventOccurCount": 1
+                }
+            ]
+        },
+        {
+            "year": 3,
+            "specialEventList": [
+                {
+                    "specialEventId": 1,
+                    "totalAccSpecialEventOccurCount": 3
+                },
+                {
+                    "specialEventId": 2,
+                    "totalAccSpecialEventOccurCount": 1
+                },
+                {
+                    "specialEventId": 5,
+                    "totalAccSpecialEventOccurCount": 1
+                }
+            ]
+        }
+    ],
+    "achievementList": [1, 2, 3, 4, 5],
+    "privateAccPrivatePlayTime": 1092,
+    "privateTimeSlotReportList": [
+        {
+            "timeSlotIndex": 0,
+            "privateTimeSlotCount": 0
+        },
+        {
+            "timeSlotIndex": 1,
+            "privateTimeSlotCount": 0
+        },
+        {
+            "timeSlotIndex": 2,
+            "privateTimeSlotCount": 5
+        },
+        {
+            "timeSlotIndex": 3,
+            "privateTimeSlotCount": 2
+        },
+        {
+            "timeSlotIndex": 4,
+            "privateTimeSlotCount": 6
+        },
+        {
+            "timeSlotIndex": 5,
+            "privateTimeSlotCount": 7
+        },
+        {
+            "timeSlotIndex": 6,
+            "privateTimeSlotCount": 5
+        },
+        {
+            "timeSlotIndex": 7,
+            "privateTimeSlotCount": 3
+        }
+    ],
+    "tteoksangStatistics": {
+        "values": [
+            {
+                "productId": 1,
+                "value": 20.6
+            },
+            {
+                "productId": 3,
+                "value": 17.9
+            },
+            {
+                "productId": 4,
+                "value": 13.8
+            }
+        ]
+    },
+    "tteokrockStatistics": {
+        "values": [
+            {
+                "productId": 2,
+                "value": -13.2
+            },
+            {
+                "productId": 3,
+                "value": -11.2
+            },
+            {
+                "productId": 6,
+                "value": -9.7
+            }
+        ]
+    },
+    "rankInfoList": [
+        {
+            "rankName": "판매왕",
+            "rankDescription": "가장 많은 순수익을 얻은 사람",
+            "theFirstUserInfo": {
+                "userNickname": "일론 머스크",
+                "profileIconId": 3,
+                "profileFrameId": 1
+            },
+            "theFirstRecord": 120000000,
+            "myRank": 11,
+            "myRecord": 11000000
+        },
+        {
+            "rankName": "부자",
+            "rankDescription": "현재 보유 금액",
+            "theFirstUserInfo": {
+                "userNickname": "젠슨 황",
+                "profileIconId": 2,
+                "profileFrameId": 2
+            },
+            "theFirstRecord": 2000000000,
+            "myRank": 111,
+            "myRecord": 100000000
+        },
+        {
+            "rankName": "큰 손",
+            "rankDescription": "한 번에 돈을 제일 많이 쓴 사람",
+            "theFirstUserInfo": {
+                "userNickname": "김flex",
+                "profileIconId": 1,
+                "profileFrameId": 1
+            },
+            "theFirstRecord": 2000000,
+            "myRank": 3,
+            "myRecord": 800000
+        },
+        {
+            "rankName": "벼락부자",
+            "rankDescription": "한 번에 제일 많은 돈을 번 사람",
+            "theFirstUserInfo": {
+                "userNickname": "단타 장인",
+                "profileIconId": 3,
+                "profileFrameId": 3
+            },
+            "theFirstRecord": 10000000,
+            "myRank": 110,
+            "myRecord": 5000000
+        },
+        {
+            "rankName": "떡상",
+            "rankDescription": "가장 높은 수익률",
+            "theFirstUserInfo": {
+                "userNickname": "제노",
+                "profileIconId": 1,
+                "profileFrameId": 2
+            },
+            "theFirstRecord": 1200.3,
+            "myRank": 1,
+            "myRecord": 1200.3
+        }
+    ]
+}

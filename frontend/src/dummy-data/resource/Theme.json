@@ -1,0 +1,12 @@
+{
+    "themeList": [
+        {
+            "themeId": 1,
+            "themeName": "시골집 내 방"
+        },
+        {
+            "themeId": 2,
+            "themeName": "도시의 자취방"
+        }
+    ]
+}

@@ -1,0 +1,52 @@
+{
+    "productList": [
+        {
+            "productId": 1,
+            "productName": "사과",
+            "productType": "FALL",
+            "productUnit": "박스"
+        },
+        {
+            "productId": 2,
+            "productName": "딸기",
+            "productType": "SPRING",
+            "productUnit": "박스"
+        },
+        {
+            "productId": 3,
+            "productName": "키위",
+            "productType": "SUMMER",
+            "productUnit": "박스"
+        },
+        {
+            "productId": 4,
+            "productName": "복숭아",
+            "productType": "SUMMER",
+            "productUnit": "박스"
+        },
+        {
+            "productId": 5,
+            "productName": "파인애플",
+            "productType": "SUMMER",
+            "productUnit": "박스"
+        },
+        {
+            "productId": 6,
+            "productName": "귤",
+            "productType": "WINTER",
+            "productUnit": "박스"
+        },
+        {
+            "productId": 7,
+            "productName": "쌀",
+            "productType": "ALL",
+            "productUnit": "가마니"
+        },
+        {
+            "productId": 8,
+            "productName": "보리",
+            "productType": "ALL",
+            "productUnit": "가마니"
+        }
+    ]
+}

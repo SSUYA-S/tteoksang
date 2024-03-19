@@ -1,0 +1,24 @@
+{
+    "titleList": [
+        {
+            "titleId": 1,
+            "titleName": "감자농장주"
+        },
+        {
+            "titleId": 2,
+            "titleName": "고구마농장주"
+        },
+        {
+            "titleId": 3,
+            "titleName": "당근판매왕"
+        },
+        {
+            "titleId": 4,
+            "titleName": "무(지성) 투자자"
+        },
+        {
+            "titleId": 5,
+            "titleName": "토마토마토"
+        }
+    ]
+}

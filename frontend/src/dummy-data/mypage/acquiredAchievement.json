@@ -1,0 +1,16 @@
+{
+    "acquiredAchievementList": [
+        {
+            "achievementId": 1,
+            "achievedDate": "2024-03-02T11:23:11"
+        },
+        {
+            "achievementId": 2,
+            "achievedDate": "2024-03-09T09:23:11"
+        },
+        {
+            "achievementId": 3,
+            "achievedDate": "2024-03-12T13:25:11"
+        }
+    ]
+}

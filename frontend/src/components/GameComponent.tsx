@@ -34,7 +34,7 @@ export default function GameComponent() {
     //턴 시간
     const [duration, setDuration] = useState<number>(20);
     const [ingameTurn, setIngameTurn] = useState<number>(1);
-    const [ingameTime, setIngameTime] = useState<String>('00:03:00');
+    const [ingameTime, setIngameTime] = useState<string>('00:03:00');
     const [gameYear, setGameYear] = useState<number>(0);
     const [gameMonth, setGameMonth] = useState<number>(3);
     const [gameDay, setGameDay] = useState<number>(1);
@@ -43,7 +43,7 @@ export default function GameComponent() {
     const [audio, setAudio] = useState(
         new Audio('/src/assets/bgm/main_theme_bgm.mp3')
     );
-    const [theme, setTheme] = useState<String>();
+    const [theme, setTheme] = useState<string>();
     const [turnTimer, setTurnTimer] = useState<number>(-1);
     const [nowMoney, setNowMoney] = useState<number>(0);
 
