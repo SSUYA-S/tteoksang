@@ -32,7 +32,7 @@ export default function GameComponent() {
     const [inventoryFlag, setInventoryFlag] = useState<boolean>(false);
 
     //턴 시간
-    const [duration, setDuration] = useState<number>(180);
+    const [duration, setDuration] = useState<number>(20);
     const [ingameTurn, setIngameTurn] = useState<number>(1);
     const [ingameTime, setIngameTime] = useState<String>('00:03:00');
     const [gameYear, setGameYear] = useState<number>(0);
@@ -140,7 +140,55 @@ export default function GameComponent() {
      * 현재 nowMoney값을 value만큼 업데이트
      */
     const updateNowMoney = (value: number) => {
-        setNowMoney(nowMoney + value);
+        // 돈 변화 애니메이션
+        let originMoney = nowMoney;
+        let num = nowMoney + value;
+        let moneylength = 0;
+        // 빼기면
+        moneylength = Math.abs(originMoney - num).toString().length;
+        console.log('자잔');
+        console.log('돈 num : ' + num);
+        console.log('돈 originMoney :' + originMoney);
+        console.log(Math.abs(originMoney - num).toString());
+        console.log(moneylength);
+
+        let count = 0;
+
+        if (moneylength == 1) {
+            count = 1;
+        } else {
+            for (let i = 1; i <= moneylength - 1; i++) {
+                count = count * 10 + (i % 10);
+            }
+        }
+
+        // 빼기면
+        if (originMoney > num) {
+            const counting = setInterval(function () {
+                originMoney - count;
+                if (originMoney <= num) {
+                    originMoney = num;
+                    setNowMoney(originMoney);
+                    clearInterval(counting);
+                } else {
+                    originMoney = originMoney - count;
+                    setNowMoney(originMoney);
+                }
+            }, 20);
+        } else if (originMoney < num) {
+            const counting = setInterval(function () {
+                originMoney - count;
+                if (originMoney >= num) {
+                    originMoney = num;
+                    setNowMoney(originMoney);
+                    clearInterval(counting);
+                } else {
+                    originMoney = originMoney + count;
+                    setNowMoney(originMoney);
+                }
+            }, 20);
+        }
+        // 돈 변화 애니메이션
     };
 
     return (
@@ -306,7 +354,7 @@ export default function GameComponent() {
             </div>
 
             {/* 포켓몬 */}
-            <div
+            {/* <div
                 className="w-80 h-40 absolute bottom-[20%]"
                 style={{
                     backgroundImage: 'url(/src/assets/images/etc/yadon.png)',
@@ -346,7 +394,7 @@ export default function GameComponent() {
                 ></div>
             ) : (
                 <></>
-            )}
+            )} */}
             {/* 포켓몬 */}
 
             {tradeFlag ? (

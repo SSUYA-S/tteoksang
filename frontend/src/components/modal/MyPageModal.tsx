@@ -1,4 +1,4 @@
-import { SetStateAction, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     profileFrameState,
@@ -14,14 +14,20 @@ export default function MyPageModal(props: MyPageType) {
     const [littleMenu, setLittleMenu] = useState<number>(0);
     const dispatch = useDispatch();
     const profileTheme = useSelector(
-        (state: any) => state.reduxFlag.profileTheme
-    );
-    const profileFrame = useSelector(
-        (state: any) => state.reduxFlag.profileFrame
+        (state: any) => state.reduxFlag.reduxSlice.profileTheme
     );
     const profileIcon = useSelector(
-        (state: any) => state.reduxFlag.profileIcon
+        (state: any) => state.reduxFlag.reduxSlice.profileIcon
     );
+    const profileFrame = useSelector(
+        (state: any) => state.reduxFlag.reduxSlice.profileFrame
+    );
+
+    useEffect(() => {
+        console.log(profileTheme);
+        console.log(profileFrame);
+        console.log(profileIcon);
+    }, []);
 
     const changeMenu = (prop: number) => {
         setMenu(prop);
@@ -124,43 +130,43 @@ export default function MyPageModal(props: MyPageType) {
                                 <>
                                     <img
                                         className="w-40 h-40 m-4"
-                                        src="/src/assets/images/icon/ui-icon-coin.png"
+                                        src="/src/assets/images/profile/achivement (1).png"
                                         alt=""
                                         style={{ aspectRatio: 1 / 1 }}
                                     />
                                     <img
                                         className="w-40 h-40 m-4"
-                                        src="/src/assets/images/icon/ui-icon-coin.png"
+                                        src="/src/assets/images/profile/achivement (2).png"
                                         alt=""
                                         style={{ aspectRatio: 1 / 1 }}
                                     />
                                     <img
                                         className="w-40 h-40 m-4"
-                                        src="/src/assets/images/icon/ui-icon-coin.png"
+                                        src="/src/assets/images/profile/achivement (3).png"
                                         alt=""
                                         style={{ aspectRatio: 1 / 1 }}
                                     />
                                     <img
                                         className="w-40 h-40 m-4"
-                                        src="/src/assets/images/icon/ui-icon-coin.png"
+                                        src="/src/assets/images/profile/achivement (4).png"
                                         alt=""
                                         style={{ aspectRatio: 1 / 1 }}
                                     />
                                     <img
                                         className="w-40 h-40 m-4"
-                                        src="/src/assets/images/icon/ui-icon-coin.png"
+                                        src="/src/assets/images/profile/achivement (5).png"
                                         alt=""
                                         style={{ aspectRatio: 1 / 1 }}
                                     />
                                     <img
                                         className="w-40 h-40 m-4"
-                                        src="/src/assets/images/icon/ui-icon-coin.png"
+                                        src="/src/assets/images/profile/achivement (6).png"
                                         alt=""
                                         style={{ aspectRatio: 1 / 1 }}
                                     />
                                     <img
                                         className="w-40 h-40 m-4"
-                                        src="/src/assets/images/icon/ui-icon-coin.png"
+                                        src="/src/assets/images/profile/achivement (7).png"
                                         alt=""
                                         style={{ aspectRatio: 1 / 1 }}
                                     />
@@ -173,25 +179,25 @@ export default function MyPageModal(props: MyPageType) {
                                 <>
                                     <img
                                         className="w-40 h-40 m-4"
-                                        src="/src/assets/images/icon/ui-icon-coin.png"
+                                        src="/src/assets/images/profile/achivement (1).png"
                                         alt=""
                                         style={{ aspectRatio: 1 / 1 }}
                                     />
                                     <img
                                         className="w-40 h-40 m-4"
-                                        src="/src/assets/images/icon/ui-icon-coin.png"
+                                        src="/src/assets/images/profile/achivement (2).png"
                                         alt=""
                                         style={{ aspectRatio: 1 / 1 }}
                                     />
                                     <img
                                         className="w-40 h-40 m-4"
-                                        src="/src/assets/images/icon/ui-icon-coin.png"
+                                        src="/src/assets/images/profile/achivement (3).png"
                                         alt=""
                                         style={{ aspectRatio: 1 / 1 }}
                                     />
                                     <img
                                         className="w-40 h-40 m-4"
-                                        src="/src/assets/images/icon/ui-icon-coin.png"
+                                        src="/src/assets/images/profile/achivement (4).png"
                                         alt=""
                                         style={{ aspectRatio: 1 / 1 }}
                                     />
@@ -204,19 +210,19 @@ export default function MyPageModal(props: MyPageType) {
                                 <>
                                     <img
                                         className="w-40 h-40 m-4"
-                                        src="/src/assets/images/icon/ui-icon-coin.png"
+                                        src="/src/assets/images/profile/achivement (5).png"
                                         alt=""
                                         style={{ aspectRatio: 1 / 1 }}
                                     />
                                     <img
                                         className="w-40 h-40 m-4"
-                                        src="/src/assets/images/icon/ui-icon-coin.png"
+                                        src="/src/assets/images/profile/achivement (6).png"
                                         alt=""
                                         style={{ aspectRatio: 1 / 1 }}
                                     />
                                     <img
                                         className="w-40 h-40 m-4"
-                                        src="/src/assets/images/icon/ui-icon-coin.png"
+                                        src="/src/assets/images/profile/achivement (7).png"
                                         alt=""
                                         style={{ aspectRatio: 1 / 1 }}
                                     />
@@ -725,7 +731,7 @@ export default function MyPageModal(props: MyPageType) {
                 <p className="text-4xl mt-10 text-green-500">뿌리채소의 제왕</p>
                 <div className="flex my-6 text-5xl items-center justify-center">
                     <p>제노</p>
-                    <p>ㅁ</p>
+                    <p>♪</p>
                 </div>
                 <p className="text-3xl">25년차</p>
                 <div className="w-full flex items-center justify-center">
