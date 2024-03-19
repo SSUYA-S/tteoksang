@@ -1,10 +1,16 @@
 package com.welcome.tteoksang.oauth2.service;
 
-import com.welcome.tteoksang.title.dto.Title;
-import com.welcome.tteoksang.title.repository.TitleRepository;
+import com.welcome.tteoksang.resource.dto.ProfileFrame;
+import com.welcome.tteoksang.resource.dto.ProfileIcon;
+import com.welcome.tteoksang.resource.dto.Theme;
+import com.welcome.tteoksang.resource.dto.Title;
+import com.welcome.tteoksang.resource.repository.ProfileFrameRepository;
+import com.welcome.tteoksang.resource.repository.ProfileIconRepository;
+import com.welcome.tteoksang.resource.repository.ThemeRepository;
 import com.welcome.tteoksang.oauth2.dto.CustomOAuth2User;
 import com.welcome.tteoksang.oauth2.dto.GoogleResponse;
 import com.welcome.tteoksang.oauth2.dto.OAuth2Response;
+import com.welcome.tteoksang.resource.repository.TitleRepository;
 import com.welcome.tteoksang.user.dto.*;
 import com.welcome.tteoksang.user.repository.*;
 import jakarta.transaction.Transactional;
@@ -59,10 +65,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         //회원가입(첫 로그인)
         if (existData.isEmpty()) {
             // 초기 프레임, 초기 아이콘 설정
-            Optional<ProfileIcon> profileIcon = profileIconRepository.findByProfileIconId(1); // ID에 해당하는 ProfileIcon 조회
-            Optional<ProfileFrame> profileFrame = profileFrameRepository.findByProfileFrameId(1); // ID에 해당하는 ProfileFrame 조회
-            Optional<Theme> theme = themeRepository.findByThemeId(1);
-            Optional<Title> title = titleRepository.findByTitleId(1);
+            Optional<ProfileIcon> profileIcon = profileIconRepository.findById(1); // ID에 해당하는 ProfileIcon 조회
+            Optional<ProfileFrame> profileFrame = profileFrameRepository.findById(1); // ID에 해당하는 ProfileFrame 조회
+            Optional<Theme> theme = themeRepository.findById(1);
+            Optional<Title> title = titleRepository.findById(1);
 
             User user = User.builder()
                     .userGoogleId(oAuth2Response.getProviderId())
