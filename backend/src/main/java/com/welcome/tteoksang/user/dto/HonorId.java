@@ -1,4 +1,4 @@
-package com.welcome.tteoksang.honor.dto;
+package com.welcome.tteoksang.user.dto;
 
 import jakarta.persistence.Embeddable;
 import lombok.*;
