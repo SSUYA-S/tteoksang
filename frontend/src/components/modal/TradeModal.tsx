@@ -380,6 +380,7 @@ export default function TradeModal(props: tradeType) {
                 }
             }
         });
+
         console.log(myNewProductList);
         dispatch(myProductState(myNewProductList));
         props.updateNowMoney(a);
@@ -468,7 +469,7 @@ export default function TradeModal(props: tradeType) {
                                 </p>
                             </div>
                         </div>
-                        <div className="flex h-[80%] m-4 flex-wrap">
+                        <div className="flex h-[80%] m-4 flex-wrap overflow-y-scroll">
                             {sellingProductList.map((product) => {
                                 return (
                                     <TradeSellCard
