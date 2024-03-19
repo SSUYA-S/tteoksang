@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { login } from '../api/auth';
+import axios from 'axios';
+
 type startType = {
     setStartFlag: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -26,6 +29,21 @@ export default function GameStartComponent(props: startType) {
     const toggle = () => setPlaying(bgmSetting);
 
     const onClickLogin = () => {
+        // axios
+        //     .get('http://localhost:5173/api/oauth2/authorization/google')
+        //     .then((res) => {
+        //         console.log(res);
+        //     })
+        //     .catch((err) => {
+        //         console.log(err);
+        //     });
+        // login()
+        //     .then((res) => {
+        //         console.log(res);
+        //     })
+        //     .catch((err) => {
+        //         console.log(err);
+        //     });
         setLoginFlag(true);
     };
     const onReady = () => {
@@ -57,20 +75,30 @@ export default function GameStartComponent(props: startType) {
             );
         } else {
             return (
-                <div
-                    className="bg-white border border-gray-300 rounded-full flex items-center justify-center my-24 px-4 py-2 text-2xl font-bold cursor-pointer hover:bg-slate-100"
-                    onClick={() => {
-                        toggle();
-                        onClickLogin();
-                    }}
-                >
-                    <img
-                        className="w-16 h-16"
-                        src="/src/assets/images/etc/crop-apple.png"
-                        alt=""
-                    />
-                    <p className="px-2">Sign in with Google</p>
-                </div>
+                <>
+                    <div
+                        className="bg-white border border-gray-300 rounded-full flex items-center justify-center my-24 px-4 py-2 text-2xl font-bold cursor-pointer hover:bg-slate-100"
+                        onClick={() => {
+                            toggle();
+                            onClickLogin();
+                        }}
+                    >
+                        <img
+                            className="w-16 h-16"
+                            src="/src/assets/images/etc/crop-apple.png"
+                            alt=""
+                        />
+                        <p className="px-2">Sign in with Google</p>
+                    </div>
+                    <a href="http://localhost:5173/api/oauth2/authorization/google?redirect_uri='http://localhost:5173/login/oauth2/code/google&response_type=code'">
+                        <img
+                            className="w-16 h-16"
+                            src="/src/assets/images/etc/crop-apple.png"
+                            alt=""
+                        />
+                        <p className="px-2">Sign in with Google</p>
+                    </a>
+                </>
             );
         }
     };
