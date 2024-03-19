@@ -13,9 +13,9 @@ import lombok.NoArgsConstructor;
 @Getter
 public class UpdateUserReq {
 
-    @NotBlank
-    @Email
-    private String userEmail;
+//    @NotBlank
+//    @Email
+//    private String userEmail;
 
     @NotBlank
     @Size(min = 2, max = 16)

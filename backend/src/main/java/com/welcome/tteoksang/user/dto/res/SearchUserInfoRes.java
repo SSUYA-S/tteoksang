@@ -13,9 +13,13 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SearchUserInfoRes {
 
-    private String userId;
+//    private String userId;
     private String userNickname;
-    private String userEmail;
-    private String userRole;
+    //    private String userEmail;
+    private int profileIconId;
+    private int profileFrameId;
+    private int themeId;
+    private int titleId;
+    private int career;
 
 }
