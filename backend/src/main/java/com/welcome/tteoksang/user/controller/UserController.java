@@ -2,6 +2,8 @@ package com.welcome.tteoksang.user.controller;
 
 import com.welcome.tteoksang.user.dto.User;
 import com.welcome.tteoksang.user.dto.req.UpdateUserNameReq;
+import com.welcome.tteoksang.user.dto.req.UpdateUserProfileFrameReq;
+import com.welcome.tteoksang.user.dto.req.UpdateUserProfileIconReq;
 import com.welcome.tteoksang.user.dto.req.UpdateUserThemeReq;
 import com.welcome.tteoksang.user.dto.res.SearchUserInfoRes;
 import com.welcome.tteoksang.user.service.UserService;
@@ -35,9 +37,23 @@ public class UserController {
     }
 
     @PutMapping("/theme")
-    public ResponseEntity<Void>  updateTheme(@RequestBody UpdateUserThemeReq updateUserTheme,
-                                             @AuthenticationPrincipal User user) {
-        userService.updateUserTheme(updateUserTheme, user);
+    public ResponseEntity<Void> updateTheme(@RequestBody UpdateUserThemeReq updateUserThemeReq,
+                                            @AuthenticationPrincipal User user) {
+        userService.updateUserTheme(updateUserThemeReq, user);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/profile-icon")
+    public ResponseEntity<Void> updateProfileIcon(@RequestBody UpdateUserProfileIconReq updateUserProfileIconReq,
+                                                  @AuthenticationPrincipal User user) {
+        userService.updateUserProfileIcon(updateUserProfileIconReq, user);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/profile-frame")
+    public ResponseEntity<Void> updateProfileFrame(@RequestBody UpdateUserProfileFrameReq updateUserProfileFrameReq,
+                                                   @AuthenticationPrincipal User user) {
+        userService.updateUserProfileFrame(updateUserProfileFrameReq, user);
         return ResponseEntity.ok().build();
     }
 
