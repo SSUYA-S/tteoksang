@@ -4,7 +4,6 @@ package com.welcome.tteoksang.title.controller;
 import com.welcome.tteoksang.title.dto.res.SearchHonorRes;
 import com.welcome.tteoksang.title.service.TitleService;
 import com.welcome.tteoksang.user.dto.User;
-import com.welcome.tteoksang.user.dto.res.SearchUserInfoRes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

@@ -43,17 +43,16 @@ public class SecurityConfig {
     private final JWTUtil jwtUtil;
     private final UserRepository userRepository;
     private final RedisService redisService;
-    // OAuth2UserService가 정의된 서비스
-    private final CustomOAuth2UserService customOAuth2UserService;
+    private final CustomOAuth2UserService customOAuth2UserService; // OAuth2UserService가 정의된 서비스
     private final CustomClientRegistrationRepo customClientRegistrationRepo;
     private final AuthenticationEntryPoint authenticationEntryPoint;
     private final ClientRegistrationRepository clientRegistrationRepository;
     private final CustomOAuth2AuthorizedClientService customOAuth2AuthorizedClientService;
     private final JdbcTemplate jdbcTemplate;
 
-    // 로그인 후 이동할 URL
-    @Value("${auth-redirect-url}")
-    String mainPage;
+//    // 로그인 후 이동할 URL
+//    @Value("${auth-redirect-url}")
+//    String mainPage;
 
     //AuthenticationManager Bean 등록
     @Bean
@@ -74,7 +73,8 @@ public class SecurityConfig {
         http
                 .oauth2Login(oauth2 -> oauth2
 //                        .loginPage("auth/login")
-                        .successHandler(new OAuth2MemberSuccessHandler(userRepository, jwtUtil, redisService, mainPage))
+//                        .successHandler(new OAuth2MemberSuccessHandler(userRepository, jwtUtil, redisService, mainPage))
+                        .successHandler(new OAuth2MemberSuccessHandler(userRepository, jwtUtil, redisService))
                         .failureHandler(new OAuth2MemberFailureHandler())
                         .authorizationEndpoint(authorizationEndpointConfig -> authorizationEndpointConfig
                                 .authorizationRequestResolver(

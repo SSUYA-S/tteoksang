@@ -26,7 +26,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
     private final UserRepository userRepository;
     private final JWTUtil jwtUtil;
     private final RedisService redisService;
-    private final String mainPage;
+//    private final String mainPage;
 
 
     @Override
