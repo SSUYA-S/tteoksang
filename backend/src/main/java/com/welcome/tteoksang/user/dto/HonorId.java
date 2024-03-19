@@ -13,5 +13,5 @@ import java.io.Serializable;
 @Embeddable
 public class HonorId implements Serializable {
     private String honorUserId;
-    private int honorTitleId;
+    private Integer honorTitleId;
 }

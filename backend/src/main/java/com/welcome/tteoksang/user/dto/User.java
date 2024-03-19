@@ -72,7 +72,7 @@ public class User implements UserDetails {
     private LocalDateTime deletedAt;
 
     @Column(name = "career")
-    private int career;
+    private Integer career;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
