@@ -1,0 +1,253 @@
+{
+    "rentFeeInfo": {
+        "billType": "overdue",
+        "rentFee": 10000,
+        "productList": [
+            {
+                "productId": 2,
+                "productQuantity": 20
+            },
+            {
+                "productId": 3,
+                "productQuantity": 5
+            }
+        ]
+    },
+    "halfReport": {
+        "totalProductIncome": 5000000,
+        "totalProductOutcome": 2500000,
+        "totalBrokerFee": 120000,
+        "totalUpgradeFee": 50000,
+        "totalRentFee": 30000,
+        "eventBonus": 100000,
+        "participantCount": 500,
+        "rankInfoList": [
+            {
+                "rankName": "판매왕",
+                "rankDescription": "가장 많은 순수익을 얻은 사람(반기 기준)",
+                "theFirstUserInfo": {
+                    "userNickname": "일론 머스크",
+                    "profileIconId": 3,
+                    "profileFrameId": 1
+                },
+                "theFirstRecord": 10000000,
+                "myRank": 53,
+                "myRecord": 2500000
+            },
+            {
+                "rankName": "부자",
+                "rankDescription": "현재 보유 금액",
+                "theFirstUserInfo": {
+                    "userNickname": "젠슨 황",
+                    "profileIconId": 2,
+                    "profileFrameId": 2
+                },
+                "theFirstRecord": 210000000,
+                "myRank": 112,
+                "myRecord": 10000000
+            },
+            {
+                "rankName": "큰 손",
+                "rankDescription": "한 번에 돈을 제일 많이 쓴 사람(반기 기준)",
+                "theFirstUserInfo": {
+                    "userNickname": "김flex",
+                    "profileIconId": 1,
+                    "profileFrameId": 1
+                },
+                "theFirstRecord": 1000000,
+                "myRank": 12,
+                "myRecord": 500000
+            },
+            {
+                "rankName": "벼락부자",
+                "rankDescription": "한 번에 제일 많은 돈을 번 사람(반기 기준)",
+                "theFirstUserInfo": {
+                    "userNickname": "단타 장인",
+                    "profileIconId": 3,
+                    "profileFrameId": 3
+                },
+                "theFirstRecord": 5000000,
+                "myRank": 138,
+                "myRecord": 500000
+            },
+            {
+                "rankName": "떡상",
+                "rankDescription": "가장 높은 수익률(반기 기준)",
+                "theFirstUserInfo": {
+                    "userNickname": "제노",
+                    "profileIconId": 1,
+                    "profileFrameId": 2
+                },
+                "theFirstRecord": 123.5,
+                "myRank": 1,
+                "myRecord": 123.5
+            }
+        ],
+        "tteoksangStatistics": {
+            "values": [
+                {
+                    "productId": 3,
+                    "value": 12.5
+                },
+                {
+                    "productId": 7,
+                    "value": 11.2
+                },
+                {
+                    "productId": 5,
+                    "value": 9.3
+                }
+            ]
+        },
+        "tteokrockStatistics": {
+            "values": [
+                {
+                    "productId": 3,
+                    "value": -20.3
+                },
+                {
+                    "productId": 1,
+                    "value": -17.2
+                },
+                {
+                    "productId": 6,
+                    "value": -11.3
+                }
+            ]
+        },
+        "bestSellerStatistics": {
+            "values": [
+                {
+                    "productId": 3,
+                    "value": 15000000
+                },
+                {
+                    "productId": 7,
+                    "value": 12000000
+                },
+                {
+                    "productId": 1,
+                    "value": 9000000
+                }
+            ]
+        },
+        "achievementList": [2, 5]
+    },
+    "quarterReport": {
+        "quarterProfit": 1000000,
+        "rentFee": 10000,
+        "inProductList": [3, 4, 5, 7, 8],
+        "titleId": 1
+    },
+    "participantCount": 1000,
+    "rankInfoList": [
+        {
+            "rankName": "판매왕",
+            "rankDescription": "가장 많은 순수익을 얻은 사람(반기 기준)",
+            "theFirstUserInfo": {
+                "userNickname": "일론 머스크",
+                "profileIconId": 3,
+                "profileFrameId": 1
+            },
+            "theFirstRecord": 12000000,
+            "myRank": 851,
+            "myRecord": 0
+        },
+        {
+            "rankName": "부자",
+            "rankDescription": "현재 보유 금액",
+            "theFirstUserInfo": {
+                "userNickname": "젠슨 황",
+                "profileIconId": 2,
+                "profileFrameId": 2
+            },
+            "theFirstRecord": 230000000,
+            "myRank": 189,
+            "myRecord": 10000000
+        },
+        {
+            "rankName": "큰 손",
+            "rankDescription": "한 번에 돈을 제일 많이 쓴 사람(반기 기준)",
+            "theFirstUserInfo": {
+                "userNickname": "김flex",
+                "profileIconId": 1,
+                "profileFrameId": 1
+            },
+            "theFirstRecord": 3000000,
+            "myRank": 851,
+            "myRecord": 0
+        },
+        {
+            "rankName": "벼락부자",
+            "rankDescription": "한 번에 제일 많은 돈을 번 사람(반기 기준)",
+            "theFirstUserInfo": {
+                "userNickname": "단타 장인",
+                "profileIconId": 3,
+                "profileFrameId": 3
+            },
+            "theFirstRecord": 7000000,
+            "myRank": 851,
+            "myRecord": 0
+        },
+        {
+            "rankName": "떡상",
+            "rankDescription": "가장 높은 수익률(반기 기준)",
+            "theFirstUserInfo": {
+                "userNickname": "제노",
+                "profileIconId": 1,
+                "profileFrameId": 2
+            },
+            "theFirstRecord": 131.5,
+            "myRank": 500,
+            "myRecord": 0
+        }
+    ],
+    "tteoksangStatistics": {
+        "values": [
+            {
+                "productId": 3,
+                "value": 11.7
+            },
+            {
+                "productId": 7,
+                "value": 11.5
+            },
+            {
+                "productId": 5,
+                "value": 10.2
+            }
+        ]
+    },
+    "tteokrockStatistics": {
+        "values": [
+            {
+                "productId": 3,
+                "value": -21
+            },
+            {
+                "productId": 1,
+                "value": -18
+            },
+            {
+                "productId": 6,
+                "value": -15
+            }
+        ]
+    },
+    "bestSellerStatistics": {
+        "values": [
+            {
+                "productId": 3,
+                "value": 23000000
+            },
+            {
+                "productId": 7,
+                "value": 11000000
+            },
+            {
+                "productId": 1,
+                "value": 5000000
+            }
+        ]
+    }
+}

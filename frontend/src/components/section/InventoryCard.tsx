@@ -14,16 +14,15 @@ export default function InventoryCard({
     let myAvg = 0;
     if (myProduct.productQuantity !== 0) {
         myAvg = myProduct.productTotalCost / myProduct.productQuantity;
-        myAvg = Math.floor(myAvg).toLocaleString();
+        myAvg = Math.floor(myAvg);
     }
 
-    const profit = Math.floor(productTodayCost - myAvg).toLocaleString();
+    const profit = Math.floor(productTodayCost - myAvg);
 
     const productNumber = myProduct.productQuantity;
-    const productCost = myProduct.productTotalCost;
 
     return (
-        <div className="w-[50%] h-[50%] bg-white color-border-subbold border-4 rounded-xl">
+        <div className="w-[40%] h-[50%] bg-white color-border-subbold border-4 rounded-xl">
             <p className="w-full h-[15%] flex justify-center items-center text-center text-3xl color-bg-brown1 color-text-main rounded-ss-lg rounded-se-lg">
                 {productName}
             </p>

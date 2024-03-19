@@ -6,11 +6,11 @@ export interface SettingState {
     //효과음설정
     effectFlag: boolean;
     //설정 테마 시간대
-    themeType: String;
+    themeType: string;
     //로그인 유무
     isLogin: boolean;
     //내가 적용한 테마
-    profileTheme: String;
+    profileTheme: string;
     //내가 적용한 아이콘
     profileIcon: number;
     //내가 적용한 프레임
