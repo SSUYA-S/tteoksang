@@ -1,17 +1,22 @@
 package com.welcome.tteoksang.user.controller;
 
+import com.welcome.tteoksang.user.dto.Achieve;
+import com.welcome.tteoksang.user.dto.AchieveRes;
 import com.welcome.tteoksang.user.dto.User;
 import com.welcome.tteoksang.user.dto.req.UpdateUserNameReq;
 import com.welcome.tteoksang.user.dto.req.UpdateUserProfileFrameReq;
 import com.welcome.tteoksang.user.dto.req.UpdateUserProfileIconReq;
 import com.welcome.tteoksang.user.dto.req.UpdateUserThemeReq;
+import com.welcome.tteoksang.user.dto.res.SearchAchieveRes;
 import com.welcome.tteoksang.user.dto.res.SearchHonorRes;
 import com.welcome.tteoksang.user.dto.res.SearchUserInfoRes;
+import com.welcome.tteoksang.user.service.AchieveService;
 import com.welcome.tteoksang.user.service.HonorService;
 import com.welcome.tteoksang.user.service.UserService;
 
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +37,7 @@ public class UserController {
 
     private final UserService userService;
     private final HonorService honorService;
+    private final AchieveService achieveService;
 
     @PutMapping("/nickname")
     public ResponseEntity<Void> updateUser(@RequestBody UpdateUserNameReq updateUserReq,
@@ -69,6 +75,18 @@ public class UserController {
                 .body(
                         SearchHonorRes.builder()
                                 .acquiredTitleList(honorList)
+                                .build()
+                );
+    }
+
+    @GetMapping("/achievement")
+    public ResponseEntity<SearchAchieveRes> searchAchievement(@AuthenticationPrincipal User user) {
+        List<AchieveRes> achievementList = achieveService.searchAllAchieve(user.getUserId());
+
+        return ResponseEntity.ok()
+                .body(
+                        SearchAchieveRes.builder()
+                                .acquiredAchievementList(achievementList)
                                 .build()
                 );
     }
