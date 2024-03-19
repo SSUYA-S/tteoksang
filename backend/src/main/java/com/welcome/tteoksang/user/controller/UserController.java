@@ -5,10 +5,13 @@ import com.welcome.tteoksang.user.dto.req.UpdateUserNameReq;
 import com.welcome.tteoksang.user.dto.req.UpdateUserProfileFrameReq;
 import com.welcome.tteoksang.user.dto.req.UpdateUserProfileIconReq;
 import com.welcome.tteoksang.user.dto.req.UpdateUserThemeReq;
+import com.welcome.tteoksang.user.dto.res.SearchHonorRes;
 import com.welcome.tteoksang.user.dto.res.SearchUserInfoRes;
+import com.welcome.tteoksang.user.service.HonorService;
 import com.welcome.tteoksang.user.service.UserService;
 
 import java.net.URISyntaxException;
+import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserService userService;
+    private final HonorService honorService;
 
     @PutMapping("/nickname")
     public ResponseEntity<Void> updateUser(@RequestBody UpdateUserNameReq updateUserReq,
@@ -55,6 +59,18 @@ public class UserController {
                                                    @AuthenticationPrincipal User user) {
         userService.updateUserProfileFrame(updateUserProfileFrameReq, user);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/title")
+    public ResponseEntity<SearchHonorRes> searchHonor(@AuthenticationPrincipal User user) {
+        List<Integer> honorList = honorService.searchAllHonor(user.getUserId());
+
+        return ResponseEntity.ok()
+                .body(
+                        SearchHonorRes.builder()
+                                .acquiredTitleList(honorList)
+                                .build()
+                );
     }
 
     @DeleteMapping

@@ -1,6 +1,6 @@
-package com.welcome.tteoksang.honor.service;
+package com.welcome.tteoksang.user.service;
 
-import com.welcome.tteoksang.honor.repository.HonorRepository;
+import com.welcome.tteoksang.user.repository.HonorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
