@@ -1,6 +1,6 @@
 create table if not exists title
 (
-    title_id      int primary key auto_increment,
+    title_id      int unsigned primary key auto_increment,
     title_name    varchar(300) not null,
     title_content text
 );
