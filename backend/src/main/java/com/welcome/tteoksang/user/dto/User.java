@@ -1,6 +1,9 @@
 package com.welcome.tteoksang.user.dto;
 
-import com.welcome.tteoksang.title.dto.Title;
+import com.welcome.tteoksang.resource.dto.ProfileFrame;
+import com.welcome.tteoksang.resource.dto.ProfileIcon;
+import com.welcome.tteoksang.resource.dto.Theme;
+import com.welcome.tteoksang.resource.dto.Title;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
