@@ -1,14 +1,15 @@
 package com.welcome.tteoksang.user.dto;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import com.welcome.tteoksang.title.dto.Title;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,61 +26,84 @@ import org.springframework.security.core.userdetails.UserDetails;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "user")
 public class User implements UserDetails {
 
-  @Id
-  @Column(name = "user_id")
-  @Builder.Default
-  private String userId = UUID.randomUUID().toString();
+    @Id
+    @Column(name = "user_id")
+    @Builder.Default
+    private String userId = UUID.randomUUID().toString();
 
-  @Email
-  @Column(name = "user_email", nullable = false)
-  private String userEmail;
+    @Column(name = "user_google_id", unique = true, nullable = false)
+    private String userGoogleId;
 
-  @NotBlank
-  @Column(name = "user_nickname", nullable = false)
-  private String userNickname;
+    @Email
+    @Column(name = "user_email", unique = true, nullable = false)
+    private String userEmail;
 
-  @CreationTimestamp(source = SourceType.DB)
-  @Column(name = "created_at", nullable = false)
-  private LocalDateTime createdAt;
+    @NotBlank
+    @Column(name = "user_nickname", unique = true, nullable = false)
+    private String userNickname;
 
-  @Column(name = "deleted_at", nullable = false)
-  private LocalDateTime deletedAt;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_profile_icon_id")
+    private ProfileIcon profileIcon;
 
-  @Override
-  public Collection<? extends GrantedAuthority> getAuthorities() {
-    return new ArrayList<>();
-  }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_profile_frame_id")
+    private ProfileFrame profileFrame;
 
-  @Override
-  public String getPassword() {
-    return "";
-  }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_theme_id")
+    private Theme theme;
 
-  @Override
-  public String getUsername() {
-    return userEmail;
-  }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_title_id")
+    private Title title;
 
-  @Override
-  public boolean isAccountNonExpired() {
-    return deletedAt == null;
-  }
+    @CreationTimestamp(source = SourceType.DB)
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
 
-  @Override
-  public boolean isAccountNonLocked() {
-    return deletedAt == null;
-  }
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 
-  @Override
-  public boolean isCredentialsNonExpired() {
-    return true;
-  }
+    @Column(name = "career")
+    private int career;
 
-  @Override
-  public boolean isEnabled() {
-    return true;
-  }
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public String getPassword() {
+        return "";
+    }
+
+    @Override
+    public String getUsername() {
+        return userEmail;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return deletedAt == null;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return deletedAt == null;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 
 }
