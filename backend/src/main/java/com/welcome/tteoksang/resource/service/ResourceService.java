@@ -2,6 +2,8 @@ package com.welcome.tteoksang.resource.service;
 
 import com.welcome.tteoksang.resource.dto.*;
 import com.welcome.tteoksang.resource.dto.req.*;
+
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 public interface ResourceService {
@@ -24,7 +26,10 @@ public interface ResourceService {
 
     List<ProfileFrame> searchProfileFrameList();
 
-    void searchMessageTypeList();
+    List<MessageTypeResource> searchMessageTypeList();
 
-    void searchChecksum();
+    //TODO
+    void searchMessageTypeList(String name);
+
+    void searchChecksum() throws NoSuchAlgorithmException;
 }

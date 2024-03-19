@@ -4,9 +4,7 @@ import com.welcome.tteoksang.resource.dto.req.*;
 import com.welcome.tteoksang.resource.service.ResourceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/resource")
@@ -89,5 +87,18 @@ public class ResourceController { //tteoksang.me 접속과 동시에 불러옴
         );
     }
 
+    @GetMapping("/message-type/{name}")
+    ResponseEntity<Void> searchMessageTypeResource(@PathVariable String name){
+        resourceService.searchMessageTypeList(name);
+        return ResponseEntity.ok().build();
+    }
 
+    @GetMapping("/message-type")
+    ResponseEntity<SearchMessageTypeResource> searchMessageTypeResource(){
+        return ResponseEntity.ok(
+                SearchMessageTypeResource.builder()
+                        .messageTypeList(resourceService.searchMessageTypeList())
+                        .build()
+        );
+    }
 }
