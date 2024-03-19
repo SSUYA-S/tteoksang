@@ -1,6 +1,7 @@
 ### Common
 .env
 .idea
+/*/venv
 
 ### Java template
 # Compiled class file
