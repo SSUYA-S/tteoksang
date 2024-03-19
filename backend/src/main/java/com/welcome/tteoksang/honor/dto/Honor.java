@@ -1,4 +1,4 @@
-package com.welcome.tteoksang.title.dto;
+package com.welcome.tteoksang.honor.dto;
 
 import com.welcome.tteoksang.resource.dto.Title;
 import com.welcome.tteoksang.user.dto.User;
@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.SourceType;
+
 import java.time.LocalDateTime;
 
 @Getter

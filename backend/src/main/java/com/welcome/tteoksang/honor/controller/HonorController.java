@@ -1,8 +1,8 @@
-package com.welcome.tteoksang.title.controller;
+package com.welcome.tteoksang.honor.controller;
 
 
-import com.welcome.tteoksang.title.dto.res.SearchHonorRes;
-import com.welcome.tteoksang.title.service.TitleService;
+import com.welcome.tteoksang.honor.dto.res.SearchHonorRes;
+import com.welcome.tteoksang.honor.service.HonorService;
 import com.welcome.tteoksang.user.dto.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,12 +18,12 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/title")
-public class TitleController {
-    private final TitleService titleService;
+public class HonorController {
+    private final HonorService honorService;
 
     @GetMapping
     public ResponseEntity<SearchHonorRes> searchHonor(@AuthenticationPrincipal User user) {
-        List<Integer> honorList = titleService.searchAllHonor(user.getUserId());
+        List<Integer> honorList = honorService.searchAllHonor(user.getUserId());
 
         return ResponseEntity.ok()
                 .body(
