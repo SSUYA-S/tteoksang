@@ -6,10 +6,16 @@ import com.welcome.tteoksang.oauth2.repository.GoogleRepository;
 import com.welcome.tteoksang.oauth2.service.GoogleRevokeService;
 import com.welcome.tteoksang.redis.RedisPrefix;
 import com.welcome.tteoksang.redis.RedisService;
+import com.welcome.tteoksang.resource.dto.ProfileFrame;
+import com.welcome.tteoksang.resource.dto.ProfileIcon;
 import com.welcome.tteoksang.resource.dto.Theme;
+import com.welcome.tteoksang.resource.repository.ProfileFrameRepository;
+import com.welcome.tteoksang.resource.repository.ProfileIconRepository;
 import com.welcome.tteoksang.resource.repository.ThemeRepository;
 import com.welcome.tteoksang.user.dto.User;
 import com.welcome.tteoksang.user.dto.req.UpdateUserNameReq;
+import com.welcome.tteoksang.user.dto.req.UpdateUserProfileFrameReq;
+import com.welcome.tteoksang.user.dto.req.UpdateUserProfileIconReq;
 import com.welcome.tteoksang.user.dto.req.UpdateUserThemeReq;
 import com.welcome.tteoksang.user.exception.*;
 import com.welcome.tteoksang.user.repository.UserRepository;
@@ -30,6 +36,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     private final UserRepository userRepository;
     private final ThemeRepository themeRepository;
+    private final ProfileIconRepository profileIconRepository;
+    private final ProfileFrameRepository profileFrameRepository;
     private final RedisService redisService;
     private final GoogleRevokeService googleRevokeService;
     private final GoogleRepository googleRepository;
@@ -51,6 +59,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
         userRepository.save(user);
     }
+
     public void updateUserTheme(UpdateUserThemeReq updateUserThemeReq, User user) {
         Optional<Theme> theme = themeRepository.findById(updateUserThemeReq.getThemeId());
 //        if (theme.isEmpty()) {
@@ -58,6 +67,28 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 //        }
         //테마 변경
         user.setTheme(theme.get());
+
+        userRepository.save(user);
+    }
+
+    public void updateUserProfileIcon(UpdateUserProfileIconReq updateUserProfileIconReq, User user) {
+        Optional<ProfileIcon> profileIcon = profileIconRepository.findById(updateUserProfileIconReq.getProfileIconId());
+//        if (profileIcon.isEmpty()) {
+//            throw new NicknameNullException();
+//        }
+        //프로필 아이콘 변경
+        user.setProfileIcon(profileIcon.get());
+
+        userRepository.save(user);
+    }
+
+    public void updateUserProfileFrame(UpdateUserProfileFrameReq updateUserProfileFrameReq, User user) {
+        Optional<ProfileFrame> profileFrame = profileFrameRepository.findById(updateUserProfileFrameReq.getProfileFrameId());
+//        if (theme.isEmpty()) {
+//            throw new NicknameNullException();
+//        }
+        //프로필 프레임 변경
+        user.setProfileFrame(profileFrame.get());
 
         userRepository.save(user);
     }
