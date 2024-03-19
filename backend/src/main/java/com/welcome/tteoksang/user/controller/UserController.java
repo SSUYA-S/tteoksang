@@ -1,7 +1,8 @@
 package com.welcome.tteoksang.user.controller;
 
 import com.welcome.tteoksang.user.dto.User;
-import com.welcome.tteoksang.user.dto.req.UpdateUserReq;
+import com.welcome.tteoksang.user.dto.req.UpdateUserNameReq;
+import com.welcome.tteoksang.user.dto.req.UpdateUserThemeReq;
 import com.welcome.tteoksang.user.dto.res.SearchUserInfoRes;
 import com.welcome.tteoksang.user.service.UserService;
 
@@ -27,9 +28,16 @@ public class UserController {
     private final UserService userService;
 
     @PutMapping("/nickname")
-    public ResponseEntity<Void> updateUser(@RequestBody UpdateUserReq updateUserReq,
+    public ResponseEntity<Void> updateUser(@RequestBody UpdateUserNameReq updateUserReq,
                                            @AuthenticationPrincipal User user) {
-        userService.updateUser(updateUserReq, user);
+        userService.updateUserName(updateUserReq, user);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/theme")
+    public ResponseEntity<Void>  updateTheme(@RequestBody UpdateUserThemeReq updateUserTheme,
+                                             @AuthenticationPrincipal User user) {
+        userService.updateUserTheme(updateUserTheme, user);
         return ResponseEntity.ok().build();
     }
 
