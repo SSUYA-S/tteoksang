@@ -1,13 +1,18 @@
 package com.welcome.tteoksang.resource.service;
 
+import com.welcome.tteoksang.resource.constant.CoreMessageType;
+import com.welcome.tteoksang.resource.constant.MessageType;
 import com.welcome.tteoksang.resource.dto.*;
 import com.welcome.tteoksang.resource.dto.req.AchievementResource;
 import com.welcome.tteoksang.resource.dto.req.EventResource;
+import com.welcome.tteoksang.resource.dto.req.MessageTypeResource;
 import com.welcome.tteoksang.resource.dto.req.ProductResource;
 import com.welcome.tteoksang.resource.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -114,14 +119,34 @@ public class ResourceServiceImpl implements ResourceService{
         return profileFrameRepository.findAll();
     }
 
-    //TODO
     @Override
-    public void searchMessageTypeList() {
+    public List<MessageTypeResource> searchMessageTypeList() {
+        List<MessageTypeResource> messageTypeList= new ArrayList<>();
+        for(MessageType messageType: MessageType.values()) {
+            messageTypeList.add(new MessageTypeResource(messageType.name(), messageType.ordinal()));
+        }
+        return messageTypeList;
+    }
+
+    //TEST진행..
+    @Override
+    public void searchMessageTypeList(String name) {
+        CoreMessageType myType= CoreMessageType.valueOf(name);
+        System.out.println(myType);
+        System.out.println(myType.name());
+        System.out.println(myType.ordinal());
+        System.out.println(myType.getCode());
+//        CoreMessageType.
+//        System.out.println(myType==MessageType.);
+        System.out.println(CoreMessageType.ALERT_PLAYTIME.name());
+        System.out.println(CoreMessageType.ALERT_PLAYTIME); //==NAME
+        System.out.println(CoreMessageType.ALERT_PLAYTIME.ordinal());
+        System.out.println(CoreMessageType.ALERT_PLAYTIME.getCode());
 
     }
     //TODO
     @Override
-    public void searchChecksum() {
-
+    public void searchChecksum() throws NoSuchAlgorithmException {
+        MessageDigest.getInstance("MD5").digest();
     }
 }
