@@ -14,7 +14,7 @@ export default defineConfig({
             workbox: {
                 clientsClaim: true,
                 skipWaiting: true,
-                globPatterns: ['**/*.{js,ts,css,html,ico,png,svg}'],
+                globPatterns: ['**/*.{js,tsx,ts,tsx,css,html,ico,png,svg}'],
             },
             manifest: {
                 name: '떡상',
@@ -22,7 +22,7 @@ export default defineConfig({
                 description: '최고의 상인이 되어보세요!',
                 theme_color: '#ffffff',
                 start_url: '/',
-                scope: '.',
+                scope: '/',
                 display: 'fullscreen',
                 orientation: 'landscape',
                 lang: 'ko-KR',
