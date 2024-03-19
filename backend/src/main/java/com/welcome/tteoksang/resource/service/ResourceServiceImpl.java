@@ -3,12 +3,11 @@ package com.welcome.tteoksang.resource.service;
 import com.welcome.tteoksang.resource.constant.CoreMessageType;
 import com.welcome.tteoksang.resource.constant.MessageType;
 import com.welcome.tteoksang.resource.dto.*;
-import com.welcome.tteoksang.resource.dto.req.AchievementResource;
-import com.welcome.tteoksang.resource.dto.req.EventResource;
-import com.welcome.tteoksang.resource.dto.req.MessageTypeResource;
-import com.welcome.tteoksang.resource.dto.req.ProductResource;
+import com.welcome.tteoksang.resource.dto.req.*;
 import com.welcome.tteoksang.resource.repository.*;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.MessageDigest;
@@ -17,7 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
+@Transactional
 public class ResourceServiceImpl implements ResourceService{
 
     private final AchievementRepository achievementRepository;
@@ -29,6 +29,23 @@ public class ResourceServiceImpl implements ResourceService{
     private final TitleRepository titleRepository;
     private final VehicleRepository vehicleRepository;
     private final WarehouseRepository warehouseRepository;
+    private final ResourceChecksumRepository resourceChecksumRepository;
+
+    //TODO- DI 확인 및 더 좋은 로직 있는지 체크
+    @Autowired
+    public ResourceServiceImpl(AchievementRepository achievementRepository, BrokerRepository brokerRepository, ProductRepository productRepository, ProfileFrameRepository profileFrameRepository, ProfileIconRepository profileIconRepository, ThemeRepository themeRepository, TitleRepository titleRepository, VehicleRepository vehicleRepository, WarehouseRepository warehouseRepository, ResourceChecksumRepository resourceChecksumRepository) {
+        this.achievementRepository = achievementRepository;
+        this.brokerRepository = brokerRepository;
+        this.productRepository = productRepository;
+        this.profileFrameRepository = profileFrameRepository;
+        this.profileIconRepository = profileIconRepository;
+        this.themeRepository = themeRepository;
+        this.titleRepository = titleRepository;
+        this.vehicleRepository = vehicleRepository;
+        this.warehouseRepository = warehouseRepository;
+        this.resourceChecksumRepository = resourceChecksumRepository;
+        saveResourceChecksum();
+    }
 
     //TODO - 도전과제 넣을 내용 확정
     @Override
@@ -110,6 +127,15 @@ public class ResourceServiceImpl implements ResourceService{
     }
 
     @Override
+    public SearchInfraResourceReq searchInfraResource(){
+        return SearchInfraResourceReq.builder()
+                .brokerInfoList(searchBrokerList())
+                .vehicleInfoList(searchVehicleList())
+                .warehouseInfoList(searchWarehouseList())
+                .build();
+    }
+
+    @Override
     public List<ProfileIcon> searchProfileIconList() {
         return profileIconRepository.findAll();
     }
@@ -144,9 +170,54 @@ public class ResourceServiceImpl implements ResourceService{
         System.out.println(CoreMessageType.ALERT_PLAYTIME.getCode());
 
     }
-    //TODO
+    private void saveResourceChecksum(){
+        List<ResourceChecksum> checksumList= searchResourceChecksum();
+        for(ResourceChecksum checksum:checksumList){
+            resourceChecksumRepository.save(checksum);
+        }
+    }
+
     @Override
-    public void searchChecksum() throws NoSuchAlgorithmException {
-        MessageDigest.getInstance("MD5").digest();
+    public List<ResourceChecksum> searchResourceChecksum() {
+        List<ResourceChecksum> checksumList=new ArrayList<>();
+        checksumList.add(
+                new ResourceChecksum("infra",makeObjectChecksum(searchInfraResource()))
+        );
+        checksumList.add(
+                new ResourceChecksum("product",makeObjectChecksum(searchProductList()))
+        );
+        checksumList.add(
+                new ResourceChecksum("profile-frame",makeObjectChecksum(searchProfileFrameList()))
+        );
+        checksumList.add(
+                new ResourceChecksum("profile-icon",makeObjectChecksum(searchProfileIconList()))
+        );
+        checksumList.add(
+                new ResourceChecksum("theme",makeObjectChecksum(searchThemeList()))
+        );
+        checksumList.add(
+                new ResourceChecksum("title",makeObjectChecksum(searchTitleList()))
+        );
+        checksumList.add(
+                new ResourceChecksum("achievement",makeObjectChecksum(searchAchievementList()))
+        );
+        checksumList.add(
+                new ResourceChecksum("event",makeObjectChecksum(searchEventList()))
+        );
+        checksumList.add(
+                new ResourceChecksum("message-type",makeObjectChecksum(searchMessageTypeList()))
+        );
+        return checksumList;
+    }
+
+    //TODO- checksum 만드는 로직 짜기
+    // - 오브젝트 해싱값 반환
+    private String makeObjectChecksum(Object object) {
+        try {
+            MessageDigest.getInstance("MD5").digest();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        return "";
     }
 }

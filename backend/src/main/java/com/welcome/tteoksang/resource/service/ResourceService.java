@@ -7,29 +7,32 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 public interface ResourceService {
-
-    List<AchievementResource> searchAchievementList();
-
-    List<Title> searchTitleList();
-
-    List<Theme> searchThemeList();
-
-    List<ProductResource> searchProductList();
-
-    List<EventResource> searchEventList();
-
+    //INFRA resource
     List<Warehouse> searchWarehouseList();
     List<Vehicle> searchVehicleList();
     List<Broker> searchBrokerList();
+    SearchInfraResourceReq searchInfraResource();
 
+    //PRODUCT resource
+    List<ProductResource> searchProductList();
+
+    //PROFILE & THEME resource
     List<ProfileIcon> searchProfileIconList();
-
     List<ProfileFrame> searchProfileFrameList();
+    List<Theme> searchThemeList();
 
+    //TITLE & ACHIEVEMENT resource
+    List<Title> searchTitleList();
+    List<AchievementResource> searchAchievementList();
+
+    //EVENT resource
+    List<EventResource> searchEventList();
+
+    //MESSAGE-TYPE resource
     List<MessageTypeResource> searchMessageTypeList();
-
-    //TODO
+    //MESSAGE-TYPE -> Test
     void searchMessageTypeList(String name);
 
-    void searchChecksum() throws NoSuchAlgorithmException;
+
+    List<ResourceChecksum> searchResourceChecksum() throws NoSuchAlgorithmException;
 }
