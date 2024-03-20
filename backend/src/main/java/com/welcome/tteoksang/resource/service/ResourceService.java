@@ -34,5 +34,5 @@ public interface ResourceService {
     void searchMessageTypeList(String name);
 
 
-    List<ResourceChecksum> searchResourceChecksum() throws NoSuchAlgorithmException;
+    List<ResourceChecksum> searchResourceChecksum();
 }

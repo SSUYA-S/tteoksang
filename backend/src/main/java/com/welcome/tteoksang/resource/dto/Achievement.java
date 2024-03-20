@@ -7,11 +7,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-public class Achievement {
+public class Achievement  implements Serializable {
     @Id
     @Column(name = "achievement_id")
     Integer achievementId;

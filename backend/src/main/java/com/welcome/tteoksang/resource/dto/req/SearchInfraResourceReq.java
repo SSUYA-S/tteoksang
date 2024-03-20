@@ -5,6 +5,7 @@ import com.welcome.tteoksang.resource.dto.Vehicle;
 import com.welcome.tteoksang.resource.dto.Warehouse;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Getter
@@ -12,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SearchInfraResourceReq {
+public class SearchInfraResourceReq  implements Serializable {
 
     List<Broker> brokerInfoList;
     List<Warehouse> warehouseInfoList;
