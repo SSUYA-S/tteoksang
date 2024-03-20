@@ -34,7 +34,7 @@ public class ResourceServiceImpl implements ResourceService {
     private final WarehouseRepository warehouseRepository;
     private final ResourceChecksumRepository resourceChecksumRepository;
 
-    //TODO- DI 확인 및 더 좋은 로직 있는지 체크
+    //(TODO) 추후 더 좋은 로직 있는지 체크
     @Autowired //의존성 주입 및 체크섬 저장
     public ResourceServiceImpl(AchievementRepository achievementRepository, BrokerRepository brokerRepository, ProductRepository productRepository, ProfileFrameRepository profileFrameRepository, ProfileIconRepository profileIconRepository, ThemeRepository themeRepository, TitleRepository titleRepository, VehicleRepository vehicleRepository, WarehouseRepository warehouseRepository, ResourceChecksumRepository resourceChecksumRepository) {
         this.achievementRepository = achievementRepository;
@@ -50,20 +50,17 @@ public class ResourceServiceImpl implements ResourceService {
         saveResourceChecksum();
     }
 
-    //TODO - 도전과제 넣을 내용 확정
     @Override
     public List<AchievementResource> searchAchievementList() {
         List<AchievementResource> achievementResourceList = new ArrayList<>();
         for (Achievement achievement : achievementRepository.findAll()) {
+
             achievementResourceList.add(
                     AchievementResource.builder()
                             .achievementId(achievement.getAchievementId())
                             .achievementName(achievement.getAchievementName())
-                            .achievementDescription(
-                                    achievement.getAchievementContent()
-                            )
-                            .achievementGoal(achievement.getAchievementGoal())
-                            .achievementGoalDescription(achievement.getAchievementContent())
+                            .achievementDescription(achievement.getAchievementContent())
+                            .achievementGoalDescription(makeAchievementGoalDescription(achievement))
                             .build()
             );
         }
@@ -71,10 +68,14 @@ public class ResourceServiceImpl implements ResourceService {
         return achievementResourceList;
     }
 
-    //TODO- goalDescription에 따라 description 생성
-    public String getAchievementGoalDescription() {
-        StringBuilder sb = new StringBuilder();
-
+    // goalDescription에 따라 description 생성
+    //TODO- statistics 형식에 따라 내용 변경
+    // {대상통계량} {목표}({단위}) 달성 형식
+    public String makeAchievementGoalDescription(Achievement achievement) {
+        StringBuffer sb = new StringBuffer();
+        sb.append(achievement.getStatisticsName()).append(" ")
+                .append(achievement.getAchievementGoal()) //.append(단위) 있으면 좋을 듯
+                .append(" 달성");
         return sb.toString();
     }
 
@@ -105,7 +106,7 @@ public class ResourceServiceImpl implements ResourceService {
         return productResourceList;
     }
 
-    //TODO
+    //TODO - eventLIST 완성
     @Override
     public List<EventResource> searchEventList() {
         List<EventResource> eventResourceList = new ArrayList<>();
@@ -179,7 +180,6 @@ public class ResourceServiceImpl implements ResourceService {
         return resourceChecksumRepository.findAll();
     }
 
-    //TODO- checksum 만드는 로직 확인
     private String makeObjectChecksum(Object object) {
         ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
         try {
