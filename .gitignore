@@ -2,6 +2,7 @@
 .env
 .idea
 /*/venv
+/frontend/dev-dist/sw.js
 
 ### Java template
 # Compiled class file
