@@ -8,9 +8,6 @@ export default defineConfig({
         react(),
         VitePWA({
             registerType: 'autoUpdate',
-            devOptions: {
-                enabled: true,
-            },
             workbox: {
                 clientsClaim: true,
                 skipWaiting: true,
@@ -22,7 +19,6 @@ export default defineConfig({
                 description: '최고의 상인이 되어보세요!',
                 theme_color: '#ffffff',
                 start_url: '/',
-                scope: '/',
                 display: 'fullscreen',
                 orientation: 'landscape',
                 lang: 'ko-KR',
