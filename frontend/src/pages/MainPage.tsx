@@ -4,6 +4,7 @@ import GameComponent from '../components/GameComponent';
 
 export default function MainPage() {
     const [startFlag, setStartFlag] = useState<boolean>(false);
+    // const [initialData, setInitialData] = useState;
     return (
         <section className="w-full h-full">
             {!startFlag ? (
