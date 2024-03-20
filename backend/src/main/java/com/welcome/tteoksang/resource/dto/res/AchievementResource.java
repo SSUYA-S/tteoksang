@@ -13,6 +13,5 @@ public class AchievementResource  implements Serializable {
     Integer achievementId;
     String achievementName;
     String achievementDescription;
-    Integer achievementGoal;
     String achievementGoalDescription;
 }
