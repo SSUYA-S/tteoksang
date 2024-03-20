@@ -1,8 +1,7 @@
 package com.welcome.tteoksang.resource.dto;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import com.welcome.tteoksang.resource.type.RewardType;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,8 +26,9 @@ public class Achievement  implements Serializable {
     @Column(name = "achievement_goal")
     Integer achievementGoal;
 
-    @Column(name = "achievement_reward_type")
-    String achievementRewardType;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "achievement_reward_type") //columnDefinition = "enum ('NONE','TITLE', 'ICON','FRAME','THEME')"
+    RewardType achievementRewardType;
     @Column(name="achievement_reward_id")
     Integer achievementRewardId;
 }

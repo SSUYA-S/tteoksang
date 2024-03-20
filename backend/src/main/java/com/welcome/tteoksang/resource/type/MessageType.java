@@ -1,4 +1,4 @@
-package com.welcome.tteoksang.resource.constant;
+package com.welcome.tteoksang.resource.type;
 
 public enum MessageType {
 

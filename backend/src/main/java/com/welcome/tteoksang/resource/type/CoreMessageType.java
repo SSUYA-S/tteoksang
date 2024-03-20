@@ -1,4 +1,4 @@
-package com.welcome.tteoksang.resource.constant;
+package com.welcome.tteoksang.resource.type;
 
 //REQ, RES 제외 메세지 타입 구분만 있는 ENUM
 public enum CoreMessageType {
