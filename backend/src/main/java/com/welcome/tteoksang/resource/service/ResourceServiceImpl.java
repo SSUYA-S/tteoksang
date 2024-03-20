@@ -37,22 +37,6 @@ public class ResourceServiceImpl implements ResourceService {
     private final WarehouseRepository warehouseRepository;
     private final ResourceChecksumRepository resourceChecksumRepository;
 
-//    //(TODO) 추후 더 좋은 로직 있는지 체크
-//    @Autowired //의존성 주입 및 체크섬 저장
-//    public ResourceServiceImpl(AchievementRepository achievementRepository, BrokerRepository brokerRepository, ProductRepository productRepository, ProfileFrameRepository profileFrameRepository, ProfileIconRepository profileIconRepository, ThemeRepository themeRepository, TitleRepository titleRepository, VehicleRepository vehicleRepository, WarehouseRepository warehouseRepository, ResourceChecksumRepository resourceChecksumRepository) {
-//        this.achievementRepository = achievementRepository;
-//        this.brokerRepository = brokerRepository;
-//        this.productRepository = productRepository;
-//        this.profileFrameRepository = profileFrameRepository;
-//        this.profileIconRepository = profileIconRepository;
-//        this.themeRepository = themeRepository;
-//        this.titleRepository = titleRepository;
-//        this.vehicleRepository = vehicleRepository;
-//        this.warehouseRepository = warehouseRepository;
-//        this.resourceChecksumRepository = resourceChecksumRepository;
-//        saveResourceChecksum();
-//    }
-
     @Override
     public List<AchievementResource> searchAchievementList() {
         List<AchievementResource> achievementResourceList = new ArrayList<>();
@@ -198,41 +182,11 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     //각 리소스 체크섬 저장
+    // 체크섬 저장 시 Object를 json String으로 변환 후 계산
     //TODO- 인터페이스 분리 체크
     @Override
     public void saveResourceChecksum(String resourceName, Object object) {
         resourceChecksumRepository.save(new ResourceChecksum(resourceName,makeObjectChecksum(object)));
     }
 
-    // 각 ResourceChecksum 저장하는 메서드.
-    // ResourceService bean 생성 시 한 번만 동작하도록 구성
-//    private void saveResourceChecksum() {
-//        resourceChecksumRepository.save(
-//                new ResourceChecksum("infra", makeObjectChecksum(searchInfraResource()))
-//        );
-//        resourceChecksumRepository.save(
-//                new ResourceChecksum("product", makeObjectChecksum(searchProductList()))
-//        );
-//        resourceChecksumRepository.save(
-//                new ResourceChecksum("profile-frame", makeObjectChecksum(searchProfileFrameList()))
-//        );
-//        resourceChecksumRepository.save(
-//                new ResourceChecksum("profile-icon", makeObjectChecksum(searchProfileIconList()))
-//        );
-//        resourceChecksumRepository.save(
-//                new ResourceChecksum("theme", makeObjectChecksum(searchThemeList()))
-//        );
-//        resourceChecksumRepository.save(
-//                new ResourceChecksum("title", makeObjectChecksum(searchTitleList()))
-//        );
-//        resourceChecksumRepository.save(
-//                new ResourceChecksum("achievement", makeObjectChecksum(searchAchievementList()))
-//        );
-//        resourceChecksumRepository.save(
-//                new ResourceChecksum("event", makeObjectChecksum(searchEventList()))
-//        );
-//        resourceChecksumRepository.save(
-//                new ResourceChecksum("message-type", makeObjectChecksum(searchMessageTypeList()))
-//        );
-//    }
 }

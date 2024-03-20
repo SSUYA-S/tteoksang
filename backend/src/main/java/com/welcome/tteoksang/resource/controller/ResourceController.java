@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.*;
 public class ResourceController { //tteoksang.me 접속과 동시에 불러오는 리소스 조회
 
     private final ResourceService resourceService;
-
-    //FIXME- 안됨!!!! 고치자!!!
     @Autowired
     public ResourceController(ResourceService resourceService) {
         this.resourceService = resourceService;
@@ -120,6 +118,7 @@ public class ResourceController { //tteoksang.me 접속과 동시에 불러오�
         );
     }
 
+    //checksum 재계산: 처음 프로젝트 생성될 때, DB 변경되었을 때 실행
     @GetMapping("/reload-resource")
     void reloadResource() {
         resourceService.saveResourceChecksum("infra",
@@ -132,14 +131,17 @@ public class ResourceController { //tteoksang.me 접속과 동시에 불러오�
         resourceService.saveResourceChecksum("product",
                 SearchProductResourceRes.builder()
                         .productList(resourceService.searchProductList())
+                        .build()
         );
         resourceService.saveResourceChecksum("profile-frame",
                 SearchProfileFrameResourceRes.builder()
                         .profileFrameList(resourceService.searchProfileFrameList())
+                        .build()
         );
         resourceService.saveResourceChecksum("profile-icon",
                 SearchProfileIconResourceRes.builder()
                         .profileIconList(resourceService.searchProfileIconList())
+                        .build()
         );
         resourceService.saveResourceChecksum("theme",
                 SearchThemeResourceRes.builder()
