@@ -7,11 +7,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-public class ProfileFrame {
+public class ProfileFrame implements Serializable {
 
     @Id
     @Column(name = "profile_frame_id")

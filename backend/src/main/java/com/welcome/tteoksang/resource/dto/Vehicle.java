@@ -7,11 +7,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-public class Vehicle {
+public class Vehicle implements Serializable {
     @Id
     @Column(name = "vehicle_level")
     Integer vehicleLevel;

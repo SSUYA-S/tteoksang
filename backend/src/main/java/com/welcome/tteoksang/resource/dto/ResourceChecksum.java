@@ -1,22 +1,19 @@
 package com.welcome.tteoksang.resource.dto;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serializable;
-
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
-public class Theme implements Serializable {
+@AllArgsConstructor
+public class ResourceChecksum {
     @Id
-    @Column(name = "theme_id")
-    Integer themeId;
-    @Column(name = "theme_name")
-    String themeName;
+    String resourceName;
+    String checksumValue;
 }
