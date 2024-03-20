@@ -1,5 +1,7 @@
 package com.welcome.tteoksang.auth.controller;
 
+import com.welcome.tteoksang.auth.cookie.CookieUtil;
+import com.welcome.tteoksang.auth.dto.TokenCookie;
 import com.welcome.tteoksang.auth.dto.req.TokenReq;
 import com.welcome.tteoksang.auth.dto.res.LoginRes;
 import com.welcome.tteoksang.auth.dto.res.TokenRes;
@@ -8,6 +10,7 @@ import com.welcome.tteoksang.auth.service.AuthService;
 import com.welcome.tteoksang.redis.RedisPrefix;
 import com.welcome.tteoksang.redis.RedisService;
 import com.welcome.tteoksang.user.dto.User;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -40,11 +43,15 @@ public class AuthController {
     }
 
     @GetMapping("/logout")
-    public ResponseEntity<Void> logout(@AuthenticationPrincipal User user) {
+    public void logout(HttpServletRequest request,
+                                       HttpServletResponse response,
+                                       @AuthenticationPrincipal User user) {
         String key = RedisPrefix.REFRESH_TOKEN.prefix() + user.getUserId();
         redisService.deleteValues(key);
-        log.info("redis:{}", redisService.getValues(key));
-        return ResponseEntity.ok().build();
+        log.debug("redis:{}", redisService.getValues(key));
+
+        // 쿠키 지우기
+        CookieUtil.deleteCookie(request, response);
     }
 
     @PostMapping("/token")
