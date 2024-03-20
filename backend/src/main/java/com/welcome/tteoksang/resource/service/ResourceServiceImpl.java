@@ -3,10 +3,9 @@ package com.welcome.tteoksang.resource.service;
 import com.welcome.tteoksang.resource.constant.CoreMessageType;
 import com.welcome.tteoksang.resource.constant.MessageType;
 import com.welcome.tteoksang.resource.dto.*;
-import com.welcome.tteoksang.resource.dto.req.*;
+import com.welcome.tteoksang.resource.dto.res.*;
 import com.welcome.tteoksang.resource.repository.*;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +17,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.zip.CRC32C;
 
 @Service
 //@RequiredArgsConstructor
@@ -132,8 +130,8 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
-    public SearchInfraResourceReq searchInfraResource() {
-        return SearchInfraResourceReq.builder()
+    public SearchInfraResourceRes searchInfraResource() {
+        return SearchInfraResourceRes.builder()
                 .brokerInfoList(searchBrokerList())
                 .vehicleInfoList(searchVehicleList())
                 .warehouseInfoList(searchWarehouseList())

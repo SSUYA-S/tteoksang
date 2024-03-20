@@ -1,9 +1,8 @@
 package com.welcome.tteoksang.resource.service;
 
 import com.welcome.tteoksang.resource.dto.*;
-import com.welcome.tteoksang.resource.dto.req.*;
+import com.welcome.tteoksang.resource.dto.res.*;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 public interface ResourceService {
@@ -11,7 +10,7 @@ public interface ResourceService {
     List<Warehouse> searchWarehouseList();
     List<Vehicle> searchVehicleList();
     List<Broker> searchBrokerList();
-    SearchInfraResourceReq searchInfraResource();
+    SearchInfraResourceRes searchInfraResource();
 
     //PRODUCT resource
     List<ProductResource> searchProductList();
