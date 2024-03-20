@@ -1,4 +1,4 @@
-package com.welcome.tteoksang.title.dto;
+package com.welcome.tteoksang.user.dto;
 
 import jakarta.persistence.Embeddable;
 import lombok.*;
@@ -13,5 +13,5 @@ import java.io.Serializable;
 @Embeddable
 public class HonorId implements Serializable {
     private String honorUserId;
-    private int honorTitleId;
+    private Integer honorTitleId;
 }

@@ -59,4 +59,15 @@ public class UserExceptionHandler {
     errorMessage.append("존재하지 않는 사용자입니다.");
     return ResponseEntity.badRequest().body(errorMessage.toString());
   }
+
+//  @ExceptionHandler(GameInfoNullException.class)
+//  @ResponseStatus(HttpStatus.BAD_REQUEST)
+//  protected ResponseEntity<String> gameInfoNullExceptionHandler(GameInfoNullException e) {
+//    StringBuilder errorMessage = new StringBuilder();
+//
+//    makeErrorMessage(errorMessage, e);
+//
+//    errorMessage.append("게임 정보가 없습니다.");
+//    return ResponseEntity.badRequest().body(errorMessage.toString());
+//  }
 }
