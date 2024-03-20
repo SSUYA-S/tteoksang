@@ -1,5 +1,7 @@
 import { SetStateAction } from 'react';
 
+import newsData from '../../dummy-data/article.json';
+
 type NewsType = {
     setNewsFlag: React.Dispatch<SetStateAction<boolean>>;
 };
@@ -7,6 +9,14 @@ export default function NewsModal(props: NewsType) {
     const closeNewsModal = () => {
         props.setNewsFlag(false);
     };
+
+    const turn = newsData.publishTurn;
+    const year = Math.floor((turn - 1) / 360);
+    const month = Math.floor(((turn - 1) % 360) / 30) + 1;
+    const day = Math.floor(((turn - 1) % 360) % 30) + 1;
+
+    const articleList = newsData.articleList;
+
     return (
         <div className="absolute w-[70%] h-[95%] animation-modal ">
             <div className="h-[15%]"></div>
@@ -21,7 +31,7 @@ export default function NewsModal(props: NewsType) {
                     <div className="w-full h-[50%] flex flex-col items-center">
                         <p className="w-full h-[0.2vw] bg-black"></p>
                         <p className="my-[0.4vw] text-[2.4vw]">
-                            2023년 4월 6일호
+                            {year}년 {month}월 {day}일호
                         </p>
                         <p className="w-full h-[0.2vw] bg-black"></p>
                     </div>
@@ -38,15 +48,15 @@ export default function NewsModal(props: NewsType) {
                 <div className="relative w-[90%] h-[65%] flex ">
                     <div className="w-[60%] h-full">
                         <div className="w-full h-[50%]  text-start text-[3.6vw]">
-                            <p>중국에서 황사 발생</p>
+                            <p>{articleList[0].articleHeadline}</p>
                         </div>
                         <div className="w-full h-[40%]  text-start text-[2vw]">
-                            <div>게임회사 어서오-십조, KOSPI 상장</div>
+                            <div>{articleList[1].articleHeadline}</div>
                         </div>
                     </div>
 
                     <div className="w-[40%] h-[90%] b text-start text-[2.4vw]">
-                        한미 FTA체결
+                        {articleList[2].articleHeadline}
                     </div>
                 </div>
             </div>

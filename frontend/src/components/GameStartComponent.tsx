@@ -4,6 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 //dummy data
 import totalInfo from '../dummy-data/total-info.json';
 
+//Cookie
+import { Cookies } from 'react-cookie';
+
 //redux
 import {
     brokerLevelState,
@@ -33,6 +36,8 @@ export default function GameStartComponent(props: startType) {
 
     const dispatch = useDispatch();
 
+    const cookies = new Cookies();
+
     useEffect(() => {
         playing ? audio.play() : audio.pause();
     }, [playing, audio]);
@@ -48,12 +53,20 @@ export default function GameStartComponent(props: startType) {
 
     const onClickLogin = () => {
         //로그인 표시
-        setLoginFlag(true);
+        window.location.href =
+            'http://localhost:5173/api/oauth2/authorization/google';
     };
     const onReady = () => {
         audio.pause();
         props.setStartFlag(true);
     };
+
+    useEffect(() => {
+        //로그인 정보 있으면 자동 로그인
+        if (cookies.get('accessToken')) {
+            setLoginFlag(true);
+        }
+    }, [cookies]);
 
     /** loadGameData()
      *  게임 정보를 불러옵니다.
@@ -124,14 +137,6 @@ export default function GameStartComponent(props: startType) {
                         />
                         <p className="px-2">Sign in with Google</p>
                     </div>
-                    <a href="http://localhost:5173/api/oauth2/authorization/google?redirect_uri='http://localhost:5173/login/oauth2/code/google&response_type=code'">
-                        <img
-                            className="w-16 h-16"
-                            src="/src/assets/images/etc/crop-apple.png"
-                            alt=""
-                        />
-                        <p className="px-2">Sign in with Google</p>
-                    </a>
                 </>
             );
         }
