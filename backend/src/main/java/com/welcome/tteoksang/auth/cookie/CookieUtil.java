@@ -3,6 +3,7 @@ package com.welcome.tteoksang.auth.cookie;
 import com.welcome.tteoksang.auth.dto.TokenCookie;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * 쿠키 정보 가져오기
@@ -24,5 +25,20 @@ public class CookieUtil {
                 .accessTokenCookie(accessTokenCookie)
                 .refreshTokenCookie(refreshTokenCookie)
                 .build();
+    }
+
+    public static void deleteCookie(HttpServletRequest request,
+                                    HttpServletResponse response) {
+        TokenCookie tokenCookie = CookieUtil.resolveToken(request);
+
+        Cookie accessTokenCookie = tokenCookie.getAccessTokenCookie();
+        Cookie refreshTokenCookie = tokenCookie.getRefreshTokenCookie();
+
+        // 해당 쿠키 제거
+        accessTokenCookie.setMaxAge(0);
+        response.addCookie(accessTokenCookie);
+
+        refreshTokenCookie.setMaxAge(0);
+        response.addCookie(refreshTokenCookie);
     }
 }

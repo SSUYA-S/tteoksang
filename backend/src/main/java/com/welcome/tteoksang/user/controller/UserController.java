@@ -1,5 +1,7 @@
 package com.welcome.tteoksang.user.controller;
 
+import com.welcome.tteoksang.auth.cookie.CookieUtil;
+import com.welcome.tteoksang.auth.dto.TokenCookie;
 import com.welcome.tteoksang.user.dto.AchieveRes;
 import com.welcome.tteoksang.user.dto.PreviousPlayInfo;
 import com.welcome.tteoksang.user.dto.User;
@@ -19,6 +21,9 @@ import com.welcome.tteoksang.user.service.UserService;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -107,8 +112,12 @@ public class UserController {
     }
 
     @DeleteMapping
-    public void deleteUser(@AuthenticationPrincipal User user) throws URISyntaxException {
+    public ResponseEntity<Void> deleteUser(HttpServletRequest request,
+                                             HttpServletResponse response,
+                                             @AuthenticationPrincipal User user) throws URISyntaxException {
         userService.deleteUser(user);
+        CookieUtil.deleteCookie(request, response);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping
