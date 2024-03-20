@@ -1,4 +1,4 @@
-package com.welcome.tteoksang.title.dto.res;
+package com.welcome.tteoksang.user.dto.res;
 
 import lombok.*;
 

@@ -1,6 +1,6 @@
-package com.welcome.tteoksang.title.repository;
+package com.welcome.tteoksang.user.repository;
 
-import com.welcome.tteoksang.title.dto.Honor;
+import com.welcome.tteoksang.user.dto.Honor;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
