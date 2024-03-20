@@ -1,7 +1,7 @@
 package com.welcome.tteoksang.resource.service;
 
-import com.welcome.tteoksang.resource.constant.CoreMessageType;
-import com.welcome.tteoksang.resource.constant.MessageType;
+import com.welcome.tteoksang.resource.type.CoreMessageType;
+import com.welcome.tteoksang.resource.type.MessageType;
 import com.welcome.tteoksang.resource.dto.*;
 import com.welcome.tteoksang.resource.dto.res.*;
 import com.welcome.tteoksang.resource.repository.*;
@@ -96,7 +96,7 @@ public class ResourceServiceImpl implements ResourceService {
                     ProductResource.builder()
                             .productId(product.getProductId())
                             .productName(product.getProductName())
-                            .productType(product.getProductType())
+                            .productType(product.getProductType().name())
                             .productUnit(product.getProductUnit())
                             .build()
             );
