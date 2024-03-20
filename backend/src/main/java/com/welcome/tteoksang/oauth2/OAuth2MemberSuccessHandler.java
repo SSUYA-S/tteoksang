@@ -9,10 +9,12 @@ import com.welcome.tteoksang.redis.RedisService;
 import com.welcome.tteoksang.user.dto.User;
 import com.welcome.tteoksang.user.repository.UserRepository;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.time.Duration;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +28,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
     private final UserRepository userRepository;
     private final JWTUtil jwtUtil;
     private final RedisService redisService;
-//    private final String mainPage;
+    private final String mainPage;
 
 
     @Override
@@ -53,27 +55,42 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
                         1000 * 60 * 60 * 24 * 7L)
                         : jwtUtil.createJwt(user.getUserId(), 1000 * 60 * 60 * 24 * 14L);
 
+        //만료시간
+        Long expiredMillis = jwtUtil.getExpiredDate(refreshToken);
+        Duration expiredTime = Duration.ofMillis(expiredMillis);
+
         //Redis에 refreshToken 저장 - key는 "loginRefresh:jwt값"
-        redisService.setValues(key, refreshToken);
+        redisService.setValues(key, refreshToken, expiredTime);
         log.debug("RefreshToken: {}", redisService.getValues(key));
 
-        //response에 토큰 담아서 반환
-        ObjectMapper objectMapper = new ObjectMapper();
-        // content -type
-        response.setContentType("application/json");
-        response.setCharacterEncoding("utf-8");
+//        //response에 토큰 담아서 반환
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        // content -type
+//        response.setContentType("application/json");
+//        response.setCharacterEncoding("utf-8");
+//
+//        LoginRes loginRes = new LoginRes();
+//        loginRes.setAccessToken(accessToken);
+//        loginRes.setRefreshToken(refreshToken);
+//
+//        // JSON 형태로 변환하기
+//        // {"accessToken" : "12344", "refreshToken" : "dasgfdsa"}
+//        String result = objectMapper.writeValueAsString(loginRes);
+//
+//        response.getWriter().write(result);
+        int expiredSeconds = (int) (expiredMillis / 1000);
+        // 쿠키에 데이터 저장
+        Cookie accessTokenCookie = new Cookie("accessToken", accessToken);
+        accessTokenCookie.setPath("/");
+        accessTokenCookie.setMaxAge(60 * 60);
+        response.addCookie(accessTokenCookie);
 
-        LoginRes loginRes = new LoginRes();
-        loginRes.setAccessToken(accessToken);
-        loginRes.setRefreshToken(refreshToken);
-
-        // JSON 형태로 변환하기
-        // {"accessToken" : "12344", "refreshToken" : "dasgfdsa"}
-        String result = objectMapper.writeValueAsString(loginRes);
-
-        response.getWriter().write(result);
-        // 리다이렉트 사용x
-//        response.sendRedirect(mainPage);
+        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+        refreshTokenCookie.setPath("/");
+        refreshTokenCookie.setMaxAge(expiredSeconds);
+        response.addCookie(refreshTokenCookie);
+        // 리다이렉트 사용
+        response.sendRedirect(mainPage);
     }
 }
 
