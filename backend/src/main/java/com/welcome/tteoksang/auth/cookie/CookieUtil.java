@@ -35,9 +35,11 @@ public class CookieUtil {
         Cookie refreshTokenCookie = tokenCookie.getRefreshTokenCookie();
 
         // 해당 쿠키 제거
+        accessTokenCookie.setPath("/");
         accessTokenCookie.setMaxAge(0);
         response.addCookie(accessTokenCookie);
 
+        refreshTokenCookie.setPath("/");
         refreshTokenCookie.setMaxAge(0);
         response.addCookie(refreshTokenCookie);
     }

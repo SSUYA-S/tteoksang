@@ -86,10 +86,12 @@ public class JWTFilter extends OncePerRequestFilter {
         if (accessTokenCookie == null || refreshTokenCookie == null) {
             // 남아있는 쿠키 제거
             if (accessTokenCookie != null) {
+                accessTokenCookie.setPath("/");
                 accessTokenCookie.setMaxAge(0);
                 response.addCookie(accessTokenCookie);
             }
             if (refreshTokenCookie != null) {
+                refreshTokenCookie.setPath("/");
                 refreshTokenCookie.setMaxAge(0);
                 response.addCookie(refreshTokenCookie);
             }
@@ -109,9 +111,11 @@ public class JWTFilter extends OncePerRequestFilter {
             redisService.deleteValues(refreshToken);
 
             // 해당 쿠키 제거
+            accessTokenCookie.setPath("/");
             accessTokenCookie.setMaxAge(0);
             response.addCookie(accessTokenCookie);
 
+            refreshTokenCookie.setPath("/");
             refreshTokenCookie.setMaxAge(0);
             response.addCookie(refreshTokenCookie);
 
@@ -149,9 +153,11 @@ public class JWTFilter extends OncePerRequestFilter {
                 redisService.deleteValues(refreshToken);
 
                 // 해당 쿠키 제거
+                accessTokenCookie.setPath("/");
                 accessTokenCookie.setMaxAge(0);
                 response.addCookie(accessTokenCookie);
 
+                refreshTokenCookie.setPath("/");
                 refreshTokenCookie.setMaxAge(0);
                 response.addCookie(refreshTokenCookie);
 
