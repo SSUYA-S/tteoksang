@@ -76,24 +76,35 @@ export default function GameStartComponent(props: startType) {
     const loginElement = () => {
         if (loginFlag) {
             return (
-                <div>
-                    <img
-                        className="my-3 cursor-pointer"
-                        src="/src/assets/images/etc/btn-game-resume.png"
-                        alt=""
+                <div className="w-full h-[30%] flex flex-col items-center justify-center">
+                    <div
+                        className="w-[100%] h-[45%] cursor-pointer"
+                        style={{
+                            backgroundImage:
+                                'url(/src/assets/images/etc/btn-game-resume.png)',
+                            backgroundSize: 'contain ',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat',
+                        }}
                         onClick={() => {
                             loadGameData();
                             onReady();
                         }}
-                    />
-                    <img
-                        className="my-3 cursor-pointer"
-                        src="/src/assets/images/etc/btn-game-new.png"
-                        alt=""
+                    ></div>
+                    <div className="h-[10%]"></div>
+                    <div
+                        className="w-[100%] h-[45%] cursor-pointer"
+                        style={{
+                            backgroundImage:
+                                'url(/src/assets/images/etc/btn-game-new.png)',
+                            backgroundSize: 'contain ',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat',
+                        }}
                         onClick={() => {
                             onReady();
                         }}
-                    />
+                    ></div>
                 </div>
             );
         } else {
@@ -131,32 +142,71 @@ export default function GameStartComponent(props: startType) {
             style={{
                 backgroundImage:
                     'url(/src/assets/images/background/bg-start.png)',
+                backgroundSize: 'contain ',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
             }}
         >
-            <div className="absolute flex flex-col justify-center items-center top-[4%] right-[2%]">
-                <img
-                    className="relative my-2"
-                    src="/src/assets/images/icon/ui-icon-ranking.png"
-                    alt=""
+            <div className="absolute w-[10%] h-[40%] flex flex-col justify-center items-center top-[4%] right-[0%]">
+                <div
+                    className="w-[50%] h-[30%] cursor-pointer z-10"
+                    style={{
+                        backgroundImage:
+                            'url(/src/assets/images/icon/ui-icon-ranking.png)',
+                        backgroundSize: 'contain ',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                    }}
                 />
-                <img
-                    className="relative my-8"
-                    src="/src/assets/images/icon/ui-icon-mypage.png"
-                    alt=""
+                <div className="h-[5%]" />
+                <div
+                    className="w-[50%] h-[30%] cursor-pointer z-10"
+                    style={{
+                        backgroundImage:
+                            'url(/src/assets/images/icon/ui-icon-mypage.png)',
+                        backgroundSize: 'contain ',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                    }}
                 />
-                <div>
-                    <button onClick={toggle}>
-                        {playing ? 'Pause' : 'Play'}
-                    </button>
+                <div className="h-[5%]" />
+                <div
+                    className="w-[50%] h-[30%] cursor-pointer z-10"
+                    style={{
+                        backgroundImage:
+                            'url(/src/assets/images/icon/ui-icon-mypage.png)',
+                        backgroundSize: 'contain ',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                    }}
+                    onClick={() => {
+                        toggle();
+                    }}
+                >
+                    {playing ? 'Pause' : 'Play'}
                 </div>
             </div>
-            <div className="flex flex-col justify-center items-center">
-                <img src="/src/assets/images/etc/text-start-title.png" alt="" />
-                <img
-                    className="my-8"
-                    src="/src/assets/images/etc/text-start-content.png"
-                    alt=""
-                />
+            <div className="relative w-full h-[80%] flex flex-col justify-center items-center">
+                <div
+                    className="w-[100%] h-[50%]"
+                    style={{
+                        backgroundImage:
+                            'url(/src/assets/images/etc/text-start-title.png)',
+                        backgroundSize: 'contain ',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                    }}
+                ></div>
+                <div
+                    className="w-[40%] h-[20%]"
+                    style={{
+                        backgroundImage:
+                            'url(/src/assets/images/etc/text-start-content.png)',
+                        backgroundSize: 'contain ',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                    }}
+                ></div>
 
                 {loginElement()}
             </div>

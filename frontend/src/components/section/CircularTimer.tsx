@@ -41,8 +41,8 @@ const CircularTimer: React.FC<CircularTimerProps> = ({
     }, [duration]);
 
     const timerStyle: React.CSSProperties = {
-        width: '150px',
-        height: '150px',
+        width: '100%',
+        height: '100%',
         borderRadius: '50%',
         position: 'relative',
         background: `conic-gradient(

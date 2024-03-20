@@ -1,4 +1,5 @@
 import gameInfo from '../../dummy-data/game-info.json';
+import { BuyInfo } from '../../type/types';
 
 interface BuyReceiptProps {
     buyableInfoList: BuyInfo[];
@@ -15,11 +16,11 @@ export default function TradeBuyReceipt({
     let totalCost = 0;
 
     return (
-        <div className="w-full h-full flex flex-col items-center bg-white color-text-textcolor border-[6px] color-border-subbold">
-            <p className="h-[15%] text-5xl flex items-center justify-center">
+        <div className="w-full h-full flex flex-col justify-between items-center bg-white color-text-textcolor border-[0.4vw] color-border-subbold">
+            <p className="h-[15%] text-[2.4vw] flex items-center justify-center">
                 구매 영수증
             </p>
-            <div className="w-[90%] h-[60%] text-2xl">
+            <div className="w-[90%] h-[60%] text-[1.2vw]">
                 <div className="w-full flex justify-between">
                     <p className="w-[35%]">물품명</p>
                     <p className="w-[30%]">수량</p>
@@ -33,7 +34,7 @@ export default function TradeBuyReceipt({
                         totalCost += product.productTotalCost;
                         return (
                             <div
-                                className="w-full flex justify-between my-1"
+                                className="w-full flex justify-between my-[0.2vw]"
                                 key={product.productId}
                             >
                                 <p className="w-[35%]">
@@ -50,7 +51,7 @@ export default function TradeBuyReceipt({
                     }
                 })}
             </div>
-            <div className="w-[90%] h-[25%] text-2xl">
+            <div className="w-[90%] text-[1.2vw]">
                 <p>-------------------------------</p>
                 <div className="flex items-center justify-between">
                     <p>총 구매 가능</p>
@@ -63,7 +64,7 @@ export default function TradeBuyReceipt({
                     <p>{totalCost.toLocaleString()}</p>
                 </div>
                 <div
-                    className="my-4 py-2 border-4 color-border-subbold cursor-pointer"
+                    className="my-[0.4vw] py-[0.4vw] border-[0.2vw] color-border-subbold cursor-pointer"
                     onClick={() => buyProduct(-1 * totalCost)}
                 >
                     구매
