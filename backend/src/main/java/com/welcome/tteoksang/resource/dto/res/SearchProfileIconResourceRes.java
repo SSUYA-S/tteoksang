@@ -1,4 +1,4 @@
-package com.welcome.tteoksang.resource.dto.req;
+package com.welcome.tteoksang.resource.dto.res;
 
 import com.welcome.tteoksang.resource.dto.ProfileIcon;
 import lombok.*;
@@ -10,6 +10,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SearchProfileIconResourceReq {
+public class SearchProfileIconResourceRes {
     List<ProfileIcon> profileIconList;
 }

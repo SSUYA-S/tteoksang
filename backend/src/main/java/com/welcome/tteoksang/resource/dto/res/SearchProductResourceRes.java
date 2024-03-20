@@ -1,4 +1,4 @@
-package com.welcome.tteoksang.resource.dto.req;
+package com.welcome.tteoksang.resource.dto.res;
 
 import lombok.*;
 
@@ -9,6 +9,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SearchProductResourceReq {
+public class SearchProductResourceRes {
     List<ProductResource> productList;
 }

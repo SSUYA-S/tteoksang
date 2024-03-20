@@ -1,4 +1,4 @@
-package com.welcome.tteoksang.resource.dto.req;
+package com.welcome.tteoksang.resource.dto.res;
 
 import com.welcome.tteoksang.resource.dto.Broker;
 import com.welcome.tteoksang.resource.dto.Vehicle;
@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SearchInfraResourceReq  implements Serializable {
+public class SearchInfraResourceRes implements Serializable {
 
     List<Broker> brokerInfoList;
     List<Warehouse> warehouseInfoList;

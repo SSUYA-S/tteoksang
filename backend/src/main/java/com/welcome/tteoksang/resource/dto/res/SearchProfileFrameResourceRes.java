@@ -1,5 +1,5 @@
 
-package com.welcome.tteoksang.resource.dto.req;
+package com.welcome.tteoksang.resource.dto.res;
 
 import com.welcome.tteoksang.resource.dto.ProfileFrame;
 import lombok.*;
@@ -11,6 +11,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SearchProfileFrameResourceReq {
+public class SearchProfileFrameResourceRes {
     List<ProfileFrame> profileFrameList;
 }

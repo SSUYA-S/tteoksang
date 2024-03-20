@@ -1,5 +1,6 @@
-package com.welcome.tteoksang.resource.dto;
+package com.welcome.tteoksang.resource.dto.res;
 
+import com.welcome.tteoksang.resource.dto.ResourceChecksum;
 import lombok.*;
 
 import java.util.List;
