@@ -217,27 +217,31 @@ export default function GameComponent() {
             </div>
 
             {/* 좌측 상단 ui */}
-            <div className="absolute top-[4%] left-[2%]">
-                <div className="flex items-center justify-center">
+            <div className="absolute w-[25%] h-[20%] top-[4%] left-[2%]">
+                <div className="relative w-full h-full flex items-center justify-center color-bg-main  border-[0.2vw] color-border-subbold rounded-[0.4vw] p-[1%] cursor-pointer">
                     <div
-                        className="relative color-bg-main flex w-[480px] h-fit border-[5px] color-border-subbold rounded-xl py-2 cursor-pointer "
+                        className="relative w-full h-full flex"
                         onClick={() => openMypageElement()}
                     >
-                        <div className="relative w-40 h-40 m-4">
+                        <div
+                            className="relative w-[35%] m-0"
+                            style={{ aspectRatio: 1 / 1 }}
+                        >
                             <img
+                                className="absolute w-full h-full cursor-pointer"
                                 src={`/src/assets/images/profile/icon (${profileIcon}).png`}
                             />
                             <img
-                                className="absolute left-0 top-0"
+                                className="absolute w-full h-full cursor-pointer"
                                 src={`/src/assets/images/profile/frame (${profileFrame}).png`}
                             />
                         </div>
 
-                        <div className=" flex flex-col items-center justify-center ps-4">
-                            <p className="w-full text-start mx-8 text-3xl text-green-500">
+                        <div className="relative w-[65%] flex flex-col items-center justify-center ps-[5%]">
+                            <p className="w-full text-start mx-2 text-[1.5vw] text-green-500">
                                 뿌리채소의 제왕
                             </p>
-                            <p className="w-full text-start mx-8 my-2 text-4xl text-green-500 mt-8">
+                            <p className="w-full text-start mx-2 my-[5%] text-[2vw] text-green-500">
                                 제노 님
                             </p>
                         </div>
@@ -246,33 +250,50 @@ export default function GameComponent() {
             </div>
 
             {/* 우측 상단 ui */}
-            <div className="absolute top-[1%] right-[3%] flex items-center justify-center">
-                <div className="relative w-[320px] h-[100px] py-2 flex flex-col items-center justify-around color-bg-main border-4 color-border-subbold rounded-xl color-text-textcolor left-12 z-0">
-                    <p className="text-2xl">
+            <div className="absolute w-[25%] h-[14%] top-[4%] right-[2%] flex items-center justify-center">
+                <div className="relative w-[65%] h-full py-[0.2vw] flex flex-col items-center justify-around color-bg-main border-[0.2vw] color-border-subbold rounded-[1vw] color-text-textcolor left-[2vw] z-0">
+                    <p className="text-[1.4vw]">
                         {gameYear}년 {gameMonth}월 {gameDay}일
                     </p>
-                    <div className="flex items-center justify-center">
+                    <div className="flex items-center justify-start">
                         <img
+                            className="absolute left-0 mx-[1vw] w-[12%]"
                             src="/src/assets/images/icon/ui-icon-coin.png"
                             alt=""
                         />
-                        <p className="ml-2 text-3xl">
+                        <p className="text-[1.6vw]">
                             {nowMoney.toLocaleString()}
                         </p>
                     </div>
                 </div>
-                <div className="flex items-center justify-center rounded-full border-8 color-border-subbold z-10">
+                <div
+                    className="relative w-[35%] flex items-center justify-center rounded-full border-[0.4vw] color-border-subbold z-10"
+                    style={{ aspectRatio: 1 / 1 }}
+                >
                     <CircularTimer
                         duration={duration}
                         setTurnTimer={setTurnTimer}
                         setIngameTurn={setIngameTurn}
                     />
-                    <div className="timerwrap flex items-center justify-center">
+                    <div className="absolute w-full h-full rounded-full border-[0.4vw] border-white flex items-center justify-center">
                         <div
-                            className="w-full h-full z-20 bg-no-repeat bg-center"
+                            className="absolute w-full h-full"
+                            style={{
+                                backgroundImage:
+                                    'url(/src/assets/images/icon/ui-icon-timeCircle.png)',
+                                backgroundSize: 'contain ',
+                                backgroundPosition: 'center',
+                                backgroundRepeat: 'no-repeat',
+                            }}
+                        ></div>
+                        <div
+                            className="absolute w-[60%] h-[60%] z-20 bg-no-repeat bg-center"
                             style={{
                                 backgroundImage:
                                     'url(/src/assets/images/icon/ui-season-spring.png)',
+                                backgroundSize: 'contain ',
+                                backgroundPosition: 'center',
+                                backgroundRepeat: 'no-repeat',
                             }}
                         />
                     </div>
@@ -280,74 +301,95 @@ export default function GameComponent() {
             </div>
 
             {/* 좌측 하단 ui */}
-            <div className="absolute bottom-[2%] left-[1%]">
-                <div className="flex items-center justify-center">
+            <div className="absolute w-[40%] h-[20%] bottom-[2%] left-[1%]">
+                <div className="relative w-full h-full flex items-center justify-center">
                     <div
-                        className="w-28 h-36 bg-no-repeat cursor-pointer"
+                        className="w-[19%] h-[100%] bg-no-repeat cursor-pointer"
                         style={{
                             backgroundImage:
                                 'url(/src/assets/images/icon/ui-icon-trade.png)',
+                            backgroundSize: 'contain ',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat',
                         }}
                         onClick={() => {
                             openTradeElement();
                         }}
                     />
                     <div
-                        className="w-28 h-36 bg-no-repeat cursor-pointer mx-2"
+                        className="w-[19%] h-[100%] bg-no-repeat cursor-pointer mx-[0.4vw]"
                         style={{
                             backgroundImage:
                                 'url(/src/assets/images/icon/ui-icon-facility.png)',
+                            backgroundSize: 'contain ',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat',
                         }}
                         onClick={() => {
                             openFacilityElement();
                         }}
                     />
                     <div
-                        className="w-28 h-36 bg-no-repeat cursor-pointer"
+                        className="w-[19%] h-[100%] bg-no-repeat cursor-pointer"
                         style={{
                             backgroundImage:
                                 'url(/src/assets/images/icon/ui-icon-inventory.png)',
+                            backgroundSize: 'contain ',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat',
                         }}
                         onClick={() => {
                             openInventoryElement();
                         }}
                     />
                     <div
-                        className="w-28 h-36 bg-no-repeat cursor-pointer"
+                        className="w-[19%] h-[100%] bg-no-repeat cursor-pointer"
                         style={{
                             backgroundImage:
                                 'url(/src/assets/images/icon/ui-icon-newspaper.png)',
+                            backgroundSize: 'contain ',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat',
                         }}
                         onClick={() => {
                             openNewsElement();
                         }}
                     />
                     <div
-                        className="w-28 h-36 bg-no-repeat cursor-pointer"
+                        className="w-[19%] h-[100%] bg-no-repeat cursor-pointer"
                         style={{
                             backgroundImage:
                                 'url(/src/assets/images/icon/ui-icon-accident.png)',
+                            backgroundSize: 'contain ',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat',
                         }}
                     />
                 </div>
             </div>
 
             {/* 우측 하단 ui */}
-            <div className="absolute bottom-[2%] right-[1%]">
-                <div className="flex items-center justify-center">
+            <div className="absolute w-[12%] h-[20%]  bottom-[2%] right-[1%]">
+                <div className="relative w-full h-full flex items-center justify-center">
                     <div
-                        className="w-28 h-40 bg-no-repeat cursor-pointer"
+                        className="w-[50%] h-[100%]  bg-no-repeat cursor-pointer"
                         style={{
                             backgroundImage:
                                 'url(/src/assets/images/icon/ui-icon-setting.png)',
+                            backgroundSize: 'contain ',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat',
                         }}
                         onClick={() => openSettingElement()}
                     />
                     <div
-                        className="w-28 h-40 bg-no-repeat cursor-pointer"
+                        className="w-[50%] h-[100%]  bg-no-repeat cursor-pointer"
                         style={{
                             backgroundImage:
                                 'url(/src/assets/images/icon/ui-icon-quit.png)',
+                            backgroundSize: 'contain ',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat',
                         }}
                     />
                 </div>

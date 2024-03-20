@@ -412,11 +412,11 @@ export default function TradeModal(props: tradeType) {
             return (
                 <>
                     <div className="w-[60%] h-full">
-                        <div className="h-[15%] flex justify-between items-end pb-4">
-                            <p className="text-5xl color-text-textcolor">
+                        <div className="h-[15%] flex justify-between items-end pb-[0.2vh]">
+                            <p className="text-[3vw] color-text-textcolor">
                                 물품 구매
                             </p>
-                            <div className="w-[35%] flex justify-between text-3xl color-text-textcolor">
+                            <div className="w-[35%] flex justify-between text-[1.6vw] color-text-textcolor">
                                 <p>예상 창고 용량</p>
                                 <p>
                                     {totalNumber}/
@@ -428,7 +428,7 @@ export default function TradeModal(props: tradeType) {
                                 </p>
                             </div>
                         </div>
-                        <div className="flex h-[80%] m-4 flex-wrap overflow-y-auto">
+                        <div className="flex h-[80%] m-[0.4vw] flex-wrap overflow-y-auto">
                             {buyableProduct.map((product) => {
                                 return (
                                     <TradeBuyCard
@@ -440,7 +440,7 @@ export default function TradeModal(props: tradeType) {
                             })}
                         </div>
                     </div>
-                    <div className="w-[28%] h-full p-4">
+                    <div className="w-[28%] h-full p-[0.4vw]">
                         <TradeBuyReceipt
                             buyableInfoList={buyableProduct}
                             maximumBuyable={maximumBuyableAmount}
@@ -453,11 +453,11 @@ export default function TradeModal(props: tradeType) {
             return (
                 <>
                     <div className="w-[60%] h-full">
-                        <div className="h-[15%] flex justify-between items-end pb-4">
-                            <p className="text-5xl color-text-textcolor">
+                        <div className="h-[15%] flex justify-between items-end pb-[0.2vh]">
+                            <p className="text-[3vw] color-text-textcolor">
                                 물품 판매
                             </p>
-                            <div className="w-[35%] flex justify-between text-3xl color-text-textcolor">
+                            <div className="w-[35%] flex justify-between text-[1.6vw] color-text-textcolor">
                                 <p>예상 창고 용량</p>
                                 <p>
                                     {totalNumber}/
@@ -469,7 +469,7 @@ export default function TradeModal(props: tradeType) {
                                 </p>
                             </div>
                         </div>
-                        <div className="flex h-[80%] m-4 flex-wrap overflow-y-auto">
+                        <div className="flex h-[80%] m-[0.4vw] flex-wrap overflow-y-auto">
                             {sellingProductList.map((product) => {
                                 return (
                                     <TradeSellCard
@@ -481,7 +481,7 @@ export default function TradeModal(props: tradeType) {
                             })}
                         </div>
                     </div>
-                    <div className="w-[28%] h-full p-4">
+                    <div className="w-[28%] h-full p-[0.4vw]">
                         <TradeSellReceipt
                             sellableInfoList={sellingProductList}
                             fee={
@@ -499,7 +499,7 @@ export default function TradeModal(props: tradeType) {
                 <>
                     <div className="w-[80%] h-full">
                         <div className="h-[15%] flex justify-between items-end pb-4">
-                            <p className="text-5xl color-text-textcolor">
+                            <p className="text-[2.4vw] color-text-textcolor">
                                 오늘의 시세
                             </p>
                         </div>
@@ -561,12 +561,12 @@ export default function TradeModal(props: tradeType) {
         }
     };
     return (
-        <section className="relative w-[80%] h-[80%] flex justify-center items-center border-8 color-border-sublight color-bg-main rounded-xl z-50 animation-modal mt-10">
+        <section className="relative w-[80%] h-[80%] flex justify-center items-center border-[0.4vw] color-border-sublight color-bg-main rounded-[0.4vw] z-50 animation-modal mt-[1vh]">
             <div className="w-[12%] h-full">
                 <div className="h-[15%]" />
                 <div className="flex flex-col items-center ">
                     <div
-                        className="w-[70%] text-3xl my-2 py-4 bg-white color-text-textcolor border-4 color-border-sublight rounded-xl cursor-pointer"
+                        className="w-[70%] text-[1.4vw] my-[0.4vw] py-[0.8vw] bg-white color-text-textcolor border-[0.2vw] color-border-sublight rounded-[0.4vw] cursor-pointer"
                         onClick={() => {
                             changeTab(0);
                         }}
@@ -583,7 +583,7 @@ export default function TradeModal(props: tradeType) {
                         구매
                     </div>
                     <div
-                        className="w-[70%] text-3xl my-2 py-4 bg-white color-text-textcolor border-4 color-border-sublight rounded-xl cursor-pointer"
+                        className="w-[70%] text-[1.4vw] my-[0.4vw] py-[0.8vw] bg-white color-text-textcolor border-[0.2vw] color-border-sublight rounded-[0.4vw] cursor-pointer"
                         onClick={() => {
                             changeTab(1);
                         }}
@@ -600,7 +600,7 @@ export default function TradeModal(props: tradeType) {
                         판매
                     </div>
                     <div
-                        className="w-[70%] text-3xl my-2 py-4 bg-white color-text-textcolor border-4 color-border-sublight rounded-xl cursor-pointer"
+                        className="w-[70%] text-[1.4vw] my-[0.4vw] py-[0.8vw] bg-white color-text-textcolor border-[0.2vw] color-border-sublight rounded-[0.4vw] cursor-pointer"
                         onClick={() => {
                             changeTab(2);
                         }}
@@ -620,7 +620,7 @@ export default function TradeModal(props: tradeType) {
             </div>
             {tradeElement()}
             <div
-                className="absolute text-3xl flex items-center justify-center text-white -top-8 -right-8 w-16 h-16 border-[6px] color-border-sublight color-bg-orange1 rounded-full cursor-pointer"
+                className="absolute text-[2vw] flex items-center justify-center text-white -top-[1.6vw] -right-[2vw] w-[4vw] h-[4vw] border-[0.4vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer"
                 onClick={() => {
                     closeTradeModal();
                 }}
