@@ -1,12 +1,10 @@
 package com.welcome.tteoksang.resource.controller;
 
-import com.welcome.tteoksang.resource.dto.req.*;
+import com.welcome.tteoksang.resource.dto.res.*;
 import com.welcome.tteoksang.resource.service.ResourceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/resource")
@@ -16,54 +14,54 @@ public class ResourceController { //tteoksang.me 접속과 동시에 불러옴
     private final ResourceService resourceService;
 
     @GetMapping("/achievement")
-    ResponseEntity<SearchAchievementResourceReq> searchAchievementResource() {
+    ResponseEntity<SearchAchievementResourceRes> searchAchievementResource() {
         return ResponseEntity.ok(
-                SearchAchievementResourceReq.builder()
+                SearchAchievementResourceRes.builder()
                         .achievementList(resourceService.searchAchievementList())
                         .build()
         );
     }
 
     @GetMapping("/title")
-    ResponseEntity<SearchTitleResourceReq> searchTitleResource() {
+    ResponseEntity<SearchTitleResourceRes> searchTitleResource() {
         return ResponseEntity.ok(
-                SearchTitleResourceReq.builder()
+                SearchTitleResourceRes.builder()
                         .titleList(resourceService.searchTitleList())
                         .build()
         );
     }
 
     @GetMapping("/theme")
-    ResponseEntity<SearchThemeResourceReq> searchThemeResource() {
+    ResponseEntity<SearchThemeResourceRes> searchThemeResource() {
         return ResponseEntity.ok(
-                SearchThemeResourceReq.builder()
+                SearchThemeResourceRes.builder()
                         .themeList(resourceService.searchThemeList())
                         .build()
         );
     }
 
     @GetMapping("/product")
-    ResponseEntity<SearchProductResourceReq> searchProductResource() {
+    ResponseEntity<SearchProductResourceRes> searchProductResource() {
         return ResponseEntity.ok(
-                SearchProductResourceReq.builder()
+                SearchProductResourceRes.builder()
                         .productList(resourceService.searchProductList())
                         .build()
         );
     }
 
     @GetMapping("/event")
-    ResponseEntity<SearchEventResourceReq> searchEventResource() {
+    ResponseEntity<SearchEventResourceRes> searchEventResource() {
         return ResponseEntity.ok(
-                SearchEventResourceReq.builder()
+                SearchEventResourceRes.builder()
                         .eventList(resourceService.searchEventList())
                         .build()
         );
     }
 
     @GetMapping("/infra")
-    ResponseEntity<SearchInfraResourceReq> searchInfraResource() {
+    ResponseEntity<SearchInfraResourceRes> searchInfraResource() {
         return ResponseEntity.ok(
-                SearchInfraResourceReq.builder()
+                SearchInfraResourceRes.builder()
                         .brokerInfoList(resourceService.searchBrokerList())
                         .vehicleInfoList(resourceService.searchVehicleList())
                         .warehouseInfoList(resourceService.searchWarehouseList())
@@ -72,22 +70,44 @@ public class ResourceController { //tteoksang.me 접속과 동시에 불러옴
     }
 
     @GetMapping("/profile-icon")
-    ResponseEntity<SearchProfileIconResourceReq> searchProfileIconResource() {
+    ResponseEntity<SearchProfileIconResourceRes> searchProfileIconResource() {
         return ResponseEntity.ok(
-                SearchProfileIconResourceReq.builder()
+                SearchProfileIconResourceRes.builder()
                         .profileIconList(resourceService.searchProfileIconList())
                         .build()
         );
     }
 
     @GetMapping("/profile-frame")
-    ResponseEntity<SearchProfileFrameResourceReq> searchProfileFrameResource() {
+    ResponseEntity<SearchProfileFrameResourceRes> searchProfileFrameResource() {
         return ResponseEntity.ok(
-                SearchProfileFrameResourceReq.builder()
+                SearchProfileFrameResourceRes.builder()
                         .profileFrameList(resourceService.searchProfileFrameList())
                         .build()
         );
     }
 
+    @GetMapping("/message-type/{name}")
+    ResponseEntity<Void> searchMessageTypeResource(@PathVariable String name){
+        resourceService.searchMessageTypeList(name);
+        return ResponseEntity.ok().build();
+    }
 
+    @GetMapping("/message-type")
+    ResponseEntity<SearchMessageTypeResourceRes> searchMessageTypeResource(){
+        return ResponseEntity.ok(
+                SearchMessageTypeResourceRes.builder()
+                        .messageTypeList(resourceService.searchMessageTypeList())
+                        .build()
+        );
+    }
+
+    @GetMapping("/checksum")
+    ResponseEntity<SearchChecksumRes> searchChecksumResource(){
+        return ResponseEntity.ok(
+                SearchChecksumRes.builder()
+                        .checksumList(resourceService.searchResourceChecksum())
+                        .build()
+        );
+    }
 }

@@ -7,11 +7,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-public class Warehouse {
+public class Warehouse implements Serializable {
 
     @Id
     @Column(name = "warehouse_level")
