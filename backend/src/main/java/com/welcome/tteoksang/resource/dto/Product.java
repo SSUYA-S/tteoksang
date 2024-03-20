@@ -28,8 +28,6 @@ public class Product implements Serializable {
     @Column(name = "product_basic_cost")
     Integer productBasicCost;
 
-    @Column(name = "product_min_rate")
-    Integer productMinRate;
-    @Column(name = "product_max_rate")
-    Integer productMaxRate;
+    @Column(name = "product_basic_harvest")
+    Integer productBasicHarvest;
 }
