@@ -1,4 +1,4 @@
-package com.welcome.tteoksang.resource.dto.res;
+package com.welcome.tteoksang.resource.dto;
 
 import lombok.*;
 
