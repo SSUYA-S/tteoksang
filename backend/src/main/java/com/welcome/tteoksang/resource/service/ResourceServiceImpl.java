@@ -1,11 +1,14 @@
 package com.welcome.tteoksang.resource.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.welcome.tteoksang.resource.type.CoreMessageType;
 import com.welcome.tteoksang.resource.type.MessageType;
 import com.welcome.tteoksang.resource.dto.*;
 import com.welcome.tteoksang.resource.dto.res.*;
 import com.welcome.tteoksang.resource.repository.*;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +22,7 @@ import java.util.Base64;
 import java.util.List;
 
 @Service
-//@RequiredArgsConstructor
+@RequiredArgsConstructor
 @Transactional
 public class ResourceServiceImpl implements ResourceService {
 
@@ -34,21 +37,21 @@ public class ResourceServiceImpl implements ResourceService {
     private final WarehouseRepository warehouseRepository;
     private final ResourceChecksumRepository resourceChecksumRepository;
 
-    //(TODO) 추후 더 좋은 로직 있는지 체크
-    @Autowired //의존성 주입 및 체크섬 저장
-    public ResourceServiceImpl(AchievementRepository achievementRepository, BrokerRepository brokerRepository, ProductRepository productRepository, ProfileFrameRepository profileFrameRepository, ProfileIconRepository profileIconRepository, ThemeRepository themeRepository, TitleRepository titleRepository, VehicleRepository vehicleRepository, WarehouseRepository warehouseRepository, ResourceChecksumRepository resourceChecksumRepository) {
-        this.achievementRepository = achievementRepository;
-        this.brokerRepository = brokerRepository;
-        this.productRepository = productRepository;
-        this.profileFrameRepository = profileFrameRepository;
-        this.profileIconRepository = profileIconRepository;
-        this.themeRepository = themeRepository;
-        this.titleRepository = titleRepository;
-        this.vehicleRepository = vehicleRepository;
-        this.warehouseRepository = warehouseRepository;
-        this.resourceChecksumRepository = resourceChecksumRepository;
-        saveResourceChecksum();
-    }
+//    //(TODO) 추후 더 좋은 로직 있는지 체크
+//    @Autowired //의존성 주입 및 체크섬 저장
+//    public ResourceServiceImpl(AchievementRepository achievementRepository, BrokerRepository brokerRepository, ProductRepository productRepository, ProfileFrameRepository profileFrameRepository, ProfileIconRepository profileIconRepository, ThemeRepository themeRepository, TitleRepository titleRepository, VehicleRepository vehicleRepository, WarehouseRepository warehouseRepository, ResourceChecksumRepository resourceChecksumRepository) {
+//        this.achievementRepository = achievementRepository;
+//        this.brokerRepository = brokerRepository;
+//        this.productRepository = productRepository;
+//        this.profileFrameRepository = profileFrameRepository;
+//        this.profileIconRepository = profileIconRepository;
+//        this.themeRepository = themeRepository;
+//        this.titleRepository = titleRepository;
+//        this.vehicleRepository = vehicleRepository;
+//        this.warehouseRepository = warehouseRepository;
+//        this.resourceChecksumRepository = resourceChecksumRepository;
+//        saveResourceChecksum();
+//    }
 
     @Override
     public List<AchievementResource> searchAchievementList() {
@@ -172,7 +175,6 @@ public class ResourceServiceImpl implements ResourceService {
         System.out.println(CoreMessageType.ALERT_PLAYTIME); //==NAME
         System.out.println(CoreMessageType.ALERT_PLAYTIME.ordinal());
         System.out.println(CoreMessageType.ALERT_PLAYTIME.getCode());
-
     }
 
     @Override
@@ -181,54 +183,56 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     private String makeObjectChecksum(Object object) {
-        ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+        ObjectMapper objectMapper=new ObjectMapper();
         try {
-            //byteStream에 Object 직렬화 결과를 저장하기 위한 objectOutputStream
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteStream);
-            objectOutputStream.writeObject(object);
-            objectOutputStream.close();
-            //byteStream에 저장 완료 후 종료
-
+            //Object를 jsonString으로 변환
+            String jsonString = objectMapper.writeValueAsString(object);
+            System.out.println(jsonString);
             //MD5를 통해 해싱 -> checksumByte.length=16
-            byte[] checksumByte = MessageDigest.getInstance("MD5").digest(byteStream.toByteArray());
+            byte[] checksumByte = MessageDigest.getInstance("MD5").digest(jsonString.getBytes());
 
             return Base64.getEncoder().encodeToString(checksumByte);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
+        } catch (NoSuchAlgorithmException | JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
 
-    // 각 ResourceChecksum 저장하는 메서드. 
-    // ResourceService bean 생성 시 한 번만 동작하도록 구성
-    private void saveResourceChecksum() {
-        resourceChecksumRepository.save(
-                new ResourceChecksum("infra", makeObjectChecksum(searchInfraResource()))
-        );
-        resourceChecksumRepository.save(
-                new ResourceChecksum("product", makeObjectChecksum(searchProductList()))
-        );
-        resourceChecksumRepository.save(
-                new ResourceChecksum("profile-frame", makeObjectChecksum(searchProfileFrameList()))
-        );
-        resourceChecksumRepository.save(
-                new ResourceChecksum("profile-icon", makeObjectChecksum(searchProfileIconList()))
-        );
-        resourceChecksumRepository.save(
-                new ResourceChecksum("theme", makeObjectChecksum(searchThemeList()))
-        );
-        resourceChecksumRepository.save(
-                new ResourceChecksum("title", makeObjectChecksum(searchTitleList()))
-        );
-        resourceChecksumRepository.save(
-                new ResourceChecksum("achievement", makeObjectChecksum(searchAchievementList()))
-        );
-        resourceChecksumRepository.save(
-                new ResourceChecksum("event", makeObjectChecksum(searchEventList()))
-        );
-        resourceChecksumRepository.save(
-                new ResourceChecksum("message-type", makeObjectChecksum(searchMessageTypeList()))
-        );
+    //각 리소스 체크섬 저장
+    //TODO- 인터페이스 분리 체크
+    @Override
+    public void saveResourceChecksum(String resourceName, Object object) {
+        resourceChecksumRepository.save(new ResourceChecksum(resourceName,makeObjectChecksum(object)));
     }
+
+    // 각 ResourceChecksum 저장하는 메서드.
+    // ResourceService bean 생성 시 한 번만 동작하도록 구성
+//    private void saveResourceChecksum() {
+//        resourceChecksumRepository.save(
+//                new ResourceChecksum("infra", makeObjectChecksum(searchInfraResource()))
+//        );
+//        resourceChecksumRepository.save(
+//                new ResourceChecksum("product", makeObjectChecksum(searchProductList()))
+//        );
+//        resourceChecksumRepository.save(
+//                new ResourceChecksum("profile-frame", makeObjectChecksum(searchProfileFrameList()))
+//        );
+//        resourceChecksumRepository.save(
+//                new ResourceChecksum("profile-icon", makeObjectChecksum(searchProfileIconList()))
+//        );
+//        resourceChecksumRepository.save(
+//                new ResourceChecksum("theme", makeObjectChecksum(searchThemeList()))
+//        );
+//        resourceChecksumRepository.save(
+//                new ResourceChecksum("title", makeObjectChecksum(searchTitleList()))
+//        );
+//        resourceChecksumRepository.save(
+//                new ResourceChecksum("achievement", makeObjectChecksum(searchAchievementList()))
+//        );
+//        resourceChecksumRepository.save(
+//                new ResourceChecksum("event", makeObjectChecksum(searchEventList()))
+//        );
+//        resourceChecksumRepository.save(
+//                new ResourceChecksum("message-type", makeObjectChecksum(searchMessageTypeList()))
+//        );
+//    }
 }
