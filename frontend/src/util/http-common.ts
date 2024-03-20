@@ -9,6 +9,7 @@ export default function localAxios() {
             'content-type': 'application/json;charset=UTF-8',
             accept: 'application/json',
         },
+        //쿠키 보내주도록 설정
         withCredentials: true,
     });
 

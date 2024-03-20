@@ -9,19 +9,22 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistor, store } from './util/store.ts';
 import GoogleLoginPage from './pages/GoogleLoginPage.tsx';
+import { CookiesProvider } from 'react-cookie';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-            <BrowserRouter>
-                <Routes>
-                    <Route index element={<MainPage />}></Route>
-                    <Route
-                        path="/login/oauth2/code/google"
-                        element={<GoogleLoginPage />}
-                    ></Route>
-                </Routes>
-            </BrowserRouter>
-        </PersistGate>
+        <CookiesProvider>
+            <PersistGate loading={null} persistor={persistor}>
+                <BrowserRouter>
+                    <Routes>
+                        <Route index element={<MainPage />}></Route>
+                        <Route
+                            path="/login/oauth2/code/google"
+                            element={<GoogleLoginPage />}
+                        ></Route>
+                    </Routes>
+                </BrowserRouter>
+            </PersistGate>
+        </CookiesProvider>
     </Provider>
 );
