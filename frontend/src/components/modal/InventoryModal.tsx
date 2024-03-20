@@ -1,7 +1,8 @@
 import { useSelector } from 'react-redux';
 import InventoryCard from '../section/InventoryCard';
-import gameInfo from '../../dummy-data/game-info.json';
-import publicEvent from '../../dummy-data/public-event.json';
+import { ProductInfo } from '../../type/types';
+
+import productSource from '../../dummy-data/resource/Product.json';
 
 type inventoryType = {
     setInventoryFlag: React.Dispatch<React.SetStateAction<boolean>>;
@@ -12,8 +13,12 @@ export default function InventoryModal(props: inventoryType) {
         props.setInventoryFlag(false);
     };
 
-    const myProduct: Product[] = useSelector(
+    const myProduct = useSelector(
         (state: any) => state.reduxFlag.myProductSlice.myProductList
+    );
+
+    const productInfoList = useSelector(
+        (state: any) => state.reduxFlag.productAndEventSlice.productInfoList
     );
 
     return (
@@ -23,13 +28,16 @@ export default function InventoryModal(props: inventoryType) {
                     return (
                         <InventoryCard
                             myProduct={product}
-                            productName={gameInfo.product[product.productId]}
+                            productName={
+                                productSource.productList[product.productId - 1]
+                                    .productName
+                            }
                             productTodayCost={
-                                publicEvent.productInfoList[product.productId]
+                                productInfoList[product.productId - 1]
                                     .productCost
                             }
                             productFluctuation={
-                                publicEvent.productInfoList[product.productId]
+                                productInfoList[product.productId - 1]
                                     .productFluctuation
                             }
                         />

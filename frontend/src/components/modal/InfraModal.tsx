@@ -6,7 +6,7 @@ import {
     brokerLevelState,
 } from '../../util/myproduct-slice';
 
-import gameInfo from '../../dummy-data/game-info.json';
+import infraInfo from '../../dummy-data/resource/Infra.json';
 
 type InfraType = {
     setFacilityFlag: React.Dispatch<React.SetStateAction<boolean>>;
@@ -14,7 +14,7 @@ type InfraType = {
 };
 
 export default function InfraModal(props: InfraType) {
-    const [facilityType, setFacilityType] = useState<Number>(0);
+    const [facilityType, setFacilityType] = useState<number>(0);
     const [nowLevel, setNowLevel] = useState<number>(0);
     const [urlFacilityName, setURLFacilityName] = useState<string>('');
     const closeFacilityModal = () => {
@@ -35,7 +35,7 @@ export default function InfraModal(props: InfraType) {
 
     const dispatch = useDispatch();
 
-    const changeFailityType = (prop: Number) => {
+    const changeFailityType = (prop: number) => {
         setFacilityType(prop);
         if (prop === 1) {
             setURLFacilityName('transport');
@@ -51,24 +51,27 @@ export default function InfraModal(props: InfraType) {
 
     const checkMaxLevel = () => {
         if (facilityType === 1) {
-            return nowLevel < gameInfo.vehicle.length - 1;
+            return nowLevel < infraInfo.vehicleInfoList.length - 1;
         } else if (facilityType === 2) {
-            return nowLevel < gameInfo.warehouse.length - 1;
+            return nowLevel < infraInfo.warehouseInfoList.length - 1;
         } else if (facilityType === 3) {
-            return nowLevel < gameInfo.broker.length - 1;
+            return nowLevel < infraInfo.brokerInfoList.length - 1;
         }
     };
 
     const upgradeFacility = () => {
         let upgradeFee: number = 0;
         if (facilityType === 1) {
-            upgradeFee = gameInfo.vehicle[nowLevel].upgradefee;
+            upgradeFee =
+                infraInfo.vehicleInfoList[nowLevel - 1].vehicleUpgradeFee;
             dispatch(vehicleLevelState(nowLevel + 1));
         } else if (facilityType === 2) {
-            upgradeFee = gameInfo.warehouse[nowLevel].upgradefee;
+            upgradeFee =
+                infraInfo.warehouseInfoList[nowLevel - 1].warehouseUpgradeFee;
             dispatch(warehouseLevelState(nowLevel + 1));
         } else if (facilityType === 3) {
-            upgradeFee = gameInfo.broker[nowLevel].upgradefee;
+            upgradeFee =
+                infraInfo.brokerInfoList[nowLevel - 1].brokerUpgradeFee;
             dispatch(brokerLevelState(nowLevel + 1));
         }
         props.updateNowMoney(-1 * upgradeFee);
@@ -155,24 +158,33 @@ export default function InfraModal(props: InfraType) {
                             <div className="w-[33%] h-[50%]">
                                 <p className="text-3xl">
                                     {facilityType === 1
-                                        ? gameInfo.vehicle[vehicleLevel].name
+                                        ? infraInfo.vehicleInfoList[
+                                              vehicleLevel - 1
+                                          ].vehicleName
                                         : facilityType === 2
-                                        ? gameInfo.warehouse[warehouseLevel]
-                                              .name
-                                        : gameInfo.broker[brokerLevel].name}
+                                        ? infraInfo.warehouseInfoList[
+                                              warehouseLevel - 1
+                                          ].warehouseName
+                                        : infraInfo.brokerInfoList[
+                                              brokerLevel - 1
+                                          ].brokerName}
                                 </p>
                                 <p className="text-3xl">
                                     {facilityType === 1
                                         ? '탈 것 용량 : ' +
-                                          gameInfo.vehicle[vehicleLevel].size
+                                          infraInfo.vehicleInfoList[
+                                              vehicleLevel - 1
+                                          ].maxPurchaseQuantity
                                         : facilityType === 2
                                         ? '창고 용량 : ' +
-                                          gameInfo.warehouse[warehouseLevel]
-                                              .size
+                                          infraInfo.warehouseInfoList[
+                                              warehouseLevel - 1
+                                          ].maxHoldingQuantity
                                         : '중개소 수수료 : ' +
                                           Math.round(
-                                              +gameInfo.broker[brokerLevel]
-                                                  .charge * 100
+                                              +infraInfo.brokerInfoList[
+                                                  brokerLevel - 1
+                                              ].brokerFee * 100
                                           ) +
                                           '%'}
                                 </p>
@@ -191,26 +203,32 @@ export default function InfraModal(props: InfraType) {
                             <div className="w-[33%] h-[50%]">
                                 <p className="text-3xl">
                                     {facilityType === 1
-                                        ? gameInfo.vehicle[vehicleLevel + 1]
-                                              .name
+                                        ? infraInfo.vehicleInfoList[
+                                              vehicleLevel
+                                          ].vehicleName
                                         : facilityType === 2
-                                        ? gameInfo.warehouse[warehouseLevel + 1]
-                                              .name
-                                        : gameInfo.broker[brokerLevel + 1].name}
+                                        ? infraInfo.warehouseInfoList[
+                                              warehouseLevel
+                                          ].warehouseName
+                                        : infraInfo.brokerInfoList[brokerLevel]
+                                              .brokerName}
                                 </p>
                                 <p className="text-3xl">
                                     {facilityType === 1
                                         ? '탈 것 용량 : ' +
-                                          gameInfo.vehicle[vehicleLevel + 1]
-                                              .size
+                                          infraInfo.vehicleInfoList[
+                                              vehicleLevel
+                                          ].maxPurchaseQuantity
                                         : facilityType === 2
                                         ? '창고 용량 : ' +
-                                          gameInfo.warehouse[warehouseLevel + 1]
-                                              .size
+                                          infraInfo.warehouseInfoList[
+                                              warehouseLevel
+                                          ].maxHoldingQuantity
                                         : '중개소 수수료 : ' +
                                           Math.round(
-                                              +gameInfo.broker[brokerLevel + 1]
-                                                  .charge * 100
+                                              +infraInfo.brokerInfoList[
+                                                  brokerLevel
+                                              ].brokerFee * 100
                                           ) +
                                           '%'}
                                 </p>
@@ -237,11 +255,15 @@ export default function InfraModal(props: InfraType) {
                             <p className="text-4xl">업그레이드</p>
                             <p className="text-3xl mt-2">
                                 {facilityType === 1
-                                    ? gameInfo.vehicle[vehicleLevel].upgradefee
+                                    ? infraInfo.vehicleInfoList[
+                                          vehicleLevel - 1
+                                      ].vehicleUpgradeFee
                                     : facilityType === 2
-                                    ? gameInfo.warehouse[warehouseLevel]
-                                          .upgradefee
-                                    : gameInfo.broker[brokerLevel].upgradefee}
+                                    ? infraInfo.warehouseInfoList[
+                                          warehouseLevel - 1
+                                      ].warehouseUpgradeFee
+                                    : infraInfo.brokerInfoList[brokerLevel - 1]
+                                          .brokerUpgradeFee}
                             </p>
                         </div>
                         <div
@@ -270,24 +292,33 @@ export default function InfraModal(props: InfraType) {
                             <div className="w-[33%] h-[50%]">
                                 <p className="text-3xl">
                                     {facilityType === 1
-                                        ? gameInfo.vehicle[vehicleLevel].name
+                                        ? infraInfo.vehicleInfoList[
+                                              vehicleLevel - 1
+                                          ].vehicleName
                                         : facilityType === 2
-                                        ? gameInfo.warehouse[warehouseLevel]
-                                              .name
-                                        : gameInfo.broker[brokerLevel].name}
+                                        ? infraInfo.warehouseInfoList[
+                                              warehouseLevel - 1
+                                          ].warehouseName
+                                        : infraInfo.brokerInfoList[
+                                              brokerLevel - 1
+                                          ].brokerName}
                                 </p>
                                 <p className="text-3xl">
                                     {facilityType === 1
                                         ? '탈 것 용량 : ' +
-                                          gameInfo.vehicle[vehicleLevel].size
+                                          infraInfo.vehicleInfoList[
+                                              vehicleLevel - 1
+                                          ].maxPurchaseQuantity
                                         : facilityType === 2
                                         ? '창고 용량 : ' +
-                                          gameInfo.warehouse[warehouseLevel]
-                                              .size
+                                          infraInfo.warehouseInfoList[
+                                              warehouseLevel - 1
+                                          ].maxHoldingQuantity
                                         : '중개소 수수료 : ' +
                                           Math.round(
-                                              +gameInfo.broker[brokerLevel]
-                                                  .charge * 100
+                                              +infraInfo.brokerInfoList[
+                                                  brokerLevel - 1
+                                              ].brokerFee * 100
                                           ) +
                                           '%'}
                                 </p>

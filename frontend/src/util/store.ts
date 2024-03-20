@@ -3,6 +3,7 @@ import reduxSlice from './counter-slice';
 import myProductSlice from './myproduct-slice';
 import storage from 'redux-persist/lib/storage';
 import { persistReducer, persistStore } from 'redux-persist';
+import productAndEventSlice from './product-and-event';
 
 const persistConfig = {
     key: 'root',
@@ -13,6 +14,7 @@ const persistConfig = {
 const rootSlice = combineReducers({
     reduxSlice,
     myProductSlice,
+    productAndEventSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootSlice);

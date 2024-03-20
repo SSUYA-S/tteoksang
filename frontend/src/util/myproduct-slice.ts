@@ -1,18 +1,22 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { Product } from '../type/types';
 
-export interface myState {
+export interface myProductState {
     myProductList: Product[];
     warehouseLevel: number;
     vehicleLevel: number;
     brokerLevel: number;
+    gold: number;
+    purchasedQuantity: number;
 }
 
-const initialState: myState = {
+const initialState: myProductState = {
     myProductList: [],
     warehouseLevel: 0,
     vehicleLevel: 0,
     brokerLevel: 0,
+    gold: 0,
+    purchasedQuantity: 0,
 };
 
 export const myProductSlice = createSlice({
@@ -20,17 +24,23 @@ export const myProductSlice = createSlice({
     initialState,
     reducers: {
         //내 product 설정
-        myProductState: (state: myState, action) => {
+        myProductState: (state: myProductState, action) => {
             state.myProductList = action.payload;
         },
-        warehouseLevelState: (state: myState, action) => {
+        warehouseLevelState: (state: myProductState, action) => {
             state.warehouseLevel = action.payload;
         },
-        vehicleLevelState: (state: myState, action) => {
+        vehicleLevelState: (state: myProductState, action) => {
             state.vehicleLevel = action.payload;
         },
-        brokerLevelState: (state: myState, action) => {
+        brokerLevelState: (state: myProductState, action) => {
             state.brokerLevel = action.payload;
+        },
+        goldState: (state: myProductState, action) => {
+            state.gold = action.payload;
+        },
+        purchasedQuantityState: (state: myProductState, action) => {
+            state.purchasedQuantity = action.payload;
         },
     },
 });
@@ -40,5 +50,7 @@ export const {
     warehouseLevelState,
     vehicleLevelState,
     brokerLevelState,
+    goldState,
+    purchasedQuantityState,
 } = myProductSlice.actions;
 export default myProductSlice.reducer;

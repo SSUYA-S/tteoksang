@@ -4,35 +4,30 @@
             "achievementId": 1,
             "achievementName": "강원도의 전설",
             "achievementDescription": "강원도의 전설이 되어보세요.",
-            "achievementGoal": 30,
             "achievementGoalDescription": "감자를 한 판에 누적 30개 이상 구매하세요."
         },
         {
             "achievementId": 2,
             "achievementName": "아침드라마",
             "achievementDescription": "답답하다.",
-            "achievementGoal": 30,
             "achievementGoalDescription": "고구마를 한 판에 누적 30개 이상 구매하세요."
         },
         {
             "achievementId": 3,
             "achievementName": "당근마켓 온도 100도",
             "achievementDescription": "당근마켓에 당근 팔아요^^",
-            "achievementGoal": 10,
             "achievementGoalDescription": "당근을 한 번에 10개 이상 판매하세요"
         },
         {
             "achievementId": 4,
             "achievementName": "무트코인은 떡상한다.",
             "achievementDescription": "대량 매수가 답이다",
-            "achievementGoal": 100,
             "achievementGoalDescription": "무를 한 판에 누적 100개 이상 구매하세요."
         },
         {
             "achievementId": 5,
             "achievementName": "토마토",
             "achievementDescription": "거꾸로 말해도 토마토",
-            "achievementGoal": 1,
             "achievementGoalDescription": "토마토를 구매하세요."
         }
     ]

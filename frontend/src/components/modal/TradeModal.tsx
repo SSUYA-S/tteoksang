@@ -5,14 +5,13 @@ import TradeSellCard from '../section/TradeSellCard';
 import TradeSellReceipt from '../section/TradeSellReceipt';
 
 //import dummy datas
-import gameInfo from '../../dummy-data/game-info.json';
-import publicEvent from '../../dummy-data/public-event.json';
-import warehouseInfo from '../../dummy-data/warehouse-info.json';
-import totalInfo from '../../dummy-data/total-info.json';
+import infraInfo from '../../dummy-data/resource/Infra.json';
+import productResource from '../../dummy-data/resource/Product.json';
 
 import { myProductState } from '../../util/myproduct-slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { BuyInfo, SellInfo, Product } from '../../type/types';
+import { productInfoAndEventState } from '../../util/product-and-event';
 
 type tradeType = {
     setTradeFlag: React.Dispatch<React.SetStateAction<boolean>>;
@@ -30,20 +29,26 @@ export default function TradeModal(props: tradeType) {
     const [buyableProduct, setBuyableProduct] = useState<BuyInfo[]>([]);
     const [totalNumber, setTotalNumber] = useState<number>(0);
 
+    //useSelector
+    const myProductInfo: myProductState = useSelector(
+        (state: any) => state.reduxFlag.myProductSlice
+    );
+    const productInfoAndEvent: productInfoAndEventState = useSelector(
+        (state: any) => state.reduxFlag.productAndEventSlice
+    );
+
+    const myProductList = myProductInfo.myProductList;
     //구매 가능 검증용 변수, 창고에 있는 재고 불러와 계산하는 로직 추가
     let maximumBuyableAmount = Math.min(
-        gameInfo.warehouse[warehouseInfo.warehouseLevel].size,
-        gameInfo.vehicle[warehouseInfo.vehicleLevel].size
+        infraInfo.warehouseInfoList[myProductInfo.warehouseLevel - 1]
+            .maxHoldingQuantity,
+        infraInfo.vehicleInfoList[myProductInfo.vehicleLevel - 1]
+            .maxPurchaseQuantity
     );
-    maximumBuyableAmount -= totalInfo.purchasedQuantity; //나중에 고민해보자.(purchasedQuantity를 어떻게 관리할 지)
+    maximumBuyableAmount -= myProductInfo.purchasedQuantity;
 
     //현재 창고 내 재고
     const [nowStock, setNowStock] = useState<number>(0);
-
-    // myProduct
-    const myProductList = useSelector(
-        (state: any) => state.reduxFlag.myProductSlice.myProductList
-    );
 
     const dispatch = useDispatch();
 
@@ -51,8 +56,9 @@ export default function TradeModal(props: tradeType) {
     useEffect(() => {
         //구매 품목 관련 로드
         const buyable: BuyInfo[] = [];
-        publicEvent.buyableProductIdList.map((id: number) => {
+        productInfoAndEvent.buyableProductIdList.map((id: number) => {
             //내 보유 품목 조회
+            //평균 구매가 계산 위해
             const myProduct: Product = {
                 productId: id,
                 productQuantity: 0,
@@ -77,8 +83,8 @@ export default function TradeModal(props: tradeType) {
 
             //집어넣기
             const product: BuyInfo = {
-                productName: gameInfo.product[id],
-                productInfo: publicEvent.productInfoList[id],
+                productName: productResource.productList[id - 1].productName,
+                productInfo: productInfoAndEvent.productInfoList[id - 1],
                 myProduct: myProduct,
                 buyingInfo: buyingInfo,
             };
@@ -92,8 +98,8 @@ export default function TradeModal(props: tradeType) {
         const myList: SellInfo[] = [];
         myProductList.map((product: Product) => {
             const id = product.productId;
-            const productName = gameInfo.product[id];
-            const productInfo = publicEvent.productInfoList[id];
+            const productName = productResource.productList[id - 1].productName;
+            const productInfo = productInfoAndEvent.productInfoList[id - 1];
             const sellingInfo: Product = {
                 productId: id,
                 productQuantity: 0,
@@ -113,67 +119,7 @@ export default function TradeModal(props: tradeType) {
         setSellingProductList(myList);
         setTotalNumber(stock);
         setNowStock(stock);
-    }, [myProductList]);
-
-    /** 구매, 판매 정보 초기화*/
-    // useEffect(() => {
-    //     if (loaded) {
-    //         //새 구매 정보
-    //         const newBuyList: BuyInfo[] = [];
-    //         buyableProduct.map((product) => {
-    //             const myProduct = {
-    //                 productId: product.myProduct.productId,
-    //                 productQuantity: product.myProduct.productQuantity,
-    //                 productTotalCost: product.myProduct.productTotalCost,
-    //             };
-    //             const buyingInfo = {
-    //                 productId: product.buyingInfo.productId,
-    //                 productQuantity: 0,
-    //                 productTotalCost: 0,
-    //             };
-    //             const prodId = product.productInfo.productId;
-
-    //             //깊은 복사
-    //             const newProductInfo: BuyInfo = {
-    //                 productName: gameInfo.product[prodId],
-    //                 productInfo: publicEvent.productInfoList[prodId],
-    //                 myProduct: myProduct,
-    //                 buyingInfo: buyingInfo,
-    //             };
-    //             newBuyList.push(newProductInfo);
-    //         });
-    //         setBuyableProduct(newBuyList);
-
-    //         //새 판매 정보
-    //         const newSellingList: SellInfo[] = [];
-    //         sellingProductList.map((product) => {
-    //             const myProduct = {
-    //                 productId: product.myProduct.productId,
-    //                 productQuantity: product.myProduct.productQuantity,
-    //                 productTotalCost: product.myProduct.productTotalCost,
-    //             };
-    //             const sellingInfo = {
-    //                 productId: product.sellingInfo.productId,
-    //                 productQuantity: 0,
-    //                 productTotalCost: 0,
-    //             };
-    //             const prodId = product.productInfo.productId;
-
-    //             //깊은 복사
-    //             const newProductInfo: SellInfo = {
-    //                 productName: gameInfo.product[prodId],
-    //                 productInfo: publicEvent.productInfoList[prodId],
-    //                 myProduct: myProduct,
-    //                 sellingInfo: sellingInfo,
-    //             };
-
-    //             newSellingList.push(newProductInfo);
-    //         });
-    //         setSellingProductList(newSellingList);
-
-    //         setTotalNumber(nowStock);
-    //     }
-    // }, [tradeTab]);
+    }, [myProductInfo, productInfoAndEvent]);
 
     const changeTab = (prop: number) => {
         setTradeTab(prop);
@@ -208,11 +154,11 @@ export default function TradeModal(props: tradeType) {
                 productTotalCost: product.buyingInfo.productTotalCost,
             };
             const prodId = product.productInfo.productId;
-
             //깊은 복사
             const newProductInfo: BuyInfo = {
-                productName: gameInfo.product[prodId],
-                productInfo: publicEvent.productInfoList[prodId],
+                productName:
+                    productResource.productList[prodId - 1].productName,
+                productInfo: productInfoAndEvent.productInfoList[prodId - 1],
                 myProduct: myProduct,
                 buyingInfo: buyingInfo,
             };
@@ -224,7 +170,6 @@ export default function TradeModal(props: tradeType) {
             totalBuyCost += buyingInfo.productTotalCost;
             newList.push(newProductInfo);
         });
-
         //구매 가능 수량 초과
         if (
             totalBuyNum > maximumBuyableAmount ||
@@ -233,15 +178,15 @@ export default function TradeModal(props: tradeType) {
             console.log('구매 가능 초과');
             return;
         }
-
         // 현재 창고 내 재고 반영
         totalBuyNum = nowStock + totalBuyNum;
-
         //용량 초과시 반영 안함
         if (
-            totalBuyNum > gameInfo.warehouse[warehouseInfo.warehouseLevel].size
+            totalBuyNum >
+            infraInfo.warehouseInfoList[myProductInfo.warehouseLevel - 1]
+                .maxHoldingQuantity
         ) {
-            console.log('용량 초과!'); //모달로 대체
+            console.log('창고 용량 초과!'); //모달로 대체
             return;
         } else {
             setTotalNumber(totalBuyNum);
@@ -274,15 +219,14 @@ export default function TradeModal(props: tradeType) {
                 productTotalCost: product.sellingInfo.productTotalCost,
             };
             const prodId = product.productInfo.productId;
-
             //깊은 복사
             const newProductInfo: SellInfo = {
-                productName: gameInfo.product[prodId],
-                productInfo: publicEvent.productInfoList[prodId],
+                productName:
+                    productResource.productList[prodId - 1].productName,
+                productInfo: productInfoAndEvent.productInfoList[prodId - 1],
                 myProduct: myProduct,
                 sellingInfo: sellingInfo,
             };
-
             if (sellingInfo.productId === id) {
                 sellingInfo.productQuantity = changedValue;
                 sellingInfo.productTotalCost = changedCost;
@@ -290,9 +234,7 @@ export default function TradeModal(props: tradeType) {
             totalSellNum += sellingInfo.productQuantity;
             newList.push(newProductInfo);
         });
-
         const total = nowStock - totalSellNum;
-
         setTotalNumber(total);
         setSellingProductList(newList);
     };
@@ -300,22 +242,17 @@ export default function TradeModal(props: tradeType) {
     const sellProduct = (value: number) => {
         //판매 금액 표시
         props.updateNowMoney(value);
-
         let total = 0;
-
         const newList: SellInfo[] = [];
         const myNewProductList: Product[] = [];
         sellingProductList.map((product) => {
             const avgCost =
                 product.myProduct.productTotalCost /
                 product.myProduct.productQuantity;
-
             const newQuantity =
                 product.myProduct.productQuantity -
                 product.sellingInfo.productQuantity;
-
             total += newQuantity;
-
             //없으면 추가 안함
             if (newQuantity !== 0) {
                 const newSellInfo: SellInfo = {
@@ -332,7 +269,6 @@ export default function TradeModal(props: tradeType) {
                         productTotalCost: 0,
                     },
                 };
-
                 newList.push(newSellInfo);
                 myNewProductList.push(newSellInfo.myProduct);
             }
@@ -344,7 +280,6 @@ export default function TradeModal(props: tradeType) {
 
     const buyProduct = (a: number) => {
         const myNewProductList: Product[] = [];
-
         //함수 복사
         myProductList.map((product: Product) => {
             myNewProductList.push({
@@ -373,15 +308,13 @@ export default function TradeModal(props: tradeType) {
                         break;
                     }
                 }
-
                 //못찾으면 추가
                 if (flag) {
                     myNewProductList.push(product.buyingInfo);
                 }
             }
         });
-
-        console.log(myNewProductList);
+        // console.log(myNewProductList);
         dispatch(myProductState(myNewProductList));
         props.updateNowMoney(a);
     };
@@ -399,7 +332,6 @@ export default function TradeModal(props: tradeType) {
                 break;
             }
         }
-
         return number;
     };
 
@@ -421,9 +353,9 @@ export default function TradeModal(props: tradeType) {
                                 <p>
                                     {totalNumber}/
                                     {
-                                        gameInfo.warehouse[
-                                            warehouseInfo.warehouseLevel
-                                        ].size
+                                        infraInfo.warehouseInfoList[
+                                            myProductInfo.warehouseLevel - 1
+                                        ].maxHoldingQuantity
                                     }
                                 </p>
                             </div>
@@ -462,9 +394,9 @@ export default function TradeModal(props: tradeType) {
                                 <p>
                                     {totalNumber}/
                                     {
-                                        gameInfo.warehouse[
-                                            warehouseInfo.warehouseLevel
-                                        ].size
+                                        infraInfo.warehouseInfoList[
+                                            myProductInfo.warehouseLevel - 1
+                                        ].maxHoldingQuantity
                                     }
                                 </p>
                             </div>
@@ -485,8 +417,9 @@ export default function TradeModal(props: tradeType) {
                         <TradeSellReceipt
                             sellableInfoList={sellingProductList}
                             fee={
-                                gameInfo.broker[warehouseInfo.brokerLevel]
-                                    .charge
+                                infraInfo.brokerInfoList[
+                                    myProductInfo.brokerLevel - 1
+                                ].brokerFee
                             }
                             updateNowMoney={props.updateNowMoney}
                             sellProduct={sellProduct}
@@ -511,48 +444,54 @@ export default function TradeModal(props: tradeType) {
                                     <th>보유개수</th>
                                     <th>등락폭</th>
                                 </tr>
-                                {publicEvent.productInfoList.map((product) => {
-                                    if (product.productId !== 0) {
-                                        return (
-                                            <tr className="border-y-2 border-black">
-                                                <td>
-                                                    {
-                                                        gameInfo.product[
+                                {productInfoAndEvent.productInfoList.map(
+                                    (product) => {
+                                        if (product.productId !== 0) {
+                                            return (
+                                                <tr className="border-y-2 border-black">
+                                                    <td>
+                                                        {
+                                                            productResource
+                                                                .productList[
+                                                                product.productId -
+                                                                    1
+                                                            ].productName
+                                                        }
+                                                    </td>
+                                                    <td>
+                                                        {product.productCost}
+                                                    </td>
+                                                    <td>
+                                                        {getNumber(
                                                             product.productId
-                                                        ]
-                                                    }
-                                                </td>
-                                                <td>{product.productCost}</td>
-                                                <td>
-                                                    {getNumber(
-                                                        product.productId
-                                                    )}
-                                                </td>
-                                                <td>
-                                                    {product.productFluctuation >
-                                                    0 ? (
-                                                        <p className="color-text-blue3">
-                                                            {'+' +
-                                                                product.productFluctuation +
-                                                                'G'}
-                                                        </p>
-                                                    ) : product.productFluctuation ===
-                                                      0 ? (
-                                                        <p className="color-text-green1">
-                                                            {product.productFluctuation +
-                                                                'G'}
-                                                        </p>
-                                                    ) : (
-                                                        <p className="color-text-red1">
-                                                            {product.productFluctuation +
-                                                                'G'}
-                                                        </p>
-                                                    )}
-                                                </td>
-                                            </tr>
-                                        );
+                                                        )}
+                                                    </td>
+                                                    <td>
+                                                        {product.productFluctuation >
+                                                        0 ? (
+                                                            <p className="color-text-blue3">
+                                                                {'+' +
+                                                                    product.productFluctuation +
+                                                                    'G'}
+                                                            </p>
+                                                        ) : product.productFluctuation ===
+                                                          0 ? (
+                                                            <p className="color-text-green1">
+                                                                {product.productFluctuation +
+                                                                    'G'}
+                                                            </p>
+                                                        ) : (
+                                                            <p className="color-text-red1">
+                                                                {product.productFluctuation +
+                                                                    'G'}
+                                                            </p>
+                                                        )}
+                                                    </td>
+                                                </tr>
+                                            );
+                                        }
                                     }
-                                })}
+                                )}
                             </table>
                         </div>
                     </div>
