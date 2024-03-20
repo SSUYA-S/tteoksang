@@ -1,5 +1,6 @@
 package com.welcome.tteoksang.resource.controller;
 
+import com.welcome.tteoksang.resource.dto.SearchChecksumRes;
 import com.welcome.tteoksang.resource.dto.req.*;
 import com.welcome.tteoksang.resource.service.ResourceService;
 import lombok.RequiredArgsConstructor;
@@ -98,6 +99,15 @@ public class ResourceController { //tteoksang.me 접속과 동시에 불러옴
         return ResponseEntity.ok(
                 SearchMessageTypeResource.builder()
                         .messageTypeList(resourceService.searchMessageTypeList())
+                        .build()
+        );
+    }
+
+    @GetMapping("/checksum")
+    ResponseEntity<SearchChecksumRes> searchChecksumResource(){
+        return ResponseEntity.ok(
+                SearchChecksumRes.builder()
+                        .checksumList(resourceService.searchResourceChecksum())
                         .build()
         );
     }
