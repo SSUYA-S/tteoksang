@@ -1,5 +1,5 @@
 import { SettingState } from '../util/counter-slice';
-import { myState } from '../util/myproduct-slice';
+import { myProductState } from '../util/myproduct-slice';
 
 export interface Product {
     productId: number;
@@ -34,5 +34,5 @@ export interface SellInfo {
 
 export interface RootSliceState {
     reduxSlice: SettingState;
-    myProductSlice: myState;
+    myProductSlice: myProductState;
 }

@@ -1,4 +1,5 @@
 {
+    "lastGameTurn": 78,
     "rentFeeInfo": {
         "billType": "overdue",
         "rentFee": 10000,

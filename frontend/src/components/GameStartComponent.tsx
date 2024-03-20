@@ -1,8 +1,24 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { login } from '../api/auth';
-import axios from 'axios';
+//dummy data
+import totalInfo from '../dummy-data/total-info.json';
+
+//redux
+import {
+    brokerLevelState,
+    goldState,
+    myProductState,
+    purchasedQuantityState,
+    vehicleLevelState,
+    warehouseLevelState,
+} from '../util/myproduct-slice';
+import {
+    privateEventState,
+    specialEventState,
+    productInfoState,
+    buyableProductIdState,
+} from '../util/product-and-event';
 
 type startType = {
     setStartFlag: React.Dispatch<React.SetStateAction<boolean>>;
@@ -14,6 +30,8 @@ export default function GameStartComponent(props: startType) {
         new Audio('/src/assets/bgm/start_theme_bgm.mp3')
     );
     const bgmSetting = useSelector((state: any) => state.reduxFlag.bgmFlag);
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
         playing ? audio.play() : audio.pause();
@@ -29,26 +47,30 @@ export default function GameStartComponent(props: startType) {
     const toggle = () => setPlaying(bgmSetting);
 
     const onClickLogin = () => {
-        // axios
-        //     .get('http://localhost:5173/api/oauth2/authorization/google')
-        //     .then((res) => {
-        //         console.log(res);
-        //     })
-        //     .catch((err) => {
-        //         console.log(err);
-        //     });
-        // login()
-        //     .then((res) => {
-        //         console.log(res);
-        //     })
-        //     .catch((err) => {
-        //         console.log(err);
-        //     });
+        //로그인 표시
         setLoginFlag(true);
     };
     const onReady = () => {
         audio.pause();
         props.setStartFlag(true);
+    };
+
+    /** loadGameData()
+     *  게임 정보를 불러옵니다.
+     */
+    const loadGameData = () => {
+        //dummy data로부터 정보 불러오기
+        //totalInfo
+        dispatch(goldState(totalInfo.gold));
+        dispatch(privateEventState(totalInfo.privateEventId));
+        dispatch(specialEventState(totalInfo.specialEventId));
+        dispatch(myProductState(totalInfo.productList));
+        dispatch(productInfoState(totalInfo.productInfoList));
+        dispatch(buyableProductIdState(totalInfo.buyableProductIdList));
+        dispatch(purchasedQuantityState(totalInfo.purchasedQuantity));
+        dispatch(warehouseLevelState(totalInfo.warehouseLevel));
+        dispatch(vehicleLevelState(totalInfo.vehicleLevel));
+        dispatch(brokerLevelState(totalInfo.brokerLevel));
     };
 
     const loginElement = () => {
@@ -60,6 +82,7 @@ export default function GameStartComponent(props: startType) {
                         src="/src/assets/images/etc/btn-game-resume.png"
                         alt=""
                         onClick={() => {
+                            loadGameData();
                             onReady();
                         }}
                     />

@@ -11,14 +11,9 @@ import NewsModal from './modal/NewsModal';
 import LottieRain from './lottie-animation/LottieRain';
 import totalInfo from '../dummy-data/total-info.json';
 
-import {
-    myProductState,
-    warehouseLevelState,
-    brokerLevelState,
-    vehicleLevelState,
-} from '../util/myproduct-slice';
 import InventoryModal from './modal/InventoryModal';
 import InfraModal from './modal/InfraModal';
+import { goldState } from '../util/myproduct-slice';
 
 export default function GameComponent() {
     const [tradeFlag, setTradeFlag] = useState<boolean>(false);
@@ -47,6 +42,7 @@ export default function GameComponent() {
     const [turnTimer, setTurnTimer] = useState<number>(-1);
     const [nowMoney, setNowMoney] = useState<number>(0);
 
+    //게임 설정 정보 불러오기
     const bgmSetting = useSelector(
         (state: any) => state.reduxFlag.reduxSlice.bgmFlag
     );
@@ -63,18 +59,18 @@ export default function GameComponent() {
         (state: any) => state.reduxFlag.reduxSlice.profileFrame
     );
 
+    //게임 초기 정보 불러오기
+    const goldNumber = useSelector(
+        (state: any) => state.reduxFlag.myProductSlice.gold
+    );
+
     const dispatch = useDispatch();
 
     /**초기정보 세팅 */
     useEffect(() => {
-        setNowMoney(totalInfo.gold);
-
-        //myProductList
-        dispatch(myProductState(totalInfo.productList));
-        dispatch(warehouseLevelState(totalInfo.warehouseLevel));
-        dispatch(vehicleLevelState(totalInfo.vehicleLevel));
-        dispatch(brokerLevelState(totalInfo.brokerLevel));
-    }, []);
+        //초기 정보 설정
+        setNowMoney(goldNumber);
+    }, [goldNumber]);
 
     // 인게임 시간 설정
     useEffect(() => {
@@ -142,7 +138,7 @@ export default function GameComponent() {
     const updateNowMoney = (value: number) => {
         // 돈 변화 애니메이션
         let originMoney = nowMoney;
-        let num = nowMoney + value;
+        const num = nowMoney + value;
         let moneylength = 0;
         // 빼기면
         moneylength = Math.abs(originMoney - num).toString().length;
@@ -189,6 +185,9 @@ export default function GameComponent() {
             }, 20);
         }
         // 돈 변화 애니메이션
+
+        //redux 반영
+        dispatch(goldState(num));
     };
 
     return (
