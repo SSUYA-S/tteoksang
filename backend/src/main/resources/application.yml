@@ -5,6 +5,7 @@ spring:
   config:
     import:
       - optional:file:.env[.properties]
+      - classpath:application-dev.yml
   datasource:
     url: ${DB_URL}
     username: ${USER_NAME}
