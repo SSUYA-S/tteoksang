@@ -32,6 +32,6 @@ public interface ResourceService {
     //MESSAGE-TYPE -> Test
     void searchMessageTypeList(String name);
 
-
+    void saveResourceChecksum(String resourceName, Object object);
     List<ResourceChecksum> searchResourceChecksum();
 }

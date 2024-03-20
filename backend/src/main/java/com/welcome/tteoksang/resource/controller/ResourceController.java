@@ -1,17 +1,26 @@
 package com.welcome.tteoksang.resource.controller;
 
+import com.welcome.tteoksang.resource.dto.ResourceChecksum;
 import com.welcome.tteoksang.resource.dto.res.*;
 import com.welcome.tteoksang.resource.service.ResourceService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/resource")
-@RequiredArgsConstructor
-public class ResourceController { //tteoksang.me 접속과 동시에 불러옴
+//@RequiredArgsConstructor
+public class ResourceController { //tteoksang.me 접속과 동시에 불러오는 리소스 조회
 
     private final ResourceService resourceService;
+
+    //FIXME- 안됨!!!! 고치자!!!
+    @Autowired
+    public ResourceController(ResourceService resourceService) {
+        this.resourceService = resourceService;
+        reloadResource();
+    }
 
     @GetMapping("/achievement")
     ResponseEntity<SearchAchievementResourceRes> searchAchievementResource() {
@@ -88,13 +97,13 @@ public class ResourceController { //tteoksang.me 접속과 동시에 불러옴
     }
 
     @GetMapping("/message-type/{name}")
-    ResponseEntity<Void> searchMessageTypeResource(@PathVariable String name){
+    ResponseEntity<Void> searchMessageTypeResource(@PathVariable String name) {
         resourceService.searchMessageTypeList(name);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/message-type")
-    ResponseEntity<SearchMessageTypeResourceRes> searchMessageTypeResource(){
+    ResponseEntity<SearchMessageTypeResourceRes> searchMessageTypeResource() {
         return ResponseEntity.ok(
                 SearchMessageTypeResourceRes.builder()
                         .messageTypeList(resourceService.searchMessageTypeList())
@@ -103,10 +112,58 @@ public class ResourceController { //tteoksang.me 접속과 동시에 불러옴
     }
 
     @GetMapping("/checksum")
-    ResponseEntity<SearchChecksumRes> searchChecksumResource(){
+    ResponseEntity<SearchChecksumRes> searchChecksumResource() {
         return ResponseEntity.ok(
                 SearchChecksumRes.builder()
                         .checksumList(resourceService.searchResourceChecksum())
+                        .build()
+        );
+    }
+
+    @GetMapping("/reload-resource")
+    void reloadResource() {
+        resourceService.saveResourceChecksum("infra",
+                SearchInfraResourceRes.builder()
+                        .brokerInfoList(resourceService.searchBrokerList())
+                        .warehouseInfoList(resourceService.searchWarehouseList())
+                        .vehicleInfoList(resourceService.searchVehicleList())
+                        .build()
+        );
+        resourceService.saveResourceChecksum("product",
+                SearchProductResourceRes.builder()
+                        .productList(resourceService.searchProductList())
+        );
+        resourceService.saveResourceChecksum("profile-frame",
+                SearchProfileFrameResourceRes.builder()
+                        .profileFrameList(resourceService.searchProfileFrameList())
+        );
+        resourceService.saveResourceChecksum("profile-icon",
+                SearchProfileIconResourceRes.builder()
+                        .profileIconList(resourceService.searchProfileIconList())
+        );
+        resourceService.saveResourceChecksum("theme",
+                SearchThemeResourceRes.builder()
+                        .themeList(resourceService.searchThemeList())
+                        .build()
+        );
+        resourceService.saveResourceChecksum("title",
+                SearchTitleResourceRes.builder()
+                        .titleList(resourceService.searchTitleList())
+                        .build()
+        );
+        resourceService.saveResourceChecksum("achievement",
+                SearchAchievementResourceRes.builder()
+                        .achievementList(resourceService.searchAchievementList())
+                        .build()
+        );
+        resourceService.saveResourceChecksum("event",
+                SearchEventResourceRes.builder()
+                        .eventList(resourceService.searchEventList())
+                        .build()
+        );
+        resourceService.saveResourceChecksum("message-type",
+                SearchMessageTypeResourceRes.builder()
+                        .messageTypeList(resourceService.searchMessageTypeList())
                         .build()
         );
     }
