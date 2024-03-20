@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+  TteoksangBackend:
+    image: ssuyas/tteoksang_backend_test
+    container_name: TteoksangBackend
+    restart: unless-stopped
+    networks:
+      - TteoksangNetwork
+    environment:
+      DB_NAME: ${DB_NAME}
+      USER_NAME: ${USER_NAME}
+      USER_PASSWORD: ${USER_PASSWORD}
+      DB_URL: ${DB_URL}
+      DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+
+
+networks:
+  TteoksangNetwork:
+    external: true
