@@ -6,5 +6,10 @@ create table if not exists profile_frame
 
 insert into profile_frame(profile_frame_name)
 VALUES ("없음"),
-       ("기본 프레임"),
-       ("귀여운 프레임");
+       ("판타지 숲"),
+       ("숲"),
+       ("16bit"),
+       ("동물의 숲"),
+       ("네온1"),
+       ("네온2"),
+       ("네온3");
