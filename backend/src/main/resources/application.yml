@@ -72,7 +72,7 @@ social:
     secret: ${GOOGLE_CLIENT_SECRET}
     redirect: ${GOOGLE_REDIRECT_URL}
 
-#auth-redirect-url: ${AUTH_REDIRECT_URL}
+auth-redirect-url: ${AUTH_REDIRECT_URL}
 
 server:
   port: 8080
