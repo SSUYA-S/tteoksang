@@ -80,7 +80,7 @@ public class ResourceController { //tteoksang.me 접속과 동시에 불러오�
         );
     }
 
-    @GetMapping("/profileIcon")
+    @GetMapping("/profile-icon")
     ResponseEntity<SearchProfileIconResourceRes> searchProfileIconResource() {
         return ResponseEntity.ok(
                 SearchProfileIconResourceRes.builder()
@@ -89,7 +89,7 @@ public class ResourceController { //tteoksang.me 접속과 동시에 불러오�
         );
     }
 
-    @GetMapping("/profileFrame")
+    @GetMapping("/profile-frame")
     ResponseEntity<SearchProfileFrameResourceRes> searchProfileFrameResource() {
         return ResponseEntity.ok(
                 SearchProfileFrameResourceRes.builder()
@@ -104,7 +104,7 @@ public class ResourceController { //tteoksang.me 접속과 동시에 불러오�
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/messageType")
+    @GetMapping("/message-type")
     ResponseEntity<SearchMessageTypeResourceRes> searchMessageTypeResource() {
         return ResponseEntity.ok(
                 SearchMessageTypeResourceRes.builder()
