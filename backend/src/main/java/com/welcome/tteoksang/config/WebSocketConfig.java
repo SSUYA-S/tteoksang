@@ -36,6 +36,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     /**
      * websocket endpoint 등록
+     * 브로커 주소의 주소
      */
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
