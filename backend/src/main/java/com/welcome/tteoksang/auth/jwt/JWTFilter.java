@@ -77,8 +77,9 @@ public class JWTFilter extends OncePerRequestFilter {
         log.debug("---------------- 필터 타기 -----------------");
         log.debug("[TokenFilter] - 필터 시작");
 
-        if(request.getContextPath().equals("/static")) {
+        if(request.getContextPath().equals("static")) {
             filterChain.doFilter(request, response);
+            return;
         }
 
         // Cookie 기반 토큰 확인
