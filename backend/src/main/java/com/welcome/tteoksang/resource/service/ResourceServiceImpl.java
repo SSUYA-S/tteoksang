@@ -118,15 +118,6 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
-    public SearchInfraResourceRes searchInfraResource() {
-        return SearchInfraResourceRes.builder()
-                .brokerInfoList(searchBrokerList())
-                .vehicleInfoList(searchVehicleList())
-                .warehouseInfoList(searchWarehouseList())
-                .build();
-    }
-
-    @Override
     public List<ProfileIcon> searchProfileIconList() {
         return profileIconRepository.findAll();
     }

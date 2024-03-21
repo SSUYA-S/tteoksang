@@ -1,5 +1,6 @@
 package com.welcome.tteoksang.resource.controller;
 
+import com.welcome.tteoksang.resource.dto.InfraResource;
 import com.welcome.tteoksang.resource.dto.ResourceChecksum;
 import com.welcome.tteoksang.resource.dto.res.*;
 import com.welcome.tteoksang.resource.service.ResourceService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class ResourceController { //tteoksang.me 접속과 동시에 불러오는 리소스 조회
 
     private final ResourceService resourceService;
+
     @Autowired
     public ResourceController(ResourceService resourceService) {
         this.resourceService = resourceService;
@@ -69,9 +71,11 @@ public class ResourceController { //tteoksang.me 접속과 동시에 불러오�
     ResponseEntity<SearchInfraResourceRes> searchInfraResource() {
         return ResponseEntity.ok(
                 SearchInfraResourceRes.builder()
-                        .brokerInfoList(resourceService.searchBrokerList())
-                        .vehicleInfoList(resourceService.searchVehicleList())
-                        .warehouseInfoList(resourceService.searchWarehouseList())
+                        .infraList(InfraResource.builder()
+                                .brokerInfoList(resourceService.searchBrokerList())
+                                .vehicleInfoList(resourceService.searchVehicleList())
+                                .warehouseInfoList(resourceService.searchWarehouseList())
+                                .build())
                         .build()
         );
     }
@@ -123,9 +127,11 @@ public class ResourceController { //tteoksang.me 접속과 동시에 불러오�
     void reloadResource() {
         resourceService.saveResourceChecksum("infra",
                 SearchInfraResourceRes.builder()
-                        .brokerInfoList(resourceService.searchBrokerList())
-                        .warehouseInfoList(resourceService.searchWarehouseList())
-                        .vehicleInfoList(resourceService.searchVehicleList())
+                        .infraList(InfraResource.builder()
+                                .brokerInfoList(resourceService.searchBrokerList())
+                                .vehicleInfoList(resourceService.searchVehicleList())
+                                .warehouseInfoList(resourceService.searchWarehouseList())
+                                .build())
                         .build()
         );
         resourceService.saveResourceChecksum("product",
@@ -133,12 +139,12 @@ public class ResourceController { //tteoksang.me 접속과 동시에 불러오�
                         .productList(resourceService.searchProductList())
                         .build()
         );
-        resourceService.saveResourceChecksum("profile-frame",
+        resourceService.saveResourceChecksum("profileFrame",
                 SearchProfileFrameResourceRes.builder()
                         .profileFrameList(resourceService.searchProfileFrameList())
                         .build()
         );
-        resourceService.saveResourceChecksum("profile-icon",
+        resourceService.saveResourceChecksum("profileIcon",
                 SearchProfileIconResourceRes.builder()
                         .profileIconList(resourceService.searchProfileIconList())
                         .build()
@@ -163,7 +169,7 @@ public class ResourceController { //tteoksang.me 접속과 동시에 불러오�
                         .eventList(resourceService.searchEventList())
                         .build()
         );
-        resourceService.saveResourceChecksum("message-type",
+        resourceService.saveResourceChecksum("messageType",
                 SearchMessageTypeResourceRes.builder()
                         .messageTypeList(resourceService.searchMessageTypeList())
                         .build()

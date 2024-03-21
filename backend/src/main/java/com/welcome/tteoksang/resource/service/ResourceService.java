@@ -10,7 +10,6 @@ public interface ResourceService {
     List<Warehouse> searchWarehouseList();
     List<Vehicle> searchVehicleList();
     List<Broker> searchBrokerList();
-    SearchInfraResourceRes searchInfraResource();
 
     //PRODUCT resource
     List<ProductResource> searchProductList();
