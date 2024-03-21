@@ -1,8 +1,7 @@
 package com.welcome.tteoksang.user.controller;
 
 import com.welcome.tteoksang.auth.cookie.CookieUtil;
-import com.welcome.tteoksang.auth.dto.TokenCookie;
-import com.welcome.tteoksang.user.dto.AchieveRes;
+import com.welcome.tteoksang.user.dto.AchieveInfo;
 import com.welcome.tteoksang.user.dto.PreviousPlayInfo;
 import com.welcome.tteoksang.user.dto.User;
 import com.welcome.tteoksang.user.dto.req.UpdateUserNameReq;
@@ -21,7 +20,6 @@ import com.welcome.tteoksang.user.service.UserService;
 import java.net.URISyntaxException;
 import java.util.List;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -88,7 +86,7 @@ public class UserController {
 
     @GetMapping("/achievement")
     public ResponseEntity<SearchAchieveRes> searchAchievement(@AuthenticationPrincipal User user) {
-        List<AchieveRes> achievementList = achieveService.searchAllAchieve(user.getUserId());
+        List<AchieveInfo> achievementList = achieveService.searchAllAchieve(user.getUserId());
 
         return ResponseEntity.ok()
                 .body(
@@ -116,7 +114,7 @@ public class UserController {
                                              HttpServletResponse response,
                                              @AuthenticationPrincipal User user) throws URISyntaxException {
         userService.deleteUser(user);
-        CookieUtil.deleteCookie(request, response);
+        CookieUtil.deleteTokenCookie(request, response);
         return ResponseEntity.ok().build();
     }
 
