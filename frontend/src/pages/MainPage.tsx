@@ -13,17 +13,22 @@ import {
     resourceTheme,
     resourceTitle,
 } from '../api/resource';
-import { ChecksumList, NewChecksum } from '../type/types';
+import {
+    AchievementList,
+    ChecksumList,
+    InitialData,
+    NewChecksum,
+} from '../type/types';
 import { AxiosResponse } from 'axios';
 import { createMD5 } from '../util/createMD5';
 import { deleteResourceAPICacheKey } from '../util/controllServiceWorker';
 
 export default function MainPage() {
     const [startFlag, setStartFlag] = useState<boolean>(false);
-    const [checkSumData, setCheckSumData] = useState<ChecksumList>({
+    const [checksumData, setChecksumData] = useState<ChecksumList>({
         checksumList: [],
     });
-    const [newCheckSumData, setNewCheckSumData] = useState<NewChecksum>({
+    const [newChecksumData, setNewChecksumData] = useState<NewChecksum>({
         achievement: '',
         event: '',
         infra: '',
@@ -34,17 +39,40 @@ export default function MainPage() {
         theme: '',
         title: '',
     });
+    const [achievement, setAchievement] = useState<AchievementList>();
+    const [initialData, setInitialData] = useState<InitialData>({
+        achievementList: [],
+        titleList: [],
+        themeList: [],
+        productList: [],
+        eventList: [],
+        infraList: [],
+        messageTypeList: [],
+        profileIconList: [],
+        profileFrameList: [],
+    });
     useEffect(() => {
         const loadChecksumAPI = async () => {
             await resourceChecksum().then((res) => {
-                setCheckSumData(res.data);
+                setChecksumData(res.data);
             });
         };
         loadChecksumAPI();
+
+        const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+            e.preventDefault();
+            e.returnValue =
+                '변경사항이 저장되지 않을 수 있습니다. 페이지를 떠나시겠습니까?';
+        };
+        // 이벤트 리스너 추가
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
     }, []);
 
     useEffect(() => {
-        if (checkSumData.checksumList.length > 0) {
+        if (checksumData.checksumList.length > 0) {
             const resourceCall = [
                 resourceAchievement(),
                 resourceEvent(),
@@ -56,25 +84,47 @@ export default function MainPage() {
                 resourceTheme(),
                 resourceTitle(),
             ];
-            console.log(checkSumData);
             Promise.all(resourceCall).then((result) => {
                 result.map((item) => {
                     const objectKey = Object.keys(item.data);
-                    console.log(item.data);
+                    // console.log(item.data);
+
+                    // 데이터 저장
+                    pushInitialData(objectKey.toString(), item);
                     const hashMD5 = createMD5(JSON.stringify(item.data));
                     changeNewChecksum(objectKey.toString(), hashMD5);
 
-                    console.log(hashMD5);
+                    // console.log(hashMD5);
                 });
-                compareChecksum();
             });
         }
-    }, [checkSumData]);
+    }, [checksumData]);
+
+    useEffect(() => {
+        if (
+            newChecksumData.achievement !== '' &&
+            newChecksumData.event !== '' &&
+            newChecksumData.infra !== '' &&
+            newChecksumData.messageType !== '' &&
+            newChecksumData.product !== '' &&
+            newChecksumData.profileFrame !== '' &&
+            newChecksumData.profileIcon !== '' &&
+            newChecksumData.theme !== '' &&
+            newChecksumData.title !== ''
+        ) {
+            compareChecksum();
+        }
+    }, [newChecksumData]);
+
+    useEffect(() => {
+        console.log(initialData);
+    }, [initialData]);
+
     const changeNewChecksum = (key: string, value: string) => {
         if (key.length >= 4) {
             key = key.slice(0, -4);
         }
-        setNewCheckSumData((prev) => {
+        setNewChecksumData((prev) => {
             let newHash = { ...prev };
             if (
                 key === 'achievement' ||
@@ -94,83 +144,112 @@ export default function MainPage() {
     };
 
     const compareChecksum = () => {
-        console.log(checkSumData);
         if (
-            checkSumData.checksumList[0].checksumValue !==
-            newCheckSumData.achievement
+            checksumData.checksumList[0].checksumValue !==
+            newChecksumData.achievement
         ) {
             deleteResourceAPICacheKey('achievement');
             console.log('achievement 재요청을 보내겠습니다');
-            resourceAchievement();
+            resourceAchievement().then((res) => {
+                pushInitialData('achievementList', res);
+            });
         }
         if (
-            checkSumData.checksumList[1].checksumValue !== newCheckSumData.event
+            checksumData.checksumList[1].checksumValue !== newChecksumData.event
         ) {
             deleteResourceAPICacheKey('event');
             console.log('event 재요청을 보내겠습니다');
-            resourceEvent();
+            resourceEvent().then((res) => {
+                pushInitialData('eventtList', res);
+            });
         }
         if (
-            checkSumData.checksumList[2].checksumValue !== newCheckSumData.infra
+            checksumData.checksumList[2].checksumValue !== newChecksumData.infra
         ) {
             deleteResourceAPICacheKey('infra');
             console.log('infra 재요청을 보내겠습니다');
-            resourceInfra();
+            resourceInfra().then((res) => {
+                pushInitialData('infraList', res);
+            });
         }
         if (
-            checkSumData.checksumList[3].checksumValue !==
-            newCheckSumData.messageType
+            checksumData.checksumList[3].checksumValue !==
+            newChecksumData.messageType
         ) {
-            deleteResourceAPICacheKey('messageType');
+            deleteResourceAPICacheKey('message-type');
             console.log('messageType 재요청을 보내겠습니다');
-            resourceMessageType();
+            resourceMessageType().then((res) => {
+                pushInitialData('messageTypeList', res);
+            });
         }
         if (
-            checkSumData.checksumList[4].checksumValue !==
-            newCheckSumData.product
+            checksumData.checksumList[4].checksumValue !==
+            newChecksumData.product
         ) {
             deleteResourceAPICacheKey('product');
             console.log('product 재요청을 보내겠습니다');
-            resourceProduct();
+            resourceProduct().then((res) => {
+                pushInitialData('productList', res);
+            });
         }
         if (
-            checkSumData.checksumList[5].checksumValue !==
-            newCheckSumData.profileFrame
+            checksumData.checksumList[5].checksumValue !==
+            newChecksumData.profileFrame
         ) {
-            deleteResourceAPICacheKey('profileFrame');
+            deleteResourceAPICacheKey('profile-frame');
             console.log('profileFrame 재요청을 보내겠습니다');
-            resourceProfileFrame();
+            resourceProfileFrame().then((res) => {
+                pushInitialData('profileFrameList', res);
+            });
         }
         if (
-            checkSumData.checksumList[6].checksumValue !==
-            newCheckSumData.profileIcon
+            checksumData.checksumList[6].checksumValue !==
+            newChecksumData.profileIcon
         ) {
-            deleteResourceAPICacheKey('profileIcon');
+            deleteResourceAPICacheKey('profile-icon');
             console.log('profileIcon 재요청을 보내겠습니다');
-            resourceProfileIcon();
+            resourceProfileIcon().then((res) => {
+                pushInitialData('profileIconList', res);
+            });
         }
         if (
-            checkSumData.checksumList[7].checksumValue !== newCheckSumData.theme
+            checksumData.checksumList[7].checksumValue !== newChecksumData.theme
         ) {
             deleteResourceAPICacheKey('theme');
             console.log('theme 재요청을 보내겠습니다');
-            resourceTheme();
+            resourceTheme().then((res) => {
+                pushInitialData('themeList', res);
+            });
         }
         if (
-            checkSumData.checksumList[8].checksumValue !== newCheckSumData.title
+            checksumData.checksumList[8].checksumValue !== newChecksumData.title
         ) {
             deleteResourceAPICacheKey('title');
             console.log('title 재요청을 보내겠습니다');
-            resourceTitle();
+            resourceTitle().then((res) => {
+                pushInitialData('titleList', res);
+            });
         }
+    };
+    const pushInitialData = (key: string, res: AxiosResponse<any, any>) => {
+        setInitialData((prev) => ({
+            ...prev,
+            [key]: Object.values(res.data)[0],
+        }));
     };
 
     return (
         <section className="w-full h-full">
             {!startFlag ? (
-                <GameStartComponent setStartFlag={setStartFlag} />
+                <GameStartComponent
+                    setStartFlag={setStartFlag}
+                    achievementData={initialData.achievementList}
+                    titleData={initialData.titleList}
+                    profileFrameData={initialData.profileFrameList}
+                    profileIconData={initialData.profileIconList}
+                />
             ) : (
-                <GameComponent />
+                <GameComponent initialData={initialData} />
             )}
         </section>
     );

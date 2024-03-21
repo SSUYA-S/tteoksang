@@ -24,11 +24,20 @@ import {
     productInfoState,
     buyableProductIdState,
 } from '../util/product-and-event';
+import { Achievement, ProfileFrame, ProfileIcon, Title } from '../type/types';
 
 type startType = {
     setStartFlag: React.Dispatch<React.SetStateAction<boolean>>;
+    achievementData: Achievement[];
+    titleData: Title[];
+    profileFrameData: ProfileFrame[];
+    profileIconData: ProfileIcon[];
 };
 export default function GameStartComponent(props: startType) {
+    const achievementData = props.achievementData;
+    const titleData = props.titleData;
+    const profileFrameData = props.profileFrameData;
+    const profileIconData = props.profileIconData;
     const [loginFlag, setLoginFlag] = useState<boolean>(false);
     const [playing, setPlaying] = useState<boolean>(false);
     const [audio, setAudio] = useState(
