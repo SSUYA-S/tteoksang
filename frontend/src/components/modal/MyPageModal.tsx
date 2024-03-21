@@ -475,6 +475,7 @@ export default function MyPageModal(props: MyPageType) {
                                         (frame) => {
                                             return (
                                                 <img
+                                                    key={frame.profileFrameId}
                                                     className={
                                                         'w-[7vw] h-[7vw] m-[0.8vw] cursor-pointer ' +
                                                         (tempFrame ===
@@ -506,6 +507,7 @@ export default function MyPageModal(props: MyPageType) {
                                     {iconInfo.profileIconList.map((icon) => {
                                         return (
                                             <img
+                                                key={icon.profileIconId}
                                                 className={
                                                     'w-[7vw] h-[7vw] m-[0.8vw] cursor-pointer ' +
                                                     (tempIcon ===
@@ -534,6 +536,7 @@ export default function MyPageModal(props: MyPageType) {
                                     {themeInfo.themeList.map((theme) => {
                                         return (
                                             <img
+                                                key={theme.themeId}
                                                 className={
                                                     'w-[15vw] h-[7vw] m-[0.8vw] cursor-pointer ' +
                                                     (tempTheme === theme.themeId
