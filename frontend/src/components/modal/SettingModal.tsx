@@ -1,9 +1,14 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { bgmState, themeState } from '../../util/counter-slice';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import { logout } from '../../api/auth';
+import { httpStatusCode } from '../../util/http-status';
 
 type settingType = {
     setSettingFlag: React.Dispatch<React.SetStateAction<boolean>>;
+    setStartFlag: React.Dispatch<React.SetStateAction<boolean>>;
 };
 export default function SettingModal(props: settingType) {
     const bgmSetting = useSelector(
@@ -37,6 +42,19 @@ export default function SettingModal(props: settingType) {
     const closeResultModal = () => {
         props.setSettingFlag(false);
     };
+
+    /** handleLogOut()
+     *  로그아웃
+     */
+    const handleLogOut = async () => {
+        const res = await logout();
+        if (res.status === httpStatusCode.OK) {
+            props.setStartFlag(false);
+        } else {
+            console.log('Logout error');
+        }
+    };
+
     return (
         <div className="absolute w-[40%] h-[50%] flex items-center justify-start color-text-textcolor border-[0.4vw] color-border-brown1 color-bg-main z-50 rounded-[0.8vw] animation-modal ">
             <div className="w-[100%] h-full flex flex-col items-center">
@@ -161,7 +179,10 @@ export default function SettingModal(props: settingType) {
                     <p>시간에 따라 배경 화면이 변합니다.</p>
                     <p className="text-[1.3vw] my-[0.4vw]">게임 플레이</p>
                     <div className="w-full flex justify-between">
-                        <p className="text-[1.3vw] border-[0.1vw] py-[0.4vw] px-[1.6vw] rounded-[0.6vw] color-border-orange1 color-text-orange1 bg-white cursor-pointer">
+                        <p
+                            className="text-[1.3vw] border-[0.1vw] py-[0.4vw] px-[1.6vw] rounded-[0.6vw] color-border-orange1 color-text-orange1 bg-white cursor-pointer"
+                            onClick={handleLogOut}
+                        >
                             로그아웃
                         </p>
                         <p className="text-[1.3vw] border-[0.1vw] py-[0.4vw] px-[1.6vw] rounded-[0.6vw] border-white bg-red-600 text-white cursor-pointer">
