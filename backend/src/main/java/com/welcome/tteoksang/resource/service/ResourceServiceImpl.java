@@ -2,21 +2,14 @@ package com.welcome.tteoksang.resource.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.welcome.tteoksang.resource.type.CoreMessageType;
 import com.welcome.tteoksang.resource.type.MessageType;
 import com.welcome.tteoksang.resource.dto.*;
-import com.welcome.tteoksang.resource.dto.res.*;
 import com.welcome.tteoksang.resource.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.buf.HexUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.codec.Hex;
 import org.springframework.stereotype.Service;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
@@ -131,25 +124,9 @@ public class ResourceServiceImpl implements ResourceService {
     public List<MessageTypeResource> searchMessageTypeList() {
         List<MessageTypeResource> messageTypeList = new ArrayList<>();
         for (MessageType messageType : MessageType.values()) {
-            messageTypeList.add(new MessageTypeResource(messageType.name(), messageType.ordinal()));
+            messageTypeList.add(new MessageTypeResource(messageType.name(), messageType.getCode()));
         }
         return messageTypeList;
-    }
-
-    //TEST진행..
-    @Override
-    public void searchMessageTypeList(String name) {
-        CoreMessageType myType = CoreMessageType.valueOf(name);
-        System.out.println(myType);
-        System.out.println(myType.name());
-        System.out.println(myType.ordinal());
-        System.out.println(myType.getCode());
-//        CoreMessageType.
-//        System.out.println(myType==MessageType.);
-        System.out.println(CoreMessageType.ALERT_PLAYTIME.name());
-        System.out.println(CoreMessageType.ALERT_PLAYTIME); //==NAME
-        System.out.println(CoreMessageType.ALERT_PLAYTIME.ordinal());
-        System.out.println(CoreMessageType.ALERT_PLAYTIME.getCode());
     }
 
     @Override

@@ -20,20 +20,23 @@ public class GameInfo {
     @Column(name = "game_id")
     private Integer gameId;
 
+    @Column(name = "gold")
+    private Long gold;
+
     @Column(name = "warehouse_level")
-    Integer warehouse;
+    private Integer warehouseLevel;
 
     @Column(name = "vehicle_level")
-    Integer vehicleLevel;
+    private Integer vehicleLevel;
 
     @Column(name = "broker_level")
-    Integer brokerLevel;
+    private Integer brokerLevel;
 
     @Column(name = "private_event_id")
-    String privateEventId;
+    private String privateEventId;
 
     @Column(name = "last_play_turn")
-    Integer lastPlayTurn;
+    private Integer lastPlayTurn;
 
     @Column(name = "last_connect_time")
     private LocalDateTime lastConnectTime;
