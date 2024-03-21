@@ -19,8 +19,13 @@ import { goldState } from '../util/myproduct-slice';
 import Stomp from '@stomp/stompjs';
 import { Client } from '@stomp/stompjs';
 import { handshake, sendMessage } from '../util/websocket/client';
+import { InitialData } from '../type/types';
 
-export default function GameComponent() {
+type GameType = {
+    initialData: InitialData;
+};
+export default function GameComponent(props: GameType) {
+    const initialData = props.initialData;
     const [tradeFlag, setTradeFlag] = useState<boolean>(false);
     const [facilityFlag, setFacilityFlag] = useState<boolean>(false);
     const [infoSeasonFlag, setInfoSeasonFlag] = useState<boolean>(true);
@@ -30,7 +35,6 @@ export default function GameComponent() {
     const [mypageFlag, setMyPageFlag] = useState<boolean>(false);
     const [newsFlag, setNewsFlag] = useState<boolean>(false);
     const [inventoryFlag, setInventoryFlag] = useState<boolean>(false);
-
     //턴 시간
     const [duration, setDuration] = useState<number>(20);
     const [ingameTurn, setIngameTurn] = useState<number>(1);

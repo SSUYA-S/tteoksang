@@ -1,7 +1,7 @@
-import { Product } from '../../type/types';
+import { ProductBucket } from '../../type/types';
 
 interface SellCardProps {
-    myProduct: Product;
+    myProduct: ProductBucket;
     productName: string;
     productTodayCost: number;
     productFluctuation: number;

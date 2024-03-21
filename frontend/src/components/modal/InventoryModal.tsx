@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 import InventoryCard from '../section/InventoryCard';
-import { ProductInfo } from '../../type/types';
+import { ProductBucket, ProductInfo } from '../../type/types';
 
 import productSource from '../../dummy-data/resource/Product.json';
 
@@ -24,7 +24,7 @@ export default function InventoryModal(props: inventoryType) {
     return (
         <section className="absolute w-[80%] h-[80%] flex justify-center items-center border-[0.4vw] color-border-sublight color-bg-main rounded-[0.6vw] z-50 animation-modal mt-[1vw]">
             <div className="absolute left-[1vw] w-[95%] h-[90%] bg-white flex flex-wrap overflow-y-auto">
-                {myProduct.map((product) => {
+                {myProduct.map((product: ProductBucket) => {
                     return (
                         <InventoryCard
                             myProduct={product}

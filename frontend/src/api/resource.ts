@@ -1,3 +1,4 @@
+import axios from 'axios';
 import localAxios from '../util/http-common';
 
 const local = localAxios();
@@ -9,7 +10,7 @@ export async function resourceChecksum() {
 
 /**도전과제 리스트 조회 */
 export async function resourceAchievement() {
-    return await local.get(`/api/resource/achievement`);
+    return await axios.get(`/api/resource/achievement`);
 }
 
 /**칭호 리소스 조회 */
