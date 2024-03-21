@@ -17,6 +17,7 @@ import {
     changeProfileIcon,
 } from '../../api/user';
 import { httpStatusCode } from '../../util/http-status';
+import NicknameChangeModal from './NicknameChangeModal';
 
 type MyPageType = {
     setMypageFlag: React.Dispatch<SetStateAction<boolean>>;
@@ -52,6 +53,9 @@ export default function MyPageModal(props: MyPageType) {
     const [tempTheme, setTempTheme] = useState<number>(0);
     /**임시 아이콘(미리보기) */
     const [tempIcon, setTempIcon] = useState<number>(0);
+
+    const [isNicknameChanging, setIsNicknameChanging] =
+        useState<boolean>(false);
 
     useEffect(() => {
         setTempFrame(profileFrame);
@@ -121,6 +125,11 @@ export default function MyPageModal(props: MyPageType) {
             .catch((err) => {
                 console.log(err);
             });
+    };
+
+    /**닉네임 변경 모달 닫기 */
+    const closeNicknameModal = () => {
+        setIsNicknameChanging(false);
     };
 
     //animation 효과
@@ -554,6 +563,14 @@ export default function MyPageModal(props: MyPageType) {
     };
     return (
         <div className="absolute w-[90%] h-[95%] flex items-center justify-center color-text-textcolor border-[0.2vw] color-border-brown1 color-bg-main z-50 animation-modal ">
+            {isNicknameChanging ? (
+                <NicknameChangeModal
+                    closeModal={closeNicknameModal}
+                    nickName={userNickname}
+                />
+            ) : (
+                <></>
+            )}
             <div className="w-[32%] h-[85%] flex flex-col py-[3.2vw] items-center bg-white border-[0.2vw] color-border-brown1">
                 <div
                     className="relative w-[13vw] border-[0.2vw]"
@@ -575,7 +592,10 @@ export default function MyPageModal(props: MyPageType) {
                 <p className="text-[1.5vw] mt-[1.8vw] text-green-500">
                     {titleInfo.titleList[titleId - 1].titleName}
                 </p>
-                <div className="flex my-[0.8vw] text-[1.8vw] items-center justify-center">
+                <div
+                    className="flex my-[0.8vw] text-[1.8vw] items-center justify-center cursor-pointer"
+                    onClick={() => setIsNicknameChanging(true)}
+                >
                     {userNickname}
                 </div>
                 <p className="text-[1.3vw]">{`${career}년차`}</p>
@@ -662,7 +682,7 @@ export default function MyPageModal(props: MyPageType) {
                 </div>
                 <div
                     className={
-                        'absolute right-5 bottom-2 w-[9vw]  text-white bg-black p-[0.2vw] text-[1.4vw] cursor-pointer '
+                        'absolute right-[5%] bottom-[5%] w-[9vw]  text-white bg-black p-[0.2vw] text-[1.4vw] cursor-pointer '
                     }
                     onClick={() => saveSettings()}
                 >
