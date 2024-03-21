@@ -136,3 +136,12 @@ export interface InitialData {
     profileIconList: ProfileIcon[];
     profileFrameList: ProfileFrame[];
 }
+
+export interface profileData {
+    career: number;
+    profileFrameId: number;
+    profileIconId: number;
+    themeId: number;
+    titleId: number;
+    userNickname: string;
+}

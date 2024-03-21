@@ -249,7 +249,7 @@ export default function MainPage() {
                     profileIconData={initialData.profileIconList}
                 />
             ) : (
-                <GameComponent initialData={initialData} />
+                <GameComponent initialData={initialData} setStartFlag={setStartFlag} />
             )}
         </section>
     );

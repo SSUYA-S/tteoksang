@@ -9,6 +9,9 @@ import CircularTimer from './section/CircularTimer';
 import MyPageModal from './modal/MyPageModal';
 import NewsModal from './modal/NewsModal';
 import LottieRain from './lottie-animation/LottieRain';
+
+//dummydata
+import titleInfo from '../dummy-data/resource/Title.json';
 import totalInfo from '../dummy-data/total-info.json';
 
 import InventoryModal from './modal/InventoryModal';
@@ -20,9 +23,12 @@ import Stomp from '@stomp/stompjs';
 import { Client } from '@stomp/stompjs';
 import { handshake, sendMessage } from '../util/websocket/client';
 import { InitialData } from '../type/types';
+import { checkMyProfile } from '../api/user';
 
 type GameType = {
     initialData: InitialData;
+  setStartFlag: React.Dispatch<React.SetStateAction<boolean>>;
+
 };
 export default function GameComponent(props: GameType) {
     const initialData = props.initialData;
@@ -75,6 +81,14 @@ export default function GameComponent(props: GameType) {
     //게임 초기 정보 불러오기
     const goldNumber = useSelector(
         (state: any) => state.reduxFlag.myProductSlice.gold
+    );
+
+    const userNickname = useSelector(
+        (state: any) => state.reduxFlag.myProfileSlice.userNickname
+    );
+
+    const titleId = useSelector(
+        (state: any) => state.reduxFlag.myProfileSlice.title
     );
 
     const dispatch = useDispatch();
@@ -260,10 +274,10 @@ export default function GameComponent(props: GameType) {
 
                         <div className="relative w-[65%] flex flex-col items-center justify-center ps-[5%]">
                             <p className="w-full text-start mx-2 text-[1.5vw] text-green-500">
-                                뿌리채소의 제왕
+                                {titleInfo.titleList[titleId - 1].titleName}
                             </p>
                             <p className="w-full text-start mx-2 my-[5%] text-[2vw] text-green-500">
-                                제노 님
+                                {userNickname}
                             </p>
                         </div>
                     </div>
@@ -495,7 +509,10 @@ export default function GameComponent(props: GameType) {
                 <></>
             )}
             {settingFlag ? (
-                <SettingModal setSettingFlag={setSettingFlag} />
+                <SettingModal
+                    setSettingFlag={setSettingFlag}
+                    setStartFlag={props.setStartFlag}
+                />
             ) : (
                 <></>
             )}

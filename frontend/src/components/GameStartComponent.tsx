@@ -25,6 +25,19 @@ import {
     buyableProductIdState,
 } from '../util/product-and-event';
 import { Achievement, ProfileFrame, ProfileIcon, Title } from '../type/types';
+import { checkMyProfile } from '../api/user';
+import { httpStatusCode } from '../util/http-status';
+import { profileData } from '../type/types';
+import {
+    careerState,
+    titleState,
+    userNicknameState,
+} from '../util/myprofile-slice';
+import {
+    profileFrameState,
+    profileIconeState,
+    profileThemeState,
+} from '../util/counter-slice';
 
 type startType = {
     setStartFlag: React.Dispatch<React.SetStateAction<boolean>>;
@@ -74,6 +87,24 @@ export default function GameStartComponent(props: startType) {
     useEffect(() => {
         //로그인 정보 있으면 자동 로그인
         if (cookies.get('accessToken')) {
+            //초기 설정 불러와 설정
+            checkMyProfile()
+                .then((res) => {
+                    if (res.status === httpStatusCode.OK) {
+                        //프로필 테마와 게임 내 칭호, 닉네임 등 불러오기
+                        const profile: profileData = res.data;
+                        dispatch(careerState(profile.career));
+                        dispatch(profileFrameState(profile.profileFrameId));
+                        dispatch(profileIconeState(profile.profileIconId));
+                        dispatch(profileThemeState(profile.themeId));
+                        dispatch(titleState(profile.titleId));
+                        dispatch(userNicknameState(profile.userNickname));
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+
             setLoginFlag(true);
         }
     }, [cookies]);
