@@ -3,6 +3,7 @@
 .idea
 /*/venv
 /frontend/dev-dist/sw.js
+/frontend/package-lock.json
 
 ### Java template
 # Compiled class file
