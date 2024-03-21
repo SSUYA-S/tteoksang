@@ -98,12 +98,6 @@ public class ResourceController { //tteoksang.me 접속과 동시에 불러오�
         );
     }
 
-    @GetMapping("/messageType/{name}")
-    ResponseEntity<Void> searchMessageTypeResource(@PathVariable String name) {
-        resourceService.searchMessageTypeList(name);
-        return ResponseEntity.ok().build();
-    }
-
     @GetMapping("/message-type")
     ResponseEntity<SearchMessageTypeResourceRes> searchMessageTypeResource() {
         return ResponseEntity.ok(

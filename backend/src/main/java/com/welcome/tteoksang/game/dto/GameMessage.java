@@ -1,5 +1,6 @@
 package com.welcome.tteoksang.game.dto;
 
+import com.welcome.tteoksang.resource.type.MessageType;
 import lombok.*;
 
 @Getter
@@ -8,6 +9,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class GameMessage {
-    String type;
+    MessageType type;
     Object body;
 }

@@ -24,7 +24,10 @@ public class GameController {
           */
         User user = (User) ((Authentication) principal).getPrincipal();
         switch (gameMessage.getType()){
-
+            case CHANGE_TITLE:
+                // 처리
+            default:
+                // 정의되지 않은 요청
         }
         return gameMessage;
     }

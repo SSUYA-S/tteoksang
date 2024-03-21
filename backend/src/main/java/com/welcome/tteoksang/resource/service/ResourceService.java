@@ -28,8 +28,6 @@ public interface ResourceService {
 
     //MESSAGE-TYPE resource
     List<MessageTypeResource> searchMessageTypeList();
-    //MESSAGE-TYPE -> Test
-    void searchMessageTypeList(String name);
 
     void saveResourceChecksum(String resourceName, Object object);
     List<ResourceChecksum> searchResourceChecksum();
