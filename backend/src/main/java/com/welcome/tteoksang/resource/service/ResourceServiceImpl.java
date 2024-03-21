@@ -9,7 +9,9 @@ import com.welcome.tteoksang.resource.dto.res.*;
 import com.welcome.tteoksang.resource.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.buf.HexUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.codec.Hex;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -17,9 +19,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -175,7 +175,9 @@ public class ResourceServiceImpl implements ResourceService {
             //MD5를 통해 해싱 -> checksumByte.length=16
             byte[] checksumByte = MessageDigest.getInstance("MD5").digest(jsonString.getBytes());
 
-            return Base64.getEncoder().encodeToString(checksumByte);
+            System.out.println(HexUtils.toHexString(checksumByte));
+            return HexUtils.toHexString(checksumByte);
+//            return Base64.getEncoder().encodeToString(checksumByte);
         } catch (NoSuchAlgorithmException | JsonProcessingException e) {
             throw new RuntimeException(e);
         }
