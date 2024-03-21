@@ -82,7 +82,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         // 쿠키에 데이터 저장
         Cookie accessTokenCookie = new Cookie("accessToken", accessToken);
         accessTokenCookie.setPath("/");
-        accessTokenCookie.setHttpOnly(true);
+//        accessTokenCookie.setHttpOnly(true);
         accessTokenCookie.setMaxAge(60 * 60);
         response.addCookie(accessTokenCookie);
 
