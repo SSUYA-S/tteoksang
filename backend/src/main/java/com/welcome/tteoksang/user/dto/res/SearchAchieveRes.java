@@ -1,7 +1,6 @@
 package com.welcome.tteoksang.user.dto.res;
 
-import com.welcome.tteoksang.user.dto.Achieve;
-import com.welcome.tteoksang.user.dto.AchieveRes;
+import com.welcome.tteoksang.user.dto.AchieveInfo;
 import lombok.*;
 
 import java.util.List;
@@ -13,6 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 public class SearchAchieveRes {
 
-    private List<AchieveRes> acquiredAchievementList;
+    private List<AchieveInfo> acquiredAchievementList;
 
 }

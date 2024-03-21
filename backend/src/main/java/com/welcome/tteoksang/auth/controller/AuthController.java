@@ -51,7 +51,7 @@ public class AuthController {
         log.debug("redis:{}", redisService.getValues(key));
 
         // 쿠키 지우기
-        CookieUtil.deleteCookie(request, response);
+        CookieUtil.deleteTokenCookie(request, response);
     }
 
     @PostMapping("/token")

@@ -27,8 +27,21 @@ public class CookieUtil {
                 .build();
     }
 
-    public static void deleteCookie(HttpServletRequest request,
-                                    HttpServletResponse response) {
+//    public static Cookie searchCookie(String cookieName, HttpServletRequest request) {
+//        Cookie selectedCookie = null;
+//        Cookie[] cookies = request.getCookies();
+//        if (cookies != null) {
+//            for (Cookie cookie : cookies) {
+//                if (cookieName.equals(cookie.getName())) {
+//                    selectedCookie = cookie;
+//                }
+//            }
+//        }
+//        return selectedCookie;
+//    }
+
+    public static void deleteTokenCookie(HttpServletRequest request,
+                                         HttpServletResponse response) {
         TokenCookie tokenCookie = CookieUtil.resolveToken(request);
 
         Cookie accessTokenCookie = tokenCookie.getAccessTokenCookie();
