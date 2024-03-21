@@ -81,8 +81,11 @@ export default function GameComponent() {
         setNowMoney(goldNumber);
     }, [goldNumber]);
 
-    //websocket
+    //init
     useEffect(() => {
+        setIngameTurn(totalInfo.turn);
+
+        //websocket
         const client = handshake();
         setWebSocketClient(client);
     }, []);
