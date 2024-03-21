@@ -10,7 +10,6 @@ public interface ResourceService {
     List<Warehouse> searchWarehouseList();
     List<Vehicle> searchVehicleList();
     List<Broker> searchBrokerList();
-    SearchInfraResourceRes searchInfraResource();
 
     //PRODUCT resource
     List<ProductResource> searchProductList();
@@ -32,6 +31,6 @@ public interface ResourceService {
     //MESSAGE-TYPE -> Test
     void searchMessageTypeList(String name);
 
-
+    void saveResourceChecksum(String resourceName, Object object);
     List<ResourceChecksum> searchResourceChecksum();
 }
