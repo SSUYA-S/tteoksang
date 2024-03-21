@@ -170,7 +170,7 @@ export default function MainPage() {
             {!startFlag ? (
                 <GameStartComponent setStartFlag={setStartFlag} />
             ) : (
-                <GameComponent />
+                <GameComponent setStartFlag={setStartFlag} />
             )}
         </section>
     );

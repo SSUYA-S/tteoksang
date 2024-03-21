@@ -6,6 +6,18 @@ import {
     profileThemeState,
 } from '../../util/counter-slice';
 
+//dummy data
+import titleInfo from '../../dummy-data/resource/Title.json';
+import profileFrameInfo from '../../dummy-data/resource/ProfileFrame.json';
+import themeInfo from '../../dummy-data/resource/Theme.json';
+import iconInfo from '../../dummy-data/resource/ProfileIcon.json';
+import {
+    changeProfileFrame,
+    changeProfileTheme,
+    changeProfileIcon,
+} from '../../api/user';
+import { httpStatusCode } from '../../util/http-status';
+
 type MyPageType = {
     setMypageFlag: React.Dispatch<SetStateAction<boolean>>;
 };
@@ -23,10 +35,28 @@ export default function MyPageModal(props: MyPageType) {
         (state: any) => state.reduxFlag.reduxSlice.profileFrame
     );
 
+    const userNickname = useSelector(
+        (state: any) => state.reduxFlag.myProfileSlice.userNickname
+    );
+    const career = useSelector(
+        (state: any) => state.reduxFlag.myProfileSlice.career
+    );
+    const titleId = useSelector(
+        (state: any) => state.reduxFlag.myProfileSlice.title
+    );
+
+    //useState
+    /**임시 프레임(미리보기) */
+    const [tempFrame, setTempFrame] = useState<number>(0);
+    /**임시 테마(미리보기) */
+    const [tempTheme, setTempTheme] = useState<number>(0);
+    /**임시 아이콘(미리보기) */
+    const [tempIcon, setTempIcon] = useState<number>(0);
+
     useEffect(() => {
-        console.log(profileTheme);
-        console.log(profileFrame);
-        console.log(profileIcon);
+        setTempFrame(profileFrame);
+        setTempTheme(profileTheme);
+        setTempIcon(profileIcon);
     }, []);
 
     const changeMenu = (prop: number) => {
@@ -41,14 +71,56 @@ export default function MyPageModal(props: MyPageType) {
         props.setMypageFlag(false);
     };
 
-    const changeTheme = (prop: string) => {
-        dispatch(profileThemeState(prop));
+    const changeTempTheme = (prop: number) => {
+        setTempTheme(prop);
     };
-    const changeIcon = (prop: number) => {
-        dispatch(profileIconeState(prop));
+    const changeTempIcon = (prop: number) => {
+        setTempIcon(prop);
     };
-    const changeFrame = (prop: number) => {
-        dispatch(profileFrameState(prop));
+    const changeTempFrame = (prop: number) => {
+        setTempFrame(prop);
+    };
+
+    const saveSettings = () => {
+        //프로필 변경 요청
+        changeProfileFrame(tempFrame)
+            .then((res) => {
+                if (res.status === httpStatusCode.OK) {
+                    dispatch(profileFrameState(tempFrame));
+                    console.log('success');
+                } else {
+                    console.log('Fail');
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        //테마 변경 요청
+        changeProfileTheme(tempTheme)
+            .then((res) => {
+                if (res.status === httpStatusCode.OK) {
+                    dispatch(profileThemeState(tempTheme));
+                    console.log('success');
+                } else {
+                    console.log('fail');
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        //아이콘 변경 요청
+        changeProfileIcon(tempIcon)
+            .then((res) => {
+                if (res.status === httpStatusCode.OK) {
+                    dispatch(profileIconeState(tempIcon));
+                    console.log('Success');
+                } else {
+                    console.log('fail');
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     };
 
     //animation 효과
@@ -390,104 +462,31 @@ export default function MyPageModal(props: MyPageType) {
                             {/* 프레임 보기 */}
                             {littleMenu === 0 ? (
                                 <>
-                                    <img
-                                        className={
-                                            'w-[7vw] h-[7vw] m-[0.8vw] cursor-pointer ' +
-                                            (profileFrame === 1
-                                                ? 'border-[0.2vw] border-green-400'
-                                                : '')
+                                    {profileFrameInfo.profileFrameList.map(
+                                        (frame) => {
+                                            return (
+                                                <img
+                                                    className={
+                                                        'w-[7vw] h-[7vw] m-[0.8vw] cursor-pointer ' +
+                                                        (tempFrame ===
+                                                        frame.profileFrameId
+                                                            ? 'border-[0.2vw] border-green-400'
+                                                            : '')
+                                                    }
+                                                    src={`/src/assets/images/profile/frame (${frame.profileFrameId}).png`}
+                                                    alt=""
+                                                    style={{
+                                                        aspectRatio: 1 / 1,
+                                                    }}
+                                                    onClick={() => {
+                                                        changeTempFrame(
+                                                            frame.profileFrameId
+                                                        );
+                                                    }}
+                                                />
+                                            );
                                         }
-                                        src="/src/assets/images/profile/frame (1).png"
-                                        alt=""
-                                        style={{ aspectRatio: 1 / 1 }}
-                                        onClick={() => {
-                                            changeFrame(1);
-                                        }}
-                                    />
-                                    <img
-                                        className={
-                                            'w-[7vw] h-[7vw] m-[0.8vw] cursor-pointer ' +
-                                            (profileFrame === 2
-                                                ? 'border-[0.2vw] border-green-400'
-                                                : '')
-                                        }
-                                        src="/src/assets/images/profile/frame (2).png"
-                                        alt=""
-                                        style={{ aspectRatio: 1 / 1 }}
-                                        onClick={() => {
-                                            changeFrame(2);
-                                        }}
-                                    />
-                                    <img
-                                        className={
-                                            'w-[7vw] h-[7vw] m-[0.8vw] cursor-pointer ' +
-                                            (profileFrame === 3
-                                                ? 'border-[0.2vw] border-green-400'
-                                                : '')
-                                        }
-                                        src="/src/assets/images/profile/frame (3).png"
-                                        alt=""
-                                        style={{ aspectRatio: 1 / 1 }}
-                                        onClick={() => {
-                                            changeFrame(3);
-                                        }}
-                                    />
-                                    <img
-                                        className={
-                                            'w-[7vw] h-[7vw] m-[0.8vw] cursor-pointer ' +
-                                            (profileFrame === 4
-                                                ? 'border-[0.2vw] border-green-400'
-                                                : '')
-                                        }
-                                        src="/src/assets/images/profile/frame (4).png"
-                                        alt=""
-                                        style={{ aspectRatio: 1 / 1 }}
-                                        onClick={() => {
-                                            changeFrame(4);
-                                        }}
-                                    />
-                                    <img
-                                        className={
-                                            'w-[7vw] h-[7vw] m-[0.8vw] cursor-pointer ' +
-                                            (profileFrame === 5
-                                                ? 'border-[0.2vw] border-green-400'
-                                                : '')
-                                        }
-                                        src="/src/assets/images/profile/frame (5).png"
-                                        alt=""
-                                        style={{ aspectRatio: 1 / 1 }}
-                                        onClick={() => {
-                                            changeFrame(5);
-                                        }}
-                                    />
-                                    <img
-                                        className={
-                                            'w-[7vw] h-[7vw] m-[0.8vw] cursor-pointer ' +
-                                            (profileFrame === 6
-                                                ? 'border-[0.2vw] border-green-400'
-                                                : '')
-                                        }
-                                        src="/src/assets/images/profile/frame (6).png"
-                                        alt=""
-                                        style={{ aspectRatio: 1 / 1 }}
-                                        onClick={() => {
-                                            changeFrame(6);
-                                        }}
-                                    />
-                                    <img
-                                        className={
-                                            'w-[7vw] h-[7vw] m-[0.8vw] cursor-pointer ' +
-                                            (profileFrame === 7
-                                                ? 'border-[0.2vw] border-green-400'
-                                                : '')
-                                        }
-                                        src="/src/assets/images/profile/frame (7).png"
-                                        alt=""
-                                        style={{ aspectRatio: 1 / 1 }}
-                                        onClick={() => {
-                                            changeFrame(7);
-                                        }}
-                                    />
+                                    )}
                                 </>
                             ) : (
                                 <></>
@@ -495,174 +494,27 @@ export default function MyPageModal(props: MyPageType) {
                             {/* 아이콘 보기 */}
                             {littleMenu === 1 ? (
                                 <>
-                                    <img
-                                        className={
-                                            'w-[7vw] h-[7vw] m-[0.8vw] cursor-pointer ' +
-                                            (profileIcon === 1
-                                                ? 'border-[0.2vw] border-green-400'
-                                                : '')
-                                        }
-                                        src="/src/assets/images/profile/icon (1).png"
-                                        alt=""
-                                        style={{ aspectRatio: 1 / 1 }}
-                                        onClick={() => {
-                                            changeIcon(1);
-                                        }}
-                                    />
-                                    <img
-                                        className={
-                                            'w-[7vw] h-[7vw] m-[0.8vw] cursor-pointer ' +
-                                            (profileIcon === 2
-                                                ? 'border-[0.2vw] border-green-400'
-                                                : '')
-                                        }
-                                        src="/src/assets/images/profile/icon (2).png"
-                                        alt=""
-                                        style={{ aspectRatio: 1 / 1 }}
-                                        onClick={() => {
-                                            changeIcon(2);
-                                        }}
-                                    />
-                                    <img
-                                        className={
-                                            'w-[7vw] h-[7vw] m-[0.8vw] cursor-pointer ' +
-                                            (profileIcon === 3
-                                                ? 'border-[0.2vw] border-green-400'
-                                                : '')
-                                        }
-                                        src="/src/assets/images/profile/icon (3).png"
-                                        alt=""
-                                        style={{ aspectRatio: 1 / 1 }}
-                                        onClick={() => {
-                                            changeIcon(3);
-                                        }}
-                                    />
-                                    <img
-                                        className={
-                                            'w-[7vw] h-[7vw] m-[0.8vw] cursor-pointer ' +
-                                            (profileIcon === 4
-                                                ? 'border-[0.2vw] border-green-400'
-                                                : '')
-                                        }
-                                        src="/src/assets/images/profile/icon (4).png"
-                                        alt=""
-                                        style={{ aspectRatio: 1 / 1 }}
-                                        onClick={() => {
-                                            changeIcon(4);
-                                        }}
-                                    />
-                                    <img
-                                        className={
-                                            'w-[7vw] h-[7vw] m-[0.8vw] cursor-pointer ' +
-                                            (profileIcon === 5
-                                                ? 'border-[0.2vw] border-green-400'
-                                                : '')
-                                        }
-                                        src="/src/assets/images/profile/icon (5).png"
-                                        alt=""
-                                        style={{ aspectRatio: 1 / 1 }}
-                                        onClick={() => {
-                                            changeIcon(5);
-                                        }}
-                                    />
-                                    <img
-                                        className={
-                                            'w-[7vw] h-[7vw] m-[0.8vw] cursor-pointer ' +
-                                            (profileIcon === 6
-                                                ? 'border-[0.2vw] border-green-400'
-                                                : '')
-                                        }
-                                        src="/src/assets/images/profile/icon (6).png"
-                                        alt=""
-                                        style={{ aspectRatio: 1 / 1 }}
-                                        onClick={() => {
-                                            changeIcon(6);
-                                        }}
-                                    />
-                                    <img
-                                        className={
-                                            'w-[7vw] h-[7vw] m-[0.8vw] cursor-pointer ' +
-                                            (profileIcon === 7
-                                                ? 'border-[0.2vw] border-green-400'
-                                                : '')
-                                        }
-                                        src="/src/assets/images/profile/icon (7).png"
-                                        alt=""
-                                        style={{ aspectRatio: 1 / 1 }}
-                                        onClick={() => {
-                                            changeIcon(7);
-                                        }}
-                                    />
-                                    <img
-                                        className={
-                                            'w-[7vw] h-[7vw] m-[0.8vw] cursor-pointer ' +
-                                            (profileIcon === 8
-                                                ? 'border-[0.2vw] border-green-400'
-                                                : '')
-                                        }
-                                        src="/src/assets/images/profile/icon (8).png"
-                                        alt=""
-                                        style={{ aspectRatio: 1 / 1 }}
-                                        onClick={() => {
-                                            changeIcon(8);
-                                        }}
-                                    />
-                                    <img
-                                        className={
-                                            'w-[7vw] h-[7vw] m-[0.8vw] cursor-pointer ' +
-                                            (profileIcon === 9
-                                                ? 'border-[0.2vw] border-green-400'
-                                                : '')
-                                        }
-                                        src="/src/assets/images/profile/icon (9).png"
-                                        alt=""
-                                        style={{ aspectRatio: 1 / 1 }}
-                                        onClick={() => {
-                                            changeIcon(9);
-                                        }}
-                                    />
-                                    <img
-                                        className={
-                                            'w-[7vw] h-[7vw] m-[0.8vw] cursor-pointer ' +
-                                            (profileIcon === 10
-                                                ? 'border-[0.2vw] border-green-400'
-                                                : '')
-                                        }
-                                        src="/src/assets/images/profile/icon (10).png"
-                                        alt=""
-                                        style={{ aspectRatio: 1 / 1 }}
-                                        onClick={() => {
-                                            changeIcon(10);
-                                        }}
-                                    />
-                                    <img
-                                        className={
-                                            'w-[7vw] h-[7vw] m-[0.8vw] cursor-pointer ' +
-                                            (profileIcon === 11
-                                                ? 'border-[0.2vw] border-green-400'
-                                                : '')
-                                        }
-                                        src="/src/assets/images/profile/icon (11).png"
-                                        alt=""
-                                        style={{ aspectRatio: 1 / 1 }}
-                                        onClick={() => {
-                                            changeIcon(11);
-                                        }}
-                                    />
-                                    <img
-                                        className={
-                                            'w-[7vw] h-[7vw] m-[0.8vw] cursor-pointer ' +
-                                            (profileIcon === 12
-                                                ? 'border-[0.2vw] border-green-400'
-                                                : '')
-                                        }
-                                        src="/src/assets/images/profile/icon (12).png"
-                                        alt=""
-                                        style={{ aspectRatio: 1 / 1 }}
-                                        onClick={() => {
-                                            changeIcon(12);
-                                        }}
-                                    />
+                                    {iconInfo.profileIconList.map((icon) => {
+                                        return (
+                                            <img
+                                                className={
+                                                    'w-[7vw] h-[7vw] m-[0.8vw] cursor-pointer ' +
+                                                    (tempIcon ===
+                                                    icon.profileIconId
+                                                        ? 'border-[0.2vw] border-green-400'
+                                                        : '')
+                                                }
+                                                src={`/src/assets/images/profile/icon (${icon.profileIconId}).png`}
+                                                alt=""
+                                                style={{ aspectRatio: 1 / 1 }}
+                                                onClick={() => {
+                                                    changeTempIcon(
+                                                        icon.profileIconId
+                                                    );
+                                                }}
+                                            />
+                                        );
+                                    })}
                                 </>
                             ) : (
                                 <></>
@@ -670,34 +522,26 @@ export default function MyPageModal(props: MyPageType) {
                             {/* 테마 보기 */}
                             {littleMenu === 2 ? (
                                 <>
-                                    <img
-                                        className={
-                                            'w-[15vw] h-[7vw] m-[0.8vw] cursor-pointer ' +
-                                            (profileTheme === 'main'
-                                                ? 'border-[0.2vw] border-green-400'
-                                                : '')
-                                        }
-                                        src="/src/assets/images/background/bg-main-morning.png"
-                                        alt=""
-                                        style={{ aspectRatio: 1 / 1 }}
-                                        onClick={() => {
-                                            changeTheme('main');
-                                        }}
-                                    />
-                                    <img
-                                        className={
-                                            'w-[15vw] h-[7vw] m-[0.8vw] cursor-pointer ' +
-                                            (profileTheme === 'main2'
-                                                ? 'border-[0.2vw] border-green-400'
-                                                : '')
-                                        }
-                                        src="/src/assets/images/background/bg-main2-morning.png"
-                                        alt=""
-                                        style={{ aspectRatio: 1 / 1 }}
-                                        onClick={() => {
-                                            changeTheme('main2');
-                                        }}
-                                    />
+                                    {themeInfo.themeList.map((theme) => {
+                                        return (
+                                            <img
+                                                className={
+                                                    'w-[15vw] h-[7vw] m-[0.8vw] cursor-pointer ' +
+                                                    (tempTheme === theme.themeId
+                                                        ? 'border-[0.2vw] border-green-400'
+                                                        : '')
+                                                }
+                                                src={`/src/assets/images/background/bg-${theme.themeId}-morning.png`}
+                                                alt=""
+                                                style={{ aspectRatio: 1 / 1 }}
+                                                onClick={() => {
+                                                    changeTempTheme(
+                                                        theme.themeId
+                                                    );
+                                                }}
+                                            />
+                                        );
+                                    })}
                                 </>
                             ) : (
                                 <></>
@@ -717,25 +561,24 @@ export default function MyPageModal(props: MyPageType) {
                 >
                     <img
                         className="absolute w-full h-full object-cover "
-                        src={`/src/assets/images/profile/icon (${profileIcon}).png`}
+                        src={`/src/assets/images/profile/icon (${tempIcon}).png`}
                         alt=""
                         style={{ aspectRatio: 1 / 1 }}
                     />
                     <img
                         className="absolute w-full h-full object-cover "
-                        src={`/src/assets/images/profile/frame (${profileFrame}).png`}
+                        src={`/src/assets/images/profile/frame (${tempFrame}).png`}
                         alt=""
                         style={{ aspectRatio: 1 / 1 }}
                     />
                 </div>
                 <p className="text-[1.5vw] mt-[1.8vw] text-green-500">
-                    뿌리채소의 제왕
+                    {titleInfo.titleList[titleId - 1].titleName}
                 </p>
                 <div className="flex my-[0.8vw] text-[1.8vw] items-center justify-center">
-                    <p>제노</p>
-                    <p>♪</p>
+                    {userNickname}
                 </div>
-                <p className="text-[1.3vw]">25년차</p>
+                <p className="text-[1.3vw]">{`${career}년차`}</p>
                 <div className="w-full flex items-center justify-center">
                     <div
                         className="relative w-[20%] bg-white border-[0.1vw] border-black cursor-pointer"
@@ -747,7 +590,7 @@ export default function MyPageModal(props: MyPageType) {
                     >
                         <img
                             className="w-full h-full object-cover "
-                            src={`/src/assets/images/profile/frame (${profileFrame}).png`}
+                            src={`/src/assets/images/profile/frame (${tempFrame}).png`}
                             alt=""
                             style={{ aspectRatio: 1 / 1 }}
                         />
@@ -762,7 +605,7 @@ export default function MyPageModal(props: MyPageType) {
                     >
                         <img
                             className="w-full h-full object-cover "
-                            src={`/src/assets/images/profile/icon (${profileIcon}).png`}
+                            src={`/src/assets/images/profile/icon (${tempIcon}).png`}
                             alt=""
                             style={{ aspectRatio: 1 / 1 }}
                         />
@@ -777,7 +620,7 @@ export default function MyPageModal(props: MyPageType) {
                     >
                         <img
                             className="w-full h-full object-cover "
-                            src={`/src/assets/images/background/bg-${profileTheme}-morning.png`}
+                            src={`/src/assets/images/background/bg-${tempTheme}-morning.png`}
                             alt=""
                             style={{ aspectRatio: 1 / 1 }}
                         />
@@ -816,6 +659,14 @@ export default function MyPageModal(props: MyPageType) {
                     >
                         꾸미기
                     </div>
+                </div>
+                <div
+                    className={
+                        'absolute right-5 bottom-2 w-[9vw]  text-white bg-black p-[0.2vw] text-[1.4vw] cursor-pointer '
+                    }
+                    onClick={() => saveSettings()}
+                >
+                    적용하기
                 </div>
             </div>
             <div

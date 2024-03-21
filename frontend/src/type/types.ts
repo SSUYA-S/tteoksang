@@ -55,3 +55,12 @@ export interface NewChecksum {
     theme: String;
     title: String;
 }
+
+export interface profileData {
+    career: number;
+    profileFrameId: number;
+    profileIconId: number;
+    themeId: number;
+    titleId: number;
+    userNickname: string;
+}
