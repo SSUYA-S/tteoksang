@@ -10,10 +10,10 @@ export default function NewsModal(props: NewsType) {
         props.setNewsFlag(false);
     };
 
-    const turn = newsData.publishTurn;
-    const year = Math.floor((turn - 1) / 360);
-    const month = Math.floor(((turn - 1) % 360) / 30) + 1;
-    const day = Math.floor(((turn - 1) % 360) % 30) + 1;
+    const date = newsData.publishTurn;
+    const year = Math.floor((date + 60) / 360);
+    const month = ((Math.floor(date / 30) + 2) % 12) + 1;
+    const day = (date % 30) + 1;
 
     const articleList = newsData.articleList;
 
