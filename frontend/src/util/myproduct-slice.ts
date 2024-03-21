@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Product } from '../type/types';
+import { ProductBucket } from '../type/types';
 
 export interface myProductState {
-    myProductList: Product[];
+    myProductList: ProductBucket[];
     warehouseLevel: number;
     vehicleLevel: number;
     brokerLevel: number;

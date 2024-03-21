@@ -101,6 +101,9 @@ const cacheFirst = async ({ request, preloadResponsePromise, fallbackUrl }) => {
         cache = await caches.open('v1');
     }
 
+    // console.log('하하');
+    // console.log(request);
+
     const responseFromCache = await cache.match(request);
     if (responseFromCache) {
         // console.log('이미 있으므로 캐쉬에서 데이터를 반환합니다 :');
@@ -123,7 +126,6 @@ const cacheFirst = async ({ request, preloadResponsePromise, fallbackUrl }) => {
         if (request.url.includes('/src/assets/images/')) {
             await putInLocalImageCache(request, responseFromNetwork.clone());
         }
-
         // 여기에 checksum 데이터 추가
         else if (request.url.includes('/api/resource')) {
             if (

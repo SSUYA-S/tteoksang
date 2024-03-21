@@ -10,7 +10,7 @@ import productResource from '../../dummy-data/resource/Product.json';
 
 import { myProductState } from '../../util/myproduct-slice';
 import { useDispatch, useSelector } from 'react-redux';
-import { BuyInfo, SellInfo, Product } from '../../type/types';
+import { BuyInfo, SellInfo, ProductBucket } from '../../type/types';
 import { productInfoAndEventState } from '../../util/product-and-event';
 
 type tradeType = {
@@ -59,7 +59,7 @@ export default function TradeModal(props: tradeType) {
         productInfoAndEvent.buyableProductIdList.map((id: number) => {
             //내 보유 품목 조회
             //평균 구매가 계산 위해
-            const myProduct: Product = {
+            const myProduct: ProductBucket = {
                 productId: id,
                 productQuantity: 0,
                 productTotalCost: 0,
@@ -75,7 +75,7 @@ export default function TradeModal(props: tradeType) {
             }
 
             //살 정보 관련
-            const buyingInfo: Product = {
+            const buyingInfo: ProductBucket = {
                 productId: id,
                 productQuantity: 0,
                 productTotalCost: 0,
@@ -96,11 +96,11 @@ export default function TradeModal(props: tradeType) {
         let stock = 0; //현재 창고 내 재고 조사
 
         const myList: SellInfo[] = [];
-        myProductList.map((product: Product) => {
+        myProductList.map((product: ProductBucket) => {
             const id = product.productId;
             const productName = productResource.productList[id - 1].productName;
             const productInfo = productInfoAndEvent.productInfoList[id - 1];
-            const sellingInfo: Product = {
+            const sellingInfo: ProductBucket = {
                 productId: id,
                 productQuantity: 0,
                 productTotalCost: 0,
@@ -244,7 +244,7 @@ export default function TradeModal(props: tradeType) {
         props.updateNowMoney(value);
         let total = 0;
         const newList: SellInfo[] = [];
-        const myNewProductList: Product[] = [];
+        const myNewProductList: ProductBucket[] = [];
         sellingProductList.map((product) => {
             const avgCost =
                 product.myProduct.productTotalCost /
@@ -279,9 +279,9 @@ export default function TradeModal(props: tradeType) {
     };
 
     const buyProduct = (a: number) => {
-        const myNewProductList: Product[] = [];
+        const myNewProductList: ProductBucket[] = [];
         //함수 복사
-        myProductList.map((product: Product) => {
+        myProductList.map((product: ProductBucket) => {
             myNewProductList.push({
                 productId: product.productId,
                 productQuantity: product.productQuantity,
