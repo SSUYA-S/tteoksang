@@ -448,7 +448,10 @@ export default function TradeModal(props: tradeType) {
                                     (product) => {
                                         if (product.productId !== 0) {
                                             return (
-                                                <tr className="border-y-2 border-black">
+                                                <tr
+                                                    className="border-y-2 border-black"
+                                                    key={product.productId}
+                                                >
                                                     <td>
                                                         {
                                                             productResource

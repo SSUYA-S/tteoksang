@@ -75,6 +75,8 @@ export default function InfraModal(props: InfraType) {
             dispatch(brokerLevelState(nowLevel + 1));
         }
         props.updateNowMoney(-1 * upgradeFee);
+
+        setNowLevel((prev) => prev + 1);
     };
 
     const facilityElement = () => {
@@ -254,7 +256,6 @@ export default function InfraModal(props: InfraType) {
                             onClick={() => {
                                 //업그레이드 명령 내리고 창 닫기
                                 upgradeFacility();
-                                changeFailityType(0);
                             }}
                         >
                             <p className="text-[1.6vw]">업그레이드</p>
@@ -274,7 +275,6 @@ export default function InfraModal(props: InfraType) {
                         <div
                             className="absolute top-[1vw] left-[0.4vw] flex flex-col py-[0.8vw] px-[6vw] color-bg-yellow2 color-border-yellow1 border-[0.4vw] rounded-full cursor-pointer"
                             onClick={() => {
-                                //업그레이드 명령 내리고 창 닫기
                                 changeFailityType(0);
                             }}
                         >
