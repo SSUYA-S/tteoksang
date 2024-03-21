@@ -33,21 +33,33 @@ export async function withdrawal() {
 }
 
 /**테마 변경 */
-export async function changeTheme(themeId: number) {
-    return await local.put(`/api/user/theme`, themeId, {});
+export async function changeProfileTheme(themeId: number) {
+    const body = {
+        themeId,
+    };
+    return await local.put(`/api/user/theme`, body, {});
 }
 
 /**프로필 아이콘 변경 */
 export async function changeProfileIcon(profileIconId: number) {
-    return await local.put(`/api/user/profile-icon`, profileIconId, {});
+    const body = {
+        profileIconId,
+    };
+    return await local.put(`/api/user/profile-icon`, body, {});
 }
 
 /**프로필 프레임 변경 */
 export async function changeProfileFrame(profileFrameId: number) {
-    return await local.put(`/api/user/profile-frame`, profileFrameId, {});
+    const body = {
+        profileFrameId,
+    };
+    return await local.put(`/api/user/profile-frame`, body, {});
 }
 
 /**닉네임 변경 */
 export async function changeNickname(userNickname: string) {
-    return await local.put(`/api/user/nickname`, userNickname, {});
+    const body = {
+        userNickname,
+    };
+    return await local.put(`/api/user/nickname`, body, {});
 }

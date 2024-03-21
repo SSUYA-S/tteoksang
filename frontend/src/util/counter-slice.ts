@@ -10,7 +10,7 @@ export interface SettingState {
     //로그인 유무
     isLogin: boolean;
     //내가 적용한 테마
-    profileTheme: string;
+    profileTheme: number;
     //내가 적용한 아이콘
     profileIcon: number;
     //내가 적용한 프레임
@@ -21,7 +21,7 @@ const initialState: SettingState = {
     effectFlag: true,
     themeType: 'auto',
     isLogin: false,
-    profileTheme: 'main',
+    profileTheme: 0,
     profileIcon: 1,
     profileFrame: 1,
 };

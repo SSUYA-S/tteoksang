@@ -17,9 +17,7 @@ export default function TradeSellCard({
         myAvg = Math.floor(myAvg);
     }
 
-    const profit = Math.floor(
-        sellInfo.productInfo.productCost - myAvg
-    );
+    const profit = Math.floor(sellInfo.productInfo.productCost - myAvg);
 
     const productNumber = sellInfo.sellingInfo.productQuantity;
     const productCost = sellInfo.sellingInfo.productTotalCost;
