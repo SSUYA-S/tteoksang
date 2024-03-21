@@ -1,6 +1,7 @@
 package com.welcome.tteoksang.config;
 
-import com.welcome.tteoksang.socket.interceptor.JwtTokenChannelInterceptor;
+import com.welcome.tteoksang.socket.interceptor.AuthHandshakeInterceptor;
+import com.welcome.tteoksang.socket.interceptor.InGameChannelInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
@@ -14,12 +15,13 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    private final JwtTokenChannelInterceptor jwtTokenChannelInterceptor;
+    private final InGameChannelInterceptor inGameChannelInterceptor;
+    private final AuthHandshakeInterceptor authHandshakeInterceptor;
 
     // 클라이언트로부터 들어오는 메시지를 처리할 인터셉터를 설정
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(jwtTokenChannelInterceptor);
+        registration.interceptors(inGameChannelInterceptor);
     }
 
     /**
@@ -40,8 +42,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
      */
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        // "/ws"라는 endpoint를 등록하고, 모든 도메인에서의 접근을 허용함
+        // "/game"라는 endpoint를 등록하고, 모든 도메인에서의 접근을 허용함
         registry.addEndpoint("/game")
+                .addInterceptors(authHandshakeInterceptor)
                 .setAllowedOriginPatterns("*");
     }
 }

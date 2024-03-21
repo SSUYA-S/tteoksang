@@ -30,7 +30,7 @@ public class GameController {
         String webSocketUUID = UUID.randomUUID().toString();
 
         String key = RedisPrefix.WEBSOCKET.prefix() + user.getUserId();
-        // 레디스에 socketId 저장
+        // 레디스에 webSocketId 저장
         redisService.setValues(key, webSocketUUID);
 
         return ResponseEntity.ok().
