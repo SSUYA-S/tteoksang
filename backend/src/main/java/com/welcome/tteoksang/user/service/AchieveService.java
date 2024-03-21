@@ -1,13 +1,12 @@
 package com.welcome.tteoksang.user.service;
 
-import com.welcome.tteoksang.user.dto.Achieve;
-import com.welcome.tteoksang.user.dto.AchieveRes;
+import com.welcome.tteoksang.user.dto.AchieveInfo;
 
 import java.util.List;
 
 
 public interface AchieveService {
 
-    public List<AchieveRes> searchAllAchieve(String userId);
+    public List<AchieveInfo> searchAllAchieve(String userId);
 
 }
