@@ -25,11 +25,11 @@ public class GameController {
 
     private final RedisService redisService;
 
-    @GetMapping("/game")
+    @GetMapping("/web-socket")
     public ResponseEntity<WebSocketIdRes> createWebSocketId(@AuthenticationPrincipal User user) {
         String webSocketUUID = UUID.randomUUID().toString();
 
-        String key = RedisPrefix.SOCKET.prefix() + user.getUserId();
+        String key = RedisPrefix.WEBSOCKET.prefix() + user.getUserId();
         // 레디스에 socketId 저장
         redisService.setValues(key, webSocketUUID);
 
@@ -59,9 +59,9 @@ public class GameController {
     }
 
 
-    @MessageMapping("/chat/{webSocketId}") // 클라이언트에서 보낸 메시지를 받을 메서드 지정
+    @MessageMapping("/chat") // 클라이언트에서 보낸 메시지를 받을 메서드 지정
     @SendTo("/topic/chat") // 메서드가 처리한 결과를 보낼 목적지 지정
-    public GameMessage handleChatMessage(@DestinationVariable String webSocketId, @Payload GameMessage gameMessage, Principal principal) {
+    public GameMessage handleChatMessage(@Payload GameMessage gameMessage, Principal principal) {
           /* @DestinationVariable: 메시지의 목적지에서 변수를 추출
              @Payload: 메시지 본문(body)의 내용을 메서드의 인자로 전달할 때 사용
                       (클라이언트가 JSON 형태의 메시지를 보냈다면, 이를 GameMessage 객체로 변환하여 메서드에 전달)
