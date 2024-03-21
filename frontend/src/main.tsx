@@ -8,7 +8,6 @@ import MainPage from './pages/MainPage.tsx';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import { persistor, store } from './util/store.ts';
-import GoogleLoginPage from './pages/GoogleLoginPage.tsx';
 import { CookiesProvider } from 'react-cookie';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
