@@ -5,6 +5,7 @@ import com.welcome.tteoksang.auth.jwt.JWTUtil;
 import com.welcome.tteoksang.user.dto.User;
 import com.welcome.tteoksang.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
+@Slf4j
 public class JwtTokenChannelInterceptor implements ChannelInterceptor {
 
     private final JWTUtil jwtUtil;
@@ -51,8 +53,7 @@ public class JwtTokenChannelInterceptor implements ChannelInterceptor {
                     User user = userRepository.findByUserIdAndDeletedAtIsNull(userId).orElseThrow(()-> new JwtException("올바르지 않은 토큰입니다."));
 
                     //스프링 시큐리티 인증 토큰 생성
-                    Authentication authentication = new UsernamePasswordAuthenticationToken(user, null);
-                    authentication.setAuthenticated(true);
+                    Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, null);
 
                     // 사용자 정보 저장
                     accessor.setUser(authentication);
@@ -61,7 +62,6 @@ public class JwtTokenChannelInterceptor implements ChannelInterceptor {
                 }
             }
         }
-
         return message;
     }
 }
