@@ -27,4 +27,10 @@ public class GameInfoServiceImpl implements GameInfoService {
                     .build();
         }
     }
+
+    @Override
+    public GameInfo searchGameInfo(String userId) {
+        return gameInfoRepository.findById(userId).orElse(null);
+    }
+
 }
