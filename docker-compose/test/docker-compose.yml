@@ -1,12 +1,10 @@
 version: '3.7'
 
 services:
-  TteoksangBackend:
-    image: ssuyas/tteoksang_backend_test
-    container_name: TteoksangBackend
+  TteoksangBackendDev:
+    image: ssuyas/tteoksang_backend_dev
+    container_name: TteoksangBackendDev
     restart: unless-stopped
-    networks:
-      - TteoksangNetwork
     environment:
       DB_NAME: ${DB_NAME}
       USER_NAME: ${USER_NAME}
@@ -16,8 +14,55 @@ services:
       REDIS_PORT: ${REDIS_PORT}
       REDIS_HOST: ${REDIS_HOST}
       REDIS_PASSWORD: ${REDIS_PASSWORD}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      GOOGLE_REDIRECT_URL: ${GOOGLE_REDIRECT_URL}
+      AUTH_REDIRECT_URL: ${AUTH_REDIRECT_URL}
+      JWT_KEY: ${JWT_KEY}
 
+  TteoksangRedisDev:
+    image: redis:7.2.4
+    container_name: TteoksangRedisDev
+    restart: unless-stopped
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    volumes:
+      - redis-dev-data:/data
+
+  TteoksangMariaDBDev:
+    image: mariadb:10.11.7
+    container_name: TteoksangMariaDBDev
+    restart: unless-stopped
+    volumes:
+      - mariadb-dev-data:/lib/var/mysql
+      - ./initdb.d:/docker-entrypoint-initdb.d
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    environment:
+      MARIADB_DATABASE: ${DB_NAME}
+      MARIADB_USER: ${USER_NAME}
+      MARIADB_PASSWORD: ${USER_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+
+  TteoksangFrontendDev:
+    image: ssuyas/tteoksang_frontend_dev
+    container_name: TteoksangFrontendDev
+    restart: unless-stopped
+    volumes:
+      - /etc/letsencrypt/live/tteoksang.me/fullchain.pem:/etc/letsencrypt/live/tteoksang.me/fullchain.pem
+      - /etc/letsencrypt/live/tteoksang.me/privkey.pem:/etc/letsencrypt/live/tteoksang.me/privkey.pem
+      - /etc/letsencrypt/options-ssl-nginx.conf:/etc/letsencrypt/options-ssl-nginx.conf
+      - /etc/letsencrypt/ssl-dhparams.pem:/etc/letsencrypt/ssl-dhparams.pem
+    ports:
+      - "443:443"
+      - "80:80"
+
+volumes:
+  redis-dev-data:
+  mariadb-dev-data:
 
 networks:
-  TteoksangNetwork:
+  default:
     external: true
+    name: TteoksangNetworkDev
