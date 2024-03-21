@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 //dummy data
 import totalInfo from '../dummy-data/total-info.json';
 
+//.env
+
 //Cookie
 import { Cookies } from 'react-cookie';
 
@@ -53,8 +55,7 @@ export default function GameStartComponent(props: startType) {
 
     const onClickLogin = () => {
         //로그인 표시
-        window.location.href =
-            'http://localhost:5173/api/oauth2/authorization/google';
+        window.location.href = import.meta.env.VITE_REACT_GOOGLE_LOGIN_URL;
     };
     const onReady = () => {
         audio.pause();

@@ -4,7 +4,7 @@ import axios from 'axios';
 export default function localAxios() {
     //axios instance 생성
     const instance = axios.create({
-        baseURL: 'http://localhost:5173',
+        baseURL: import.meta.env.VITE_REACT_API_URL,
         headers: {
             'content-type': 'application/json;charset=UTF-8',
             accept: 'application/json',

@@ -15,6 +15,11 @@ import InventoryModal from './modal/InventoryModal';
 import InfraModal from './modal/InfraModal';
 import { goldState } from '../util/myproduct-slice';
 
+//websocket
+import Stomp from '@stomp/stompjs';
+import { Client } from '@stomp/stompjs';
+import { handshake, sendMessage } from '../util/websocket/client';
+
 export default function GameComponent() {
     const [tradeFlag, setTradeFlag] = useState<boolean>(false);
     const [facilityFlag, setFacilityFlag] = useState<boolean>(false);
@@ -41,6 +46,10 @@ export default function GameComponent() {
     const [theme, setTheme] = useState<string>();
     const [turnTimer, setTurnTimer] = useState<number>(-1);
     const [nowMoney, setNowMoney] = useState<number>(0);
+
+    const [webSocketClient, setWebSocketClient] = useState<Stomp.Client>(
+        new Client()
+    );
 
     //게임 설정 정보 불러오기
     const bgmSetting = useSelector(
@@ -71,6 +80,12 @@ export default function GameComponent() {
         //초기 정보 설정
         setNowMoney(goldNumber);
     }, [goldNumber]);
+
+    //websocket
+    useEffect(() => {
+        const client = handshake();
+        setWebSocketClient(client);
+    }, []);
 
     // 인게임 시간 설정
     useEffect(() => {

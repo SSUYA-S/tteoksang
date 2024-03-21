@@ -18,10 +18,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                 <BrowserRouter>
                     <Routes>
                         <Route index element={<MainPage />}></Route>
-                        <Route
-                            path="/login/oauth2/code/google"
-                            element={<GoogleLoginPage />}
-                        ></Route>
                     </Routes>
                 </BrowserRouter>
             </PersistGate>
