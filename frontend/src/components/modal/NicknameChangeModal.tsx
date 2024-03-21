@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { changeNickname } from '../../api/user';
 import { httpStatusCode } from '../../util/http-status';
 import { userNicknameState } from '../../util/myprofile-slice';
+import {Event} from "../../type/types.ts";
 
 interface PropType {
     closeModal: MouseEventHandler<HTMLDivElement>;
@@ -12,7 +13,7 @@ interface PropType {
 export default function NicknameChangeModal(props: PropType) {
     const [nickName, setNickName] = useState<string>(props.nickName);
 
-    const updateName = (event) => {
+    const updateName = (event: Event) => {
         setNickName(event.target.value);
     };
 
