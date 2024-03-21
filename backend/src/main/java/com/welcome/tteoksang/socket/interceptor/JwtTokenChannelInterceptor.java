@@ -27,6 +27,7 @@ public class JwtTokenChannelInterceptor implements ChannelInterceptor {
 
     /**
      * 메시지를 보내기 전에 실행되는 인터셉터 메소드
+     *
      * @param message 전송될 메시지. 이 메시지의 헤더에는 JWT 토큰이 포함되어 있어야 함
      * @param channel 메시지가 전송될 채널
      * @return 수정된 메시지를 반환(사용자 인증 정보가 추가된 메시지)
@@ -50,13 +51,17 @@ public class JwtTokenChannelInterceptor implements ChannelInterceptor {
                     String userId = jwtUtil.getUserId(jwtToken);
 
                     //user를 생성하여 값 set
-                    User user = userRepository.findByUserIdAndDeletedAtIsNull(userId).orElseThrow(()-> new JwtException("올바르지 않은 토큰입니다."));
+                    User user = userRepository.findByUserIdAndDeletedAtIsNull(userId).orElseThrow(() -> new JwtException("올바르지 않은 토큰입니다."));
 
                     //스프링 시큐리티 인증 토큰 생성
                     Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, null);
 
                     // 사용자 정보 저장
                     accessor.setUser(authentication);
+
+                    // 레디스에서 Socket:Id가 있는지 확인
+
+                    // gameInfo 불러오기
                 } catch (JwtException e) {
                     throw new TokenInvalidException(e);
                 }
