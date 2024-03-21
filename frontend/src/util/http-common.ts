@@ -6,7 +6,7 @@ export default function localAxios() {
     const instance = axios.create({
         baseURL: import.meta.env.VITE_REACT_API_URL,
         headers: {
-            'content-type': 'application/json;charset=UTF-8',
+            'Content-Type': 'application/json; charset=utf-8',
             accept: 'application/json',
         },
         //쿠키 보내주도록 설정
