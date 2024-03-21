@@ -36,3 +36,22 @@ export interface RootSliceState {
     reduxSlice: SettingState;
     myProductSlice: myProductState;
 }
+
+export interface Checksum {
+    resourceName: String;
+    checksumValue: String;
+}
+export interface ChecksumList {
+    checksumList: Checksum[];
+}
+export interface NewChecksum {
+    achievement: String;
+    event: String;
+    infra: String;
+    messageType: String;
+    product: String;
+    profileFrame: String;
+    profileIcon: String;
+    theme: String;
+    title: String;
+}

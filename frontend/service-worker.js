@@ -5,8 +5,16 @@ const enableNavigationPreload = async () => {
     }
 };
 
-const addResourcesToCache = async (resources) => {
-    const cache = await caches.open('v1');
+const addLocalResourcesToCache = async (resources) => {
+    const cache = await caches.open('localImages');
+    await cache.addAll(resources);
+};
+const addApiToCache = async (resources) => {
+    const cache = await caches.open('api');
+    await cache.addAll(resources);
+};
+const addNetworkResourcesToCache = async (resources) => {
+    const cache = await caches.open('networkImages');
     await cache.addAll(resources);
 };
 
@@ -14,7 +22,7 @@ const addResourcesToCache = async (resources) => {
 self.addEventListener('install', (e) => {
     console.log('[Service Worker] installed');
     e.waitUntil(
-        addResourcesToCache([
+        addLocalResourcesToCache([
             // '/',
             // '/index.html',
             // '/service-worker.js',
@@ -50,25 +58,60 @@ self.addEventListener('activate', (e) => {
     e.waitUntil(enableNavigationPreload());
 });
 
+//키 삭제
+self.addEventListener('message', (event) => {
+    const { action, type, key } = event.data;
+    if (action === 'deleteKey') {
+        caches.open(type).then((cache) => {
+            cache.delete(key).then((response) => {
+                if (response) {
+                    console.log('특정 키가 성공적으로 삭제되었습니다.');
+                } else {
+                    console.log('삭제할 키를 찾지 못했습니다.');
+                }
+            });
+        });
+    }
+});
+
 // 캐쉬에 저장
-const putInCache = async (request, response) => {
-    const cache = await caches.open('v1');
+const putInLocalImageCache = async (request, response) => {
+    const cache = await caches.open('localImages');
+    await cache.put(request, response);
+};
+const putInApiCache = async (request, response) => {
+    const cache = await caches.open('api');
+    await cache.put(request, response);
+};
+const putInNetworkImageCache = async (request, response) => {
+    const cache = await caches.open('networkImages');
     await cache.put(request, response);
 };
 
 // 리소스가 있는지 없는지 확인
 const cacheFirst = async ({ request, preloadResponsePromise, fallbackUrl }) => {
-    const cache = await caches.open('v1');
+    let cache;
+    if (request.url.includes('/src/assets/images/')) {
+        cache = await caches.open('localImages');
+    } else if (request.url.includes('/api/resource')) {
+        cache = await caches.open('api');
+    } else if (request.url.includes('/api/s3')) {
+        cache = await caches.open('networkImages');
+    } else {
+        cache = await caches.open('v1');
+    }
+
     const responseFromCache = await cache.match(request);
     if (responseFromCache) {
-        // console.log('이미 있으므로 캐쉬에서 데이터를 반환합니다');
+        // console.log('이미 있으므로 캐쉬에서 데이터를 반환합니다 :');
+        // console.log(responseFromCache);
         return responseFromCache;
     }
 
     const preloadResponse = await preloadResponsePromise;
     if (preloadResponse) {
         console.info('using preload response', preloadResponse);
-        putInCache(request, preloadResponse.clone());
+        putInLocalImageCache(request, preloadResponse.clone());
         return preloadResponse;
     }
 
@@ -78,11 +121,19 @@ const cacheFirst = async ({ request, preloadResponsePromise, fallbackUrl }) => {
         const responseFromNetwork = await fetch(request);
         // `/src/assets/images/` 경로에 있는 리소스에 대해서만 캐시에 저장
         if (request.url.includes('/src/assets/images/')) {
-            await putInCache(request, responseFromNetwork.clone());
+            await putInLocalImageCache(request, responseFromNetwork.clone());
         }
-        // 여기에 캐시 데이터 추가
-        if (request.url.includes('/src/assets/images/')) {
-            await putInCache(request, responseFromNetwork.clone());
+
+        // 여기에 checksum 데이터 추가
+        else if (request.url.includes('/api/resource')) {
+            if (
+                !request.url.includes('/api/resource/checksum') &&
+                !request.url.includes('.ts')
+            ) {
+                await putInApiCache(request, responseFromNetwork.clone());
+            }
+        } else if (request.url.includes('/api/s3')) {
+            await putInNetworkImageCache(request, responseFromNetwork.clone());
         }
         return responseFromNetwork;
     } catch (error) {

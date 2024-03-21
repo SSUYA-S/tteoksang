@@ -39,7 +39,7 @@ export async function resourceInfra() {
 
 /**메세지 타입 조회 */
 export async function resourceMessageType() {
-    return await local.get(`/api/resource/meesage-type`);
+    return await local.get(`/api/resource/message-type`);
 }
 
 /**프로필 아이콘 조회 */
