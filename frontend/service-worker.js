@@ -90,6 +90,7 @@ const putInNetworkImageCache = async (request, response) => {
 
 // 리소스가 있는지 없는지 확인
 const cacheFirst = async ({ request, preloadResponsePromise, fallbackUrl }) => {
+    console.log('가로챔 진입');
     let cache;
     if (request.url.includes('/src/assets/images/')) {
         cache = await caches.open('localImages');
@@ -152,14 +153,25 @@ const cacheFirst = async ({ request, preloadResponsePromise, fallbackUrl }) => {
 
 // fetch event
 self.addEventListener('fetch', (e) => {
-    // console.log('[Service Worker] fetched resource ' + e.request.url);
-    e.respondWith(
-        cacheFirst({
-            request: e.request,
-            preloadResponsePromise: e.preloadResponse,
-            // 여기서 fallbackUrl은 네트워크 요청이 실패했을 때 사용되는 백업 리소스의 URL을 의미합니다
-            // 위의 경우 네트워크 요청이 실패 할 시 대체 이미지를 보여줌
-            fallbackUrl: '/src/assets/images/frame1.png',
-        })
-    );
+    if (e.request.url.includes('/oauth2/authorization/')) {
+        console.log('구글 요청은 가로채지 않고 돌려보냄');
+        return;
+    } else if (
+        e.request.url.includes('/src/assets/images/') ||
+        e.request.url.includes('/api/resource') ||
+        e.request.url.includes('/api/s3')
+    ) {
+        // console.log('서비스 워커가 요청 가로챔 ' + e.request.url);
+        e.respondWith(
+            cacheFirst({
+                request: e.request,
+                preloadResponsePromise: e.preloadResponse,
+                // 여기서 fallbackUrl은 네트워크 요청이 실패했을 때 사용되는 백업 리소스의 URL을 의미합니다
+                // 위의 경우 네트워크 요청이 실패 할 시 대체 이미지를 보여줌
+                fallbackUrl: '/src/assets/images/frame1.png',
+            })
+        );
+    } else {
+        return;
+    }
 });

@@ -2,8 +2,6 @@ version: "3.7"
 
 x-datanode_base: &datanode_base
   image: ssuyas/datanode
-  networks:
-    - bridge
 
 services:
   namenode:
@@ -17,8 +15,6 @@ services:
       - namenode:/opt/spark/eventLog # spark history log data mount
       - namenode:/opt/hadoop/yarn/timeline # yarn timeline data mount
       - /home/ec2-user/testdata:/testdata
-    networks:
-      - bridge
 
   datanode01:
     <<: *datanode_base
@@ -51,8 +47,6 @@ services:
     hostname: resourcemanager
     ports:
       - "9099:8088"
-    networks:
-      - bridge
 
   yarntimelineserver:
     image: ssuyas/timeline
@@ -60,8 +54,6 @@ services:
     hostname: yarntimelineserver
     ports:
       - "9096:8188"
-    networks:
-      - bridge
     volumes:
       - namenode:/opt/hadoop/yarn/timeline
 
@@ -76,8 +68,6 @@ services:
       - resourcemanager
     volumes:
       - namenode:/opt/spark/eventLog
-    networks:
-      - bridge
 
   zeppelin:
     image: ssuyas/zeppelin
@@ -85,8 +75,6 @@ services:
     hostname: zeppelin
     ports:
       - "9097:8080"
-    networks:
-      - bridge
     volumes:
       - namenode:/opt/spark/eventLog
       - /env/hadoop-eco/hadoop/zeppelin/notebook:/zeppelin-0.10.1-bin-all/notebook
@@ -99,4 +87,5 @@ volumes:
   datanode03:
 
 networks:
-  bridge:
+  default:
+    name: TteoksangHadoop
