@@ -1,17 +1,26 @@
 package com.welcome.tteoksang.resource.controller;
 
+import com.welcome.tteoksang.resource.dto.InfraResource;
+import com.welcome.tteoksang.resource.dto.ResourceChecksum;
 import com.welcome.tteoksang.resource.dto.res.*;
 import com.welcome.tteoksang.resource.service.ResourceService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/resource")
-@RequiredArgsConstructor
-public class ResourceController { //tteoksang.me 접속과 동시에 불러옴
+//@RequiredArgsConstructor
+public class ResourceController { //tteoksang.me 접속과 동시에 불러오는 리소스 조회
 
     private final ResourceService resourceService;
+
+    @Autowired
+    public ResourceController(ResourceService resourceService) {
+        this.resourceService = resourceService;
+        reloadResource();
+    }
 
     @GetMapping("/achievement")
     ResponseEntity<SearchAchievementResourceRes> searchAchievementResource() {
@@ -62,14 +71,16 @@ public class ResourceController { //tteoksang.me 접속과 동시에 불러옴
     ResponseEntity<SearchInfraResourceRes> searchInfraResource() {
         return ResponseEntity.ok(
                 SearchInfraResourceRes.builder()
-                        .brokerInfoList(resourceService.searchBrokerList())
-                        .vehicleInfoList(resourceService.searchVehicleList())
-                        .warehouseInfoList(resourceService.searchWarehouseList())
+                        .infraList(InfraResource.builder()
+                                .brokerInfoList(resourceService.searchBrokerList())
+                                .vehicleInfoList(resourceService.searchVehicleList())
+                                .warehouseInfoList(resourceService.searchWarehouseList())
+                                .build())
                         .build()
         );
     }
 
-    @GetMapping("/profile-icon")
+    @GetMapping("/profileIcon")
     ResponseEntity<SearchProfileIconResourceRes> searchProfileIconResource() {
         return ResponseEntity.ok(
                 SearchProfileIconResourceRes.builder()
@@ -78,7 +89,7 @@ public class ResourceController { //tteoksang.me 접속과 동시에 불러옴
         );
     }
 
-    @GetMapping("/profile-frame")
+    @GetMapping("/profileFrame")
     ResponseEntity<SearchProfileFrameResourceRes> searchProfileFrameResource() {
         return ResponseEntity.ok(
                 SearchProfileFrameResourceRes.builder()
@@ -87,14 +98,14 @@ public class ResourceController { //tteoksang.me 접속과 동시에 불러옴
         );
     }
 
-    @GetMapping("/message-type/{name}")
-    ResponseEntity<Void> searchMessageTypeResource(@PathVariable String name){
+    @GetMapping("/messageType/{name}")
+    ResponseEntity<Void> searchMessageTypeResource(@PathVariable String name) {
         resourceService.searchMessageTypeList(name);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/message-type")
-    ResponseEntity<SearchMessageTypeResourceRes> searchMessageTypeResource(){
+    @GetMapping("/messageType")
+    ResponseEntity<SearchMessageTypeResourceRes> searchMessageTypeResource() {
         return ResponseEntity.ok(
                 SearchMessageTypeResourceRes.builder()
                         .messageTypeList(resourceService.searchMessageTypeList())
@@ -103,10 +114,64 @@ public class ResourceController { //tteoksang.me 접속과 동시에 불러옴
     }
 
     @GetMapping("/checksum")
-    ResponseEntity<SearchChecksumRes> searchChecksumResource(){
+    ResponseEntity<SearchChecksumRes> searchChecksumResource() {
         return ResponseEntity.ok(
                 SearchChecksumRes.builder()
                         .checksumList(resourceService.searchResourceChecksum())
+                        .build()
+        );
+    }
+
+    //checksum 재계산: 처음 프로젝트 생성될 때, DB 변경되었을 때 실행
+    @GetMapping("/reload-resource")
+    void reloadResource() {
+        resourceService.saveResourceChecksum("infra",
+                SearchInfraResourceRes.builder()
+                        .infraList(InfraResource.builder()
+                                .brokerInfoList(resourceService.searchBrokerList())
+                                .vehicleInfoList(resourceService.searchVehicleList())
+                                .warehouseInfoList(resourceService.searchWarehouseList())
+                                .build())
+                        .build()
+        );
+        resourceService.saveResourceChecksum("product",
+                SearchProductResourceRes.builder()
+                        .productList(resourceService.searchProductList())
+                        .build()
+        );
+        resourceService.saveResourceChecksum("profileFrame",
+                SearchProfileFrameResourceRes.builder()
+                        .profileFrameList(resourceService.searchProfileFrameList())
+                        .build()
+        );
+        resourceService.saveResourceChecksum("profileIcon",
+                SearchProfileIconResourceRes.builder()
+                        .profileIconList(resourceService.searchProfileIconList())
+                        .build()
+        );
+        resourceService.saveResourceChecksum("theme",
+                SearchThemeResourceRes.builder()
+                        .themeList(resourceService.searchThemeList())
+                        .build()
+        );
+        resourceService.saveResourceChecksum("title",
+                SearchTitleResourceRes.builder()
+                        .titleList(resourceService.searchTitleList())
+                        .build()
+        );
+        resourceService.saveResourceChecksum("achievement",
+                SearchAchievementResourceRes.builder()
+                        .achievementList(resourceService.searchAchievementList())
+                        .build()
+        );
+        resourceService.saveResourceChecksum("event",
+                SearchEventResourceRes.builder()
+                        .eventList(resourceService.searchEventList())
+                        .build()
+        );
+        resourceService.saveResourceChecksum("messageType",
+                SearchMessageTypeResourceRes.builder()
+                        .messageTypeList(resourceService.searchMessageTypeList())
                         .build()
         );
     }
