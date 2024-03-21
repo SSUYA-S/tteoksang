@@ -6,7 +6,7 @@ public enum RedisPrefix {
     CHANGE_EMAIL("changeEmail:"),
     RESET_PASSOWRD("resetPassword:"),
     ENCODING("encoding:"),
-    STUDIO("studio:");
+    SOCKET("socket:");
 
 
     private String prefix;
