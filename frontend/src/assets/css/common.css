@@ -5,8 +5,8 @@
 #root {
     width: 100vw;
     height: 100vh;
-    /* max-width: 2220px;
-    max-height: 1080px; */
+    max-width: 3000px;
+    max-height: 1600px;
     margin: 0 auto;
     text-align: center;
     overflow-x: hidden;
