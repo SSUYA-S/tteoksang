@@ -1,5 +1,6 @@
 package com.welcome.tteoksang.socket.interceptor;
 
+import com.welcome.tteoksang.auth.exception.TokenInvalidException;
 import com.welcome.tteoksang.auth.jwt.JWTUtil;
 import com.welcome.tteoksang.game.dto.RedisGameInfo;
 import com.welcome.tteoksang.redis.RedisPrefix;
@@ -55,8 +56,40 @@ public class InGameChannelInterceptor implements ChannelInterceptor {
             }
         }
 
-        // CONNECT요청 처리
+        // CONNECT 요청 처리
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
+            log.debug("연결");
+
+            /*
+             웹에서 ws 테스트 시 유저 정보가 없기 때문에 자체적으로 Authorization Bearer로 설정해서 확인 한다.
+             실제 배포에서는 사용하면 x
+            */
+            String authToken = accessor.getFirstNativeHeader("Authorization");
+
+            if (authToken != null && authToken.startsWith("Bearer ")) {
+                String jwtToken = authToken.split(" ")[1];
+                try {
+                    // 토큰 유효성 검사
+                    if (!jwtUtil.isValid(jwtToken)) {
+                        throw new JwtException("토큰이 만료되었습니다.");
+                    }
+                    //토큰에서 userId, role 획득
+                    userId = jwtUtil.getUserId(jwtToken);
+
+                    //user를 생성하여 값 set
+                    User user = userRepository.findByUserIdAndDeletedAtIsNull(userId).orElseThrow(() -> new JwtException("올바르지 않은 토큰입니다."));
+
+                    //스프링 시큐리티 인증 토큰 생성
+                    Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, null);
+
+                    // 사용자 정보 저장
+                    accessor.setUser(authentication);
+                } catch (JwtException e) {
+                    e.printStackTrace();
+                    throw new TokenInvalidException(e);
+                }
+            }
+
             //user를 생성하여 값 set
             User user = userRepository.findByUserIdAndDeletedAtIsNull(userId).orElseThrow(() -> new JwtException("올바르지 않은 토큰입니다."));
             log.debug("유저 아이디 :{}", userId);
