@@ -12,7 +12,7 @@ interface PropType {
 export default function NicknameChangeModal(props: PropType) {
     const [nickName, setNickName] = useState<string>(props.nickName);
 
-    const updateName = (event) => {
+    const updateName = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNickName(event.target.value);
     };
 
