@@ -27,7 +27,7 @@
                 // Register a service worker hosted at the root of the
                 // site using the default scope.
                 navigator.serviceWorker
-                    .register('./service-worker.js')
+                    .register('/api/js/service-worker.js')
                     .then((registration) => {
                         console.log(
                             'Service worker registration succeeded:',
@@ -37,7 +37,7 @@
                     .catch((err) => {
                         console.log(
                             'Service worker registration failed:',
-                            error
+                            err
                         );
                     });
             } else {
