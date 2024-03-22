@@ -140,7 +140,7 @@ public class JWTFilter extends OncePerRequestFilter {
             User user;
             try {
                 //DB에서 유저 정보 탐색
-                user = userRepository.findByUserId(userId).orElseThrow(UserNotExistException::new);
+                user = userRepository.findByUserIdAndDeletedAtIsNull(userId).orElseThrow(UserNotExistException::new);
                 //스프링 시큐리티 인증 토큰 생성 - 우리가 사용할 내용은 유저 객체
                 Authentication authToken = new UsernamePasswordAuthenticationToken(user, null, null);
 

@@ -9,4 +9,6 @@ public interface GameInfoService {
 
     public GameInfo searchGameInfo(String userId);
 
+    public void updateGameInfo(GameInfo gameInfo);
+
 }
