@@ -99,7 +99,7 @@ const cacheFirst = async ({ request, preloadResponsePromise, fallbackUrl }) => {
     let cache;
     if (request.url.includes('/src/assets/images/')) {
         cache = await caches.open('localImages');
-    } else if (request.url.includes('/api/resource')) {
+    } else if (request.url.includes('/api/resources')) {
         cache = await caches.open('api');
     } else if (request.url.includes('/api/s3')) {
         cache = await caches.open('networkImages');
@@ -133,9 +133,9 @@ const cacheFirst = async ({ request, preloadResponsePromise, fallbackUrl }) => {
             await putInLocalImageCache(request, responseFromNetwork.clone());
         }
         // 여기에 checksum 데이터 추가
-        else if (request.url.includes('/api/resource')) {
+        else if (request.url.includes('/api/resources')) {
             if (
-                !request.url.includes('/api/resource/checksum') &&
+                !request.url.includes('/api/resources/checksum') &&
                 !request.url.includes('.ts')
             ) {
                 await putInApiCache(request, responseFromNetwork.clone());
@@ -169,7 +169,7 @@ self.addEventListener('fetch', (e) => {
     } else if (
         e.request.url.includes('/src/assets/images/') ||
         e.request.url.includes('/src/assets/bgm') ||
-        e.request.url.includes('/api/resource') ||
+        e.request.url.includes('/api/resources') ||
         e.request.url.includes('/api/s3')
     ) {
         // console.log('서비스 워커가 요청 가로챔 ' + e.request.url);

@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 
 import static java.time.LocalTime.now;
-@Controller
+//@Controller
 @RequiredArgsConstructor
 public class SceduledGameController {
 
