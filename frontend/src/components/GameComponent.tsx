@@ -27,6 +27,8 @@ import { InitialData } from '../type/types';
 import { checkMyProfile, withdrawal } from '../api/user';
 import ErrorModal from './modal/ErrorModal';
 import WarningModal from './modal/ErrorModal';
+import { getWebSocketId } from '../api/game';
+import ChattingModal from './modal/ChattingModal';
 
 type GameType = {
     initialData: InitialData;
@@ -167,8 +169,19 @@ export default function GameComponent(props: GameType) {
         setIngameTurn(totalInfo.turn);
 
         //websocket
-        const client = handshake();
-        setWebSocketClient(client);
+        //websocketId 받아오기 -> handshake
+        getWebSocketId()
+            .then((res) => {
+                console.log(res);
+                if (res.status === httpStatusCode.OK) {
+                    const websocketId = res.data.webSocketId;
+                    const client = handshake(websocketId);
+                    setWebSocketClient(client);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
 
         const handleBeforeUnload = (e: BeforeUnloadEvent) => {
             e.preventDefault();
@@ -641,6 +654,7 @@ export default function GameComponent(props: GameType) {
             ) : (
                 <></>
             )}
+            <ChattingModal />
         </section>
     );
 }
