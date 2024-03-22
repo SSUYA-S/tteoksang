@@ -1,11 +1,10 @@
 import { useSelector } from 'react-redux';
 import InventoryCard from '../section/InventoryCard';
-import { ProductBucket, ProductInfo } from '../../type/types';
-
-import productSource from '../../dummy-data/resource/Product.json';
+import { ProductBucket, Product } from '../../type/types';
 
 type inventoryType = {
     setInventoryFlag: React.Dispatch<React.SetStateAction<boolean>>;
+    productSource: Product[];
 };
 
 export default function InventoryModal(props: inventoryType) {
@@ -29,7 +28,7 @@ export default function InventoryModal(props: inventoryType) {
                         <InventoryCard
                             myProduct={product}
                             productName={
-                                productSource.productList[product.productId - 1]
+                                props.productSource[product.productId - 1]
                                     .productName
                             }
                             productTodayCost={
