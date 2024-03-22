@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/resource")
+@RequestMapping("/resources")
 //@RequiredArgsConstructor
 public class ResourceController { //tteoksang.me 접속과 동시에 불러오는 리소스 조회
 

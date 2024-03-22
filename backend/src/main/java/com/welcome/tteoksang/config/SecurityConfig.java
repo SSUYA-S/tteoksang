@@ -93,12 +93,12 @@ public class SecurityConfig {
                         .authenticationEntryPoint(authenticationEntryPoint)
                 );
 
-        http.logout(logout -> logout
-                .logoutUrl("/auth/logout")
-                .logoutSuccessUrl(mainPage)
-                .deleteCookies("accessToken", "refreshToken") // 쿠키 삭제
-                .invalidateHttpSession(true) // 세션 무효화
-        );
+//        http.logout(logout -> logout
+//                .logoutUrl("/auth/logout")
+//                .logoutSuccessUrl(mainPage)
+//                .deleteCookies("accessToken", "refreshToken") // 쿠키 삭제
+//                .invalidateHttpSession(true) // 세션 무효화
+//        );
 
         // 시큐리티 기반 로그인 페이지 경로
         // http://localhost:8080/oauth2/authorization/google 여기로 로그인 요청을 보내면 된다.
@@ -108,10 +108,10 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/auth/**").permitAll()  // 인증 및 토큰 재발급 허용
-                        .requestMatchers("/resource/**").permitAll() //리소스 불러오기 허용
+                        .requestMatchers("/resources/**").permitAll() //리소스 불러오기 허용
                         .requestMatchers("/game/**").permitAll() // 웹소켓 허용
                         .requestMatchers("/error").permitAll() // 에러메세지 처리
-                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                        .requestMatchers("/js/**").permitAll()
                         .anyRequest().authenticated());
 
         //JWTFilter 등록
