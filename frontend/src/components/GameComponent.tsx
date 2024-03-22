@@ -27,8 +27,7 @@ import { checkMyProfile } from '../api/user';
 
 type GameType = {
     initialData: InitialData;
-  setStartFlag: React.Dispatch<React.SetStateAction<boolean>>;
-
+    setStartFlag: React.Dispatch<React.SetStateAction<boolean>>;
 };
 export default function GameComponent(props: GameType) {
     const initialData = props.initialData;
@@ -106,6 +105,17 @@ export default function GameComponent(props: GameType) {
         //websocket
         const client = handshake();
         setWebSocketClient(client);
+
+        const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+            e.preventDefault();
+            e.returnValue =
+                '변경사항이 저장되지 않을 수 있습니다. 페이지를 떠나시겠습니까?';
+        };
+        // 이벤트 리스너 추가
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
     }, []);
 
     // 인게임 시간 설정
@@ -229,22 +239,22 @@ export default function GameComponent(props: GameType) {
     return (
         <section className="mainBackground relative w-full h-full flex flex-col justify-center items-center">
             <img
-                src={`/src/assets/images/background/bg-${profileTheme}-morning.png`}
+                src={`/src/assets/images/background/bg-${profileTheme}-morning.webp`}
                 className="bg-image"
                 style={{ opacity: theme === 'morning' ? '1' : '0' }}
             />
             <img
-                src={`/src/assets/images/background/bg-${profileTheme}-evening.png`}
+                src={`/src/assets/images/background/bg-${profileTheme}-evening.webp`}
                 className="bg-image"
                 style={{ opacity: theme === 'evening' ? '1' : '0' }}
             />
             <img
-                src={`/src/assets/images/background/bg-${profileTheme}-night.png`}
+                src={`/src/assets/images/background/bg-${profileTheme}-night.webp`}
                 className="bg-image"
                 style={{ opacity: theme === 'night' ? '1' : '0' }}
             />
             <img
-                src={`/src/assets/images/background/bg-${profileTheme}-morning.png`}
+                src={`/src/assets/images/background/bg-${profileTheme}-morning.webp`}
                 className="bg-image -z-10"
             />
             <div className="absolute top-0 w-[60%] h-[100%]">
