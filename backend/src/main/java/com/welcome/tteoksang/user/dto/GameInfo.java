@@ -1,8 +1,13 @@
 package com.welcome.tteoksang.user.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Getter
@@ -12,9 +17,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name = "game_info")
-public class GameInfo {
+public class GameInfo implements Serializable {
 
     @Id
+    @Column(name = "user_id")
     private String userId;
 
     @Column(name = "game_id")
@@ -38,6 +44,8 @@ public class GameInfo {
     @Column(name = "last_play_turn")
     private Integer lastPlayTurn;
 
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     @Column(name = "last_connect_time")
     private LocalDateTime lastConnectTime;
 

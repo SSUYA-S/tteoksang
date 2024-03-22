@@ -33,4 +33,9 @@ public class GameInfoServiceImpl implements GameInfoService {
         return gameInfoRepository.findById(userId).orElse(null);
     }
 
+    @Override
+    public void updateGameInfo(GameInfo gameInfo) {
+        gameInfoRepository.save(gameInfo);
+    }
+
 }
