@@ -9,6 +9,8 @@ import CircularTimer from './section/CircularTimer';
 import MyPageModal from './modal/MyPageModal';
 import NewsModal from './modal/NewsModal';
 import LottieRain from './lottie-animation/LottieRain';
+import { logout } from '../api/auth';
+import { httpStatusCode } from '../util/http-status';
 
 //dummydata
 import totalInfo from '../dummy-data/total-info.json';
@@ -22,7 +24,11 @@ import Stomp from '@stomp/stompjs';
 import { Client } from '@stomp/stompjs';
 import { handshake, sendMessage } from '../util/websocket/client';
 import { InitialData } from '../type/types';
-import { checkMyProfile } from '../api/user';
+import { checkMyProfile, withdrawal } from '../api/user';
+import ErrorModal from './modal/ErrorModal';
+import WarningModal from './modal/ErrorModal';
+import { getWebSocketId } from '../api/game';
+import ChattingModal from './modal/ChattingModal';
 
 type GameType = {
     initialData: InitialData;
@@ -58,6 +64,64 @@ export default function GameComponent(props: GameType) {
     const [webSocketClient, setWebSocketClient] = useState<Stomp.Client>(
         new Client()
     );
+
+    const [isLogoutProceeding, setIsLogoutProceeding] =
+        useState<boolean>(false);
+
+    const [isWithdrawalProceeding, setIsWithdrawalProceeding] =
+        useState<boolean>(false);
+
+    /** handleLogOut()
+     *  로그아웃
+     */
+    const handleLogOut = async () => {
+        const res = await logout();
+        if (res.status === httpStatusCode.OK) {
+            props.setStartFlag(false);
+            setIsLogoutProceeding(false);
+        } else {
+            console.log('Logout error');
+        }
+    };
+
+    /** proceedLogout()
+     * 로그아웃 모달 활성화 */
+    const proceedLogout = () => {
+        setIsLogoutProceeding(true);
+    };
+
+    /** handleCloseErrorModal()
+     * 로그아웃 모달 비활성화 */
+    const handleCloseErrorModal = () => {
+        setIsLogoutProceeding(false);
+    };
+
+    /** handleWithdrawal()
+     *  회원 탈퇴를 진행한다.
+     */
+    const handleWithdrawal = async () => {
+        const res = await withdrawal();
+        if (res.status === httpStatusCode.OK) {
+            props.setStartFlag(false);
+            setIsWithdrawalProceeding(false);
+        } else {
+            console.log('회원 탈퇴 불가');
+        }
+    };
+
+    /** proceedWithdrawal()
+     *  회원 탈퇴 모달을 띄운다.
+     */
+    const proceedWithdrawal = () => {
+        setIsWithdrawalProceeding(true);
+    };
+
+    /** cancelWithdrawal()
+     *  회원 탈퇴 진행을 취소한다.
+     */
+    const cancelWithdrawal = () => {
+        setIsWithdrawalProceeding(false);
+    };
 
     //칭호 정보 불러오기
     const titleInfo = initialData.titleList;
@@ -105,8 +169,19 @@ export default function GameComponent(props: GameType) {
         setIngameTurn(totalInfo.turn);
 
         //websocket
-        const client = handshake();
-        setWebSocketClient(client);
+        //websocketId 받아오기 -> handshake
+        getWebSocketId()
+            .then((res) => {
+                console.log(res);
+                if (res.status === httpStatusCode.OK) {
+                    const websocketId = res.data.webSocketId;
+                    const client = handshake(websocketId);
+                    setWebSocketClient(client);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
 
         const handleBeforeUnload = (e: BeforeUnloadEvent) => {
             e.preventDefault();
@@ -240,6 +315,28 @@ export default function GameComponent(props: GameType) {
 
     return (
         <section className="mainBackground relative w-full h-full flex flex-col justify-center items-center">
+            {isLogoutProceeding ? (
+                <WarningModal
+                    handleOK={handleLogOut}
+                    handleCancel={handleCloseErrorModal}
+                    message="로그아웃 하시겠습니까?"
+                    cancelMessage="취소"
+                    okMessage="로그아웃"
+                />
+            ) : (
+                <></>
+            )}
+            {isWithdrawalProceeding ? (
+                <WarningModal
+                    handleOK={handleWithdrawal}
+                    handleCancel={cancelWithdrawal}
+                    message="정말로 회원탈퇴 하시겠습니까?"
+                    cancelMessage="취소"
+                    okMessage="회원탈퇴"
+                />
+            ) : (
+                <></>
+            )}
             <img
                 src={`/src/assets/images/background/bg-${profileTheme}-morning.webp`}
                 className="bg-image"
@@ -285,9 +382,13 @@ export default function GameComponent(props: GameType) {
                         </div>
 
                         <div className="relative w-[65%] flex flex-col items-center justify-center ps-[5%]">
-                            <p className="w-full text-start mx-2 text-[1.5vw] text-green-500">
-                                {titleInfo[titleId - 1].titleName}
-                            </p>
+                            {titleId === 1 ? (
+                                <></>
+                            ) : (
+                                <p className="w-full text-start mx-2 text-[1.5vw] text-green-500">
+                                    {titleInfo[titleId - 1].titleName}
+                                </p>
+                            )}
                             <p className="w-full text-start mx-2 my-[5%] text-[2vw] text-green-500">
                                 {userNickname}
                             </p>
@@ -438,6 +539,7 @@ export default function GameComponent(props: GameType) {
                             backgroundPosition: 'center',
                             backgroundRepeat: 'no-repeat',
                         }}
+                        onClick={proceedLogout}
                     />
                 </div>
             </div>
@@ -501,6 +603,7 @@ export default function GameComponent(props: GameType) {
                 <InfraModal
                     setFacilityFlag={setFacilityFlag}
                     updateNowMoney={updateNowMoney}
+                    infraInfo={initialData.infraList}
                 />
             ) : (
                 <></>
@@ -525,18 +628,33 @@ export default function GameComponent(props: GameType) {
             {settingFlag ? (
                 <SettingModal
                     setSettingFlag={setSettingFlag}
-                    setStartFlag={props.setStartFlag}
+                    proceedLogout={proceedLogout}
+                    proceedWithdrawal={proceedWithdrawal}
                 />
             ) : (
                 <></>
             )}
-            {mypageFlag ? <MyPageModal setMypageFlag={setMyPageFlag} /> : <></>}
-            {newsFlag ? <NewsModal setNewsFlag={setNewsFlag} /> : <></>}
-            {inventoryFlag ? (
-                <InventoryModal setInventoryFlag={setInventoryFlag} />
+            {mypageFlag ? (
+                <MyPageModal
+                    setMypageFlag={setMyPageFlag}
+                    titleInfo={initialData.titleList}
+                    profileFrameInfo={initialData.profileFrameList}
+                    themeInfo={initialData.themeList}
+                    iconInfo={initialData.profileIconList}
+                />
             ) : (
                 <></>
             )}
+            {newsFlag ? <NewsModal setNewsFlag={setNewsFlag} /> : <></>}
+            {inventoryFlag ? (
+                <InventoryModal
+                    setInventoryFlag={setInventoryFlag}
+                    productSource={initialData.productList}
+                />
+            ) : (
+                <></>
+            )}
+            <ChattingModal />
         </section>
     );
 }

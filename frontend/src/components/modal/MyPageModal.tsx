@@ -6,11 +6,6 @@ import {
     profileThemeState,
 } from '../../util/counter-slice';
 
-//dummy data
-import titleInfo from '../../dummy-data/resource/Title.json';
-import profileFrameInfo from '../../dummy-data/resource/ProfileFrame.json';
-import themeInfo from '../../dummy-data/resource/Theme.json';
-import iconInfo from '../../dummy-data/resource/ProfileIcon.json';
 import {
     changeProfileFrame,
     changeProfileTheme,
@@ -18,9 +13,14 @@ import {
 } from '../../api/user';
 import { httpStatusCode } from '../../util/http-status';
 import NicknameChangeModal from './NicknameChangeModal';
+import { Title, ProfileFrame, Theme, ProfileIcon } from '../../type/types';
 
 type MyPageType = {
     setMypageFlag: React.Dispatch<SetStateAction<boolean>>;
+    titleInfo: Title[];
+    profileFrameInfo: ProfileFrame[];
+    themeInfo: Theme[];
+    iconInfo: ProfileIcon[];
 };
 export default function MyPageModal(props: MyPageType) {
     const [menu, setMenu] = useState<number>(0);
@@ -471,32 +471,30 @@ export default function MyPageModal(props: MyPageType) {
                             {/* 프레임 보기 */}
                             {littleMenu === 0 ? (
                                 <>
-                                    {profileFrameInfo.profileFrameList.map(
-                                        (frame) => {
-                                            return (
-                                                <img
-                                                    key={frame.profileFrameId}
-                                                    className={
-                                                        'w-[7vw] h-[7vw] m-[0.8vw] cursor-pointer ' +
-                                                        (tempFrame ===
+                                    {props.profileFrameInfo.map((frame) => {
+                                        return (
+                                            <img
+                                                key={frame.profileFrameId}
+                                                className={
+                                                    'w-[7vw] h-[7vw] m-[0.8vw] cursor-pointer ' +
+                                                    (tempFrame ===
+                                                    frame.profileFrameId
+                                                        ? 'border-[0.2vw] border-green-400'
+                                                        : '')
+                                                }
+                                                src={`/src/assets/images/profile/frame (${frame.profileFrameId}).png`}
+                                                alt=""
+                                                style={{
+                                                    aspectRatio: 1 / 1,
+                                                }}
+                                                onClick={() => {
+                                                    changeTempFrame(
                                                         frame.profileFrameId
-                                                            ? 'border-[0.2vw] border-green-400'
-                                                            : '')
-                                                    }
-                                                    src={`/src/assets/images/profile/frame (${frame.profileFrameId}).png`}
-                                                    alt=""
-                                                    style={{
-                                                        aspectRatio: 1 / 1,
-                                                    }}
-                                                    onClick={() => {
-                                                        changeTempFrame(
-                                                            frame.profileFrameId
-                                                        );
-                                                    }}
-                                                />
-                                            );
-                                        }
-                                    )}
+                                                    );
+                                                }}
+                                            />
+                                        );
+                                    })}
                                 </>
                             ) : (
                                 <></>
@@ -504,7 +502,7 @@ export default function MyPageModal(props: MyPageType) {
                             {/* 아이콘 보기 */}
                             {littleMenu === 1 ? (
                                 <>
-                                    {iconInfo.profileIconList.map((icon) => {
+                                    {props.iconInfo.map((icon) => {
                                         return (
                                             <img
                                                 key={icon.profileIconId}
@@ -533,7 +531,7 @@ export default function MyPageModal(props: MyPageType) {
                             {/* 테마 보기 */}
                             {littleMenu === 2 ? (
                                 <>
-                                    {themeInfo.themeList.map((theme) => {
+                                    {props.themeInfo.map((theme) => {
                                         return (
                                             <img
                                                 key={theme.themeId}
@@ -592,61 +590,96 @@ export default function MyPageModal(props: MyPageType) {
                         style={{ aspectRatio: 1 / 1 }}
                     />
                 </div>
-                <p className="text-[1.5vw] mt-[1.8vw] text-green-500">
-                    {titleInfo.titleList[titleId - 1].titleName}
-                </p>
-                <div
-                    className="flex my-[0.8vw] text-[1.8vw] items-center justify-center cursor-pointer"
-                    onClick={() => setIsNicknameChanging(true)}
-                >
-                    {userNickname}
+                <div className="flex w-full">
+                    <div className="flex flex-col w-[40%] pl-[20%] items-start">
+                        <p className="text-[1.5vw] mt-[1.8vw] text-green-500">
+                            칭호
+                        </p>
+                        <div
+                            className="flex my-[0.8vw] text-[1.8vw] items-center justify-center cursor-pointer"
+                            onClick={() => setIsNicknameChanging(true)}
+                        >
+                            닉네임
+                        </div>
+                        <p className="text-[1.3vw]">경력</p>
+                    </div>
+                    <div className="flex flex-col w-[40%] items-end">
+                        {titleId === 1 ? (
+                            <p className="text-[1.5vw] mt-[1.8vw] text-gray-400">
+                                칭호 없음
+                            </p>
+                        ) : (
+                            <p className="text-[1.5vw] mt-[1.8vw] text-green-500">
+                                {props.titleInfo[titleId - 1].titleName}
+                            </p>
+                        )}
+                        <div
+                            className="flex my-[0.8vw] text-[1.8vw] items-center justify-center cursor-pointer"
+                            onClick={() => setIsNicknameChanging(true)}
+                        >
+                            {userNickname}
+                        </div>
+                        <p className="text-[1.3vw]">{`${career}년차`}</p>
+                    </div>
+                    <div className="flex flex-col w-[20%]">
+                        <div
+                            className="flex mt-[4.7vw] text-[1.8vw] items-center justify-center cursor-pointer border-[0.2vw] color-border-subbold m-[0.4vw]"
+                            onClick={() => setIsNicknameChanging(true)}
+                        >
+                            수정
+                        </div>
+                    </div>
                 </div>
-                <p className="text-[1.3vw]">{`${career}년차`}</p>
-                <div className="w-full flex items-center justify-center">
-                    <div
-                        className="relative w-[20%] bg-white border-[0.1vw] border-black cursor-pointer"
-                        style={{ aspectRatio: 1 / 1 }}
-                        onClick={() => {
-                            changeMenu(2);
-                            changeLittleMenu(0);
-                        }}
-                    >
-                        <img
-                            className="w-full h-full object-cover "
-                            src={`/src/assets/images/profile/frame (${tempFrame}).png`}
-                            alt=""
-                            style={{ aspectRatio: 1 / 1 }}
-                        />
+                <div className="w-[80%] flex flex-col color-border-subbold border-[0.2vw] mt-[2vw] px-[0.5vw]">
+                    <div className="pt-[0.2vw] text-[1vw] text-left pl-[1.5vw]">
+                        현재 착용 중인 아이템
                     </div>
-                    <div
-                        className="relative w-[20%] bg-white border-[0.1vw] border-black mx-[0.8vw] my-[1.2vw] cursor-pointer"
-                        style={{ aspectRatio: 1 / 1 }}
-                        onClick={() => {
-                            changeMenu(2);
-                            changeLittleMenu(1);
-                        }}
-                    >
-                        <img
-                            className="w-full h-full object-cover "
-                            src={`/src/assets/images/profile/icon (${tempIcon}).png`}
-                            alt=""
+                    <div className="w-full flex items-center justify-center">
+                        <div
+                            className="relative w-[30%] bg-white border-[0.1vw] border-black cursor-pointer"
                             style={{ aspectRatio: 1 / 1 }}
-                        />
-                    </div>
-                    <div
-                        className="relative w-[20%] bg-white border-[0.1vw] border-black cursor-pointer"
-                        style={{ aspectRatio: 1 / 1 }}
-                        onClick={() => {
-                            changeMenu(2);
-                            changeLittleMenu(2);
-                        }}
-                    >
-                        <img
-                            className="w-full h-full object-cover "
-                            src={`/src/assets/images/background/bg-${tempTheme}-morning.png`}
-                            alt=""
+                            onClick={() => {
+                                changeMenu(2);
+                                changeLittleMenu(0);
+                            }}
+                        >
+                            <img
+                                className="w-full h-full object-cover "
+                                src={`/src/assets/images/profile/frame (${tempFrame}).png`}
+                                alt=""
+                                style={{ aspectRatio: 1 / 1 }}
+                            />
+                        </div>
+                        <div
+                            className="relative w-[30%] bg-white border-[0.1vw] border-black mx-[0.8vw] my-[1.2vw] cursor-pointer"
                             style={{ aspectRatio: 1 / 1 }}
-                        />
+                            onClick={() => {
+                                changeMenu(2);
+                                changeLittleMenu(1);
+                            }}
+                        >
+                            <img
+                                className="w-full h-full object-cover "
+                                src={`/src/assets/images/profile/icon (${tempIcon}).png`}
+                                alt=""
+                                style={{ aspectRatio: 1 / 1 }}
+                            />
+                        </div>
+                        <div
+                            className="relative w-[30%] bg-white border-[0.1vw] border-black cursor-pointer"
+                            style={{ aspectRatio: 1 / 1 }}
+                            onClick={() => {
+                                changeMenu(2);
+                                changeLittleMenu(2);
+                            }}
+                        >
+                            <img
+                                className="w-full h-full object-cover "
+                                src={`/src/assets/images/background/bg-${tempTheme}-morning.png`}
+                                alt=""
+                                style={{ aspectRatio: 1 / 1 }}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>

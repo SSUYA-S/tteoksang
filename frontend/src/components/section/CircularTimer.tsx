@@ -23,7 +23,7 @@ const CircularTimer: React.FC<CircularTimerProps> = ({
                 setPercent(newPercent >= 0 ? newPercent : 0);
 
                 //배경 바꾸기 (오토여야함)
-                console.log(newTimer);
+                // console.log(newTimer);
                 if (newTimer % 5 === 0) {
                     setTurnTimer(newTimer);
                 }
