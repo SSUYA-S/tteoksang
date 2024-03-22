@@ -1,4 +1,4 @@
-import gameInfo from '../../dummy-data/game-info.json';
+// import gameInfo from '../../dummy-data/game-info.json';
 import { BuyInfo } from '../../type/types';
 
 interface BuyReceiptProps {
@@ -37,9 +37,7 @@ export default function TradeBuyReceipt({
                                 className="w-full flex justify-between my-[0.2vw]"
                                 key={product.productId}
                             >
-                                <p className="w-[35%]">
-                                    {gameInfo.product[product.productId]}
-                                </p>
+                                <p className="w-[35%]">{buyable.productName}</p>
                                 <p className="w-[30%]">
                                     {product.productQuantity}
                                 </p>

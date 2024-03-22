@@ -3,22 +3,20 @@ import { SellInfo } from '../../type/types';
 interface SellReceiptProps {
     sellableInfoList: SellInfo[];
     fee: number;
-    updateNowMoney: (a: number) => void;
     sellProduct: (a: number) => void;
 }
 
 export default function TradeSellReceipt({
     sellableInfoList,
     fee,
-    updateNowMoney,
     sellProduct,
 }: SellReceiptProps) {
     let totalCost = 0;
     sellableInfoList.map((product) => {
         totalCost += product.sellingInfo.productTotalCost;
     });
-    let totalFee = fee * totalCost;
-    let totalProfit = totalCost - totalFee;
+    const totalFee = (fee / 100) * totalCost;
+    const totalProfit = totalCost - totalFee;
 
     return (
         <div className="w-full h-full flex flex-col justify-between items-center bg-white color-text-textcolor border-[0.4vw] color-border-subbold">

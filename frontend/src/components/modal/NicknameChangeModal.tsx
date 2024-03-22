@@ -1,4 +1,4 @@
-import {ChangeEvent, MouseEventHandler, useState} from 'react';
+import { MouseEventHandler, useState} from 'react';
 import { useDispatch } from 'react-redux';
 import { changeNickname } from '../../api/user';
 import { httpStatusCode } from '../../util/http-status';
@@ -12,7 +12,7 @@ interface PropType {
 export default function NicknameChangeModal(props: PropType) {
     const [nickName, setNickName] = useState<string>(props.nickName);
 
-    const updateName = (event: ChangeEvent<HTMLInputElement>) => {
+    const updateName = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNickName(event.target.value);
     };
 
