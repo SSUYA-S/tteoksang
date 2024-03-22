@@ -187,7 +187,7 @@ export default function GameStartComponent(props: startType) {
             className="relative w-full h-full flex flex-col justify-center items-center"
             style={{
                 backgroundImage:
-                    'url(/src/assets/images/background/bg-start.png)',
+                    'url(/src/assets/images/background/bg-start.webp)',
                 backgroundSize: 'contain ',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
