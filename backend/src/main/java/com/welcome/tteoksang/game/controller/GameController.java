@@ -1,5 +1,6 @@
 package com.welcome.tteoksang.game.controller;
 
+import com.welcome.tteoksang.game.dto.Chat;
 import com.welcome.tteoksang.game.dto.GameMessage;
 import com.welcome.tteoksang.game.dto.res.WebSocketIdRes;
 import com.welcome.tteoksang.game.service.ChatService;
@@ -12,6 +13,7 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -27,6 +29,8 @@ public class GameController {
 
     private final RedisService redisService;
     private final ChatService chatService;
+
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
     @GetMapping("/web-socket")
     public ResponseEntity<WebSocketIdRes> createWebSocketId(@AuthenticationPrincipal User user) {
@@ -70,9 +74,9 @@ public class GameController {
                       (클라이언트가 JSON 형태의 메시지를 보냈다면, 이를 GameMessage 객체로 변환하여 메서드에 전달)
           */
         User user = (User) ((Authentication) principal).getPrincipal();
-        gameMessage.setBody(
-                chatService.sendChat(user, (Map<String, Object>) gameMessage.getBody())
-        );
+        Chat chat = chatService.sendChat(user, (Map<String, Object>) gameMessage.getBody());
+        if (chat == null) return null;
+        gameMessage.setBody(chat);
         return gameMessage;
     }
 }
