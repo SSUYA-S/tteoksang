@@ -1,7 +1,12 @@
 package com.welcome.tteoksang.game.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -10,7 +15,7 @@ import java.util.Map;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RedisGameInfo {
+public class RedisGameInfo implements Serializable {
 
     private Integer gameId;
     private Long gold;
@@ -19,6 +24,9 @@ public class RedisGameInfo {
     private Integer brokerLevel;
     private String privateEventId;
     private Integer lastPlayTurn;
+
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime lastConnectTime;
     private Integer purchaseQuantity;
     private Map<Integer, Integer> products;    // 사용시 역직렬화

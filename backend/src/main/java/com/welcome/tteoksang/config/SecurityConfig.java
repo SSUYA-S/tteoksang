@@ -93,6 +93,13 @@ public class SecurityConfig {
                         .authenticationEntryPoint(authenticationEntryPoint)
                 );
 
+        http.logout(logout -> logout
+                .logoutUrl("/auth/logout")
+                .logoutSuccessUrl(mainPage)
+                .deleteCookies("accessToken", "refreshToken") // 쿠키 삭제
+                .invalidateHttpSession(true) // 세션 무효화
+        );
+
         // 시큐리티 기반 로그인 페이지 경로
         // http://localhost:8080/oauth2/authorization/google 여기로 로그인 요청을 보내면 된다.
         // url에 맞게 auth/login으로 수정
