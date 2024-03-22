@@ -26,9 +26,14 @@ self.addEventListener('install', (e) => {
             // '/',
             // '/index.html',
             // '/service-worker.js',
+            '/src/assets/bgm/main_theme_bgm.mp3',
+            '/src/assets/bgm/start_theme_bgm.mp3',
             '/src/assets/images/background/bg-main-morning.png',
             '/src/assets/images/background/bg-main-evening.png',
             '/src/assets/images/background/bg-main-night.png',
+            '/src/assets/images/background/bg-main-morning.webp',
+            '/src/assets/images/background/bg-main-evening.webp',
+            '/src/assets/images/background/bg-main-night.webp',
             '/src/assets/images/background/bg-start.png',
             '/src/assets/images/etc/text-start-content.png',
             '/src/assets/images/etc/text-start-title.png',
@@ -153,11 +158,17 @@ const cacheFirst = async ({ request, preloadResponsePromise, fallbackUrl }) => {
 
 // fetch event
 self.addEventListener('fetch', (e) => {
-    if (e.request.url.includes('/oauth2/authorization/')) {
+    if (
+        e.request.url.includes('/oauth2/authorization/') ||
+        e.request.url.includes('/oauth2/') ||
+        e.request.url.includes('auth')
+    ) {
+        console.log('서비스 워커가 요청 가로챔 ' + e.request.url);
         console.log('구글 요청은 가로채지 않고 돌려보냄');
         return;
     } else if (
         e.request.url.includes('/src/assets/images/') ||
+        e.request.url.includes('/src/assets/bgm') ||
         e.request.url.includes('/api/resource') ||
         e.request.url.includes('/api/s3')
     ) {
