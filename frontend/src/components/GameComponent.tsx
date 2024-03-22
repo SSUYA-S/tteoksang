@@ -443,7 +443,7 @@ export default function GameComponent(props: GameType) {
             </div>
 
             {/* 포켓몬 */}
-            {/* <div
+            <div
                 className="w-80 h-40 absolute bottom-[20%]"
                 style={{
                     backgroundImage: 'url(/src/assets/images/etc/yadon.png)',
@@ -483,7 +483,7 @@ export default function GameComponent(props: GameType) {
                 ></div>
             ) : (
                 <></>
-            )} */}
+            )}
             {/* 포켓몬 */}
 
             {tradeFlag ? (
