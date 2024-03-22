@@ -38,89 +38,90 @@ export interface RootSliceState {
 }
 
 export interface Checksum {
-    resourceName: String;
-    checksumValue: String;
+    resourceName: string;
+    checksumValue: string;
 }
 export interface ChecksumList {
     checksumList: Checksum[];
 }
 export interface NewChecksum {
-    achievement: String;
-    event: String;
-    infra: String;
-    messageType: String;
-    product: String;
-    profileFrame: String;
-    profileIcon: String;
-    theme: String;
-    title: String;
+    achievement: string;
+    event: string;
+    infra: string;
+    messageType: string;
+    product: string;
+    profileFrame: string;
+    profileIcon: string;
+    theme: string;
+    title: string;
 }
 
 export interface Achievement {
-    achievementDescription: String;
-    achievementGoalDescription: String;
+    achievementDescription: string;
+    achievementGoalDescription: string;
     achievementId: number;
-    achievementName: String;
+    achievementName: string;
 }
 export interface AchievementList {
     achievementList: Achievement[];
 }
 export interface Title {
-    titleId: Number;
-    titleName: String;
-    titleContent: String;
+    titleId: number;
+    titleName: string;
+    titleContent: string;
 }
 export interface TitleList {
     titleList: Title[];
 }
 export interface Theme {
-    themeId: Number;
-    themeName: String;
+    themeId: number;
+    themeName: string;
 }
 export interface ThemeList {
     themeList: Theme[];
 }
 export interface Product {
-    productId: Number;
-    productName: String;
-    productType: String;
-    productUnit: String;
+    productId: number;
+    productName: string;
+    productType: string;
+    productUnit: string;
 }
 export interface ProductList {
     productList: Product[];
 }
 export interface Event {
-    eventId: Number;
-    eventName: String;
-    eventType: String;
-    eventDescription: String;
-    eventEffectValue: Number;
-    eventUnit: String;
+    eventId: number;
+    eventName: string;
+    eventType: string;
+    eventDescription: string;
+    eventEffectValue: number;
+    eventUnit: string;
 }
 export interface EventList {
     eventList: Event[];
 }
-export interface Infra {}
 export interface InfraList {
-    infraList: Infra[];
+    brokerInfoList: BrokerInfo[];
+    vehicleInfoList: VehicleInfo[];
+    warehouseInfoList: WarehouseInfo[];
 }
 export interface MessageType {
-    messageType: String;
-    messageTypeValue: Number;
+    messageType: string;
+    messageTypeValue: number;
 }
 export interface MessageTypeList {
     messageTypeList: MessageType[];
 }
 export interface ProfileIcon {
-    profileIconId: Number;
-    profileIconName: String;
+    profileIconId: number;
+    profileIconName: string;
 }
 export interface ProfileIconList {
     profileIconList: ProfileIcon[];
 }
 export interface ProfileFrame {
-    profileFrameId: Number;
-    profileFrameName: String;
+    profileFrameId: number;
+    profileFrameName: string;
 }
 export interface ProfileFrameList {
     profileFrameList: ProfileFrame[];
@@ -131,7 +132,7 @@ export interface InitialData {
     themeList: Theme[];
     productList: Product[];
     eventList: Event[];
-    infraList: Infra[];
+    infraList: InfraList;
     messageTypeList: MessageType[];
     profileIconList: ProfileIcon[];
     profileFrameList: ProfileFrame[];
@@ -144,4 +145,25 @@ export interface profileData {
     themeId: number;
     titleId: number;
     userNickname: string;
+}
+export interface BrokerInfo {
+    brokerLevel: number;
+    brokerName: string;
+    brokerUpgradeFee: number;
+    brokerFeeRate: number;
+    brokerContent: string;
+}
+export interface VehicleInfo {
+    vehicleLevel: number;
+    vehicleName: string;
+    vehicleUpgradeFee: number;
+    vehicleCapacity: number;
+    vehicleContent: string;
+}
+export interface WarehouseInfo {
+    warehouseLevel: number;
+    warehouseName: string;
+    warehouseUpgradeFee: number;
+    warehouseCapacity: number;
+    warehouseContent: string;
 }

@@ -46,7 +46,11 @@ export default function MainPage() {
         themeList: [],
         productList: [],
         eventList: [],
-        infraList: [],
+        infraList: {
+            warehouseInfoList: [],
+            brokerInfoList: [],
+            vehicleInfoList: [],
+        },
         messageTypeList: [],
         profileIconList: [],
         profileFrameList: [],
@@ -249,7 +253,10 @@ export default function MainPage() {
                     profileIconData={initialData.profileIconList}
                 />
             ) : (
-                <GameComponent initialData={initialData} setStartFlag={setStartFlag} />
+                <GameComponent
+                    initialData={initialData}
+                    setStartFlag={setStartFlag}
+                />
             )}
         </section>
     );

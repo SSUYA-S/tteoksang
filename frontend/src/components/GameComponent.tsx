@@ -11,7 +11,6 @@ import NewsModal from './modal/NewsModal';
 import LottieRain from './lottie-animation/LottieRain';
 
 //dummydata
-import titleInfo from '../dummy-data/resource/Title.json';
 import totalInfo from '../dummy-data/total-info.json';
 
 import InventoryModal from './modal/InventoryModal';
@@ -27,8 +26,7 @@ import { checkMyProfile } from '../api/user';
 
 type GameType = {
     initialData: InitialData;
-  setStartFlag: React.Dispatch<React.SetStateAction<boolean>>;
-
+    setStartFlag: React.Dispatch<React.SetStateAction<boolean>>;
 };
 export default function GameComponent(props: GameType) {
     const initialData = props.initialData;
@@ -60,6 +58,9 @@ export default function GameComponent(props: GameType) {
     const [webSocketClient, setWebSocketClient] = useState<Stomp.Client>(
         new Client()
     );
+
+    //칭호 정보 불러오기
+    const titleInfo = initialData.titleList;
 
     //게임 설정 정보 불러오기
     const bgmSetting = useSelector(
@@ -274,7 +275,7 @@ export default function GameComponent(props: GameType) {
 
                         <div className="relative w-[65%] flex flex-col items-center justify-center ps-[5%]">
                             <p className="w-full text-start mx-2 text-[1.5vw] text-green-500">
-                                {titleInfo.titleList[titleId - 1].titleName}
+                                {titleInfo[titleId - 1].titleName}
                             </p>
                             <p className="w-full text-start mx-2 my-[5%] text-[2vw] text-green-500">
                                 {userNickname}
@@ -479,6 +480,8 @@ export default function GameComponent(props: GameType) {
                     setTradeFlag={setTradeFlag}
                     updateNowMoney={updateNowMoney}
                     nowMoney={nowMoney}
+                    infraInfo={initialData.infraList}
+                    productResource={initialData.productList}
                 />
             ) : (
                 <></>

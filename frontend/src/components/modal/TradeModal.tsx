@@ -3,10 +3,11 @@ import TradeBuyReceipt from '../section/TradeBuyReceipt';
 import TradeBuyCard from '../section/TradeBuyCard';
 import TradeSellCard from '../section/TradeSellCard';
 import TradeSellReceipt from '../section/TradeSellReceipt';
+import { InfraList, Product } from '../../type/types';
 
 //import dummy datas
-import infraInfo from '../../dummy-data/resource/Infra.json';
-import productResource from '../../dummy-data/resource/Product.json';
+// import infraInfo from '../../dummy-data/resource/Infra.json';
+// import productResource from '../../dummy-data/resource/Product.json';
 
 import { myProductState } from '../../util/myproduct-slice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,6 +18,8 @@ type tradeType = {
     setTradeFlag: React.Dispatch<React.SetStateAction<boolean>>;
     updateNowMoney: (a: number) => void;
     nowMoney: number;
+    infraInfo: InfraList;
+    productResource: Product[];
 };
 
 export default function TradeModal(props: tradeType) {
@@ -40,10 +43,10 @@ export default function TradeModal(props: tradeType) {
     const myProductList = myProductInfo.myProductList;
     //구매 가능 검증용 변수, 창고에 있는 재고 불러와 계산하는 로직 추가
     let maximumBuyableAmount = Math.min(
-        infraInfo.warehouseInfoList[myProductInfo.warehouseLevel - 1]
-            .maxHoldingQuantity,
-        infraInfo.vehicleInfoList[myProductInfo.vehicleLevel - 1]
-            .maxPurchaseQuantity
+        props.infraInfo.warehouseInfoList[myProductInfo.warehouseLevel - 1]
+            .warehouseCapacity,
+        props.infraInfo.vehicleInfoList[myProductInfo.vehicleLevel - 1]
+            .vehicleCapacity
     );
     maximumBuyableAmount -= myProductInfo.purchasedQuantity;
 
@@ -83,7 +86,7 @@ export default function TradeModal(props: tradeType) {
 
             //집어넣기
             const product: BuyInfo = {
-                productName: productResource.productList[id - 1].productName,
+                productName: props.productResource[id - 1].productName,
                 productInfo: productInfoAndEvent.productInfoList[id - 1],
                 myProduct: myProduct,
                 buyingInfo: buyingInfo,
@@ -98,7 +101,7 @@ export default function TradeModal(props: tradeType) {
         const myList: SellInfo[] = [];
         myProductList.map((product: ProductBucket) => {
             const id = product.productId;
-            const productName = productResource.productList[id - 1].productName;
+            const productName = props.productResource[id - 1].productName;
             const productInfo = productInfoAndEvent.productInfoList[id - 1];
             const sellingInfo: ProductBucket = {
                 productId: id,
@@ -156,8 +159,7 @@ export default function TradeModal(props: tradeType) {
             const prodId = product.productInfo.productId;
             //깊은 복사
             const newProductInfo: BuyInfo = {
-                productName:
-                    productResource.productList[prodId - 1].productName,
+                productName: props.productResource[prodId - 1].productName,
                 productInfo: productInfoAndEvent.productInfoList[prodId - 1],
                 myProduct: myProduct,
                 buyingInfo: buyingInfo,
@@ -183,8 +185,8 @@ export default function TradeModal(props: tradeType) {
         //용량 초과시 반영 안함
         if (
             totalBuyNum >
-            infraInfo.warehouseInfoList[myProductInfo.warehouseLevel - 1]
-                .maxHoldingQuantity
+            props.infraInfo.warehouseInfoList[myProductInfo.warehouseLevel - 1]
+                .warehouseCapacity
         ) {
             console.log('창고 용량 초과!'); //모달로 대체
             return;
@@ -221,8 +223,7 @@ export default function TradeModal(props: tradeType) {
             const prodId = product.productInfo.productId;
             //깊은 복사
             const newProductInfo: SellInfo = {
-                productName:
-                    productResource.productList[prodId - 1].productName,
+                productName: props.productResource[prodId - 1].productName,
                 productInfo: productInfoAndEvent.productInfoList[prodId - 1],
                 myProduct: myProduct,
                 sellingInfo: sellingInfo,
@@ -353,9 +354,9 @@ export default function TradeModal(props: tradeType) {
                                 <p>
                                     {totalNumber}/
                                     {
-                                        infraInfo.warehouseInfoList[
+                                        props.infraInfo.warehouseInfoList[
                                             myProductInfo.warehouseLevel - 1
-                                        ].maxHoldingQuantity
+                                        ].warehouseCapacity
                                     }
                                 </p>
                             </div>
@@ -394,9 +395,9 @@ export default function TradeModal(props: tradeType) {
                                 <p>
                                     {totalNumber}/
                                     {
-                                        infraInfo.warehouseInfoList[
+                                        props.infraInfo.warehouseInfoList[
                                             myProductInfo.warehouseLevel - 1
-                                        ].maxHoldingQuantity
+                                        ].warehouseCapacity
                                     }
                                 </p>
                             </div>
@@ -417,11 +418,10 @@ export default function TradeModal(props: tradeType) {
                         <TradeSellReceipt
                             sellableInfoList={sellingProductList}
                             fee={
-                                infraInfo.brokerInfoList[
+                                props.infraInfo.brokerInfoList[
                                     myProductInfo.brokerLevel - 1
-                                ].brokerFee
+                                ].brokerFeeRate
                             }
-                            updateNowMoney={props.updateNowMoney}
                             sellProduct={sellProduct}
                         />
                     </div>
@@ -454,8 +454,8 @@ export default function TradeModal(props: tradeType) {
                                                 >
                                                     <td>
                                                         {
-                                                            productResource
-                                                                .productList[
+                                                            props
+                                                                .productResource[
                                                                 product.productId -
                                                                     1
                                                             ].productName
