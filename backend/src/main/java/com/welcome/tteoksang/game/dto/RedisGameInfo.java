@@ -12,7 +12,6 @@ import java.util.Map;
 @NoArgsConstructor
 public class RedisGameInfo {
 
-    private String userId;
     private Integer gameId;
     private Long gold;
     private Integer warehouseLevel;
