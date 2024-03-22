@@ -285,9 +285,13 @@ export default function GameComponent(props: GameType) {
                         </div>
 
                         <div className="relative w-[65%] flex flex-col items-center justify-center ps-[5%]">
-                            <p className="w-full text-start mx-2 text-[1.5vw] text-green-500">
-                                {titleInfo[titleId - 1].titleName}
-                            </p>
+                            {titleId === 1 ? (
+                                <></>
+                            ) : (
+                                <p className="w-full text-start mx-2 text-[1.5vw] text-green-500">
+                                    {titleInfo[titleId - 1].titleName}
+                                </p>
+                            )}
                             <p className="w-full text-start mx-2 my-[5%] text-[2vw] text-green-500">
                                 {userNickname}
                             </p>
@@ -501,6 +505,7 @@ export default function GameComponent(props: GameType) {
                 <InfraModal
                     setFacilityFlag={setFacilityFlag}
                     updateNowMoney={updateNowMoney}
+                    infraInfo={initialData.infraList}
                 />
             ) : (
                 <></>
@@ -530,10 +535,23 @@ export default function GameComponent(props: GameType) {
             ) : (
                 <></>
             )}
-            {mypageFlag ? <MyPageModal setMypageFlag={setMyPageFlag} /> : <></>}
+            {mypageFlag ? (
+                <MyPageModal
+                    setMypageFlag={setMyPageFlag}
+                    titleInfo={initialData.titleList}
+                    profileFrameInfo={initialData.profileFrameList}
+                    themeInfo={initialData.themeList}
+                    iconInfo={initialData.profileIconList}
+                />
+            ) : (
+                <></>
+            )}
             {newsFlag ? <NewsModal setNewsFlag={setNewsFlag} /> : <></>}
             {inventoryFlag ? (
-                <InventoryModal setInventoryFlag={setInventoryFlag} />
+                <InventoryModal
+                    setInventoryFlag={setInventoryFlag}
+                    productSource={initialData.productList}
+                />
             ) : (
                 <></>
             )}

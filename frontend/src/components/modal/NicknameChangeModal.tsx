@@ -1,11 +1,11 @@
-import { MouseEventHandler, useState} from 'react';
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { changeNickname } from '../../api/user';
 import { httpStatusCode } from '../../util/http-status';
 import { userNicknameState } from '../../util/myprofile-slice';
 
 interface PropType {
-    closeModal: MouseEventHandler<HTMLDivElement>;
+    closeModal: () => void;
     nickName: string;
 }
 
@@ -23,6 +23,7 @@ export default function NicknameChangeModal(props: PropType) {
             .then((res) => {
                 if (res.status === httpStatusCode.OK) {
                     dispatch(userNicknameState(nickName));
+                    props.closeModal();
                     console.log('Success');
                 } else {
                     console.log('Fail');
@@ -31,6 +32,12 @@ export default function NicknameChangeModal(props: PropType) {
             .catch((err) => {
                 console.log(err);
             });
+    };
+
+    const enterPressed = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.code === 'Enter') {
+            sendChangeRequest();
+        }
     };
 
     return (
@@ -44,6 +51,7 @@ export default function NicknameChangeModal(props: PropType) {
                     className="w-[90%] h-[30%] text-[2vw] p-[1vw]"
                     value={nickName}
                     onChange={updateName}
+                    onKeyDown={enterPressed}
                 />
                 <div
                     className="text-[2vw] w-[30%] h-[30%] bg-black text-white mt-[1vh] flex justify-center items-center cursor-pointer"
