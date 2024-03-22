@@ -58,17 +58,6 @@ export default function MainPage() {
             });
         };
         loadChecksumAPI();
-
-        const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-            e.preventDefault();
-            e.returnValue =
-                '변경사항이 저장되지 않을 수 있습니다. 페이지를 떠나시겠습니까?';
-        };
-        // 이벤트 리스너 추가
-        window.addEventListener('beforeunload', handleBeforeUnload);
-        return () => {
-            window.removeEventListener('beforeunload', handleBeforeUnload);
-        };
     }, []);
 
     useEffect(() => {
@@ -249,7 +238,10 @@ export default function MainPage() {
                     profileIconData={initialData.profileIconList}
                 />
             ) : (
-                <GameComponent initialData={initialData} setStartFlag={setStartFlag} />
+                <GameComponent
+                    initialData={initialData}
+                    setStartFlag={setStartFlag}
+                />
             )}
         </section>
     );
