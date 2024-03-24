@@ -10,9 +10,11 @@ import com.welcome.tteoksang.redis.RedisService;
 import com.welcome.tteoksang.resource.dto.ProfileFrame;
 import com.welcome.tteoksang.resource.dto.ProfileIcon;
 import com.welcome.tteoksang.resource.dto.Theme;
+import com.welcome.tteoksang.resource.dto.Title;
 import com.welcome.tteoksang.resource.repository.ProfileFrameRepository;
 import com.welcome.tteoksang.resource.repository.ProfileIconRepository;
 import com.welcome.tteoksang.resource.repository.ThemeRepository;
+import com.welcome.tteoksang.resource.repository.TitleRepository;
 import com.welcome.tteoksang.user.dto.User;
 import com.welcome.tteoksang.user.dto.UserInfo;
 import com.welcome.tteoksang.user.dto.req.UpdateUserNameReq;
@@ -40,6 +42,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     private final UserRepository userRepository;
     private final ThemeRepository themeRepository;
+    private final TitleRepository titleRepository;
     private final ProfileIconRepository profileIconRepository;
     private final ProfileFrameRepository profileFrameRepository;
     private final RedisService redisService;
@@ -70,7 +73,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         // 레디스에 유저 정보 저장
         String userInfoKey = RedisPrefix.USERINFO.prefix() + user.getUserId();
         redisService.setValues(userInfoKey, userInfo);
-        log.debug("유저 기본 정보 저장 여부 확인:{}", redisService.hasKey(userInfoKey));
+        log.debug("유저 정보 저장 여부 확인 : {}", redisService.hasKey(userInfoKey));
     }
 
     @Override
@@ -84,11 +87,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
         userRepository.save(user);
 
-        // 인게임 내부에서 닉네임 수정하는 경우 레디스에도 반영
-        String userInfoKey = RedisPrefix.USERINFO.prefix() + user.getUserId();
-        if (redisService.hasKey(userInfoKey)) {
-            saveUserInfo(user);
-        }
+        // 인게임 내부에서 프레임 수정하는 경우 레디스에도 반영
+        updateUser(user);
     }
 
     @Override
@@ -102,11 +102,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
         userRepository.save(user);
 
-        // 인게임 내부에서 테마 수정하는 경우 레디스에도 반영
-        String userInfoKey = RedisPrefix.USERINFO.prefix() + user.getUserId();
-        if (redisService.hasKey(userInfoKey)) {
-            saveUserInfo(user);
-        }
+        // 인게임 내부에서 프레임 수정하는 경우 레디스에도 반영
+        updateUser(user);
     }
 
     @Override
@@ -120,11 +117,8 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
         userRepository.save(user);
 
-        // 인게임 내부에서 아이콘 수정하는 경우 레디스에도 반영
-        String userInfoKey = RedisPrefix.USERINFO.prefix() + user.getUserId();
-        if (redisService.hasKey(userInfoKey)) {
-            saveUserInfo(user);
-        }
+        // 인게임 내부에서 프레임 수정하는 경우 레디스에도 반영
+        updateUser(user);
     }
 
     @Override
@@ -139,10 +133,21 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         userRepository.save(user);
 
         // 인게임 내부에서 프레임 수정하는 경우 레디스에도 반영
-        String userInfoKey = RedisPrefix.USERINFO.prefix() + user.getUserId();
-        if (redisService.hasKey(userInfoKey)) {
-            saveUserInfo(user);
-        }
+        updateUser(user);
+    }
+
+    @Override
+    public void updateUserTitle(Integer titleId, User user) {
+        Optional<Title> title = titleRepository.findById(titleId);
+//        if (title.isEmpty()) {
+//            throw new NicknameNullException();
+//        }
+        //프로필 프레임 변경
+        user.setTitle(title.get());
+
+        userRepository.save(user);
+        // 레디스에 있는 유저 정보 변경
+        updateUser(user);
     }
 
     @Override
@@ -167,4 +172,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         userRepository.save(user);
     }
 
+    public void updateUser(User user) {
+        // 인게임 내부에서 프레임 수정하는 경우 레디스에도 반영
+        String userInfoKey = RedisPrefix.USERINFO.prefix() + user.getUserId();
+        if (redisService.hasKey(userInfoKey)) {
+            saveUserInfo(user);
+        }
+    }
 }
