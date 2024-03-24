@@ -167,3 +167,10 @@ export interface WarehouseInfo {
     warehouseCapacity: number;
     warehouseContent: string;
 }
+
+export interface Chat {
+    userNickname: string;
+    message: string;
+    profileIconId: number;
+    profileFrameId: number;
+}

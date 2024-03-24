@@ -7,7 +7,7 @@ export const handshake = (websocketId: string) => {
     stompClient = new Client({
         brokerURL: `${import.meta.env.VITE_REACT_WEBSOCKET_URL}`,
         debug: function (str) {
-            // console.log(str);
+            console.log(str);
         },
         reconnectDelay: 5000,
         onConnect: () => {
@@ -20,10 +20,6 @@ export const handshake = (websocketId: string) => {
                     console.log(`Received Private : ${message}`);
                 }
             );
-            stompClient.subscribe(`/topic/chat`, (message) => {
-                // console.log(`Received chat: ${message}`);
-                console.log(JSON.parse(message.body));
-            });
         },
     });
 
