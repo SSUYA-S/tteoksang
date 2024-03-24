@@ -20,6 +20,8 @@ public interface UserService {
 
     public void updateUserProfileFrame(UpdateUserProfileFrameReq updateUserProfileFrameReq, User user);
 
+    public void updateUserTitle(Integer titleId, User user);
+
     public void deleteUser(User user) throws URISyntaxException;
 
 }
