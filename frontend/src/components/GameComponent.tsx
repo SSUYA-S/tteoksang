@@ -70,6 +70,8 @@ export default function GameComponent(props: GameType) {
         new Client()
     );
 
+    const [webSocketId, setWebSocketId] = useState<string>('');
+
     /** handleLogOut()
      *  로그아웃
      */
@@ -80,6 +82,18 @@ export default function GameComponent(props: GameType) {
             setIsLogoutProceeding(false);
         } else {
             console.log('Logout error');
+        }
+
+        //websocket보내기
+        const quitMsg = JSON.stringify({
+            type: 'QUIT_GAME',
+            body: {},
+        });
+        if (webSocketClient.connected) {
+            webSocketClient.publish({
+                destination: `/app/private/${webSocketId}`,
+                body: quitMsg,
+            });
         }
     };
 
@@ -173,8 +187,9 @@ export default function GameComponent(props: GameType) {
             .then((res) => {
                 console.log(res);
                 if (res.status === httpStatusCode.OK) {
-                    const websocketId = res.data.webSocketId;
-                    const client = handshake(websocketId);
+                    const id = res.data.webSocketId;
+                    const client = handshake(id);
+                    setWebSocketId(id);
                     setWebSocketClient(client);
                 }
             })
@@ -596,6 +611,9 @@ export default function GameComponent(props: GameType) {
                     nowMoney={nowMoney}
                     infraInfo={initialData.infraList}
                     productResource={initialData.productList}
+                    client={webSocketClient}
+                    turn={ingameTurn}
+                    webSocketId={webSocketId}
                 />
             ) : (
                 <></>
@@ -605,6 +623,8 @@ export default function GameComponent(props: GameType) {
                     setFacilityFlag={setFacilityFlag}
                     updateNowMoney={updateNowMoney}
                     infraInfo={initialData.infraList}
+                    client={webSocketClient}
+                    webSocketId={webSocketId}
                 />
             ) : (
                 <></>
