@@ -10,6 +10,8 @@ import java.net.URISyntaxException;
 
 public interface UserService {
 
+    public void saveUserInfo(User user);
+
     public void updateUserName(UpdateUserNameReq updateUserNameReq, User user);
 
     public void updateUserTheme(UpdateUserThemeReq updateUserThemeReq, User user);

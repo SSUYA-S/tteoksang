@@ -2,14 +2,14 @@ package com.welcome.tteoksang.socket.interceptor;
 
 import com.welcome.tteoksang.auth.exception.TokenInvalidException;
 import com.welcome.tteoksang.auth.jwt.JWTUtil;
-import com.welcome.tteoksang.game.dto.RedisGameInfo;
+import com.welcome.tteoksang.game.service.RedisGameInfoService;
 import com.welcome.tteoksang.redis.RedisPrefix;
 import com.welcome.tteoksang.redis.RedisService;
-import com.welcome.tteoksang.user.dto.GameInfo;
 import com.welcome.tteoksang.user.dto.User;
 import com.welcome.tteoksang.user.exception.UserNotExistException;
 import com.welcome.tteoksang.user.repository.UserRepository;
 import com.welcome.tteoksang.user.service.GameInfoService;
+import com.welcome.tteoksang.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.Message;
@@ -23,7 +23,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -32,8 +31,10 @@ import java.util.Map;
 public class InGameChannelInterceptor implements ChannelInterceptor {
 
     private final JWTUtil jwtUtil;
+    private final UserService userService;
     private final UserRepository userRepository;
     private final RedisService redisService;
+    private final RedisGameInfoService redisGameInfoService;
     private final GameInfoService gameInfoService;
 
     /**
@@ -55,7 +56,7 @@ public class InGameChannelInterceptor implements ChannelInterceptor {
             Map<String, Object> sessionAttributes = accessor.getSessionAttributes();
             if (sessionAttributes != null) {
                 userId = (String) sessionAttributes.get("userId");
-                log.debug("유저 아이디 : {}", userId);
+                log.debug("핸드 셰이크 유저 아이디 : {}", userId);
             }
         }
 
@@ -88,69 +89,38 @@ public class InGameChannelInterceptor implements ChannelInterceptor {
 
             //스프링 시큐리티 인증 토큰 생성
             Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, null);
-
             // 사용자 정보 저장
             accessor.setUser(authentication);
 
-            // 메시지의 목적지(destination)을 가져와 private시 webSocketId가 유효성 검사 실시
-            String destination = accessor.getDestination();
+            // 레디스에 유저 정보 저장
+            userService.saveUserInfo(user);
+            // DB에 있는 게임 데이터 불러오기
+            gameInfoService.saveGameInfo(user.getUserId());
+        }
 
-            // DB에서 gameInfo 불러오기
-            GameInfo gameInfo = gameInfoService.searchGameInfo(userId);
-//            Map<Integer, Integer> products;
+        // 클라이언트 연결 해제 시
+        else if (StompCommand.DISCONNECT.equals(accessor.getCommand())) {
+            log.debug("DISCONNECT MESSAGE START");
 
-            if (gameInfo != null) {
-                String gameInfoKey = RedisPrefix.INGAMEINFO.prefix() + user.getUserId();
-//                    // 농산물 데이터 역직렬화
-//                    try (ByteArrayInputStream byteStream = new ByteArrayInputStream(gameInfo.getProducts());
-//                         ObjectInputStream objStream = new ObjectInputStream(byteStream)) {
-//
-//                        Object productsObject = objStream.readObject();
-//                        if (productsObject instanceof Map) {
-//                            products = (Map<Integer, Integer>) productsObject;
-//                        } else {
-//                            throw new IllegalArgumentException("역직렬화된 객체가 Map이 아닙니다.");
-//                        }
-//                    } catch (Exception e) {
-//                        throw new RuntimeException("역직렬화 과정에서 오류 발생", e);
-//                    }
+            // 사용자 인증 정보 추출
+            Authentication authentication = (Authentication) accessor.getUser();
+            if (authentication != null && authentication.getPrincipal() instanceof User user) {
 
-                // 게임 데이터 불러오기 위한 정보 확인
-                log.debug("[InGameChannelInterceptor] - inGameInfo : {}, {}, {}, {}"
-                        , gameInfo.getGameId(), gameInfo.getGold(),
-                        gameInfo.getWarehouseLevel(), gameInfo.getVehicleLevel()
-                );
+                // 레디스에 있는 게임 데이터 저장
+                redisGameInfoService.saveRedisGameInfo(user.getUserId());
 
-                // 레디스에 이전 게임 데이터 저장
-                RedisGameInfo redisGameInfo = RedisGameInfo.builder()
-                        .gameId(gameInfo.getGameId())
-                        .gold(gameInfo.getGold())
-                        .warehouseLevel(gameInfo.getWarehouseLevel())
-                        .vehicleLevel(gameInfo.getVehicleLevel())
-                        .brokerLevel(gameInfo.getBrokerLevel())
-                        .privateEventId(gameInfo.getPrivateEventId())
-                        .lastPlayTurn(gameInfo.getLastPlayTurn())
-                        .lastConnectTime(gameInfo.getLastConnectTime())
-                        .purchaseQuantity(gameInfo.getPurchaseQuantity())
-                        .products(null) // 작물 데이터가 있는 경우 들어감
-//                            .products(products)
-                        .rentFee(gameInfo.getRentFee())
-                        .build();
-
-                try {
-                    redisService.setValues(gameInfoKey, redisGameInfo);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                // 레디스에 있는 유저 정보 지우기
+                String userInfoKey = RedisPrefix.USERINFO.prefix() + user.getUserId();
+                if (redisService.hasKey(userInfoKey)) {
+                    redisService.deleteValues(userInfoKey);
+                    log.debug("유저 정보 제거");
                 }
-
-                RedisGameInfo redisGameInfoData = (RedisGameInfo) redisService.getValues(gameInfoKey);
-                log.debug("[InGameChannelInterceptor] - redisGameInfoData : {}, {}, {}, {}"
-                        , redisGameInfoData.getGameId(), redisGameInfoData.getGold(),
-                        redisGameInfoData.getWarehouseLevel(), redisGameInfoData.getVehicleLevel()
-                );
             }
-
-//            // 목적지가 "/private/"으로 시작하는 경우의 websocketId 확인
+        }
+        // 구독시
+        else if (StompCommand.SUBSCRIBE.equals(accessor.getCommand())) {
+//            // 메시지의 목적지(destination)을 가져와 private시 webSocketId가 유효성 검사 실시
+//            String destination = accessor.getDestination();
 //            if (destination != null && destination.startsWith("/private/")) {
 //
 //                // WebSocket ID 추출
@@ -169,50 +139,7 @@ public class InGameChannelInterceptor implements ChannelInterceptor {
 //                }
 //            }
         }
-
-        // 클라이언트 연결 해제 시
-        else if (StompCommand.DISCONNECT.equals(accessor.getCommand())) {
-            log.debug("DISCONNECT MESSAGE START");
-
-            // 사용자 인증 정보 추출
-            Authentication authentication = (Authentication) accessor.getUser();
-            if (authentication != null && authentication.getPrincipal() instanceof User user) {
-
-                // 레디스에서 게임 정보 가져오기
-                String gameInfoKey = RedisPrefix.INGAMEINFO.prefix() + user.getUserId();
-                if (redisService.hasKey(gameInfoKey)) {
-                    RedisGameInfo redisGameInfo = (RedisGameInfo) redisService.getValues(gameInfoKey);
-
-                    if (redisGameInfo != null) {
-                        // 상품 직렬화 과정이 필요함
-
-                        // 엔티티로 저장
-                        GameInfo gameInfo = GameInfo.builder()
-                                .userId(user.getUserId())
-                                .gameId(redisGameInfo.getGameId())
-                                .gold(redisGameInfo.getGold())
-                                .warehouseLevel(redisGameInfo.getWarehouseLevel())
-                                .vehicleLevel(redisGameInfo.getVehicleLevel())
-                                .brokerLevel(redisGameInfo.getBrokerLevel())
-                                .privateEventId(redisGameInfo.getPrivateEventId())
-                                .lastPlayTurn(redisGameInfo.getLastPlayTurn())
-                                .lastConnectTime(LocalDateTime.now())
-                                .purchaseQuantity(redisGameInfo.getPurchaseQuantity())
-                                .products("123".getBytes())
-                                .rentFee(redisGameInfo.getRentFee())
-                                .build();
-
-                        // 레디스에 있는 게임 정보를 데이터베이스에 저장
-                        gameInfoService.updateGameInfo(gameInfo);
-
-                        // 레디스에서 게임 정보 삭제
-                        redisService.deleteValues(gameInfoKey);
-                    }
-                }
-            }
-        }
-
-        log.debug("{} MEASSAGE END", accessor.getCommand());
+        log.debug("{} MESSAGE END", accessor.getCommand());
         return message;
     }
 }
