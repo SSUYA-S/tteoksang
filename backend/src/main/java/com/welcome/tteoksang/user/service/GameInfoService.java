@@ -11,4 +11,7 @@ public interface GameInfoService {
 
     public void updateGameInfo(GameInfo gameInfo);
 
+    public void deleteGameInfo(String userId);
+
+    public void saveGameInfo(String userId);
 }

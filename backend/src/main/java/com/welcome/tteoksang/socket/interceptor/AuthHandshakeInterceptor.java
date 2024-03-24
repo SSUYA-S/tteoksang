@@ -27,12 +27,12 @@ public class AuthHandshakeInterceptor implements HandshakeInterceptor {
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
         ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;
         HttpServletRequest httpServletRequest = servletRequest.getServletRequest();
+
         // 토큰 검증 로직
         TokenCookie authToken = CookieUtil.resolveToken(httpServletRequest);
         Cookie accessTokenCookie = authToken.getAccessTokenCookie();
         if (accessTokenCookie == null || !jwtUtil.isValid(accessTokenCookie.getValue())) {
-            // 토큰이 유효하지 않은 경우
-            // 여기서는 HTTP 응답으로 에러 메시지를 직접 설정할 수 없으므로, 연결을 거부하기 위해 false 반환
+            // 토큰이 유효하지 않은 경우 여기서는 HTTP 응답으로 에러 메시지를 직접 설정할 수 없으므로, 연결을 거부하기 위해 false 반환
             return false;
         }
         String userId = jwtUtil.getUserId(accessTokenCookie.getValue());

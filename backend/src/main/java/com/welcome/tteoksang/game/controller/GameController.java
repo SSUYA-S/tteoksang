@@ -57,7 +57,9 @@ public class GameController {
              @Payload: 메시지 본문(body)의 내용을 메서드의 인자로 전달할 때 사용
                       (클라이언트가 JSON 형태의 메시지를 보냈다면, 이를 GameMessage 객체로 변환하여 메서드에 전달)
           */
+        // 유저 정보
         User user = (User) ((Authentication) principal).getPrincipal();
+        log.debug("UserName : {}", user.getUserNickname());
         switch (gameMessage.getType()) {
             case CHANGE_TITLE:
                 // 처리

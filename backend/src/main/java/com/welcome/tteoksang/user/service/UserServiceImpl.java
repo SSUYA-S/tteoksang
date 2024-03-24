@@ -1,5 +1,6 @@
 package com.welcome.tteoksang.user.service;
 
+import com.welcome.tteoksang.auth.service.AuthService;
 import com.welcome.tteoksang.oauth2.dto.GoogleRepoId;
 import com.welcome.tteoksang.oauth2.dto.OAuth2AuthorizedClientEntity;
 import com.welcome.tteoksang.oauth2.repository.GoogleRepository;
@@ -13,6 +14,7 @@ import com.welcome.tteoksang.resource.repository.ProfileFrameRepository;
 import com.welcome.tteoksang.resource.repository.ProfileIconRepository;
 import com.welcome.tteoksang.resource.repository.ThemeRepository;
 import com.welcome.tteoksang.user.dto.User;
+import com.welcome.tteoksang.user.dto.UserInfo;
 import com.welcome.tteoksang.user.dto.req.UpdateUserNameReq;
 import com.welcome.tteoksang.user.dto.req.UpdateUserProfileFrameReq;
 import com.welcome.tteoksang.user.dto.req.UpdateUserProfileIconReq;
@@ -25,11 +27,13 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserDetailsService, UserService {
@@ -40,7 +44,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private final ProfileFrameRepository profileFrameRepository;
     private final RedisService redisService;
     private final GoogleRevokeService googleRevokeService;
+    private final AuthService authService;
     private final GoogleRepository googleRepository;
+    private final GameInfoService gameInfoService;
 
     @Override
     public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
@@ -49,6 +55,25 @@ public class UserServiceImpl implements UserDetailsService, UserService {
                 UserNotExistException::new);
     }
 
+    // 유저 정보 레디스에 저장
+    @Override
+    public void saveUserInfo(User user) {
+        // 유저 정보 저장
+        UserInfo userInfo = UserInfo.builder()
+                .nickname(user.getUserNickname())
+                .profileIconId(user.getProfileIcon().getProfileIconId())
+                .profileFrameId(user.getProfileFrame().getProfileFrameId())
+                .themeId(user.getTheme().getThemeId())
+                .titleId(user.getTitle().getTitleId())
+                .build();
+
+        // 레디스에 유저 정보 저장
+        String userInfoKey = RedisPrefix.USERINFO.prefix() + user.getUserId();
+        redisService.setValues(userInfoKey, userInfo);
+        log.debug("유저 기본 정보 저장 여부 확인:{}", redisService.hasKey(userInfoKey));
+    }
+
+    @Override
     public void updateUserName(UpdateUserNameReq updateUserReq, User user) {
         String name = updateUserReq.getUserNickname();
         if (name == null) {
@@ -58,8 +83,15 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         user.setUserNickname(updateUserReq.getUserNickname());
 
         userRepository.save(user);
+
+        // 인게임 내부에서 닉네임 수정하는 경우 레디스에도 반영
+        String userInfoKey = RedisPrefix.USERINFO.prefix() + user.getUserId();
+        if (redisService.hasKey(userInfoKey)) {
+            saveUserInfo(user);
+        }
     }
 
+    @Override
     public void updateUserTheme(UpdateUserThemeReq updateUserThemeReq, User user) {
         Optional<Theme> theme = themeRepository.findById(updateUserThemeReq.getThemeId());
 //        if (theme.isEmpty()) {
@@ -69,8 +101,15 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         user.setTheme(theme.get());
 
         userRepository.save(user);
+
+        // 인게임 내부에서 테마 수정하는 경우 레디스에도 반영
+        String userInfoKey = RedisPrefix.USERINFO.prefix() + user.getUserId();
+        if (redisService.hasKey(userInfoKey)) {
+            saveUserInfo(user);
+        }
     }
 
+    @Override
     public void updateUserProfileIcon(UpdateUserProfileIconReq updateUserProfileIconReq, User user) {
         Optional<ProfileIcon> profileIcon = profileIconRepository.findById(updateUserProfileIconReq.getProfileIconId());
 //        if (profileIcon.isEmpty()) {
@@ -80,8 +119,15 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         user.setProfileIcon(profileIcon.get());
 
         userRepository.save(user);
+
+        // 인게임 내부에서 아이콘 수정하는 경우 레디스에도 반영
+        String userInfoKey = RedisPrefix.USERINFO.prefix() + user.getUserId();
+        if (redisService.hasKey(userInfoKey)) {
+            saveUserInfo(user);
+        }
     }
 
+    @Override
     public void updateUserProfileFrame(UpdateUserProfileFrameReq updateUserProfileFrameReq, User user) {
         Optional<ProfileFrame> profileFrame = profileFrameRepository.findById(updateUserProfileFrameReq.getProfileFrameId());
 //        if (theme.isEmpty()) {
@@ -91,8 +137,15 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         user.setProfileFrame(profileFrame.get());
 
         userRepository.save(user);
+
+        // 인게임 내부에서 프레임 수정하는 경우 레디스에도 반영
+        String userInfoKey = RedisPrefix.USERINFO.prefix() + user.getUserId();
+        if (redisService.hasKey(userInfoKey)) {
+            saveUserInfo(user);
+        }
     }
 
+    @Override
     public void deleteUser(User user) throws URISyntaxException {
 
         //구글 서버로 탈퇴 요청
@@ -104,11 +157,11 @@ public class UserServiceImpl implements UserDetailsService, UserService {
             googleRevokeService.revokeGoogleAccessToken(token); // 기존 토큰 만료
         }
 
-        //관련 토큰 모두 레디스에서 제거
-        String key = RedisPrefix.REFRESH_TOKEN.prefix() + user.getUserId();
-        if (redisService.hasKey(key)) {
-            redisService.deleteValues(key);
-        }
+        String userId = user.getUserId();
+        // 로그아웃 과정
+        authService.logoutUser(userId);
+        // DB 인게임 정보 제거
+        gameInfoService.deleteGameInfo(userId);
 
         user.setDeletedAt(LocalDateTime.now());
         userRepository.save(user);

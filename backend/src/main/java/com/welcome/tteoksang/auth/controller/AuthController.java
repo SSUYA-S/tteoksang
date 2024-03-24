@@ -44,12 +44,10 @@ public class AuthController {
 
     @GetMapping("/logout")
     public void logout(HttpServletRequest request,
-                                       HttpServletResponse response,
-                                       @AuthenticationPrincipal User user) {
-        String key = RedisPrefix.REFRESH_TOKEN.prefix() + user.getUserId();
-        redisService.deleteValues(key);
-        log.debug("redis:{}", redisService.getValues(key));
-
+                       HttpServletResponse response,
+                       @AuthenticationPrincipal User user) {
+        // 레디스 정보 제거
+        authService.logoutUser(user.getUserId());
         // 쿠키 지우기
         CookieUtil.deleteTokenCookie(request, response);
     }
