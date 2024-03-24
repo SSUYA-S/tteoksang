@@ -11,6 +11,10 @@ import NewsModal from './modal/NewsModal';
 import LottieRain from './lottie-animation/LottieRain';
 import { logout } from '../api/auth';
 import { httpStatusCode } from '../util/http-status';
+import Stomp from '@stomp/stompjs';
+import { Client } from '@stomp/stompjs';
+import { getWebSocketId } from '../api/game';
+import { handshake } from '../util/websocket/client';
 
 //dummydata
 import totalInfo from '../dummy-data/total-info.json';
@@ -19,16 +23,11 @@ import InventoryModal from './modal/InventoryModal';
 import InfraModal from './modal/InfraModal';
 import { goldState } from '../util/myproduct-slice';
 
-//websocket
-import Stomp from '@stomp/stompjs';
-import { Client } from '@stomp/stompjs';
-import { handshake, sendMessage } from '../util/websocket/client';
 import { InitialData } from '../type/types';
-import { checkMyProfile, withdrawal } from '../api/user';
-import ErrorModal from './modal/ErrorModal';
+import { withdrawal } from '../api/user';
 import WarningModal from './modal/ErrorModal';
-import { getWebSocketId } from '../api/game';
 import ChattingModal from './modal/ChattingModal';
+import WebSocket from './modal/WebSocket';
 
 type GameType = {
     initialData: InitialData;
@@ -61,15 +60,15 @@ export default function GameComponent(props: GameType) {
     const [turnTimer, setTurnTimer] = useState<number>(-1);
     const [nowMoney, setNowMoney] = useState<number>(0);
 
-    const [webSocketClient, setWebSocketClient] = useState<Stomp.Client>(
-        new Client()
-    );
-
     const [isLogoutProceeding, setIsLogoutProceeding] =
         useState<boolean>(false);
 
     const [isWithdrawalProceeding, setIsWithdrawalProceeding] =
         useState<boolean>(false);
+
+    const [webSocketClient, setWebSocketClient] = useState<Stomp.Client>(
+        new Client()
+    );
 
     /** handleLogOut()
      *  로그아웃
@@ -312,6 +311,8 @@ export default function GameComponent(props: GameType) {
         //redux 반영
         dispatch(goldState(num));
     };
+
+    /**메시지 전송 */
 
     return (
         <section className="mainBackground relative w-full h-full flex flex-col justify-center items-center">
@@ -654,7 +655,7 @@ export default function GameComponent(props: GameType) {
             ) : (
                 <></>
             )}
-            <ChattingModal />
+            <ChattingModal client={webSocketClient} />
         </section>
     );
 }
