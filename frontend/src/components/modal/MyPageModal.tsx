@@ -146,11 +146,11 @@ export default function MyPageModal(props: MyPageType) {
         if (menu === 0) {
             return (
                 <>
-                    <div className="w-full h-[25%] flex justify-between items-center px-[2.2vw]">
+                    <div className="w-full h-[25%] flex justify-between items-center px-[2.2vw] ">
                         <div className="flex text-[1.3vw]">
                             <p
                                 className={
-                                    'py-[0.8vw] px-[1.4vw] border-[0.2vw] color-bg-main color-border-brown1 me-[0.6vw] cursor-pointer ' +
+                                    'py-[0.8vw] px-[1.4vw] border-[0.2vw] color-bg-main color-border-brown1 me-[0.6vw] cursor-pointer rounded-[0.8vw] ' +
                                     (littleMenu === 0
                                         ? 'color-bg-subbold text-white'
                                         : '') +
@@ -167,7 +167,7 @@ export default function MyPageModal(props: MyPageType) {
                             </p>
                             <p
                                 className={
-                                    'py-[0.8vw] px-[1.4vw] border-[0.2vw] color-bg-main color-border-brown1 mx-[0.8vw] cursor-pointer ' +
+                                    'py-[0.8vw] px-[1.4vw] border-[0.2vw] color-bg-main color-border-brown1 mx-[0.8vw] cursor-pointer rounded-[0.8vw] ' +
                                     (littleMenu === 1
                                         ? 'color-bg-subbold text-white'
                                         : '') +
@@ -184,7 +184,7 @@ export default function MyPageModal(props: MyPageType) {
                             </p>
                             <p
                                 className={
-                                    'py-[0.8vw] px-[1.4vw] border-[0.2vw] color-bg-main color-border-brown1 ml-[0.8vw] cursor-pointer ' +
+                                    'py-[0.8vw] px-[1.4vw] border-[0.2vw] color-bg-main color-border-brown1 ml-[0.8vw] cursor-pointer rounded-[0.8vw] ' +
                                     (littleMenu === 2
                                         ? 'color-bg-subbold text-white'
                                         : '') +
@@ -200,7 +200,7 @@ export default function MyPageModal(props: MyPageType) {
                                 미획득
                             </p>
                         </div>
-                        <p className="py-[0.8vw] px-[1.4vw] border-[0.2vw] color-bg-main color-border-brown1 text-[1.3vw] cursor-pointer">
+                        <p className="py-[0.8vw] px-[1.4vw] border-[0.2vw] color-bg-main color-border-brown1 text-[1.3vw] cursor-pointer rounded-[0.8vw] ">
                             자세히 보기
                         </p>
                     </div>
@@ -322,7 +322,7 @@ export default function MyPageModal(props: MyPageType) {
                         <div className="flex text-[1.3vw]">
                             <p
                                 className={
-                                    'py-[0.8vw] px-[1.4vw] border-[0.2vw] color-bg-main color-border-brown1 me-[0.6vw] cursor-pointer ' +
+                                    'py-[0.8vw] px-[1.4vw] border-[0.2vw] color-bg-main color-border-brown1 me-[0.6vw] cursor-pointer rounded-[0.8vw]' +
                                     (littleMenu === 0
                                         ? 'color-bg-subbold text-white'
                                         : '') +
@@ -339,7 +339,7 @@ export default function MyPageModal(props: MyPageType) {
                             </p>
                             <p
                                 className={
-                                    'py-[0.8vw] px-[1.4vw] border-[0.2vw] color-bg-main color-border-brown1 mx-[0.8vw] cursor-pointer ' +
+                                    'py-[0.8vw] px-[1.4vw] border-[0.2vw] color-bg-main color-border-brown1 mx-[0.8vw] cursor-pointer rounded-[0.8vw]' +
                                     (littleMenu === 1
                                         ? 'color-bg-subbold text-white'
                                         : '') +
@@ -355,7 +355,7 @@ export default function MyPageModal(props: MyPageType) {
                                 보유 중
                             </p>
                         </div>
-                        <p className="py-[0.8vw] px-[1.4vw] border-[0.2vw] color-bg-main color-border-brown1 text-[1.3vw] cursor-pointer">
+                        <p className="py-[0.8vw] px-[1.4vw] border-[0.2vw] color-bg-main color-border-brown1 text-[1.3vw] cursor-pointer rounded-[0.8vw] ">
                             자세히 보기
                         </p>
                     </div>
@@ -414,7 +414,7 @@ export default function MyPageModal(props: MyPageType) {
                         <div className="flex text-[1.3vw]">
                             <p
                                 className={
-                                    'py-[0.8vw] px-[1.4vw] border-[0.2vw] color-bg-main color-border-brown1 me-[0.6vw] cursor-pointer ' +
+                                    'py-[0.8vw] px-[1.4vw] border-[0.2vw] color-bg-main color-border-brown1 me-[0.6vw] cursor-pointer rounded-[0.8vw] ' +
                                     (littleMenu === 0
                                         ? 'color-bg-subbold text-white'
                                         : '') +
@@ -431,7 +431,7 @@ export default function MyPageModal(props: MyPageType) {
                             </p>
                             <p
                                 className={
-                                    'py-[0.8vw] px-[1.4vw] border-[0.2vw] color-bg-main color-border-brown1 mx-[0.8vw] cursor-pointer ' +
+                                    'py-[0.8vw] px-[1.4vw] border-[0.2vw] color-bg-main color-border-brown1 mx-[0.8vw] cursor-pointer rounded-[0.8vw] ' +
                                     (littleMenu === 1
                                         ? 'color-bg-subbold text-white'
                                         : '') +
@@ -448,7 +448,7 @@ export default function MyPageModal(props: MyPageType) {
                             </p>
                             <p
                                 className={
-                                    'py-[0.8vw] px-[1.4vw] border-[0.2vw] color-bg-main color-border-brown1 ml-[0.8vw] cursor-pointer ' +
+                                    'py-[0.8vw] px-[1.4vw] border-[0.2vw] color-bg-main color-border-brown1 ml-[0.8vw] cursor-pointer rounded-[0.8vw] ' +
                                     (littleMenu === 2
                                         ? 'color-bg-subbold text-white'
                                         : '') +
@@ -565,7 +565,7 @@ export default function MyPageModal(props: MyPageType) {
         }
     };
     return (
-        <div className="absolute w-[90%] h-[95%] flex items-center justify-center color-text-textcolor border-[0.2vw] color-border-brown1 color-bg-main z-50 animation-modal ">
+        <div className="absolute w-[90%] h-[95%] flex items-center justify-center color-text-textcolor border-[0.2vw] color-border-brown1 color-bg-main z-50 animation-modal rounded-[1vw]">
             {isNicknameChanging ? (
                 <NicknameChangeModal
                     closeModal={closeNicknameModal}
@@ -574,7 +574,7 @@ export default function MyPageModal(props: MyPageType) {
             ) : (
                 <></>
             )}
-            <div className="w-[32%] h-[85%] flex flex-col py-[3.2vw] items-center bg-white border-[0.2vw] color-border-brown1">
+            <div className="w-[32%] h-[85%] flex flex-col py-[3.2vw] items-center bg-white border-[0.2vw] color-border-brown1 rounded-[1vw]">
                 <div
                     className="relative w-[13vw] border-[0.2vw]"
                     style={{ aspectRatio: 1 / 1 }}
@@ -651,13 +651,13 @@ export default function MyPageModal(props: MyPageType) {
                 </div>
             </div>
             <div className="w-[1%]"></div>
-            <div className="relative w-[64%] h-[85%] bg-white border-[0.2vw] color-border-brown1">
+            <div className="relative w-[64%] h-[85%] bg-white border-[0.2vw] color-border-brown1 rounded-[1vw] ">
                 {menuElement()}
 
                 <div className="absolute -top-[2.1vw] left-[10%] flex">
                     <div
                         className={
-                            'w-[9vw]  text-white bg-red-500 pt-[0.2vw] text-[1.4vw] cursor-pointer ' +
+                            'w-[9vw]  text-white bg-red-500 pt-[0.2vw] text-[1.4vw] cursor-pointer rounded-t-[1vw] ' +
                             (menu === 0 ? 'h-[4.2vw]' : 'h-[2.1vw]')
                         }
                         onClick={() => changeMenu(0)}
@@ -666,7 +666,7 @@ export default function MyPageModal(props: MyPageType) {
                     </div>
                     <div
                         className={
-                            'w-[9vw]  text-white bg-blue-500 pt-[0.2vw] text-[1.4vw] mx-[2vw] cursor-pointer ' +
+                            'w-[9vw]  text-white bg-blue-500 pt-[0.2vw] text-[1.4vw] mx-[2vw] cursor-pointer rounded-t-[1vw] ' +
                             (menu === 1 ? 'h-[4.2vw]' : 'h-[2.1vw]')
                         }
                         onClick={() => changeMenu(1)}
@@ -675,7 +675,7 @@ export default function MyPageModal(props: MyPageType) {
                     </div>
                     <div
                         className={
-                            'w-[9vw]  text-white bg-purple-500 pt-[0.2vw] text-[1.4vw] cursor-pointer ' +
+                            'w-[9vw]  text-white bg-purple-500 pt-[0.2vw] text-[1.4vw] cursor-pointer rounded-t-[1vw] ' +
                             (menu === 2 ? 'h-[4.2vw]' : 'h-[2.1vw]')
                         }
                         onClick={() => changeMenu(2)}
@@ -685,7 +685,7 @@ export default function MyPageModal(props: MyPageType) {
                 </div>
                 <div
                     className={
-                        'absolute right-[5%] bottom-[5%] w-[9vw]  text-white bg-black p-[0.2vw] text-[1.4vw] cursor-pointer '
+                        'absolute right-[5%] bottom-[5%] w-[9vw]  text-white bg-black p-[0.2vw] text-[1.4vw] cursor-pointer rounded-[0.8vw] '
                     }
                     onClick={() => saveSettings()}
                 >
