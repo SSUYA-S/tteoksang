@@ -55,16 +55,15 @@ public class InGameChannelInterceptor implements ChannelInterceptor {
             Map<String, Object> sessionAttributes = accessor.getSessionAttributes();
             if (sessionAttributes != null) {
                 userId = (String) sessionAttributes.get("userId");
+                log.debug("유저 아이디 : {}", userId);
             }
         }
 
         // CONNECT 요청 처리
         if (StompCommand.CONNECT.equals(accessor.getCommand())) {
-            log.debug("연결");
-
+            log.debug("CONNECT MESSAGE START");
             /*
-             웹에서 ws 테스트 시 유저 정보가 없기 때문에 자체적으로 Authorization Bearer로 설정해서 확인 한다.
-             실제 배포에서는 사용하면 x
+             웹에서 ws 테스트 시 유저 정보가 없기 때문에 자체적으로 Authorization Bearer로 설정해서 확인한다.
             */
             String authToken = accessor.getFirstNativeHeader("Authorization");
 
@@ -77,24 +76,15 @@ public class InGameChannelInterceptor implements ChannelInterceptor {
                     }
                     //토큰에서 userId, role 획득
                     userId = jwtUtil.getUserId(jwtToken);
-
-                    //user를 생성하여 값 set
-                    User user = userRepository.findByUserIdAndDeletedAtIsNull(userId).orElseThrow(() -> new JwtException("올바르지 않은 토큰입니다."));
-
-                    //스프링 시큐리티 인증 토큰 생성
-                    Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, null);
-
-                    // 사용자 정보 저장
-                    accessor.setUser(authentication);
+                    log.debug("유저 아이디 : {}", userId);
                 } catch (JwtException e) {
                     e.printStackTrace();
                     throw new TokenInvalidException(e);
                 }
             }
-
             //user를 생성하여 값 set
-            User user = userRepository.findByUserIdAndDeletedAtIsNull(userId).orElseThrow(() -> new UserNotExistException("유저 없음"));
-            log.debug("유저 아이디 : {}", userId);
+            User user = userRepository.findByUserIdAndDeletedAtIsNull(userId)
+                    .orElseThrow(() -> new UserNotExistException("해당하는 유저가 없습니다."));
 
             //스프링 시큐리티 인증 토큰 생성
             Authentication authentication = new UsernamePasswordAuthenticationToken(user, null, null);
@@ -126,13 +116,13 @@ public class InGameChannelInterceptor implements ChannelInterceptor {
 //                    }
 
                 // 게임 데이터 불러오기 위한 정보 확인
-                log.info("[JWTTokenChannelInterceptor] - inGameInfo : {}, {}, {}, {}"
+                log.debug("[InGameChannelInterceptor] - inGameInfo : {}, {}, {}, {}"
                         , gameInfo.getGameId(), gameInfo.getGold(),
                         gameInfo.getWarehouseLevel(), gameInfo.getVehicleLevel()
                 );
 
-                // 레디스에 게임 데이터 저장
-                RedisGameInfo inGameInfo = RedisGameInfo.builder()
+                // 레디스에 이전 게임 데이터 저장
+                RedisGameInfo redisGameInfo = RedisGameInfo.builder()
                         .gameId(gameInfo.getGameId())
                         .gold(gameInfo.getGold())
                         .warehouseLevel(gameInfo.getWarehouseLevel())
@@ -142,16 +132,22 @@ public class InGameChannelInterceptor implements ChannelInterceptor {
                         .lastPlayTurn(gameInfo.getLastPlayTurn())
                         .lastConnectTime(gameInfo.getLastConnectTime())
                         .purchaseQuantity(gameInfo.getPurchaseQuantity())
-                        .products(null)//(products)
+                        .products(null) // 작물 데이터가 있는 경우 들어감
 //                            .products(products)
                         .rentFee(gameInfo.getRentFee())
                         .build();
-                log.debug("인게임 정보:{}", inGameInfo.getGold());
+
                 try {
-                    redisService.setValues(gameInfoKey, inGameInfo);
+                    redisService.setValues(gameInfoKey, redisGameInfo);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+                RedisGameInfo redisGameInfoData = (RedisGameInfo) redisService.getValues(gameInfoKey);
+                log.debug("[InGameChannelInterceptor] - redisGameInfoData : {}, {}, {}, {}"
+                        , redisGameInfoData.getGameId(), redisGameInfoData.getGold(),
+                        redisGameInfoData.getWarehouseLevel(), redisGameInfoData.getVehicleLevel()
+                );
             }
 
 //            // 목적지가 "/private/"으로 시작하는 경우의 websocketId 확인
@@ -173,14 +169,14 @@ public class InGameChannelInterceptor implements ChannelInterceptor {
 //                }
 //            }
         }
+
         // 클라이언트 연결 해제 시
         else if (StompCommand.DISCONNECT.equals(accessor.getCommand())) {
-            log.debug("연결 해제");
+            log.debug("DISCONNECT MESSAGE START");
 
             // 사용자 인증 정보 추출
             Authentication authentication = (Authentication) accessor.getUser();
-            if (authentication != null && authentication.getPrincipal() instanceof User) {
-                User user = (User) authentication.getPrincipal();
+            if (authentication != null && authentication.getPrincipal() instanceof User user) {
 
                 // 레디스에서 게임 정보 가져오기
                 String gameInfoKey = RedisPrefix.INGAMEINFO.prefix() + user.getUserId();
@@ -188,8 +184,6 @@ public class InGameChannelInterceptor implements ChannelInterceptor {
                     RedisGameInfo redisGameInfo = (RedisGameInfo) redisService.getValues(gameInfoKey);
 
                     if (redisGameInfo != null) {
-                        // 레디스 게임 정보를 데이터베이스에 저장하는 로직
-
                         // 상품 직렬화 과정이 필요함
 
                         // 엔티티로 저장
@@ -208,6 +202,7 @@ public class InGameChannelInterceptor implements ChannelInterceptor {
                                 .rentFee(redisGameInfo.getRentFee())
                                 .build();
 
+                        // 레디스에 있는 게임 정보를 데이터베이스에 저장
                         gameInfoService.updateGameInfo(gameInfo);
 
                         // 레디스에서 게임 정보 삭제
@@ -217,7 +212,7 @@ public class InGameChannelInterceptor implements ChannelInterceptor {
             }
         }
 
-        log.debug("message ENd");
+        log.debug("{} MEASSAGE END", accessor.getCommand());
         return message;
     }
 }

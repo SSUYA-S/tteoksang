@@ -8,6 +8,7 @@ import com.welcome.tteoksang.redis.RedisPrefix;
 import com.welcome.tteoksang.redis.RedisService;
 import com.welcome.tteoksang.user.dto.User;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -24,6 +25,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Controller
+@Slf4j
 @RequiredArgsConstructor
 public class GameController {
 
@@ -74,6 +76,9 @@ public class GameController {
                       (클라이언트가 JSON 형태의 메시지를 보냈다면, 이를 GameMessage 객체로 변환하여 메서드에 전달)
           */
         User user = (User) ((Authentication) principal).getPrincipal();
+        Map<String, Object> body = (Map<String, Object>) gameMessage.getBody();
+        String message = (String) body.get("message");
+        log.debug("메세지 내용 :{}", message);
         Chat chat = chatService.sendChat(user, (Map<String, Object>) gameMessage.getBody());
         if (chat == null) return null;
         gameMessage.setBody(chat);
