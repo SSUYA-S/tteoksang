@@ -16,7 +16,7 @@ export default function TradeBuyReceipt({
     let totalCost = 0;
 
     return (
-        <div className="w-full h-full flex flex-col justify-between items-center bg-white color-text-textcolor border-[0.4vw] color-border-subbold">
+        <div className="w-full h-full flex flex-col justify-between items-center bg-white color-text-textcolor border-[0.4vw] rounded-[1vw] color-border-subbold">
             <p className="h-[15%] text-[2.4vw] flex items-center justify-center">
                 구매 영수증
             </p>
@@ -26,7 +26,7 @@ export default function TradeBuyReceipt({
                     <p className="w-[30%]">수량</p>
                     <p className="w-[35%]">가격</p>
                 </div>
-                <p>-------------------------------</p>
+                <p>---------------------</p>
                 {buyableInfoList.map((buyable) => {
                     const product = buyable.buyingInfo;
                     if (product.productQuantity !== 0) {
@@ -50,7 +50,7 @@ export default function TradeBuyReceipt({
                 })}
             </div>
             <div className="w-[90%] text-[1.2vw]">
-                <p>-------------------------------</p>
+                <p>---------------------</p>
                 <div className="flex items-center justify-between">
                     <p>총 구매 가능</p>
                     <p>
@@ -62,7 +62,7 @@ export default function TradeBuyReceipt({
                     <p>{totalCost.toLocaleString()}</p>
                 </div>
                 <div
-                    className="my-[0.4vw] py-[0.4vw] border-[0.2vw] color-border-subbold cursor-pointer"
+                    className="my-[0.4vw] py-[0.4vw] border-[0.2vw] rounded-[1vw] color-border-subbold cursor-pointer hover:color-bg-subbold hover:text-white"
                     onClick={() => buyProduct(-1 * totalCost)}
                 >
                     구매
