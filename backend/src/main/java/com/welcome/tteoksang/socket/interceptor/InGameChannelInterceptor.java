@@ -23,7 +23,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Component
@@ -36,6 +38,8 @@ public class InGameChannelInterceptor implements ChannelInterceptor {
     private final RedisService redisService;
     private final RedisGameInfoService redisGameInfoService;
     private final GameInfoService gameInfoService;
+
+    private final Set<String> subscribedTopics = new HashSet<>();
 
     /**
      * 메시지를 보내기 전에 실행되는 인터셉터 메소드
@@ -119,25 +123,35 @@ public class InGameChannelInterceptor implements ChannelInterceptor {
         }
         // 구독시
         else if (StompCommand.SUBSCRIBE.equals(accessor.getCommand())) {
-//            // 메시지의 목적지(destination)을 가져와 private시 webSocketId가 유효성 검사 실시
-//            String destination = accessor.getDestination();
-//            if (destination != null && destination.startsWith("/private/")) {
-//
-//                // WebSocket ID 추출
-//                String webSocketId = destination.substring("/private/".length());
-//
-//                // Redis에서 webSocketId의 유효성 검증
-//                String webSocketKey = RedisPrefix.WEBSOCKET.prefix() + user.getUserId();
-//
-//                // 레디스에서 webSocketId가 있는지 확인
-//                if (!redisService.hasKey(webSocketKey)) {
-//                    log.debug("webSocketId 없음");
-//                    // 에러 처리
-//                }
-//                if (!webSocketId.equals(redisService.getValues(webSocketKey))) {
-//                    log.debug("다른 토픽을 구독함");
-//                }
-//            }
+            // 메시지의 목적지(destination)을 가져와 private시 webSocketId가 유효성 검사 실시
+            // 사용자 인증 정보 추출
+            Authentication authentication = (Authentication) accessor.getUser();
+            if (authentication != null && authentication.getPrincipal() instanceof User user) {
+                String destination = accessor.getDestination();
+                log.debug("-----{}",accessor.getDestination());
+                if (destination != null && destination.startsWith("/topic/private/")) {
+                    // WebSocket ID 추출
+                    String webSocketId = destination.substring("/topic/private/".length());
+
+                    // Redis에서 webSocketId의 유효성 검증
+                    String webSocketKey = RedisPrefix.WEBSOCKET.prefix() + user.getUserId();
+
+                    // 레디스에서 webSocketId가 있는지 확인
+                    if (!redisService.hasKey(webSocketKey)) {
+                        log.debug("webSocketId 없음");
+                        // 에러 처리
+                    }
+                    // 클라이언트가 이미 해당 토픽을 구독한 경우에는 처리하지 않음
+                    if (subscribedTopics.contains(webSocketId)) {
+                        log.debug("이미 구독된 토픽입니다.");
+                        // 중복 구독 처리 또는 에러 처리
+                        return null; // 구독을 거부하고 메시지 처리를 종료
+                    }
+
+                    // 구독 상태 갱신
+                    subscribedTopics.add(webSocketId);
+                }
+            }
         }
         log.debug("{} MESSAGE END", accessor.getCommand());
         return message;
