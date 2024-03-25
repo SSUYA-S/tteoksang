@@ -29,6 +29,6 @@ public class RedisGameInfo implements Serializable {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime lastConnectTime;
     private Integer purchaseQuantity;
-    private Map<Integer, Integer> products;    // 사용시 역직렬화
+    private Map<Integer, Object> products;    // 사용시 역직렬화
     private Long rentFee;
 }

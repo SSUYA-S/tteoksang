@@ -3,6 +3,7 @@ package com.welcome.tteoksang.game.service;
 import com.welcome.tteoksang.game.dto.RedisGameInfo;
 import com.welcome.tteoksang.redis.RedisPrefix;
 import com.welcome.tteoksang.redis.RedisService;
+import com.welcome.tteoksang.redis.RedisSerializationUtil;
 import com.welcome.tteoksang.user.dto.GameInfo;
 import com.welcome.tteoksang.user.service.GameInfoService;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +28,8 @@ public class RedisGameInfoServiceImpl implements RedisGameInfoService {
             RedisGameInfo redisGameInfo = (RedisGameInfo) redisService.getValues(gameInfoKey);
 
             if (redisGameInfo != null) {
-                //TODO: 상품 직렬화 과정이 필요함
-
+                // TODO: 상품 직렬화 과정이 필요함
+                byte[] gameInfoProducts = RedisSerializationUtil.serializeMap(redisGameInfo.getProducts());
                 // 엔티티로 저장
                 GameInfo gameInfo = GameInfo.builder()
                         .userId(userId)
@@ -41,7 +42,7 @@ public class RedisGameInfoServiceImpl implements RedisGameInfoService {
                         .lastPlayTurn(redisGameInfo.getLastPlayTurn())
                         .lastConnectTime(LocalDateTime.now())
                         .purchaseQuantity(redisGameInfo.getPurchaseQuantity())
-                        .products("123".getBytes())
+                        .products(gameInfoProducts)
                         .rentFee(redisGameInfo.getRentFee())
                         .build();
 
