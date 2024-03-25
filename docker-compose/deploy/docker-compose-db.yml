@@ -147,8 +147,8 @@ services:
     networks:
       - TteoksangNetwork
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_DB_USER_NAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_DB_ROOT_PASSWORD}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_DB_ROOT_USER_NAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_DB_ROOT_USER_PASSWORD}
     expose:
       - "27017"
 
