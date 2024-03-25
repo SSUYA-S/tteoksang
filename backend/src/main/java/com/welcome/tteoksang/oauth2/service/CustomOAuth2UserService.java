@@ -73,6 +73,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             User user = User.builder()
                     .userGoogleId(oAuth2Response.getProviderId())
                     .userEmail(oAuth2Response.getEmail())
+                    .userGoogleName(oAuth2Response.getName())
                     .userNickname(oAuth2Response.getName())
                     .profileIcon(profileIcon.get()) // 조회한 ProfileIcon 사용
                     .profileFrame(profileFrame.get()) // 조회한 ProfileFrame 사용
