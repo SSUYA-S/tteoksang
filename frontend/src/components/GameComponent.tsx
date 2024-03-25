@@ -249,70 +249,101 @@ export default function GameComponent(props: GameType) {
 
     return (
         <section className="mainBackground relative w-full h-full flex flex-col justify-center items-center">
-            {themeModeSetting === 0 ? (
-                <>
-                    <img
-                        src={`/src/assets/images/background/bg-${profileTheme}-morning.png`}
-                        className="bg-image"
-                        style={{ opacity: theme === 'morning' ? '1' : '0' }}
-                    />
-                    <img
-                        src={`/src/assets/images/background/bg-${profileTheme}-evening.png`}
-                        className="bg-image"
-                        style={{ opacity: theme === 'evening' ? '1' : '0' }}
-                    />
-                    <img
-                        src={`/src/assets/images/background/bg-${profileTheme}-night.png`}
-                        className="bg-image"
-                        style={{ opacity: theme === 'night' ? '1' : '0' }}
-                    />
-                    <img
-                        src={`/src/assets/images/background/bg-${profileTheme}-morning.png`}
-                        className="bg-image -z-10"
-                    />
-                </>
-            ) : (
-                <>
-                    <img
-                        src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-morning.png`}
-                        className="bg-image -z-10"
-                        style={{ opacity: theme === 'morning' ? '1' : '0' }}
-                    />
-                    <img
-                        src={`/src/assets/images/backgroundts/bg-${profileTheme}-morning-transparent.png`}
-                        className="bg-image"
-                        style={{ opacity: theme === 'morning' ? '1' : '0' }}
-                    />
-                    <img
-                        src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-evening.png`}
-                        className="bg-image -z-10"
-                        style={{ opacity: theme === 'evening' ? '1' : '0' }}
-                    />
-                    <img
-                        src={`/src/assets/images/backgroundts/bg-${profileTheme}-evening-transparent.png`}
-                        className="bg-image"
-                        style={{ opacity: theme === 'evening' ? '1' : '0' }}
-                    />
-                    <img
-                        src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-night.png`}
-                        className="bg-image -z-10"
-                        style={{ opacity: theme === 'night' ? '1' : '0' }}
-                    />
-                    <img
-                        src={`/src/assets/images/backgroundts/bg-${profileTheme}-night-transparent.png`}
-                        className="bg-image"
-                        style={{ opacity: theme === 'night' ? '1' : '0' }}
-                    />
-                    <img
-                        src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-morning.png`}
-                        className="bg-image -z-20"
-                    />
-                    <img
-                        src={`/src/assets/images/backgroundts/bg-${profileTheme}-morning-transparent.png`}
-                        className="bg-image -z-10"
-                    />
-                </>
-            )}
+            <img
+                src={`/src/assets/images/background/bg-${profileTheme}-morning.png`}
+                className="bg-image -z-20"
+                style={{
+                    opacity: theme === 'morning' ? '1' : '0',
+                }}
+            />
+            <img
+                src={`/src/assets/images/background/bg-${profileTheme}-evening.png`}
+                className="bg-image -z-20"
+                style={{
+                    opacity: theme === 'evening' ? '1' : '0',
+                }}
+            />
+            <img
+                src={`/src/assets/images/background/bg-${profileTheme}-night.png`}
+                className="bg-image -z-20"
+                style={{
+                    opacity: theme === 'night' ? '1' : '0',
+                }}
+            />
+            <img
+                src={`/src/assets/images/background/bg-${profileTheme}-morning.png`}
+                className="bg-image -z-30"
+            />
+            <img
+                src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-morning.png`}
+                className="bg-image -z-10"
+                style={{
+                    opacity:
+                        theme === 'morning' && themeModeSetting !== 0
+                            ? '1'
+                            : '0',
+                }}
+            />
+            <img
+                src={`/src/assets/images/backgroundts/bg-${profileTheme}-morning-transparent.png`}
+                className="bg-image"
+                style={{
+                    opacity:
+                        theme === 'morning' && themeModeSetting !== 0
+                            ? '1'
+                            : '0',
+                }}
+            />
+            <img
+                src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-evening.png`}
+                className="bg-image -z-10"
+                style={{
+                    opacity:
+                        theme === 'evening' && themeModeSetting !== 0
+                            ? '1'
+                            : '0',
+                }}
+            />
+            <img
+                src={`/src/assets/images/backgroundts/bg-${profileTheme}-evening-transparent.png`}
+                className="bg-image"
+                style={{
+                    opacity:
+                        theme === 'evening' && themeModeSetting !== 0
+                            ? '1'
+                            : '0',
+                }}
+            />
+            <img
+                src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-night.png`}
+                className="bg-image -z-10"
+                style={{
+                    opacity:
+                        theme === 'night' && themeModeSetting !== 0 ? '1' : '0',
+                }}
+            />
+            <img
+                src={`/src/assets/images/backgroundts/bg-${profileTheme}-night-transparent.png`}
+                className="bg-image"
+                style={{
+                    opacity:
+                        theme === 'night' && themeModeSetting !== 0 ? '1' : '0',
+                }}
+            />
+            <img
+                src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-morning.png`}
+                className="bg-image -z-20"
+                style={{
+                    opacity: themeModeSetting !== 0 ? '1' : '0',
+                }}
+            />
+            <img
+                src={`/src/assets/images/backgroundts/bg-${profileTheme}-morning-transparent.png`}
+                className="bg-image -z-10"
+                style={{
+                    opacity: themeModeSetting !== 0 ? '1' : '0',
+                }}
+            />
 
             <div className="absolute top-0 w-[60%] h-[100%]">
                 {/* <LottieRain /> */}
@@ -532,7 +563,7 @@ export default function GameComponent(props: GameType) {
             </div>
 
             {/* 포켓몬 */}
-            <div
+            {/* <div
                 className="w-80 h-40 absolute bottom-[20%]"
                 style={{
                     backgroundImage: 'url(/src/assets/images/etc/yadon.png)',
@@ -572,7 +603,7 @@ export default function GameComponent(props: GameType) {
                 ></div>
             ) : (
                 <></>
-            )}
+            )} */}
             {/* 포켓몬 */}
 
             {tradeFlag ? (
