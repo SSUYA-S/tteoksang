@@ -112,6 +112,7 @@ public class SecurityConfig {
                         .requestMatchers("/game/**").permitAll() // 웹소켓 허용
                         .requestMatchers("/error").permitAll() // 에러메세지 처리
                         .requestMatchers("/js/**").permitAll()
+                        .requestMatchers("/test/**").permitAll()
                         .anyRequest().authenticated());
 
         //JWTFilter 등록

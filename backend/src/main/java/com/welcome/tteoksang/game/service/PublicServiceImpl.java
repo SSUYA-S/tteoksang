@@ -45,4 +45,9 @@ public class PublicServiceImpl implements PublicService {
 
 
     }
+
+    @Override
+    public void fluctuateProduct() {
+
+    }
 }
