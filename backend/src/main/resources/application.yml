@@ -75,6 +75,19 @@ social:
     secret: ${GOOGLE_CLIENT_SECRET}
     redirect: ${GOOGLE_REDIRECT_URL}
 
+ingame:
+  period:
+    turn: ${TURN_PERIOD}
+    event: ${EVENT_ARISE_PERIOD}
+    half-year: ${HALF_YEAR_PERIOD}
+    half-year-report: ${HALF_YEAR_REPORT_PERIOD}
+    season: ${SEASON_PERIOD}
+  cron:
+    season-start: ${SEASON_START_DATE}
+  time:
+    event-start: ${EVENT_ARISE_TIME}
+    news-start: ${NEWS_PUBLISH_TIME}
+
 auth-redirect-url: ${AUTH_REDIRECT_URL}
 
 server:

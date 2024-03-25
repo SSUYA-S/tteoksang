@@ -19,4 +19,6 @@ public interface PublicService {
 
     //이벤트 적용 -> 가격 변동 영향 주기
     void applyEvent();
+    //가격변동
+    void fluctuateProduct();
 }
