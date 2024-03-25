@@ -53,6 +53,8 @@ export default function ChattingModal(props: Props) {
             destination: '/app/chat',
             body: msg,
         });
+
+        setMessage('');
     };
 
     useEffect(() => {
@@ -76,7 +78,7 @@ export default function ChattingModal(props: Props) {
     if (mode === 0) {
         renderingComponent = (
             <div
-                className="absolute left-[40%] bottom-[5%] w-[30%] h-[15%] bg-white bg-opacity-90 z-10 text-3xl overflow-y-hidden break-all rounded"
+                className="absolute left-[40%] bottom-[5%] w-[30%] h-[15%] bg-white bg-opacity-90 z-10 text-3xl overflow-y-hidden break-all rounded cursor-pointer"
                 onClick={() => setMode(1)}
                 ref={smallChatDivRef}
                 onLoad={scrollDown}
@@ -106,7 +108,12 @@ export default function ChattingModal(props: Props) {
                         type="text"
                         onChange={updateMessage}
                         value={message}
-                        className="w-[90%] rounded m-[0.2vw] text-2xl"
+                        className="w-[90%] rounded m-[0.2vw] text-2xl p-[0.5vw]"
+                        onKeyDown={(event) => {
+                            if (event.key === 'Enter') {
+                                sendMessage();
+                            }
+                        }}
                     ></input>
                     <button
                         className="w-[10%] color-bg-black text-white rounded m-[0.2vw] text-xl"
