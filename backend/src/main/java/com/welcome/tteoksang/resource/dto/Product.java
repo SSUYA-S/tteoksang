@@ -18,6 +18,9 @@ public class Product implements Serializable {
     @Column(name = "product_id")
     Integer productId;
 
+    @Column(name="product_code")
+    Integer productCode;
+
     @Column(name = "product_name")
     String productName;
 
@@ -29,9 +32,10 @@ public class Product implements Serializable {
     ProductType productType;
 
     ////
-    @Column(name = "product_basic_cost")
-    Integer productBasicCost;
+    @Column(name = "product_default_cost")
+    Integer productDefaultCost;
 
-    @Column(name = "product_basic_harvest")
-    Integer productBasicHarvest;
+    @Column(name = "product_avg_cost")
+    Double productAvgCost;
+
 }
