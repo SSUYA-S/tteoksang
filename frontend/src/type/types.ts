@@ -174,3 +174,13 @@ export interface Chat {
     profileIconId: number;
     profileFrameId: number;
 }
+
+export interface TotalProductInfo {
+    productId: number;
+    totalAccPrivateProductPurchaseQuantity: number;
+    totalAccPrivateProductOutcome: number;
+    totalAccPrivateProductSalesQuantity: number;
+    totalAccPrivateProductIncome: number;
+    totalAccPrivateProductProfit: number;
+    totalAccPrivateBrokerFee: number;
+}
