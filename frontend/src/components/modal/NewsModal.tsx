@@ -21,7 +21,7 @@ export default function NewsModal(props: NewsType) {
         <div className="absolute w-[70%] h-[95%] animation-modal ">
             <div className="h-[15%]"></div>
             <div
-                className="relative w-full h-[85%] flex flex-col items-center justify-start text-black"
+                className="relative w-full h-[85%] flex flex-col items-center justify-start text-black rounded-[0.8vw]"
                 style={{ backgroundColor: '#ececec' }}
             >
                 <div className="relative w-[90%] h-[35%] flex flex-col items-center">

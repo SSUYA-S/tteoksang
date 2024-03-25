@@ -24,6 +24,7 @@ import Stomp from '@stomp/stompjs';
 import { Client } from '@stomp/stompjs';
 import { handshake, sendMessage } from '../util/websocket/client';
 import { InitialData } from '../type/types';
+import { themeModeState } from '../util/counter-slice';
 import { checkMyProfile, withdrawal } from '../api/user';
 import ErrorModal from './modal/ErrorModal';
 import WarningModal from './modal/ErrorModal';
@@ -132,6 +133,9 @@ export default function GameComponent(props: GameType) {
     );
     const themeSetting = useSelector(
         (state: any) => state.reduxFlag.reduxSlice.themeType
+    );
+    const themeModeSetting = useSelector(
+        (state: any) => state.reduxFlag.reduxSlice.themeMode
     );
     const profileTheme = useSelector(
         (state: any) => state.reduxFlag.reduxSlice.profileTheme
@@ -255,6 +259,11 @@ export default function GameComponent(props: GameType) {
         setInventoryFlag(true);
     };
 
+    /** 테마모드변경 */
+    const changeMode = (prop: number) => {
+        dispatch(themeModeState(prop));
+    };
+
     /**updateNowMoney(value)
      * 현재 nowMoney값을 value만큼 업데이트
      */
@@ -338,24 +347,101 @@ export default function GameComponent(props: GameType) {
                 <></>
             )}
             <img
-                src={`/src/assets/images/background/bg-${profileTheme}-morning.webp`}
-                className="bg-image"
-                style={{ opacity: theme === 'morning' ? '1' : '0' }}
+                src={`/src/assets/images/background/bg-${profileTheme}-morning.png`}
+                className="bg-image -z-20"
+                style={{
+                    opacity: theme === 'morning' ? '1' : '0',
+                }}
             />
             <img
-                src={`/src/assets/images/background/bg-${profileTheme}-evening.webp`}
-                className="bg-image"
-                style={{ opacity: theme === 'evening' ? '1' : '0' }}
+                src={`/src/assets/images/background/bg-${profileTheme}-evening.png`}
+                className="bg-image -z-20"
+                style={{
+                    opacity: theme === 'evening' ? '1' : '0',
+                }}
             />
             <img
-                src={`/src/assets/images/background/bg-${profileTheme}-night.webp`}
-                className="bg-image"
-                style={{ opacity: theme === 'night' ? '1' : '0' }}
+                src={`/src/assets/images/background/bg-${profileTheme}-night.png`}
+                className="bg-image -z-20"
+                style={{
+                    opacity: theme === 'night' ? '1' : '0',
+                }}
             />
             <img
-                src={`/src/assets/images/background/bg-${profileTheme}-morning.webp`}
+                src={`/src/assets/images/background/bg-${profileTheme}-morning.png`}
+                className="bg-image -z-30"
+            />
+            <img
+                src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-morning.png`}
                 className="bg-image -z-10"
+                style={{
+                    opacity:
+                        theme === 'morning' && themeModeSetting !== 0
+                            ? '1'
+                            : '0',
+                }}
             />
+            <img
+                src={`/src/assets/images/backgroundts/bg-${profileTheme}-morning-transparent.png`}
+                className="bg-image"
+                style={{
+                    opacity:
+                        theme === 'morning' && themeModeSetting !== 0
+                            ? '1'
+                            : '0',
+                }}
+            />
+            <img
+                src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-evening.png`}
+                className="bg-image -z-10"
+                style={{
+                    opacity:
+                        theme === 'evening' && themeModeSetting !== 0
+                            ? '1'
+                            : '0',
+                }}
+            />
+            <img
+                src={`/src/assets/images/backgroundts/bg-${profileTheme}-evening-transparent.png`}
+                className="bg-image"
+                style={{
+                    opacity:
+                        theme === 'evening' && themeModeSetting !== 0
+                            ? '1'
+                            : '0',
+                }}
+            />
+            <img
+                src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-night.png`}
+                className="bg-image -z-10"
+                style={{
+                    opacity:
+                        theme === 'night' && themeModeSetting !== 0 ? '1' : '0',
+                }}
+            />
+            <img
+                src={`/src/assets/images/backgroundts/bg-${profileTheme}-night-transparent.png`}
+                className="bg-image"
+                style={{
+                    opacity:
+                        theme === 'night' && themeModeSetting !== 0 ? '1' : '0',
+                }}
+            />
+            <img
+                src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-morning.png`}
+                className="bg-image -z-20"
+                style={{
+                    opacity: themeModeSetting !== 0 ? '1' : '0',
+                }}
+            />
+            <img
+                src={`/src/assets/images/backgroundts/bg-${profileTheme}-morning-transparent.png`}
+                className="bg-image -z-10"
+                style={{
+                    opacity: themeModeSetting !== 0 ? '1' : '0',
+                }}
+            />
+
             <div className="absolute top-0 w-[60%] h-[100%]">
                 {/* <LottieRain /> */}
             </div>
@@ -411,6 +497,40 @@ export default function GameComponent(props: GameType) {
                         />
                         <p className="text-[1.6vw]">
                             {nowMoney.toLocaleString()}
+                        </p>
+                    </div>
+                    <div className="flex">
+                        <p
+                            className="px-2 cursor-pointer"
+                            onClick={() => {
+                                changeMode(0);
+                            }}
+                        >
+                            a
+                        </p>
+                        <p
+                            className="px-2 cursor-pointer"
+                            onClick={() => {
+                                changeMode(1);
+                            }}
+                        >
+                            b
+                        </p>
+                        <p
+                            className="px-2 cursor-pointer"
+                            onClick={() => {
+                                changeMode(2);
+                            }}
+                        >
+                            c
+                        </p>
+                        <p
+                            className="px-2 cursor-pointer"
+                            onClick={() => {
+                                changeMode(3);
+                            }}
+                        >
+                            d
                         </p>
                     </div>
                 </div>
@@ -545,7 +665,7 @@ export default function GameComponent(props: GameType) {
             </div>
 
             {/* 포켓몬 */}
-            <div
+            {/* <div
                 className="w-80 h-40 absolute bottom-[20%]"
                 style={{
                     backgroundImage: 'url(/src/assets/images/etc/yadon.png)',
@@ -585,7 +705,7 @@ export default function GameComponent(props: GameType) {
                 ></div>
             ) : (
                 <></>
-            )}
+            )} */}
             {/* 포켓몬 */}
 
             {tradeFlag ? (

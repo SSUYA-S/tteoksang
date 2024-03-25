@@ -90,54 +90,57 @@ export default function InfraModal(props: InfraType) {
                     </div>
                     <div className="relative w-full h-[80%] flex items-end justify-around">
                         <div
-                            className="w-[33%] h-[100%] cursor-pointer"
+                            className="w-[33%] h-[80%] cursor-pointer flex flex-col justify-end"
                             onClick={() => {
                                 changeFailityType(1);
                             }}
                         >
-                            <p className="text-[2vw]">운송수단</p>
+                            <p className="text-[2vw] ">운송수단</p>
                             <div
-                                className="w-full h-full"
+                                className="w-full h-[80%]"
                                 style={{
                                     backgroundImage: `url(
                                         "/src/assets/images/facility/transport (${vehicleLevel}).png"
                                     )`,
                                     backgroundSize: 'contain ',
-                                    backgroundPosition: 'center',
+                                    backgroundPositionX: 'center',
+                                    backgroundPositionY: '100%',
                                     backgroundRepeat: 'no-repeat',
                                 }}
                             ></div>
                         </div>
                         <div
-                            className="w-[34%] h-[100%] cursor-pointer"
+                            className="w-[34%] h-[100%] cursor-pointer flex flex-col justify-end"
                             onClick={() => {
                                 changeFailityType(2);
                             }}
                         >
                             <p className="text-[2vw]">창고</p>
                             <div
-                                className="w-full h-full"
+                                className="w-full h-[80%]"
                                 style={{
                                     backgroundImage: `url("/src/assets/images/facility/warehouse (${warehouseLevel}).png")`,
                                     backgroundSize: 'contain ',
-                                    backgroundPosition: 'center',
+                                    backgroundPositionX: 'center',
+                                    backgroundPositionY: '100%',
                                     backgroundRepeat: 'no-repeat',
                                 }}
                             ></div>
                         </div>
                         <div
-                            className="w-[33%] h-[100%] cursor-pointer"
+                            className="w-[33%] h-[100%] cursor-pointer flex flex-col justify-end"
                             onClick={() => {
                                 changeFailityType(3);
                             }}
                         >
                             <p className="text-[2vw]">중개소</p>
                             <div
-                                className="w-full h-full"
+                                className="w-full h-[80%]"
                                 style={{
                                     backgroundImage: `url("/src/assets/images/facility/broker (${brokerLevel}).png")`,
                                     backgroundSize: 'contain ',
-                                    backgroundPosition: 'center',
+                                    backgroundPositionX: 'center',
+                                    backgroundPositionY: '100%',
                                     backgroundRepeat: 'no-repeat',
                                 }}
                             ></div>
@@ -162,7 +165,7 @@ export default function InfraModal(props: InfraType) {
                                 : '중개소 업그레이드'}
                         </div>
                         <div className="relative w-[80%] h-[80%] flex items-end justify-around">
-                            <div className="w-[33%] h-[85%]">
+                            <div className="w-[33%] h-[85%] flex flex-col justify-end">
                                 <p className="text-[1.4vw]">
                                     {facilityType === 1
                                         ? props.infraInfo.vehicleInfoList[
@@ -194,11 +197,12 @@ export default function InfraModal(props: InfraType) {
                                           '%'}
                                 </p>
                                 <div
-                                    className="w-full h-full"
+                                    className="w-full h-[50%]"
                                     style={{
                                         backgroundImage: `url("/src/assets/images/facility/${urlFacilityName} (${nowLevel}).png")`,
                                         backgroundRepeat: 'no-repeat',
                                         backgroundPositionX: 'center',
+                                        backgroundPositionY: '100%',
                                         backgroundSize: 'contain ',
                                     }}
                                 ></div>
@@ -206,7 +210,7 @@ export default function InfraModal(props: InfraType) {
                             <div className="w-[34%] h-[50%] text-[2.4vw]">
                                 다음단계
                             </div>
-                            <div className="w-[33%] h-[85%]">
+                            <div className="w-[33%] h-[85%] flex flex-col justify-end">
                                 <p className="text-[1.4vw]">
                                     {facilityType === 1
                                         ? props.infraInfo.vehicleInfoList[
@@ -238,13 +242,14 @@ export default function InfraModal(props: InfraType) {
                                           '%'}
                                 </p>
                                 <div
-                                    className="w-full h-full"
+                                    className="w-full h-[50%]"
                                     style={{
                                         backgroundImage: `url("/src/assets/images/facility/${urlFacilityName} (${
                                             nowLevel + 1
                                         }).png")`,
                                         backgroundRepeat: 'no-repeat',
                                         backgroundPositionX: 'center',
+                                        backgroundPositionY: '100%',
                                         backgroundSize: 'contain ',
                                     }}
                                 ></div>
@@ -326,11 +331,12 @@ export default function InfraModal(props: InfraType) {
                                           '%'}
                                 </p>
                                 <div
-                                    className="w-full h-full"
+                                    className="w-full h-[50%]"
                                     style={{
                                         backgroundImage: `url("/src/assets/images/facility/${urlFacilityName} (${nowLevel}).png")`,
                                         backgroundRepeat: 'no-repeat',
                                         backgroundPositionX: 'center',
+                                        backgroundPositionY: '100%',
                                         backgroundSize: 'contain ',
                                     }}
                                 ></div>
@@ -359,13 +365,13 @@ export default function InfraModal(props: InfraType) {
         }
     };
     return (
-        <section className="relative w-[80%] h-[80%] flex justify-center items-center border-[0.4vw] color-border-sublight color-bg-main rounded-[0.4vw] z-50 animation-modal ">
+        <section className="relative w-[80%] h-[80%] flex justify-center items-center border-[0.4vw] color-border-sublight color-bg-main rounded-[1vw] z-50 animation-modal ">
             <div
                 className="relative w-[94%] h-[90%]"
                 style={{
                     backgroundImage:
                         'url(/src/assets/images/etc/facility-bg.png)',
-                    backgroundSize: 'contain ',
+                    backgroundSize: 'cover',
                     backgroundPosition: 'center',
                     backgroundRepeat: 'no-repeat',
                 }}

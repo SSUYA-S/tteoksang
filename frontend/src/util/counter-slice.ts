@@ -7,6 +7,8 @@ export interface SettingState {
     effectFlag: boolean;
     //설정 테마 시간대
     themeType: string;
+    //테마 모드
+    themeMode: number;
     //로그인 유무
     isLogin: boolean;
     //내가 적용한 테마
@@ -20,6 +22,7 @@ const initialState: SettingState = {
     bgmFlag: true,
     effectFlag: true,
     themeType: 'auto',
+    themeMode: 0,
     isLogin: false,
     profileTheme: 0,
     profileIcon: 1,
@@ -42,6 +45,10 @@ export const reduxSlice = createSlice({
         themeState: (state, action) => {
             state.themeType = action.payload;
         },
+        //theme모드 설정
+        themeModeState: (state, action) => {
+            state.themeMode = action.payload;
+        },
         //bgm 설정
         loginState: (state, action) => {
             state.isLogin = action.payload;
@@ -62,6 +69,7 @@ export const {
     themeState,
     bgmState,
     effectState,
+    themeModeState,
     profileFrameState,
     profileIconeState,
     profileThemeState,
