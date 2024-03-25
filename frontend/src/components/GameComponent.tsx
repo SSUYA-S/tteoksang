@@ -37,6 +37,7 @@ import ErrorModal from './modal/ErrorModal';
 import WarningModal from './modal/ErrorModal';
 import ChattingModal from './modal/ChattingModal';
 import WebSocket from './modal/WebSocket';
+import QuarterReportModal from './modal/QuarterReportModal';
 
 type GameType = {
     initialData: InitialData;
@@ -71,7 +72,13 @@ export default function GameComponent(props: GameType) {
 
     //뉴스 관련
     const [newsPublishTurn, setNewsPublishTurn] = useState<number>(0);
-    const [newsArticleList, setNewsArticleList] = useState<Article[]>([]);
+    const [newsArticleList, setNewsArticleList] = useState<Article[]>([
+        {
+            articleHeadline: `새로운 시작은 짜릿해!`,
+        },
+        { articleHeadline: `돈 버는 재태크 수단 TOP 10` },
+        { articleHeadline: `게임회사 '어서오-십조', KOSPI 상장` },
+    ]);
 
     const [isLogoutProceeding, setIsLogoutProceeding] =
         useState<boolean>(false);
@@ -135,6 +142,8 @@ export default function GameComponent(props: GameType) {
                 destination: `/app/private/${webSocketId}`,
                 body: quitMsg,
             });
+
+            webSocketClient.deactivate();
         }
     };
 
@@ -842,6 +851,11 @@ export default function GameComponent(props: GameType) {
                 newsReceived={newsReceived}
                 setStartFlag={props.setStartFlag}
                 reportReceived={reportReceived}
+            />
+            <QuarterReportModal
+                titleList={initialData.titleList}
+                eventList={initialData.eventList}
+                productList={initialData.productList}
             />
         </section>
     );
