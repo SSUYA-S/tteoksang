@@ -7,11 +7,14 @@ import {
 } from '../../util/myproduct-slice';
 
 import { InfraList } from '../../type/types';
+import { Client } from '@stomp/stompjs';
 
 type InfraType = {
     setFacilityFlag: React.Dispatch<React.SetStateAction<boolean>>;
     updateNowMoney: (a: number) => void;
     infraInfo: InfraList;
+    client: Client;
+    webSocketId: string;
 };
 
 export default function InfraModal(props: InfraType) {
@@ -62,6 +65,7 @@ export default function InfraModal(props: InfraType) {
 
     const upgradeFacility = () => {
         let upgradeFee: number = 0;
+
         if (facilityType === 1) {
             upgradeFee =
                 props.infraInfo.vehicleInfoList[nowLevel - 1].vehicleUpgradeFee;
@@ -79,6 +83,30 @@ export default function InfraModal(props: InfraType) {
         props.updateNowMoney(-1 * upgradeFee);
 
         setNowLevel((prev) => prev + 1);
+
+        //이게 찐
+        let typeMsg: string = '';
+        if (facilityType === 1) {
+            typeMsg = 'UPGRADE_VEHICLE';
+        } else if (facilityType === 2) {
+            typeMsg = 'UPGRADE_WAREHOUSE';
+        } else if (facilityType === 3) {
+            typeMsg = 'UPGRADE_BROKER';
+        }
+
+        //msg 만들기
+        const sendMsg = JSON.stringify({
+            type: typeMsg,
+            body: {},
+        });
+
+        //publish
+        if (props.client.connected) {
+            props.client.publish({
+                destination: `/app/private/${props.webSocketId}`,
+                body: sendMsg,
+            });
+        }
     };
 
     const facilityElement = () => {
