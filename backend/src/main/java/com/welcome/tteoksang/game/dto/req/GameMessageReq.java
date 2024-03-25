@@ -3,6 +3,8 @@ package com.welcome.tteoksang.game.dto.req;
 import com.welcome.tteoksang.resource.type.MessageType;
 import lombok.*;
 
+import java.util.LinkedHashMap;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -10,5 +12,5 @@ import lombok.*;
 @Builder
 public class GameMessageReq {
     MessageType type;
-    Object body;
+    LinkedHashMap<String, Object> body;
 }
