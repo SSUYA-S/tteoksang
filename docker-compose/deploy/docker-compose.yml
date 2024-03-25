@@ -30,6 +30,8 @@ services:
     ports:
       - "443:443"
       - "80:80"
+    networks:
+      TteoksangNetworkDev:
 
 volumes:
   redis-dev-data:
@@ -39,3 +41,5 @@ networks:
   default:
     external: true
     name: TteoksangNetwork
+  TteoksangNetworkDev:
+    external: true
