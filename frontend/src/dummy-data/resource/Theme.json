@@ -7,6 +7,38 @@
         {
             "themeId": 2,
             "themeName": "도시의 자취방"
+        },
+        {
+            "themeId": 3,
+            "themeName": "회의실 앞 바닷가"
+        },
+        {
+            "themeId": 4,
+            "themeName": "마법사의 집"
+        },
+        {
+            "themeId": 5,
+            "themeName": "시골 문구점"
+        },
+        {
+            "themeId": 6,
+            "themeName": "아침의 축제"
+        },
+        {
+            "themeId": 7,
+            "themeName": "덥디 더운 여름"
+        },
+        {
+            "themeId": 8,
+            "themeName": "한적한 테라스"
+        },
+        {
+            "themeId": 9,
+            "themeName": "어느 화가의 공방"
+        },
+        {
+            "themeId": 10,
+            "themeName": "떡상의 문단속"
         }
     ]
 }
