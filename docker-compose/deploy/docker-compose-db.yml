@@ -13,8 +13,6 @@ services:
       - "6379"
     volumes:
       - redis-data:/data
-    networks:
-      - TteoksangNetwork
     command: ["redis-server", "--port", "6379", "--requirepass", "${REDIS_PASSWORD}", "--appendonly", "yes", "--appendfilename", "redis1.aof", "--auto-aof-rewrite-percentage", "100", "--auto-aof-rewrite-min-size", "64mb", "--save", ""]
 
   redis2:
@@ -30,8 +28,6 @@ services:
       - "6380"
     volumes:
       - redis-data:/data
-    networks:
-      - TteoksangNetwork
     depends_on:
       - redis1
     command: ["redis-server", "--port", "6380", "--masterauth", "${REDIS_PASSWORD}", "--replicaof", "redis1", "6379", "--requirepass", "${REDIS_PASSWORD}", "--appendonly", "yes", "--appendfilename", "redis2.aof", "--auto-aof-rewrite-percentage", "100", "--auto-aof-rewrite-min-size", "64mb", "--save", ""]
@@ -49,8 +45,6 @@ services:
       - "6381"
     volumes:
       - redis-data:/data
-    networks:
-      - TteoksangNetwork
     depends_on:
       - redis1
     command: ["redis-server", "--port", "6381", "--masterauth", "${REDIS_PASSWORD}", "--replicaof", "redis1", "6379", "--requirepass", "${REDIS_PASSWORD}", "--appendonly", "yes", "--appendfilename", "redis3.aof", "--auto-aof-rewrite-percentage", "100", "--auto-aof-rewrite-min-size", "64mb", "--save", ""]
@@ -69,8 +63,6 @@ services:
       - REDIS_SENTINEL_PORT_NUMBER=26379
     expose:
       - "26379"
-    networks:
-      - TteoksangNetwork
     depends_on:
       - redis1
       - redis2
@@ -90,8 +82,6 @@ services:
       - REDIS_SENTINEL_PORT_NUMBER=26380
     expose:
       - "26380"
-    networks:
-      - TteoksangNetwork
     depends_on:
       - redis1
       - redis2
@@ -111,8 +101,6 @@ services:
       - REDIS_SENTINEL_PORT_NUMBER=26381
     expose:
       - "26381"
-    networks:
-      - TteoksangNetwork
     depends_on:
       - redis1
       - redis2
@@ -127,8 +115,6 @@ services:
       - ./initdb.d:/docker-entrypoint-initdb.d
     expose:
       - "3306"
-    networks:
-      - TteoksangNetwork
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
@@ -144,8 +130,6 @@ services:
     restart: unless-stopped
     volumes:
       - mongodb-data:/data
-    networks:
-      - TteoksangNetwork
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_DB_ROOT_USER_NAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_DB_ROOT_USER_PASSWORD}
@@ -175,8 +159,6 @@ services:
       - "2181"
     volumes:
       - zookeeper-data:/bitnami/zookeeper
-    networks:
-      - TteoksangNetwork
 
   kafka:
     image: bitnami/kafka:3.6
@@ -195,8 +177,6 @@ services:
       - "9093"
     depends_on:
       - zookeeper
-    networks:
-      - TteoksangNetwork
     volumes:
       - kafka-data:/bitnami/kafka
 
