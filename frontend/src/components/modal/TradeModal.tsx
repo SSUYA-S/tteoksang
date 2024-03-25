@@ -13,6 +13,7 @@ import { myProductState } from '../../util/myproduct-slice';
 import { useDispatch, useSelector } from 'react-redux';
 import { BuyInfo, SellInfo, ProductBucket } from '../../type/types';
 import { productInfoAndEventState } from '../../util/product-and-event';
+import { Client } from '@stomp/stompjs';
 
 type tradeType = {
     setTradeFlag: React.Dispatch<React.SetStateAction<boolean>>;
@@ -20,6 +21,9 @@ type tradeType = {
     nowMoney: number;
     infraInfo: InfraList;
     productResource: Product[];
+    client: Client;
+    turn: number;
+    webSocketId: string;
 };
 
 export default function TradeModal(props: tradeType) {
@@ -277,6 +281,30 @@ export default function TradeModal(props: tradeType) {
         setNowStock(total);
         setSellingProductList(newList);
         dispatch(myProductState(myNewProductList));
+
+        //물론 이제 이걸로 다 고칠 것이다.
+        //웹 소켓 통신
+        const newSellList: ProductBucket[] = [];
+        sellingProductList.map((product) => {
+            if (product.sellingInfo.productQuantity !== 0) {
+                newSellList.push(product.sellingInfo);
+            }
+        });
+
+        const sellMsg = JSON.stringify({
+            type: 'SELL_PRODUCT',
+            body: {
+                productList: newSellList,
+                currentTurn: props.turn,
+            },
+        });
+        //메시지 전송
+        if (props.client.connected) {
+            props.client.publish({
+                destination: `/app/private/${props.webSocketId}`,
+                body: sellMsg,
+            });
+        }
     };
 
     const buyProduct = (a: number) => {
@@ -318,6 +346,31 @@ export default function TradeModal(props: tradeType) {
         // console.log(myNewProductList);
         dispatch(myProductState(myNewProductList));
         props.updateNowMoney(a);
+
+        //webSocket으로 대체 예정
+        //아래가 그 코드
+        const newBuyList: ProductBucket[] = [];
+        buyableProduct.map((product) => {
+            if (product.buyingInfo.productQuantity !== 0) {
+                newBuyList.push(product.buyingInfo);
+            }
+        });
+
+        const buyMsg = JSON.stringify({
+            type: 'BUY_PRODUCT',
+            body: {
+                productList: newBuyList,
+                currentTurn: props.turn,
+            },
+        });
+
+        //전송
+        if (props.client.connected) {
+            props.client.publish({
+                destination: `/app/private/${props.webSocketId}`,
+                body: buyMsg,
+            });
+        }
     };
 
     /** getNumber(id)

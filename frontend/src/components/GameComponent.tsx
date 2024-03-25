@@ -11,6 +11,10 @@ import NewsModal from './modal/NewsModal';
 import LottieRain from './lottie-animation/LottieRain';
 import { logout } from '../api/auth';
 import { httpStatusCode } from '../util/http-status';
+import Stomp from '@stomp/stompjs';
+import { Client } from '@stomp/stompjs';
+import { getWebSocketId } from '../api/game';
+import { handshake } from '../util/websocket/client';
 
 //dummydata
 import totalInfo from '../dummy-data/total-info.json';
@@ -19,17 +23,13 @@ import InventoryModal from './modal/InventoryModal';
 import InfraModal from './modal/InfraModal';
 import { goldState } from '../util/myproduct-slice';
 
-//websocket
-import Stomp from '@stomp/stompjs';
-import { Client } from '@stomp/stompjs';
-import { handshake, sendMessage } from '../util/websocket/client';
 import { InitialData } from '../type/types';
 import { themeModeState } from '../util/counter-slice';
 import { checkMyProfile, withdrawal } from '../api/user';
 import ErrorModal from './modal/ErrorModal';
 import WarningModal from './modal/ErrorModal';
-import { getWebSocketId } from '../api/game';
 import ChattingModal from './modal/ChattingModal';
+import WebSocket from './modal/WebSocket';
 
 type GameType = {
     initialData: InitialData;
@@ -62,15 +62,17 @@ export default function GameComponent(props: GameType) {
     const [turnTimer, setTurnTimer] = useState<number>(-1);
     const [nowMoney, setNowMoney] = useState<number>(0);
 
-    const [webSocketClient, setWebSocketClient] = useState<Stomp.Client>(
-        new Client()
-    );
-
     const [isLogoutProceeding, setIsLogoutProceeding] =
         useState<boolean>(false);
 
     const [isWithdrawalProceeding, setIsWithdrawalProceeding] =
         useState<boolean>(false);
+
+    const [webSocketClient, setWebSocketClient] = useState<Stomp.Client>(
+        new Client()
+    );
+
+    const [webSocketId, setWebSocketId] = useState<string>('');
 
     /** handleLogOut()
      *  로그아웃
@@ -82,6 +84,18 @@ export default function GameComponent(props: GameType) {
             setIsLogoutProceeding(false);
         } else {
             console.log('Logout error');
+        }
+
+        //websocket보내기
+        const quitMsg = JSON.stringify({
+            type: 'QUIT_GAME',
+            body: {},
+        });
+        if (webSocketClient.connected) {
+            webSocketClient.publish({
+                destination: `/app/private/${webSocketId}`,
+                body: quitMsg,
+            });
         }
     };
 
@@ -134,9 +148,6 @@ export default function GameComponent(props: GameType) {
     const themeSetting = useSelector(
         (state: any) => state.reduxFlag.reduxSlice.themeType
     );
-    const themeModeSetting = useSelector(
-        (state: any) => state.reduxFlag.reduxSlice.themeMode
-    );
     const profileTheme = useSelector(
         (state: any) => state.reduxFlag.reduxSlice.profileTheme
     );
@@ -178,8 +189,9 @@ export default function GameComponent(props: GameType) {
             .then((res) => {
                 console.log(res);
                 if (res.status === httpStatusCode.OK) {
-                    const websocketId = res.data.webSocketId;
-                    const client = handshake(websocketId);
+                    const id = res.data.webSocketId;
+                    const client = handshake(id);
+                    setWebSocketId(id);
                     setWebSocketClient(client);
                 }
             })
@@ -321,6 +333,8 @@ export default function GameComponent(props: GameType) {
         //redux 반영
         dispatch(goldState(num));
     };
+
+    /**메시지 전송 */
 
     return (
         <section className="mainBackground relative w-full h-full flex flex-col justify-center items-center">
@@ -715,6 +729,9 @@ export default function GameComponent(props: GameType) {
                     nowMoney={nowMoney}
                     infraInfo={initialData.infraList}
                     productResource={initialData.productList}
+                    client={webSocketClient}
+                    turn={ingameTurn}
+                    webSocketId={webSocketId}
                 />
             ) : (
                 <></>
@@ -724,6 +741,8 @@ export default function GameComponent(props: GameType) {
                     setFacilityFlag={setFacilityFlag}
                     updateNowMoney={updateNowMoney}
                     infraInfo={initialData.infraList}
+                    client={webSocketClient}
+                    webSocketId={webSocketId}
                 />
             ) : (
                 <></>
@@ -774,7 +793,7 @@ export default function GameComponent(props: GameType) {
             ) : (
                 <></>
             )}
-            <ChattingModal />
+            <ChattingModal client={webSocketClient} />
         </section>
     );
 }
