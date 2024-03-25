@@ -6,6 +6,7 @@ public enum RedisPrefix {
     CHANGE_EMAIL("changeEmail:"),
     RESET_PASSOWRD("resetPassword:"),
     ENCODING("encoding:"),
+    USERINFO("userInfo:"),
     WEBSOCKET("webSocket:"),
     INGAMEINFO("inGameInfo:");
 

@@ -1,15 +1,10 @@
 package com.welcome.tteoksang.auth.service;
 
-import com.welcome.tteoksang.auth.dto.res.LoginRes;
-import com.welcome.tteoksang.auth.jwt.JWTUtil;
+import com.welcome.tteoksang.game.service.RedisGameInfoService;
 import com.welcome.tteoksang.redis.RedisPrefix;
 import com.welcome.tteoksang.redis.RedisService;
-import com.welcome.tteoksang.user.dto.User;
-import com.welcome.tteoksang.user.exception.UserNotExistException;
-import com.welcome.tteoksang.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,9 +14,30 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
-//    private final UserRepository userRepository;
-//
-//    private final RedisService redisService;
-//    private final JWTUtil jwtUtil;
+    private final RedisService redisService;
+    private final RedisGameInfoService redisGameInfoService;
+
+    public void logoutUser(String userId) {
+        //관련 토큰 모두 레디스에서 제거
+        String tokenKey = RedisPrefix.REFRESH_TOKEN.prefix() + userId;
+        redisService.deleteValues(tokenKey);
+        log.debug("토큰 제거");
+
+        String userInfoKey = RedisPrefix.USERINFO.prefix() + userId;
+        redisService.deleteValues(userInfoKey);
+        log.debug("유저 정보 제거");
+
+        String webSocketKey = RedisPrefix.WEBSOCKET.prefix() + userId;
+        redisService.deleteValues(webSocketKey);
+        log.debug("웹소켓 제거");
+
+        // DB에 인게임 정보 저장
+        redisGameInfoService.saveRedisGameInfo(userId);
+
+        // 레디스에서 인게임 정보 제거
+        String inGameInfoKey = RedisPrefix.INGAMEINFO.prefix() + userId;
+        redisService.deleteValues(inGameInfoKey);
+        log.debug("인게임 정보 제거");
+    }
 
 }

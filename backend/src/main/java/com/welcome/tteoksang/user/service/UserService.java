@@ -10,6 +10,8 @@ import java.net.URISyntaxException;
 
 public interface UserService {
 
+    public void saveUserInfo(User user);
+
     public void updateUserName(UpdateUserNameReq updateUserNameReq, User user);
 
     public void updateUserTheme(UpdateUserThemeReq updateUserThemeReq, User user);
@@ -17,6 +19,8 @@ public interface UserService {
     public void updateUserProfileIcon(UpdateUserProfileIconReq updateUserProfileIconReq, User user);
 
     public void updateUserProfileFrame(UpdateUserProfileFrameReq updateUserProfileFrameReq, User user);
+
+    public void updateUserTitle(Integer titleId, User user);
 
     public void deleteUser(User user) throws URISyntaxException;
 

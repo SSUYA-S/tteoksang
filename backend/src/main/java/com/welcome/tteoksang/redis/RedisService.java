@@ -3,6 +3,7 @@ package com.welcome.tteoksang.redis;
 
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -51,5 +52,4 @@ public class RedisService {
     public boolean hasKey(String key) {
         return redisTemplate.hasKey(key);
     }
-
 }
