@@ -36,8 +36,8 @@ public class PrivateGameController {
         // 유저 정보
         User user = (User) ((Authentication) principal).getPrincipal();
         log.debug("UserName : {}, webSocketId : {}", user.getUserNickname(), webSocketId);
-        LinkedHashMap<String, Object> body = (LinkedHashMap<String, Object>) gameMessageReq.getBody();
-        Boolean isSuccess = false;
+        LinkedHashMap<String, Object> body = gameMessageReq.getBody();
+        boolean isSuccess = false;
         switch (gameMessageReq.getType()) {
             case CHANGE_TITLE: {
                 // 칭호 변경
