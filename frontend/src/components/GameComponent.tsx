@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import CircularTimer from './section/CircularTimer';
 import MyPageModal from './modal/MyPageModal';
 import NewsModal from './modal/NewsModal';
-import LottieRain from './lottie-animation/LottieRain';
+// import LottieRain from './lottie-animation/LottieRain';
 import { logout } from '../api/auth';
 import { httpStatusCode } from '../util/http-status';
 import Stomp from '@stomp/stompjs';
@@ -148,6 +148,9 @@ export default function GameComponent(props: GameType) {
     const themeSetting = useSelector(
         (state: any) => state.reduxFlag.reduxSlice.themeType
     );
+    const themeModeSetting = useSelector(
+        (state: any) => state.reduxFlag.reduxSlice.themeMode
+    );
     const profileTheme = useSelector(
         (state: any) => state.reduxFlag.reduxSlice.profileTheme
     );
@@ -170,6 +173,11 @@ export default function GameComponent(props: GameType) {
     const titleId = useSelector(
         (state: any) => state.reduxFlag.myProfileSlice.title
     );
+
+    /** 테마모드변경 */
+    const changeMode = (prop: number) => {
+        dispatch(themeModeState(prop));
+    };
 
     const dispatch = useDispatch();
 
@@ -269,11 +277,6 @@ export default function GameComponent(props: GameType) {
 
     const openInventoryElement = () => {
         setInventoryFlag(true);
-    };
-
-    /** 테마모드변경 */
-    const changeMode = (prop: number) => {
-        dispatch(themeModeState(prop));
     };
 
     /**updateNowMoney(value)
