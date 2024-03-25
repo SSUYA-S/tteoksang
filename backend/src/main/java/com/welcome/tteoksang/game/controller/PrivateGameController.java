@@ -1,12 +1,17 @@
 package com.welcome.tteoksang.game.controller;
 
-import com.welcome.tteoksang.game.dto.RedisGameInfo;
-import com.welcome.tteoksang.game.dto.TotalInfo;
-import com.welcome.tteoksang.game.dto.UserWarehouseInfo;
+import com.welcome.tteoksang.game.dto.*;
 import com.welcome.tteoksang.game.dto.req.GameMessageReq;
 import com.welcome.tteoksang.game.dto.res.GameMessageRes;
 import com.welcome.tteoksang.redis.RedisPrefix;
 import com.welcome.tteoksang.redis.RedisService;
+import com.welcome.tteoksang.resource.dto.Broker;
+import com.welcome.tteoksang.resource.dto.Vehicle;
+import com.welcome.tteoksang.resource.dto.Warehouse;
+import com.welcome.tteoksang.resource.repository.BrokerRepository;
+import com.welcome.tteoksang.resource.repository.VehicleRepository;
+import com.welcome.tteoksang.resource.repository.WarehouseRepository;
+import com.welcome.tteoksang.resource.type.MessageType;
 import com.welcome.tteoksang.user.dto.UserInfo;
 import com.welcome.tteoksang.user.exception.TitleNotExistException;
 import com.welcome.tteoksang.user.service.UserService;
@@ -21,8 +26,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.*;
 
 @Controller
 @Slf4j
@@ -30,6 +34,9 @@ import java.util.LinkedHashMap;
 public class PrivateGameController {
     private final UserService userService;
     private final RedisService redisService;
+    private final WarehouseRepository warehouseRepository;
+    private final BrokerRepository brokerRepository;
+    private final VehicleRepository vehicleRepository;
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     @MessageMapping("/private/{webSocketId}") // 클라이언트에서 보낸 메시지를 받을 메서드 지정
@@ -52,6 +59,7 @@ public class PrivateGameController {
         UserInfo userInfo = (UserInfo) redisService.getValues(userInfoKey);
         log.debug("UserName : {}, webSocketId : {}", userInfo.getNickname(), webSocketId);
 
+        // 초기화
         LinkedHashMap<String, Object> body = gameMessageReq.getBody();
         Object responseBody = body;
         boolean isSuccess = false;
@@ -82,13 +90,76 @@ public class PrivateGameController {
 
             }
             case UPGRADE_WAREHOUSE: {
+                // 골드 차감
+                if (redisGameInfo != null) {
+                    long remainGold = calculateUpgradeFee(redisGameInfo.getGold(), MessageType.UPGRADE_WAREHOUSE,
+                            redisGameInfo.getWarehouseLevel()+1);
+                    if(remainGold != -1) {
+                        redisGameInfo.setGold(remainGold);
+                        redisGameInfo.setWarehouseLevel(redisGameInfo.getWarehouseLevel()+1);
 
+                        responseBody = new HashMap<>();
+                        ((Map<String, Object>) responseBody).put("gold", redisGameInfo.getGold());
+                        ((Map<String, Object>) responseBody).put("warehouseLevel", redisGameInfo.getWarehouseLevel());
+
+                        redisService.setValues(redisGameInfoKey, redisGameInfo);
+                        isSuccess = true;
+                    }
+                    else {
+                        log.error("금액 부족");
+                    }
+                } else {
+                    log.error("없는 유저 입니다.");
+                }
+                break;
             }
             case UPGRADE_BROKER: {
+                // 골드 차감
+                if (redisGameInfo != null) {
+                    long remainGold = calculateUpgradeFee(redisGameInfo.getGold(), MessageType.UPGRADE_BROKER,
+                            redisGameInfo.getBrokerLevel()+1);
+                    if(remainGold != -1) {
+                        redisGameInfo.setGold(remainGold);
+                        redisGameInfo.setBrokerLevel(redisGameInfo.getBrokerLevel()+1);
 
+                        responseBody = new HashMap<>();
+                        ((Map<String, Object>) responseBody).put("gold", redisGameInfo.getGold());
+                        ((Map<String, Object>) responseBody).put("brokerLevel", redisGameInfo.getBrokerLevel());
+
+                        redisService.setValues(redisGameInfoKey, redisGameInfo);
+                        isSuccess = true;
+                    }
+                    else {
+                        log.error("금액 부족");
+                    }
+                } else {
+                    log.error("없는 유저 입니다.");
+                }
+                break;
             }
             case UPGRADE_VEHICLE: {
+                // 골드 차감
+                if (redisGameInfo != null) {
+                    long remainGold = calculateUpgradeFee(redisGameInfo.getGold(), MessageType.UPGRADE_VEHICLE,
+                            redisGameInfo.getVehicleLevel()+1);
+                    if(remainGold != -1) {
+                        redisGameInfo.setGold(remainGold);
+                        redisGameInfo.setVehicleLevel(redisGameInfo.getVehicleLevel()+1);
 
+                        responseBody = new HashMap<>();
+                        ((Map<String, Object>) responseBody).put("gold", redisGameInfo.getGold());
+                        ((Map<String, Object>) responseBody).put("vehicleLevel", redisGameInfo.getVehicleLevel());
+
+                        redisService.setValues(redisGameInfoKey, redisGameInfo);
+                        isSuccess = true;
+                    }
+                    else {
+                        log.error("금액 부족");
+                    }
+                } else {
+                    log.error("없는 유저 입니다.");
+                }
+                break;
             }
             case GET_TOTAL_INFO: {
                 // TODO:서버 게임 정보 불러오기
@@ -131,6 +202,62 @@ public class PrivateGameController {
                 }
                 break;
             }
+            case GET_INFRA_LEVEL: {
+                if (redisGameInfo != null) {
+                    responseBody = UserInfraInfo.builder()
+                            .warehouseLevel(redisGameInfo.getWarehouseLevel())
+                            .vehicleLevel(redisGameInfo.getVehicleLevel())
+                            .brokerLevel(redisGameInfo.getBrokerLevel())
+                            .build();
+                    isSuccess = true;
+                } else {
+                    log.error("없는 유저 입니다.");
+                }
+                break;
+            }
+            case GET_MY_GOLD: {
+                if (redisGameInfo != null) {
+                    responseBody = new HashMap<>();
+                    ((Map<String, Long>) responseBody).put("gold", redisGameInfo.getGold());
+                    isSuccess = true;
+                } else {
+                    log.error("없는 유저 입니다.");
+                }
+                break;
+            }
+            case GET_PRIVATE_EVENT: {
+                if (redisGameInfo != null) {
+                    responseBody = new HashMap<>();
+                    ((Map<String, Object>) responseBody).put("gold", redisGameInfo.getGold());
+                    ((Map<String, Object>) responseBody).put("privateEventId", redisGameInfo.getPrivateEventId());
+                    isSuccess = true;
+                } else {
+                    log.error("없는 유저 입니다.");
+                }
+                break;
+            }
+            case GET_INGAME_TIME: {
+                //TODO: 서버에 있는 게임 시간 불러오기
+                if (redisGameInfo != null) {
+                    responseBody = UserInGameTimeInfo.builder()
+                            .inGameTime(LocalDateTime.now().toString())
+                            .turnStartTime(LocalDateTime.now().toString())
+                            .turn(1)
+                            .build();
+                    isSuccess = true;
+                } else {
+                    log.error("없는 유저 입니다.");
+                }
+                break;
+            }
+            case QUIT_GAME: {
+                // 로그아웃 처리와 같음
+
+            }
+            case GIVEUP_GAME: {
+
+            }
+
             // 처리
             default:
                 // 정의되지 않은 요청
@@ -144,5 +271,32 @@ public class PrivateGameController {
 //        simpMessagingTemplate.convertAndSend("/topic/private/" + webSocketId, gameMessageRes);
 
         return gameMessageRes; // 받은 메시지 그대로 반환
+    }
+
+    private long calculateUpgradeFee(long currentGold, MessageType type, Integer level) {
+        long upgradeFee;
+        switch (type) {
+            case UPGRADE_WAREHOUSE : {
+                Warehouse warehouse = warehouseRepository.findById(level).orElse(null);
+                upgradeFee = warehouse != null ? warehouse.getWarehouseUpgradeFee() : -1;
+                break;
+            }
+            case UPGRADE_BROKER: {
+                Broker broker = brokerRepository.findById(level).orElse(null);
+                upgradeFee = broker != null ? broker.getBrokerUpgradeFee() : -1;
+                break;
+            }
+            case UPGRADE_VEHICLE: {
+                Vehicle vehicle = vehicleRepository.findById(level).orElse(null);
+                upgradeFee = vehicle != null ? vehicle.getVehicleUpgradeFee() : -1;
+                break;
+            }
+            default: {
+                upgradeFee = -1;
+            }
+        }
+        if(upgradeFee == -1)
+            return -1;
+        return currentGold >= upgradeFee ? currentGold - upgradeFee : -1;
     }
 }
