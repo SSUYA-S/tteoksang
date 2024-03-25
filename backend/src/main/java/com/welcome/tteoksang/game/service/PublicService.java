@@ -1,6 +1,7 @@
 package com.welcome.tteoksang.game.service;
 
 import com.welcome.tteoksang.game.dto.Article;
+import com.welcome.tteoksang.game.scheduler.dto.PublicEventInfo;
 
 import java.util.List;
 
@@ -11,8 +12,7 @@ public interface PublicService {
     List<Article> searchNewspaper();
 
 //    공통 이벤트 조회
-    //TODO - 반환 값 설정
-    Object searchPublicEvent();
+    PublicEventInfo searchPublicEvent();
 
     //다음 이벤트 발생
     void selectNextEvent();
@@ -21,4 +21,6 @@ public interface PublicService {
     void applyEvent();
     //가격변동
     void fluctuateProduct();
+
+    void initProductInfo();
 }

@@ -1,6 +1,6 @@
 package com.welcome.tteoksang.game.scheduler;
 
-import com.cronutils.parser.CronParser;
+import com.welcome.tteoksang.game.exception.CronOffsetExceedOneWeekException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -8,6 +8,7 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,6 +32,14 @@ public class ScheduleService {
     private final String PUBLIC_EVENT = "event";
     private final String NEWSPAPER = "news";
 
+
+    public void initSeason(){
+        ServerInfo.currentTurn=0;
+        ServerInfo.turnStartTime= LocalDateTime.now();
+        ServerInfo.specialEventId="121212";
+
+    }
+
     public void startHalfYearGame() {
         register(FLUCTUATE, turnPeriod, () -> {
             log.debug("fluctuate...");
@@ -49,6 +58,7 @@ public class ScheduleService {
         remove(PUBLIC_EVENT);
     }
 
+    //등록된 모든 태스크 삭제
     public void removeAllSchedule(){
         for(String key: scheduledTasks.keySet()){
             remove(key);
@@ -98,7 +108,7 @@ public class ScheduleService {
     }
 
     /**
-     * cron 시간으로부터 offset만큼 이동한 시간에 한 번 실행되는 스케쥴 등록
+     * cron 시간으로부터 {offset}초만큼 이동한 시간에 한 번 실행되는 스케쥴 등록
      * 주에 1번 실행
      *
      * @param scheduleId
@@ -106,7 +116,7 @@ public class ScheduleService {
      * @param offsetSec
      */
     public void register(String scheduleId, String initialCron, long offsetSec, Runnable task) {
-        register(scheduleId, createGeneralCronPerWeek(initialCron, offsetSec*1000), task);
+        register(scheduleId, createGeneralCronPerWeek(initialCron, offsetSec), task);
     }
 
     public void remove(String scheduleId) {
@@ -118,22 +128,22 @@ public class ScheduleService {
     }
 
     /**
-     * 기준 cron으로부터 특정ms 이후의 cron 생성
+     * 기준 cron으로부터 특정 초 이후의 cron 생성
      *
      * @param cron
-     * @param offsetMillis
+     * @param offsetSec
      * @return
      */
-    public String createGeneralCronPerWeek(String cron, long offsetMillis) {
-        long sec = offsetMillis % 60;
-        offsetMillis /= 60;
-        long min = offsetMillis % 60;
-        offsetMillis /= 60;
-        long hour = offsetMillis % 24;
-        offsetMillis /= 24;
-        long day = offsetMillis;
-        if (day >= 7) throw new CronOffsetExceedOneWeekException();
+    public String createGeneralCronPerWeek(String cron, long offsetSec) {
+        long sec = offsetSec % 60;
+        offsetSec /= 60;
+        long min = offsetSec % 60;
+        offsetSec /= 60;
+        long hour = offsetSec % 24;
+        offsetSec /= 24;
+        long day = offsetSec;
         log.debug("Offset is " + sec + "s " + min + "m " + hour + "h " + day + "d");
+        if (day >= 7) throw new CronOffsetExceedOneWeekException();
         String[] crons = cron.split(" ");
         sec += Integer.parseInt(crons[0]);
         if (sec >= 60) {

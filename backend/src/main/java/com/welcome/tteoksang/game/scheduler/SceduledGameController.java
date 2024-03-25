@@ -1,12 +1,6 @@
 package com.welcome.tteoksang.game.scheduler;
 
-import com.cronutils.model.CronType;
-import com.cronutils.model.definition.CronDefinitionBuilder;
-import com.cronutils.model.time.ExecutionTime;
-import com.cronutils.parser.CronParser;
-import com.welcome.tteoksang.game.dto.Chat;
 import com.welcome.tteoksang.game.dto.GameMessage;
-import com.welcome.tteoksang.game.scheduler.OtherService;
 import com.welcome.tteoksang.game.service.PublicService;
 import com.welcome.tteoksang.resource.type.MessageType;
 import lombok.RequiredArgsConstructor;
@@ -18,10 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import java.time.Instant;
-import java.time.ZonedDateTime;
-import java.time.temporal.ChronoUnit;
-
 import static java.time.LocalTime.now;
 
 @Controller
@@ -31,13 +21,8 @@ public class SceduledGameController {
 
     private final SimpMessageSendingOperations sendingOperations;
     private final PublicService publicService;
-    private final OtherService otherService;
     private final ScheduleService scheduleService;
 
-    @Value("${TURN_PERIOD}")
-    private long turnPeriod;
-    @Value("${EVENT_ARISE_PERIOD}")
-    private long eventPeriod;
     @Value("${HALF_YEAR_PERIOD}")
     private long halfPeriod;
     @Value("${HALF_YEAR_REPORT_PERIOD}")
@@ -49,18 +34,12 @@ public class SceduledGameController {
 
     @GetMapping("/test/s/{scheduledId}")
     void startJob(@PathVariable String scheduledId) {
-//        otherService.test(scheduledId);
         String cronExpression = "0 0 10 ? * 1 *";
         long offset = (halfPeriod + halfReportPeriod) * 2 * seasonPeriod - halfReportPeriod;
         String nextCronExpression = scheduleService.createGeneralCronPerWeek(cronExpression, offset);
         // 결과 출력
         System.out.println("현재 시간 이후 " + offset + "초 이후의 cron 표현식: " + nextCronExpression);
 
-    }
-
-    @GetMapping("/test/e/{scheduledId}")
-    void removeJob(@PathVariable String scheduledId) {
-        otherService.test2(scheduledId);
     }
 
     @Scheduled(cron = "${SEASON_START_DATE}") //시즌 시작 시 마다 실행됨!
