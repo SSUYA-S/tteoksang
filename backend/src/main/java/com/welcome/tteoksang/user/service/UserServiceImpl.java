@@ -156,7 +156,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
         //구글 서버로 탈퇴 요청
         Optional<OAuth2AuthorizedClientEntity> entity = googleRepository.findById(
-                new GoogleRepoId("google", user.getUserNickname()));
+                new GoogleRepoId("google", user.getUserGoogleName()));
         if (entity.isPresent()) {
             String token = entity.get().getAccessTokenValue();
             googleRepository.delete(entity.get()); //OAuth2 인증 테이블에서 제거

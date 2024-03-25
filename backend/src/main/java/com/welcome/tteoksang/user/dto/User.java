@@ -45,6 +45,10 @@ public class User implements UserDetails {
     private String userEmail;
 
     @NotBlank
+    @Column(name = "user_google_name", unique = true, nullable = false)
+    private String userGoogleName;
+
+    @NotBlank
     @Column(name = "user_nickname", unique = true, nullable = false)
     private String userNickname;
 
