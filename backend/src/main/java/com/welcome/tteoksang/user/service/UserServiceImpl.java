@@ -137,17 +137,18 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public void updateUserTitle(Integer titleId, User user) {
+    public void updateUserTitle(Integer titleId, String userId) throws TitleNotExistException {
         Optional<Title> title = titleRepository.findById(titleId);
-//        if (title.isEmpty()) {
-//            throw new NicknameNullException();
-//        }
+        Optional<User> user = userRepository.findByUserId(userId);
+        if (title.isEmpty()) {
+            throw new TitleNotExistException();
+        }
         //프로필 프레임 변경
-        user.setTitle(title.get());
+        user.get().setTitle(title.get());
 
-        userRepository.save(user);
+        userRepository.save(user.get());
         // 레디스에 있는 유저 정보 변경
-        updateUser(user);
+        updateUser(user.get());
     }
 
     @Override
