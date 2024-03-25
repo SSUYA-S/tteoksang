@@ -26,9 +26,14 @@ self.addEventListener('install', (e) => {
             // '/',
             // '/index.html',
             // '/service-worker.js',
+            '/src/assets/bgm/main_theme_bgm.mp3',
+            '/src/assets/bgm/start_theme_bgm.mp3',
             '/src/assets/images/background/bg-main-morning.png',
             '/src/assets/images/background/bg-main-evening.png',
             '/src/assets/images/background/bg-main-night.png',
+            '/src/assets/images/background/bg-main-morning.webp',
+            '/src/assets/images/background/bg-main-evening.webp',
+            '/src/assets/images/background/bg-main-night.webp',
             '/src/assets/images/background/bg-start.png',
             '/src/assets/images/etc/text-start-content.png',
             '/src/assets/images/etc/text-start-title.png',
@@ -94,7 +99,7 @@ const cacheFirst = async ({ request, preloadResponsePromise, fallbackUrl }) => {
     let cache;
     if (request.url.includes('/src/assets/images/')) {
         cache = await caches.open('localImages');
-    } else if (request.url.includes('/api/resource')) {
+    } else if (request.url.includes('/api/resources')) {
         cache = await caches.open('api');
     } else if (request.url.includes('/api/s3')) {
         cache = await caches.open('networkImages');
@@ -128,9 +133,9 @@ const cacheFirst = async ({ request, preloadResponsePromise, fallbackUrl }) => {
             await putInLocalImageCache(request, responseFromNetwork.clone());
         }
         // 여기에 checksum 데이터 추가
-        else if (request.url.includes('/api/resource')) {
+        else if (request.url.includes('/api/resources')) {
             if (
-                !request.url.includes('/api/resource/checksum') &&
+                !request.url.includes('/api/resources/checksum') &&
                 !request.url.includes('.ts')
             ) {
                 await putInApiCache(request, responseFromNetwork.clone());
@@ -153,12 +158,18 @@ const cacheFirst = async ({ request, preloadResponsePromise, fallbackUrl }) => {
 
 // fetch event
 self.addEventListener('fetch', (e) => {
-    if (e.request.url.includes('/oauth2/authorization/')) {
+    if (
+        e.request.url.includes('/oauth2/authorization/') ||
+        e.request.url.includes('/oauth2/') ||
+        e.request.url.includes('auth')
+    ) {
+        console.log('서비스 워커가 요청 가로챔 ' + e.request.url);
         console.log('구글 요청은 가로채지 않고 돌려보냄');
         return;
     } else if (
         e.request.url.includes('/src/assets/images/') ||
-        e.request.url.includes('/api/resource') ||
+        e.request.url.includes('/src/assets/bgm') ||
+        e.request.url.includes('/api/resources') ||
         e.request.url.includes('/api/s3')
     ) {
         // console.log('서비스 워커가 요청 가로챔 ' + e.request.url);
