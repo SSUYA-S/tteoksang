@@ -11,8 +11,11 @@ services:
       USER_PASSWORD: ${USER_PASSWORD}
       DB_URL: ${DB_URL}
       DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      REDIS_PORT: ${REDIS_PORT}
-      REDIS_HOST: ${REDIS_HOST}
+      REDIS_SENTINEL_HOST: $REDIS_SENTINEL_HOST}
+      REDIS_SENTINEL_NODE1_PORT: ${REDIS_SENTINEL_NODE1_PORT}
+      REDIS_SENTINEL_NODE2_PORT: ${REDIS_SENTINEL_NODE2_PORT}
+      REDIS_SENTINEL_NODE3_PORT: ${REDIS_SENTINEL_NODE3_PORT}
+      REDIS_MASTER: ${REDIS_MASTER}
       REDIS_PASSWORD: ${REDIS_PASSWORD}
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
@@ -24,6 +27,10 @@ services:
     image: ssuyas/tteoksang_frontend
     container_name: TteoksangFrontend
     restart: unless-stopped
+    environment:
+      VITE_REACT_GOOGLE_LOGIN_URL: ${VITE_REACT_GOOGLE_LOGIN_URL}
+      VITE_REACT_API_URL: ${VITE_REACT_API_URL}
+      VITE_REACT_WEBSOCKET_URL: ${VITE_REACT_WEBSOCKET_URL}
     volumes:
       - ./data/certbot/conf:/etc/letsencrypt
       - ./data/certbot/www:/var/www/certbot
