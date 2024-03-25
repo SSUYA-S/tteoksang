@@ -44,7 +44,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // "/game"라는 endpoint를 등록하고, 모든 도메인에서의 접근을 허용함
         registry.addEndpoint("/game")
-//                .addInterceptors(authHandshakeInterceptor)
+                .addInterceptors(authHandshakeInterceptor)
                 .setAllowedOriginPatterns("*");
     }
 }
