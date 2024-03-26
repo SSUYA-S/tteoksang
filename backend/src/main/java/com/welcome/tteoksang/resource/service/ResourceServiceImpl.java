@@ -21,6 +21,7 @@ public class ResourceServiceImpl implements ResourceService {
 
     private final AchievementRepository achievementRepository;
     private final BrokerRepository brokerRepository;
+    private final EventRepository eventRepository;
     private final ProductRepository productRepository;
     private final ProfileFrameRepository profileFrameRepository;
     private final ProfileIconRepository profileIconRepository;
@@ -87,11 +88,20 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     //TODO - eventLIST 완성
+    // - mongoDB에서 eventLIST 가져오기
     @Override
     public List<EventResource> searchEventList() {
-        List<EventResource> eventResourceList = new ArrayList<>();
-        //TODO mongoDB에서 eventLIST 가져오기
-
+        List<EventResource> eventResourceList = eventRepository.findAll().stream().map(
+                (event) -> {
+                    return EventResource.builder()
+                            .eventId(event.getEventId())
+                            .eventDescription(event.getEventContent())
+                            .eventName(event.getEventName())
+                            .eventType(event.getEventType())
+                            .build();
+                }
+        ).toList();
+        System.out.println(eventResourceList);
         return eventResourceList;
     }
 
@@ -135,7 +145,7 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     private String makeObjectChecksum(Object object) {
-        ObjectMapper objectMapper=new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper();
         try {
             //Object를 jsonString으로 변환
             String jsonString = objectMapper.writeValueAsString(object);
@@ -156,7 +166,7 @@ public class ResourceServiceImpl implements ResourceService {
     //TODO- 인터페이스 분리 체크
     @Override
     public void saveResourceChecksum(String resourceName, Object object) {
-        resourceChecksumRepository.save(new ResourceChecksum(resourceName,makeObjectChecksum(object)));
+        resourceChecksumRepository.save(new ResourceChecksum(resourceName, makeObjectChecksum(object)));
     }
 
 }
