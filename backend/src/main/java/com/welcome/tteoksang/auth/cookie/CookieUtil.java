@@ -47,14 +47,10 @@ public class CookieUtil {
         Cookie accessTokenCookie = tokenCookie.getAccessTokenCookie();
         Cookie refreshTokenCookie = tokenCookie.getRefreshTokenCookie();
 
-        // 해당 쿠키 제거
-        accessTokenCookie.setPath("/");
-        accessTokenCookie.setMaxAge(0);
-        response.addCookie(accessTokenCookie);
-
-        refreshTokenCookie.setPath("/");
-        refreshTokenCookie.setMaxAge(0);
-        response.addCookie(refreshTokenCookie);
+        if(accessTokenCookie != null)
+            deleteCookie(accessTokenCookie, response);
+        if(refreshTokenCookie != null)
+            deleteCookie(refreshTokenCookie, response);
     }
 
     public static void deleteCookie(Cookie currentCookie, HttpServletResponse response) {

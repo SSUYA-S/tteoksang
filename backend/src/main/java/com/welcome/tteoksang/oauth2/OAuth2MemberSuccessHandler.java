@@ -45,7 +45,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         String key = RedisPrefix.REFRESH_TOKEN.prefix() + user.getUserId();
 
         //accessToken 생성
-        String accessToken = jwtUtil.createJwt(user.getUserId(), 1000 * 60 * 60L);
+        String accessToken = jwtUtil.createJwt(user.getUserId(), 1000 * 60 * 60L * 3);
 
         //refreshToken 생성
         String refreshToken =
@@ -83,7 +83,7 @@ public class OAuth2MemberSuccessHandler extends SimpleUrlAuthenticationSuccessHa
         Cookie accessTokenCookie = new Cookie("accessToken", accessToken);
         accessTokenCookie.setPath("/");
 //        accessTokenCookie.setHttpOnly(true);
-        accessTokenCookie.setMaxAge(60 * 60);
+        accessTokenCookie.setMaxAge(60 * 60 * 3);
         response.addCookie(accessTokenCookie);
 
         Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
