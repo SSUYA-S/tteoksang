@@ -38,6 +38,7 @@ import WarningModal from './modal/ErrorModal';
 import ChattingModal from './modal/ChattingModal';
 import WebSocket from './modal/WebSocket';
 import QuarterReportModal from './modal/QuarterReportModal';
+import { Cookies } from 'react-cookie';
 
 type GameType = {
     initialData: InitialData;
@@ -124,14 +125,6 @@ export default function GameComponent(props: GameType) {
      *  로그아웃
      */
     const handleLogOut = async () => {
-        const res = await logout();
-        if (res.status === httpStatusCode.OK) {
-            props.setStartFlag(false);
-            setIsLogoutProceeding(false);
-        } else {
-            console.log('Logout error');
-        }
-
         //websocket보내기
         const quitMsg = JSON.stringify({
             type: 'QUIT_GAME',
@@ -144,6 +137,14 @@ export default function GameComponent(props: GameType) {
             });
 
             webSocketClient.deactivate();
+        }
+
+        const res = await logout();
+        if (res.status === httpStatusCode.OK) {
+            props.setStartFlag(false);
+            setIsLogoutProceeding(false);
+        } else {
+            console.log('Logout error');
         }
     };
 
@@ -228,6 +229,14 @@ export default function GameComponent(props: GameType) {
     };
 
     const dispatch = useDispatch();
+
+    const cookies = new Cookies();
+    useEffect(() => {
+        if (!cookies.get('accessToken')) {
+            console.log('토큰 만료!!!');
+            props.setStartFlag(false);
+        }
+    }, [cookies]);
 
     /**초기정보 세팅 */
     useEffect(() => {
@@ -858,6 +867,8 @@ export default function GameComponent(props: GameType) {
                     eventList={initialData.eventList}
                     productList={initialData.productList}
                     setIsQtrReportAvail={setIsQtrReportAvail}
+                    webSocketId={webSocketId}
+                    webSocketClient={webSocketClient}
                 />
             ) : (
                 <></>
