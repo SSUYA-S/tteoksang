@@ -9,7 +9,7 @@ public enum MessageType {
     UPGRADE_VEHICLE(6),
     QUIT_GAME(7),
     GIVEUP_GAME(8),
-    GET_INTIME_TIME(9),
+    GET_INGAME_TIME(9),
     GET_PUBLIC_EVENT(10),
     GET_PRIVATE_EVENT(11),
     GET_MY_GOLD(12),
