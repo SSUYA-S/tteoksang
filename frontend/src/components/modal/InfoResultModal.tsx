@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { LineChart } from '../element/LineChart';
 import finalreport from '../../dummy-data/report/final.json';
 import { BarChart } from '../element/BarChart';
-import { TotalProductInfo } from '../../type/types';
+import { privateProdRep } from '../../type/types';
 
 type infoResultType = {
     setInfoResultFlag: React.Dispatch<React.SetStateAction<boolean>>;
@@ -21,7 +21,7 @@ export default function InfoResultModal(props: infoResultType) {
     const [priTotalProfit, setPriTotalProfit] = useState<number>();
     // 작물별 거래량,금액
     const [priTotalProductInfo, setPriTotalProductInfo] = useState<
-        TotalProductInfo[]
+        privateProdRep[]
     >([]);
     // 수익
     const [priTotalProductIncome, setPriTotalProductIncome] = useState<
