@@ -23,13 +23,21 @@ import InventoryModal from './modal/InventoryModal';
 import InfraModal from './modal/InfraModal';
 import { goldState } from '../util/myproduct-slice';
 
-import { InitialData } from '../type/types';
+import {
+    Article,
+    FinalReportType,
+    HalfReportType,
+    InitialData,
+    OfflineReportType,
+    QuarterReportType,
+} from '../type/types';
 import { themeModeState } from '../util/counter-slice';
 import { checkMyProfile, withdrawal } from '../api/user';
 import ErrorModal from './modal/ErrorModal';
 import WarningModal from './modal/ErrorModal';
 import ChattingModal from './modal/ChattingModal';
 import WebSocket from './modal/WebSocket';
+import QuarterReportModal from './modal/QuarterReportModal';
 
 type GameType = {
     initialData: InitialData;
@@ -62,6 +70,16 @@ export default function GameComponent(props: GameType) {
     const [turnTimer, setTurnTimer] = useState<number>(-1);
     const [nowMoney, setNowMoney] = useState<number>(0);
 
+    //뉴스 관련
+    const [newsPublishTurn, setNewsPublishTurn] = useState<number>(0);
+    const [newsArticleList, setNewsArticleList] = useState<Article[]>([
+        {
+            articleHeadline: `새로운 시작은 짜릿해!`,
+        },
+        { articleHeadline: `돈 버는 재태크 수단 TOP 10` },
+        { articleHeadline: `게임회사 '어서오-십조', KOSPI 상장` },
+    ]);
+
     const [isLogoutProceeding, setIsLogoutProceeding] =
         useState<boolean>(false);
 
@@ -73,6 +91,34 @@ export default function GameComponent(props: GameType) {
     );
 
     const [webSocketId, setWebSocketId] = useState<string>('');
+
+    /**결산 모달 관련 useState */
+    const [isQtrReportAvail, setIsQtrReportAvail] = useState<boolean>(true); //분기
+    const [isHlfReportAvail, setIsHlfReportAvail] = useState<boolean>(false); //반기
+    const [isFinReportAvail, setIsFinReportAvail] = useState<boolean>(false); //전체
+    const [isOffReportAvail, setIsOffReportAvail] = useState<boolean>(false); //미접
+
+    const [qtrReport, setQtrReport] = useState<QuarterReportType | null>(null); //분기
+    const [hlfReport, setHlfReport] = useState<HalfReportType | null>(null); //반기
+    const [finReport, setFinReport] = useState<FinalReportType | null>(null); //전체
+    const [offReport, setOffReport] = useState<OfflineReportType | null>(null); //미접
+
+    /**결산이 들어오면? */
+    const reportReceived = (type: string, body: any) => {
+        if (type === 'QUARTER_REPORT') {
+            setIsQtrReportAvail(true);
+            setQtrReport(body);
+        } else if (type === 'HALF_REPORT') {
+            setIsHlfReportAvail(true);
+            setHlfReport(body);
+        } else if (type === 'FINAL_REPORT') {
+            setIsFinReportAvail(true);
+            setFinReport(body);
+        } else if (type === 'GET_OFFLINE_REPORT') {
+            setIsOffReportAvail(true);
+            setOffReport(body);
+        }
+    };
 
     /** handleLogOut()
      *  로그아웃
@@ -96,6 +142,8 @@ export default function GameComponent(props: GameType) {
                 destination: `/app/private/${webSocketId}`,
                 body: quitMsg,
             });
+
+            webSocketClient.deactivate();
         }
     };
 
@@ -190,22 +238,6 @@ export default function GameComponent(props: GameType) {
     //init
     useEffect(() => {
         setIngameTurn(totalInfo.turn);
-
-        //websocket
-        //websocketId 받아오기 -> handshake
-        getWebSocketId()
-            .then((res) => {
-                console.log(res);
-                if (res.status === httpStatusCode.OK) {
-                    const id = res.data.webSocketId;
-                    const client = handshake(id);
-                    setWebSocketId(id);
-                    setWebSocketClient(client);
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            });
 
         const handleBeforeUnload = (e: BeforeUnloadEvent) => {
             e.preventDefault();
@@ -337,7 +369,12 @@ export default function GameComponent(props: GameType) {
         dispatch(goldState(num));
     };
 
-    /**메시지 전송 */
+    /**뉴스 수신 시 뉴스 정보 설정 함수 */
+    const newsReceived = (turn: number, articleList: Article[]) => {
+        setNewsFlag(true);
+        setNewsPublishTurn(turn);
+        setNewsArticleList(articleList);
+    };
 
     return (
         <section className="mainBackground relative w-full h-full flex flex-col justify-center items-center">
@@ -787,7 +824,16 @@ export default function GameComponent(props: GameType) {
             ) : (
                 <></>
             )}
-            {newsFlag ? <NewsModal setNewsFlag={setNewsFlag} /> : <></>}
+            {newsFlag ? (
+                <NewsModal
+                    setNewsFlag={setNewsFlag}
+                    newsPublishTurn={newsPublishTurn}
+                    articleList={newsArticleList}
+                    newsReceived={newsReceived}
+                />
+            ) : (
+                <></>
+            )}
             {inventoryFlag ? (
                 <InventoryModal
                     setInventoryFlag={setInventoryFlag}
@@ -797,6 +843,25 @@ export default function GameComponent(props: GameType) {
                 <></>
             )}
             <ChattingModal client={webSocketClient} />
+            <WebSocket
+                setWebSocketClient={setWebSocketClient}
+                setWebSocketId={setWebSocketId}
+                client={webSocketClient}
+                webSocketId={webSocketId}
+                newsReceived={newsReceived}
+                setStartFlag={props.setStartFlag}
+                reportReceived={reportReceived}
+            />
+            {isQtrReportAvail ? (
+                <QuarterReportModal
+                    titleList={initialData.titleList}
+                    eventList={initialData.eventList}
+                    productList={initialData.productList}
+                    setIsQtrReportAvail={setIsQtrReportAvail}
+                />
+            ) : (
+                <></>
+            )}
         </section>
     );
 }
