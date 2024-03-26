@@ -74,8 +74,8 @@ public class JWTFilter extends OncePerRequestFilter {
 //            }
 //        }
 
-        log.debug("---------------- 필터 타기 -----------------");
-        log.debug("[TokenFilter] - 필터 시작");
+        log.debug("----------------JWT 필터 타기 -----------------");
+        log.debug("[JWTFilter] - 필터 시작");
 
         // Cookie 기반 토큰 확인
         TokenCookie tokenCookie = CookieUtil.resolveToken(request);
@@ -83,58 +83,49 @@ public class JWTFilter extends OncePerRequestFilter {
         Cookie refreshTokenCookie = tokenCookie.getRefreshTokenCookie();
 
         // Cookie 검증
-        if (accessTokenCookie == null || refreshTokenCookie == null) {
+        if (refreshTokenCookie == null) {
             // 남아있는 쿠키 제거
             if (accessTokenCookie != null) {
-                accessTokenCookie.setPath("/");
-                accessTokenCookie.setMaxAge(0);
-                response.addCookie(accessTokenCookie);
-            }
-            if (refreshTokenCookie != null) {
-                refreshTokenCookie.setPath("/");
-                refreshTokenCookie.setMaxAge(0);
-                response.addCookie(refreshTokenCookie);
+                CookieUtil.deleteCookie(accessTokenCookie, response);
             }
 
-            // 인증이 필요없는 요청들을 위해 계속 진행 - 로그인 상태 x, 로그인 시도
+            // 401 - 에러 발생
             filterChain.doFilter(request, response);
             return;
         }
 
-        // 토큰 파싱
-        String accessToken = accessTokenCookie.getValue();
+        // Refresh 토큰 파싱
         String refreshToken = refreshTokenCookie.getValue();
 
-        // 유효성 검사 - refresh 토큰
+        // 유효성 검사 - Refresh 토큰
         if (!jwtUtil.isValid(refreshToken)) {
-            // 레디스에서 해당 토큰 제거
+            // Access 토큰 제거
+            if(accessTokenCookie != null) {
+                CookieUtil.deleteCookie(accessTokenCookie, response);
+            }
+            // 레디스에서 Refresh 토큰 제거, Refresh 토큰 제거
             redisService.deleteValues(refreshToken);
+            CookieUtil.deleteCookie(refreshTokenCookie, response);
 
-            // 해당 쿠키 제거
-            accessTokenCookie.setPath("/");
-            accessTokenCookie.setMaxAge(0);
-            response.addCookie(accessTokenCookie);
-
-            refreshTokenCookie.setPath("/");
-            refreshTokenCookie.setMaxAge(0);
-            response.addCookie(refreshTokenCookie);
-
-            // 에러 발생
-            response.setStatus(401);
+            // 401 에러 발생
+            filterChain.doFilter(request, response);
         } else {
             String userId = jwtUtil.getUserId(refreshToken);
             log.debug("토큰 유저:{}", userId);
-            // accessToken이 유효하지 않는 경우 accessToken 갱신
-            if (!jwtUtil.isValid(accessToken)) {
-                // 해당 쿠키 제거
-                accessTokenCookie.setPath("/");
-                accessTokenCookie.setMaxAge(0);
-                response.addCookie(accessTokenCookie);
 
-                // 토큰 갱신 후 accessToken 갱신
-                String newAccessToken = jwtUtil.createJwt(userId, 1000 * 60 * 60L);
+            if (accessTokenCookie == null || !jwtUtil.isValid(accessTokenCookie.getValue())) {
+                // 유효하지 않은 경우 기존 쿠키 삭제 (accessTokenCookie가 null이 아닐 때만 해당)
+                if (accessTokenCookie != null) {
+                    CookieUtil.deleteCookie(accessTokenCookie, response);
+                }
+
+                // 새로운 accessToken 생성 및 쿠키에 추가
+                String newAccessToken = jwtUtil.createJwt(userId, 1000 * 60 * 60L); // 1시간 유효기간
                 Cookie newCookie = new Cookie("accessToken", newAccessToken);
+                newCookie.setPath("/");
                 response.addCookie(newCookie);
+
+                accessTokenCookie = newCookie; // 새로운 쿠키로 업데이트
             }
 
             //user를 생성하여 값 set
@@ -153,14 +144,9 @@ public class JWTFilter extends OncePerRequestFilter {
                 // 레디스에서 해당 쿠키 제거
                 redisService.deleteValues(refreshToken);
 
-                // 해당 쿠키 제거
-                accessTokenCookie.setPath("/");
-                accessTokenCookie.setMaxAge(0);
-                response.addCookie(accessTokenCookie);
-
-                refreshTokenCookie.setPath("/");
-                refreshTokenCookie.setMaxAge(0);
-                response.addCookie(refreshTokenCookie);
+                // 토큰 쿠키 제거
+                CookieUtil.deleteCookie(accessTokenCookie, response);
+                CookieUtil.deleteCookie(refreshTokenCookie, response);
 
                 // 오류 발생
                 response.setStatus(401);
