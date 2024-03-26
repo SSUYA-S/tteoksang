@@ -11,6 +11,6 @@ import lombok.*;
 public class ProductInfo {
     private Integer productId;
     private Integer productCost;
-    private Integer productLimit;
+    private Integer productMaxQuantity;
     private Integer productFluctuation;
 }
