@@ -1,21 +1,25 @@
 import { SetStateAction } from 'react';
 
-import newsData from '../../dummy-data/article.json';
+// import newsData from '../../dummy-data/article.json';
+import { Article } from '../../type/types';
 
 type NewsType = {
     setNewsFlag: React.Dispatch<SetStateAction<boolean>>;
+    newsPublishTurn: number;
+    articleList: Article[];
+    newsReceived: (turn: number, articleList: Article[]) => void;
 };
 export default function NewsModal(props: NewsType) {
     const closeNewsModal = () => {
         props.setNewsFlag(false);
     };
 
-    const date = newsData.publishTurn;
+    const date = props.newsPublishTurn;
     const year = Math.floor((date + 60) / 360);
     const month = ((Math.floor(date / 30) + 2) % 12) + 1;
     const day = (date % 30) + 1;
 
-    const articleList = newsData.articleList;
+    const articleList = props.articleList;
 
     return (
         <div className="absolute w-[70%] h-[95%] animation-modal ">
