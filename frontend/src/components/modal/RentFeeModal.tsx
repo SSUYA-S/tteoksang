@@ -34,7 +34,7 @@ export default function RentFeeModal(props: Prop) {
     let rentReceipt = <></>;
     if (rentFeeInfo.billType === 'basic') {
         rentReceipt = (
-            <div className="w-[40%] h-[40%] bg-[#FDFFA3] flex flex-col absolute left-[30%] top-[35%] items-center">
+            <div className="w-[40%] h-[40%] bg-[#FDFFA3] flex flex-col absolute left-[30%] top-[35%] items-center z-10">
                 <div className="w-full h-[20%] p-[1vw] text-4xl text-red-500 flex justify-center items-end">
                     임대료 고지서
                 </div>
@@ -53,7 +53,7 @@ export default function RentFeeModal(props: Prop) {
         );
     } else if (rentFeeInfo.billType === 'overdue') {
         rentReceipt = (
-            <div className="w-[40%] h-[60%] bg-[#FFCEC3] flex flex-col absolute left-[30%] top-[20%] items-center">
+            <div className="w-[40%] h-[60%] bg-[#FFCEC3] flex flex-col absolute left-[30%] top-[20%] items-center z-10">
                 <div className="w-full h-[20%] p-[1vw] text-4xl text-red-500 flex justify-center items-end">
                     가압류 고지서
                 </div>
@@ -82,7 +82,7 @@ export default function RentFeeModal(props: Prop) {
                 </div>
                 <div
                     onClick={props.showReport}
-                    className="w-[90%] p-[1vw] h-[10%] m-[1vw] border-[0.2vw] color-border-subbold text-2xl color-text-subbold flex justify-center items-center cursor-pointer"
+                    className="w-[90%] p-[1vw] h-[10%] m-[1vw] border-[0.2vw] color-border-subbold text-2xl color-text-subbold flex justify-center items-center cursor-pointer "
                 >
                     확인
                 </div>
@@ -90,7 +90,7 @@ export default function RentFeeModal(props: Prop) {
         );
     } else if (rentFeeInfo.billType === 'bankrupt') {
         rentReceipt = (
-            <div className="w-[40%] h-[60%] bg-[#8e8e8e] flex flex-col absolute left-[30%] top-[20%] items-center">
+            <div className="w-[40%] h-[60%] bg-[#8e8e8e] flex flex-col absolute left-[30%] top-[20%] items-center z-10">
                 <div className="w-full h-[20%] p-[1vw] text-4xl text-white flex justify-center items-end">
                     파산 고지서
                 </div>
