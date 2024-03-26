@@ -138,6 +138,31 @@ services:
       MARIADB_PASSWORD: ${USER_PASSWORD}
       MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
 
+  mongoDB:
+    image: mongo:7.0
+    container_name: TteoksangMongoDB
+    restart: unless-stopped
+    volumes:
+      - mongodb-data:/data
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_DB_ROOT_USER_NAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_DB_ROOT_USER_PASSWORD}
+    ports:
+      - "27017:27017"
+
+  mongo-express:
+    image: mongo-express
+    container_name: TteoksangMongoExpress
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_DB_ROOT_USER_NAME}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_DB_ROOT_USER_PASSWORD}
+      ME_CONFIG_MONGODB_SERVER: 127.0.0.1
+      ME_CONFIG_BASICAUTH_USERNAME: ${MONGO_EXPRESS_USER_NAME}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGO_EXPRESS_USER_PASSWORD}
+
   zookeeper:
     image: bitnami/zookeeper:3.8.3
     container_name: TteoksangZookeeper
@@ -180,6 +205,7 @@ volumes:
   mariadb-data:
   zookeeper-data:
   kafka-data:
+  mongodb-data:
 
 networks:
   TteoksangNetwork:

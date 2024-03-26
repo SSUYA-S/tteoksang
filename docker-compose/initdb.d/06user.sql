@@ -3,6 +3,7 @@ create table user
     user_id               CHAR(36) primary key,
     user_google_id        CHAR(25) unique  not null,
     user_email            VARCHAR(40) unique,
+    user_google_name      VARCHAR(45) unique,
     user_nickname         VARCHAR(45) unique,
     user_profile_icon_id  TINYINT unsigned not null,
     user_profile_frame_id TINYINT unsigned not null,

@@ -1,0 +1,53 @@
+version: '3.7'
+
+services:
+  backend1:
+    image: ssuyas/tteoksang_backend
+    container_name: TteoksangBackend
+    restart: unless-stopped
+    environment:
+      DB_NAME: ${DB_NAME}
+      USER_NAME: ${USER_NAME}
+      USER_PASSWORD: ${USER_PASSWORD}
+      DB_URL: ${DB_URL}
+      DB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      REDIS_SENTINEL_HOST: ${REDIS_SENTINEL_HOST}
+      REDIS_SENTINEL_NODE1_PORT: ${REDIS_SENTINEL_NODE1_PORT}
+      REDIS_SENTINEL_NODE2_PORT: ${REDIS_SENTINEL_NODE2_PORT}
+      REDIS_SENTINEL_NODE3_PORT: ${REDIS_SENTINEL_NODE3_PORT}
+      REDIS_MASTER: ${REDIS_MASTER}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      GOOGLE_REDIRECT_URL: ${GOOGLE_REDIRECT_URL}
+      AUTH_REDIRECT_URL: ${AUTH_REDIRECT_URL}
+      JWT_KEY: ${JWT_KEY}
+
+  frontend:
+    image: ssuyas/tteoksang_frontend
+    container_name: TteoksangFrontend
+    restart: unless-stopped
+    environment:
+      VITE_REACT_GOOGLE_LOGIN_URL: ${VITE_REACT_GOOGLE_LOGIN_URL}
+      VITE_REACT_API_URL: ${VITE_REACT_API_URL}
+      VITE_REACT_WEBSOCKET_URL: ${VITE_REACT_WEBSOCKET_URL}
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    ports:
+      - "443:443"
+      - "80:80"
+    networks:
+      TteoksangNetworkDev:
+      default:
+
+volumes:
+  redis-dev-data:
+  mariadb-dev-data:
+
+networks:
+  default:
+    external: true
+    name: TteoksangNetwork
+  TteoksangNetworkDev:
+    external: true

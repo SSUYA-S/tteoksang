@@ -137,17 +137,18 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public void updateUserTitle(Integer titleId, User user) {
+    public void updateUserTitle(Integer titleId, String userId) throws TitleNotExistException {
         Optional<Title> title = titleRepository.findById(titleId);
-//        if (title.isEmpty()) {
-//            throw new NicknameNullException();
-//        }
+        Optional<User> user = userRepository.findByUserId(userId);
+        if (title.isEmpty()) {
+            throw new TitleNotExistException();
+        }
         //프로필 프레임 변경
-        user.setTitle(title.get());
+        user.get().setTitle(title.get());
 
-        userRepository.save(user);
+        userRepository.save(user.get());
         // 레디스에 있는 유저 정보 변경
-        updateUser(user);
+        updateUser(user.get());
     }
 
     @Override
@@ -155,7 +156,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
         //구글 서버로 탈퇴 요청
         Optional<OAuth2AuthorizedClientEntity> entity = googleRepository.findById(
-                new GoogleRepoId("google", user.getUserNickname()));
+                new GoogleRepoId("google", user.getUserGoogleName()));
         if (entity.isPresent()) {
             String token = entity.get().getAccessTokenValue();
             googleRepository.delete(entity.get()); //OAuth2 인증 테이블에서 제거

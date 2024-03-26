@@ -127,6 +127,7 @@ public class JWTFilter extends OncePerRequestFilter {
             // accessToken이 유효하지 않는 경우 accessToken 갱신
             if (!jwtUtil.isValid(accessToken)) {
                 // 해당 쿠키 제거
+                accessTokenCookie.setPath("/");
                 accessTokenCookie.setMaxAge(0);
                 response.addCookie(accessTokenCookie);
 

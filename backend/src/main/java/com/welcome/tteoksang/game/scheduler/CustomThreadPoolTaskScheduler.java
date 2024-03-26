@@ -1,15 +1,22 @@
-package com.welcome.tteoksang.config;
+package com.welcome.tteoksang.game.scheduler;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import java.util.Date;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ThreadPoolExecutor;
 
 @Configuration
+@Primary
 public class CustomThreadPoolTaskScheduler extends ThreadPoolTaskScheduler {
-
     private static final long serialVersionUID = 1L;
+
+    CustomThreadPoolTaskScheduler(){
+        setPoolSize(2);
+        setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy());
+    }
 
     @Override
     public ScheduledFuture<?> scheduleAtFixedRate(Runnable task, long period) {
