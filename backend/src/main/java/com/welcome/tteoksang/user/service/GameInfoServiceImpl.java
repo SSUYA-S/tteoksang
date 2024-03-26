@@ -2,6 +2,7 @@ package com.welcome.tteoksang.user.service;
 
 import com.welcome.tteoksang.game.dto.RedisGameInfo;
 import com.welcome.tteoksang.redis.RedisPrefix;
+import com.welcome.tteoksang.redis.RedisSerializationUtil;
 import com.welcome.tteoksang.redis.RedisService;
 import com.welcome.tteoksang.user.dto.GameInfo;
 import com.welcome.tteoksang.user.dto.PreviousPlayInfo;
@@ -11,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
 @Service
@@ -54,31 +56,21 @@ public class GameInfoServiceImpl implements GameInfoService {
     public void saveGameInfo(String userId) {
         // DB에서 gameInfo 불러오기
         GameInfo gameInfo = searchGameInfo(userId);
-        Map<Integer, Integer> products;
+        Map<Integer, Object> products;
         String gameInfoKey = RedisPrefix.INGAMEINFO.prefix() + userId;
         if (gameInfo != null) {
-//            // 농산물 데이터 역직렬화
-//            try (ByteArrayInputStream byteStream = new ByteArrayInputStream(gameInfo.getProducts());
-//                 ObjectInputStream objStream = new ObjectInputStream(byteStream)) {
-//
-//                Object productsObject = objStream.readObject();
-//                if (productsObject instanceof Map) {
-//                    products = (Map<Integer, Integer>) productsObject;
-//                } else {
-//                    throw new IllegalArgumentException("역직렬화된 객체가 Map이 아닙니다.");
-//                }
-//            } catch (Exception e) {
-//                throw new RuntimeException("역직렬화 과정에서 오류 발생", e);
-//            }
+            // 농산물 데이터 역직렬화
+            products = RedisSerializationUtil.deserializeMap(gameInfo.getProducts());
 
             // 게임 데이터 불러오기 위한 정보 확인
-            log.debug("[InGameChannelInterceptor] - inGameInfo : {}, {}, {}, {}"
+            log.debug("[InGameChannelInterceptor] - inGameInfo : {}, {}, {}, {}, {}"
                     , gameInfo.getGameId(), gameInfo.getGold(),
-                    gameInfo.getWarehouseLevel(), gameInfo.getVehicleLevel()
+                    gameInfo.getWarehouseLevel(), gameInfo.getVehicleLevel(), products.toString()
             );
         }
         // TODO:게임 데이터가 없는 경우 새로운 게임
         else {
+            products = new HashMap<>();
             gameInfo = GameInfo.builder()
                     .userId(userId)
                     .gameId(1)// 현재 게임 ID
@@ -90,7 +82,6 @@ public class GameInfoServiceImpl implements GameInfoService {
                     .lastPlayTurn(1)
                     .lastConnectTime(LocalDateTime.now())
                     .purchaseQuantity(0)
-                    .products("123".getBytes())
                     .rentFee(0L)
                     .build();
         }
@@ -106,8 +97,7 @@ public class GameInfoServiceImpl implements GameInfoService {
                 .lastPlayTurn(gameInfo.getLastPlayTurn())
                 .lastConnectTime(gameInfo.getLastConnectTime())
                 .purchaseQuantity(gameInfo.getPurchaseQuantity())
-                .products(null) // 작물 데이터가 있는 경우 들어감
-//                            .products(products)
+                .products(products) // 작물 데이터가 있는 경우 들어감
                 .rentFee(gameInfo.getRentFee())
                 .build();
 
