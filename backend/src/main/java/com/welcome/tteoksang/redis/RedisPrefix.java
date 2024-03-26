@@ -5,10 +5,11 @@ public enum RedisPrefix {
     REGIST("regist:"),
     CHANGE_EMAIL("changeEmail:"),
     RESET_PASSOWRD("resetPassword:"),
-    ENCODING("encoding:"),
+    PRODUCT_INFO("productInfo"),
     USERINFO("userInfo:"),
     WEBSOCKET("webSocket:"),
     INGAMEINFO("inGameInfo:");
+
 
 
     private String prefix;
