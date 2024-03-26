@@ -4,7 +4,7 @@ interface Prop {
     rentFeeInfo: RentFeeInfoType;
     startTurn: number;
     endTurn: number;
-    setIsRentModalAvail: React.Dispatch<React.SetStateAction<boolean>>;
+    showReport: () => void;
     productList: Product[];
 }
 
@@ -44,10 +44,8 @@ export default function RentFeeModal(props: Prop) {
                 </div>
                 <div className="text-3xl text-right w-full h-[30%] p-[1vw] color-text-subbold">{`${rentFeeInfo.rentFee.toLocaleString()}원`}</div>
                 <div
-                    onClick={() => {
-                        props.setIsRentModalAvail(false);
-                    }}
-                    className="w-[90%] p-[1vw] m-[1vw] border-[0.2vw] color-border-subbold text-2xl color-text-subbold"
+                    onClick={props.showReport()}
+                    className="w-[90%] p-[1vw] m-[1vw] border-[0.2vw] color-border-subbold text-2xl color-text-subbold cursor-pointer"
                 >
                     확인
                 </div>
@@ -84,9 +82,9 @@ export default function RentFeeModal(props: Prop) {
                 </div>
                 <div
                     onClick={() => {
-                        props.setIsRentModalAvail(false);
+                        props.showReport();
                     }}
-                    className="w-[90%] p-[1vw] h-[10%] m-[1vw] border-[0.2vw] color-border-subbold text-2xl color-text-subbold flex justify-center items-center"
+                    className="w-[90%] p-[1vw] h-[10%] m-[1vw] border-[0.2vw] color-border-subbold text-2xl color-text-subbold flex justify-center items-center cursor-pointer"
                 >
                     확인
                 </div>
@@ -109,9 +107,9 @@ export default function RentFeeModal(props: Prop) {
                 </div>
                 <div
                     onClick={() => {
-                        props.setIsRentModalAvail(false);
+                        props.showReport();
                     }}
-                    className="w-[90%] p-[1vw] h-[10%] m-[1vw] border-[0.2vw] border-white text-2xl text-white flex justify-center items-center"
+                    className="w-[90%] p-[1vw] h-[10%] m-[1vw] border-[0.2vw] border-white text-2xl text-white flex justify-center items-center cursor-pointer"
                 >
                     ㅠㅠ 다시 시작해보자...
                 </div>
