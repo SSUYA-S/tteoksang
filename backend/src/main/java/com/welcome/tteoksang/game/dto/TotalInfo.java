@@ -1,5 +1,6 @@
 package com.welcome.tteoksang.game.dto;
 
+import com.welcome.tteoksang.game.dto.ProductInfo;
 import lombok.*;
 
 import java.util.List;

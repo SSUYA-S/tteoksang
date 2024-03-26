@@ -83,7 +83,8 @@ public class JWTFilter extends OncePerRequestFilter {
         }
         catch (TokenInvalidException | UserNotExistException e) {
             deleteCookie(request, response);
-            response.setStatus(401);
+            log.error("[JWTFilter] - {}", e.getMessage());
+            filterChain.doFilter(request, response);
         }
 
     }
