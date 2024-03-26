@@ -49,11 +49,11 @@ public class SceduledGameController {
         long offset = (halfPeriod + halfReportPeriod) * 2 * seasonPeriod - halfReportPeriod;
         //반기 이벤트 등록 -> 주기는 9시간 9분
         scheduleService.register("half-register", period, () -> {
-            scheduleService.startHalfYearGame();
+            publicService.startHalfYearGame();
         });
         //반기 이벤트 삭제 이벤트 등록-> 주기는 9시간 9분, 시작은 9시간 후부터
         scheduleService.register("half-remove", halfPeriod, period, () -> {
-            scheduleService.removeHalfYearGame();
+            publicService.endHalfYearGame();
         });
         //전체 이벤트 삭제 이벤트 등록-> 주에 한 번(시즌 종료 시)만 실행되면 됨
         scheduleService.register("finishSeason", seasonStartCron, offset,

@@ -1,4 +1,4 @@
-package com.welcome.tteoksang.game.scheduler.dto;
+package com.welcome.tteoksang.game.dto;
 
 import lombok.*;
 
@@ -9,8 +9,8 @@ import lombok.*;
 @Builder
 public class RedisProductInfo {
     Integer productId;
-    Long productCost;
+    Integer productCost;
     Integer productMaxQuantity;
-    Long productFluctuation;
+    Integer productFluctuation;
     Double productAvgCost;
 }

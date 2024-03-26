@@ -1,4 +1,4 @@
-package com.welcome.tteoksang.game.scheduler;
+package com.welcome.tteoksang.resource.dto;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

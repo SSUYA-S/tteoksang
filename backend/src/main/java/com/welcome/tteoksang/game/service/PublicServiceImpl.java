@@ -1,22 +1,28 @@
 package com.welcome.tteoksang.game.service;
 
 import com.welcome.tteoksang.game.dto.Article;
-import com.welcome.tteoksang.game.scheduler.ProductFlutuation;
+import com.welcome.tteoksang.resource.dto.ProductFlutuation;
+import com.welcome.tteoksang.game.scheduler.ScheduleService;
 import com.welcome.tteoksang.game.scheduler.ServerInfo;
-import com.welcome.tteoksang.game.scheduler.dto.PublicEventInfo;
-import com.welcome.tteoksang.game.scheduler.dto.RedisProductInfo;
+import com.welcome.tteoksang.game.dto.PublicEventInfo;
+import com.welcome.tteoksang.game.dto.RedisProductInfo;
 import com.welcome.tteoksang.redis.RedisPrefix;
 import com.welcome.tteoksang.redis.RedisService;
 import com.welcome.tteoksang.resource.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class PublicServiceImpl implements PublicService {
 
+    private final ScheduleService scheduleService;
     private final RedisService redisService;
     private final ProductRepository productRepository;
     //TODO- ProductFluctuationRepository 선언
@@ -25,7 +31,46 @@ public class PublicServiceImpl implements PublicService {
     private List<String> nextEvent;
 
     private List<Article> newspaper=new ArrayList<>();
+    @Value("${TURN_PERIOD}")
+    private long turnPeriod;
+    @Value("${EVENT_ARISE_PERIOD}")
+    private long eventPeriod;
+    @Value("${EVENT_ARISE_TIME}")
+    private long eventTime;
+    @Value("${NEWS_PUBLISH_TIME}")
+    private long newsTime;
+    private final String FLUCTUATE = "fluctuate";
+    private final String PUBLIC_EVENT = "event";
+    private final String NEWSPAPER = "news";
 
+
+    public void initSeason(){
+        ServerInfo.currentTurn=0;
+        ServerInfo.turnStartTime= LocalDateTime.now();
+        ServerInfo.specialEventId="121212";
+
+    }
+
+    //반기 스케쥴 등록/삭제
+    public void startHalfYearGame() {
+        scheduleService.register(FLUCTUATE, turnPeriod, () -> {
+            log.debug("fluctuate...");
+        });
+        scheduleService.register(NEWSPAPER, newsTime, eventPeriod, () -> {
+            log.debug("news!!");
+        });
+        scheduleService.register(PUBLIC_EVENT, eventTime, eventPeriod, () -> {
+            log.debug("EVENT!!");
+        });
+    }
+
+    //실행
+
+    public void endHalfYearGame() {
+        scheduleService.remove(FLUCTUATE);
+        scheduleService.remove(NEWSPAPER);
+        scheduleService.remove(PUBLIC_EVENT);
+    }
 
     @Override
     public List<Article> createNewspaper() {
@@ -69,7 +114,7 @@ public class PublicServiceImpl implements PublicService {
             ProductFlutuation flutuation=new ProductFlutuation();
             Double range=flutuation.getMaxFluctuationRate()-flutuation.getMinFluctuationRate();
             Double value=Math.random()*range + flutuation.getMinFluctuationRate();
-            long newCost= (long) (productInfo.getProductAvgCost()*value);
+            Integer newCost= (int) (productInfo.getProductAvgCost()*value);
             productInfo.setProductFluctuation(newCost- productInfo.getProductCost());
             productInfo.setProductCost(newCost);
         }
@@ -77,17 +122,22 @@ public class PublicServiceImpl implements PublicService {
 
     @Override
     public void initProductInfo() {
-        List<RedisProductInfo> productInfoList= (List<RedisProductInfo>) productRepository.findAll().stream().map(
-                (product)-> {
-                    return RedisProductInfo.builder()
-                            .productId(product.getProductId())
-                            .productCost(Long.valueOf(product.getProductDefaultCost()))
-                            .productFluctuation(0L)
-                            .productAvgCost(product.getProductAvgCost())
-                            .productMaxQuantity(1000)
-                            .build();
-                }
-        );
-        redisService.setValues(RedisPrefix.PRODUCT_INFO.prefix(), productInfoList);
+//        List<RedisProductInfo> productInfoList= (List<RedisProductInfo>) productRepository.findAll().stream().map(
+//                (product)-> {
+//                    return RedisProductInfo.builder()
+//                            .productId(product.getProductId())
+//                            .productCost(Long.valueOf(product.getProductDefaultCost()))
+//                            .productFluctuation(0L)
+//                            .productAvgCost(product.getProductAvgCost())
+//                            .productMaxQuantity(1000)
+//                            .build();
+//                }
+//        );
+//        redisService.setValues(RedisPrefix.PRODUCT_INFO.prefix(), productInfoList);
+    }
+
+    @Override
+    public void updateProductFluctuationRate() {
+
     }
 }
