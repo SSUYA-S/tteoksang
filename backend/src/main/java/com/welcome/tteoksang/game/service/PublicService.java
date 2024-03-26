@@ -1,12 +1,18 @@
 package com.welcome.tteoksang.game.service;
 
 import com.welcome.tteoksang.game.dto.Article;
-import com.welcome.tteoksang.game.scheduler.dto.PublicEventInfo;
+import com.welcome.tteoksang.game.dto.PublicEventInfo;
 
 import java.util.List;
 
 public interface PublicService {
-//    신문 발행
+    //스케쥴 등록/삭제
+    void initSeason();
+    void startHalfYearGame();
+    void endHalfYearGame();
+
+    //실행
+//  신문 발행
     List<Article> createNewspaper();
 
     List<Article> searchNewspaper();
@@ -23,4 +29,6 @@ public interface PublicService {
     void fluctuateProduct();
 
     void initProductInfo();
+
+    void updateProductFluctuationRate();
 }

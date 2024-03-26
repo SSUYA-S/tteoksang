@@ -1,4 +1,4 @@
-package com.welcome.tteoksang.game.scheduler.dto;
+package com.welcome.tteoksang.game.dto;
 
 import lombok.*;
 
@@ -14,7 +14,7 @@ public class PublicEventInfo {
     LocalDateTime ingameTime;
     LocalDateTime turnStartTime;
     Integer turn;
-    List<ProductInfo> productInfoList;
+//    List<ProductInfo> productInfoList;
     List<Integer> buyableProductList;
     String specialEventId;
 
