@@ -42,8 +42,11 @@ public class SceduledGameController {
 
     }
 
+
+    @GetMapping("/test/season")
     @Scheduled(cron = "${SEASON_START_DATE}") //시즌 시작 시 마다 실행됨!
     public void startGame() {
+        publicService.initSeason();
         log.debug("=========start SEASON==========");
         long period = halfPeriod + halfReportPeriod;
         long offset = (halfPeriod + halfReportPeriod) * 2 * seasonPeriod - halfReportPeriod;
@@ -69,8 +72,8 @@ public class SceduledGameController {
     public void sendNewspaper() {
         GameMessage message = new GameMessage();
         message.setType(MessageType.GET_NEWSPAPER);
-        message.setBody(publicService.createNewspaper());
-
+        message.setBody("");
+        publicService.createNewspaper();
         sendingOperations.convertAndSend("/public", message);
     }
 
@@ -79,8 +82,8 @@ public class SceduledGameController {
 //    @Scheduled(cron = "0/3 * * * * *")
     public void updatePublicEvent() {
         GameMessage message = new GameMessage();
-        publicService.applyEvent();
-        publicService.searchPublicEvent();
+//        publicService.applyEvent();
+//        publicService.searchPublicEvent();
         message.setType(MessageType.GET_PUBLIC_EVENT);
 //        log.debug(message.toString());
 //        log.debug(Instant.now()+" == "+Instant.ofEpochMilli(System.currentTimeMillis())+" == "+System.currentTimeMillis());
