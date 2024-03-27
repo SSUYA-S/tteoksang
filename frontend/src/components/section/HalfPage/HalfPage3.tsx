@@ -1,6 +1,16 @@
 import { useState } from 'react';
 import { RankReportType } from '../../../type/types';
 import { useSelector } from 'react-redux';
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend,
+} from 'chart.js';
+import { Bar } from 'react-chartjs-2';
 
 interface Prop {
     participantCount: number;
@@ -25,6 +35,62 @@ export default function HalfPage3(props: Prop) {
 
     const changeMode = (modeId: number) => {
         setRankMode(modeId);
+    };
+
+    ChartJS.register(
+        CategoryScale,
+        LinearScale,
+        BarElement,
+        Title,
+        Tooltip,
+        Legend
+    );
+
+    const options = {
+        indexAxis: 'y' as const,
+        elements: {
+            bar: {
+                borderWidth: 2,
+            },
+        },
+        responsive: true,
+        plugins: {
+            legend: {
+                display: false,
+            },
+            title: {
+                display: false,
+                text: '1등과 나의 차이',
+            },
+        },
+    };
+
+    const labels = [''];
+
+    const data = {
+        labels,
+        datasets: [
+            {
+                label: '1등',
+                data: [rankInfoList[rankMode].theFirstRecord],
+                backgroundColor: 'rgb(255, 0, 0)',
+            },
+            {
+                label: `당신 (${
+                    rankInfoList[rankMode].myRank <= 100
+                        ? rankInfoList[rankMode].myRank + '등'
+                        : '상위 ' +
+                          Math.round(
+                              (rankInfoList[rankMode].myRank /
+                                  props.participantCount) *
+                                  100
+                          ) +
+                          '%'
+                })`,
+                data: [rankInfoList[rankMode].myRecord],
+                backgroundColor: 'rgb(0, 0, 255)',
+            },
+        ],
     };
 
     return (
@@ -72,13 +138,13 @@ export default function HalfPage3(props: Prop) {
                                 />
                             </div>
                             <div className="w-[65%] flex flex-col justify-around items-start">
-                                <p className="text-[2vw] w-full text-left">
+                                <p className="text-[1.5vw] w-full text-left">
                                     {
                                         rankInfoList[rankMode].theFirstUserInfo
                                             .userNickname
                                     }
                                 </p>
-                                <p className="text-[2vw] w-full text-left">
+                                <p className="text-[1.5vw] w-full text-left">
                                     {rankInfoList[
                                         rankMode
                                     ].theFirstRecord.toLocaleString()}
@@ -106,10 +172,10 @@ export default function HalfPage3(props: Prop) {
                                 />
                             </div>
                             <div className="w-[65%] flex flex-col justify-around items-start">
-                                <p className="text-[2vw] w-full text-left">
+                                <p className="text-[1.5vw] w-full text-left">
                                     {userNickname}
                                 </p>
-                                <p className="text-[2vw] w-full text-left">
+                                <p className="text-[1.5vw] w-full text-left">
                                     {rankInfoList[
                                         rankMode
                                     ].myRecord.toLocaleString()}
@@ -118,6 +184,8 @@ export default function HalfPage3(props: Prop) {
                         </div>
                     </div>
                 </div>
+                {/* 통계 자료 보여주기 */}
+                <Bar options={options} data={data} />
             </div>
         </>
     );

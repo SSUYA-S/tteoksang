@@ -6,6 +6,7 @@ import {
     Product,
     HalfReportType,
     HalfReceipt,
+    Achievement,
 } from '../../type/types';
 import { useSelector } from 'react-redux';
 import TitleChangeModal from './TitleChangeModal';
@@ -16,6 +17,7 @@ import Half from '../../dummy-data/report/half.json';
 import HalfPage1 from '../section/HalfPage/HalfPage1';
 import HalfPage2 from '../section/HalfPage/HalfPage2';
 import HalfPage3 from '../section/HalfPage/HalfPage3';
+import HalfPage4 from '../section/HalfPage/HalfPage4';
 
 interface Prop {
     titleList: Title[];
@@ -26,6 +28,7 @@ interface Prop {
     webSocketClient: Client;
     hlfReport: HalfReportType | null;
     setStartFlag: React.Dispatch<React.SetStateAction<boolean>>;
+    achievementInfo: Achievement[];
 }
 
 export default function HalfReportModal(props: Prop) {
@@ -206,7 +209,20 @@ export default function HalfReportModal(props: Prop) {
                                     participantCount={Half.participantCount}
                                 />
                             ) : (
-                                <></>
+                                <HalfPage4
+                                    productList={props.productList}
+                                    tteoksangStatistics={
+                                        Half.tteoksangStatistics
+                                    }
+                                    tteokrockStatistics={
+                                        Half.tteokrockStatistics
+                                    }
+                                    bestSellerStatistics={
+                                        Half.bestSellerStatistics
+                                    }
+                                    achievementInfo={props.achievementInfo}
+                                    achievementList={Half.achievementList}
+                                />
                             )}
                         </div>
                         <div
