@@ -2,14 +2,19 @@
     "turn": 361,
     "rentFeeInfo": {
         "billType": "basic",
-        "rentFee": 20000,
+        "rentFee": 40000,
         "productList": []
     },
     "quarterReport": {
         "quarterProfit": 1500000,
         "rentFee": 20000,
         "inProductList": [1, 7, 8],
-        "titleId": 2
+        "titleId": 2,
+        "rentFeeInfo": {
+            "billType": "basic",
+            "rentFee": 20000,
+            "productList": []
+        }
     },
     "totalProductIncome": 5000000,
     "totalProductOutcome": 2500000,

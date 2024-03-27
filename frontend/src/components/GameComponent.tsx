@@ -35,6 +35,10 @@ import WebSocket from './modal/WebSocket';
 import QuarterReportModal from './modal/QuarterReportModal';
 import { Cookies } from 'react-cookie';
 import HalfReportModal from './modal/HalfReportModal';
+import {
+    buyableProductIdState,
+    productInfoState,
+} from '../util/product-and-event';
 
 type GameType = {
     initialData: InitialData;
@@ -235,6 +239,8 @@ export default function GameComponent(props: GameType) {
     useEffect(() => {
         //초기 정보 설정
         setNowMoney(goldNumber);
+        dispatch(productInfoState(totalInfo.productInfoList));
+        dispatch(buyableProductIdState(totalInfo.buyableProductIdList));
     }, [goldNumber]);
 
     //init
@@ -323,11 +329,6 @@ export default function GameComponent(props: GameType) {
         let moneylength = 0;
         // 빼기면
         moneylength = Math.abs(originMoney - num).toString().length;
-        console.log('자잔');
-        console.log('돈 num : ' + num);
-        console.log('돈 originMoney :' + originMoney);
-        console.log(Math.abs(originMoney - num).toString());
-        console.log(moneylength);
 
         let count = 0;
 
