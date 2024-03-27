@@ -9,8 +9,9 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class EventResource  implements Serializable {
-    Integer eventId;
+    String eventId;
     String eventName;
     String eventType;
     String eventDescription;
