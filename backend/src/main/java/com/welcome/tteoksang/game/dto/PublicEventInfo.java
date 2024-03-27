@@ -14,7 +14,7 @@ public class PublicEventInfo {
     LocalDateTime ingameTime;
     LocalDateTime turnStartTime;
     Integer turn;
-//    List<ProductInfo> productInfoList;
+    List<ProductInfo> productInfoList;
     List<Integer> buyableProductList;
     String specialEventId;
 

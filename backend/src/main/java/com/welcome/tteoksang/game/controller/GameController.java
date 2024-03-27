@@ -14,6 +14,7 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -72,16 +73,17 @@ public class GameController {
 
     @MessageMapping("/chat") // 클라이언트에서 보낸 메시지를 받을 메서드 지정
     @SendTo("/topic/chat") // 메서드가 처리한 결과를 보낼 목적지 지정
-    public GameMessage handleChatMessage(@Payload GameMessage gameMessage, Principal principal) {
+    public GameMessage handleChatMessage(@Payload GameMessage gameMessage,
+                                         SimpMessageHeaderAccessor headerAccessor) {
           /* @DestinationVariable: 메시지의 목적지에서 변수를 추출
              @Payload: 메시지 본문(body)의 내용을 메서드의 인자로 전달할 때 사용
                       (클라이언트가 JSON 형태의 메시지를 보냈다면, 이를 GameMessage 객체로 변환하여 메서드에 전달)
           */
-        User user = (User) ((Authentication) principal).getPrincipal();
+        String userId = (String) headerAccessor.getSessionAttributes().get("userId");
         Map<String, Object> body = (Map<String, Object>) gameMessage.getBody();
         String message = (String) body.get("message");
         log.debug("메세지 내용 :{}", message);
-        Chat chat = chatService.sendChat(user, (Map<String, Object>) gameMessage.getBody());
+        Chat chat = chatService.sendChat(userId, (Map<String, Object>) gameMessage.getBody());
         if (chat == null) return null;
         gameMessage.setBody(chat);
         return gameMessage;

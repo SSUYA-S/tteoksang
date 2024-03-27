@@ -1,4 +1,4 @@
-package com.welcome.tteoksang.game.dto;
+package com.welcome.tteoksang.resource.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
