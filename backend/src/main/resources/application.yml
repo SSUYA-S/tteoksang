@@ -42,6 +42,13 @@ spring:
       port: 26379
       password: ${REDIS_PASSWORD}
       timeout: 600ms
+    mongodb:
+      host: localhost
+      database: ${DB_NAME}
+      port: 27017
+      user: ${MONGO_DB_ROOT_USER_NAME}
+      password: ${MONGO_DB_ROOT_USER_PASSWORD}
+#      uri: mongodb://${MONGO_DB_ROOT_USER_NAME}:${MONGO_DB_ROOT_USER_PASSWORD}@localhost:27017/>authSource=admin
   servlet:
     multipart:
       max-file-size: 100MB

@@ -1,8 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import TradeModal from './modal/TradeModal';
-import InfoSeasonModal from './modal/InfoSeasonModal';
-import InfoNotConnectModal from './modal/InfoNotConnectModal';
-import InfoResultModal from './modal/InfoResultModal';
 import SettingModal from './modal/SettingModal';
 import { useDispatch, useSelector } from 'react-redux';
 import CircularTimer from './section/CircularTimer';
@@ -13,8 +10,6 @@ import { logout } from '../api/auth';
 import { httpStatusCode } from '../util/http-status';
 import Stomp from '@stomp/stompjs';
 import { Client } from '@stomp/stompjs';
-import { getWebSocketId } from '../api/game';
-import { handshake } from '../util/websocket/client';
 
 //dummydata
 import totalInfo from '../dummy-data/total-info.json';
@@ -38,6 +33,8 @@ import WarningModal from './modal/ErrorModal';
 import ChattingModal from './modal/ChattingModal';
 import WebSocket from './modal/WebSocket';
 import QuarterReportModal from './modal/QuarterReportModal';
+import { Cookies } from 'react-cookie';
+import HalfReportModal from './modal/HalfReportModal';
 
 type GameType = {
     initialData: InitialData;
@@ -47,9 +44,6 @@ export default function GameComponent(props: GameType) {
     const initialData = props.initialData;
     const [tradeFlag, setTradeFlag] = useState<boolean>(false);
     const [facilityFlag, setFacilityFlag] = useState<boolean>(false);
-    const [infoSeasonFlag, setInfoSeasonFlag] = useState<boolean>(true);
-    const [infoNotConnectFlag, setInfoNotConnectFlag] = useState<boolean>(true);
-    const [infoResultFlag, setInfoResultFlag] = useState<boolean>(true);
     const [settingFlag, setSettingFlag] = useState<boolean>(false);
     const [mypageFlag, setMyPageFlag] = useState<boolean>(false);
     const [newsFlag, setNewsFlag] = useState<boolean>(false);
@@ -93,8 +87,8 @@ export default function GameComponent(props: GameType) {
     const [webSocketId, setWebSocketId] = useState<string>('');
 
     /**결산 모달 관련 useState */
-    const [isQtrReportAvail, setIsQtrReportAvail] = useState<boolean>(true); //분기
-    const [isHlfReportAvail, setIsHlfReportAvail] = useState<boolean>(false); //반기
+    const [isQtrReportAvail, setIsQtrReportAvail] = useState<boolean>(false); //분기
+    const [isHlfReportAvail, setIsHlfReportAvail] = useState<boolean>(true); //반기
     const [isFinReportAvail, setIsFinReportAvail] = useState<boolean>(false); //전체
     const [isOffReportAvail, setIsOffReportAvail] = useState<boolean>(false); //미접
 
@@ -124,14 +118,6 @@ export default function GameComponent(props: GameType) {
      *  로그아웃
      */
     const handleLogOut = async () => {
-        const res = await logout();
-        if (res.status === httpStatusCode.OK) {
-            props.setStartFlag(false);
-            setIsLogoutProceeding(false);
-        } else {
-            console.log('Logout error');
-        }
-
         //websocket보내기
         const quitMsg = JSON.stringify({
             type: 'QUIT_GAME',
@@ -144,6 +130,14 @@ export default function GameComponent(props: GameType) {
             });
 
             webSocketClient.deactivate();
+        }
+
+        const res = await logout();
+        if (res.status === httpStatusCode.OK) {
+            props.setStartFlag(false);
+            setIsLogoutProceeding(false);
+        } else {
+            console.log('Logout error');
         }
     };
 
@@ -228,6 +222,14 @@ export default function GameComponent(props: GameType) {
     };
 
     const dispatch = useDispatch();
+
+    const cookies = new Cookies();
+    useEffect(() => {
+        if (!cookies.get('accessToken')) {
+            console.log('토큰 만료!!!');
+            props.setStartFlag(false);
+        }
+    }, [cookies]);
 
     /**초기정보 세팅 */
     useEffect(() => {
@@ -787,23 +789,6 @@ export default function GameComponent(props: GameType) {
             ) : (
                 <></>
             )}
-            {infoSeasonFlag ? (
-                <InfoSeasonModal setInfoSeasonFlag={setInfoSeasonFlag} />
-            ) : (
-                <></>
-            )}
-            {infoNotConnectFlag ? (
-                <InfoNotConnectModal
-                    setInfoNotConnectFlag={setInfoNotConnectFlag}
-                />
-            ) : (
-                <></>
-            )}
-            {infoResultFlag ? (
-                <InfoResultModal setInfoResultFlag={setInfoResultFlag} />
-            ) : (
-                <></>
-            )}
             {settingFlag ? (
                 <SettingModal
                     setSettingFlag={setSettingFlag}
@@ -858,6 +843,24 @@ export default function GameComponent(props: GameType) {
                     eventList={initialData.eventList}
                     productList={initialData.productList}
                     setIsQtrReportAvail={setIsQtrReportAvail}
+                    webSocketId={webSocketId}
+                    webSocketClient={webSocketClient}
+                    qtrReport={qtrReport}
+                    setStartFlag={props.setStartFlag}
+                />
+            ) : (
+                <></>
+            )}
+            {isHlfReportAvail ? (
+                <HalfReportModal
+                    titleList={initialData.titleList}
+                    eventList={initialData.eventList}
+                    productList={initialData.productList}
+                    setIsHlfReportAvail={setIsHlfReportAvail}
+                    webSocketId={webSocketId}
+                    webSocketClient={webSocketClient}
+                    hlfReport={hlfReport}
+                    setStartFlag={props.setStartFlag}
                 />
             ) : (
                 <></>

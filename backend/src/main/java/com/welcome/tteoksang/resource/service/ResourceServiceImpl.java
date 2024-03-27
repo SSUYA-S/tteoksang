@@ -8,7 +8,12 @@ import com.welcome.tteoksang.resource.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.buf.HexUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -21,6 +26,8 @@ public class ResourceServiceImpl implements ResourceService {
 
     private final AchievementRepository achievementRepository;
     private final BrokerRepository brokerRepository;
+//    private final ReactiveMongoTemplate mongoTemplate;
+    private final EventRepository eventRepository;
     private final ProductRepository productRepository;
     private final ProfileFrameRepository profileFrameRepository;
     private final ProfileIconRepository profileIconRepository;
@@ -87,12 +94,25 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     //TODO - eventLIST 완성
+    // - mongoDB에서 eventLIST 가져오기
     @Override
     public List<EventResource> searchEventList() {
-        List<EventResource> eventResourceList = new ArrayList<>();
-        //TODO mongoDB에서 eventLIST 가져오기
-
-        return eventResourceList;
+//        List<Event> eventResourceList = eventRepository.findAll();;//.stream().map(
+//                (event) -> {
+//                    return EventResource.builder()
+//                            .eventId(event.getEventId())
+//                            .eventDescription(event.getEventContent())
+//                            .eventName(event.getEventName())
+//                            .eventType(event.getEventType())
+//                            .build();
+//                }
+//        ).toList();
+//        for(Event x:eventResourceList){
+//            System.out.println(x);
+//        }
+//        System.out.println(eventResourceList);
+//        return eventResourceList;
+    return null;
     }
 
     @Override
@@ -135,7 +155,7 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     private String makeObjectChecksum(Object object) {
-        ObjectMapper objectMapper=new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper();
         try {
             //Object를 jsonString으로 변환
             String jsonString = objectMapper.writeValueAsString(object);
@@ -156,7 +176,7 @@ public class ResourceServiceImpl implements ResourceService {
     //TODO- 인터페이스 분리 체크
     @Override
     public void saveResourceChecksum(String resourceName, Object object) {
-        resourceChecksumRepository.save(new ResourceChecksum(resourceName,makeObjectChecksum(object)));
+        resourceChecksumRepository.save(new ResourceChecksum(resourceName, makeObjectChecksum(object)));
     }
 
 }

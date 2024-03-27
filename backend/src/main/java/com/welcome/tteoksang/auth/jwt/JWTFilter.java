@@ -2,6 +2,7 @@ package com.welcome.tteoksang.auth.jwt;
 
 import com.welcome.tteoksang.auth.cookie.CookieUtil;
 import com.welcome.tteoksang.auth.dto.TokenCookie;
+import com.welcome.tteoksang.auth.exception.TokenInvalidException;
 import com.welcome.tteoksang.redis.RedisService;
 import com.welcome.tteoksang.user.dto.User;
 import com.welcome.tteoksang.user.exception.UserNotExistException;
@@ -74,97 +75,78 @@ public class JWTFilter extends OncePerRequestFilter {
 //            }
 //        }
 
-        log.debug("---------------- 필터 타기 -----------------");
-        log.debug("[TokenFilter] - 필터 시작");
+        log.debug("----------------JWT 필터 타기 -----------------");
+        log.debug("[JWTFilter] - 필터 시작");
+        try {
+            validateRefreshToken(request, response);
+            filterChain.doFilter(request, response);
+        }
+        catch (TokenInvalidException | UserNotExistException e) {
+            deleteCookie(request, response);
+            log.error("[JWTFilter] - {}", e.getMessage());
+            filterChain.doFilter(request, response);
+        }
 
-        // Cookie 기반 토큰 확인
+    }
+
+    private void validateRefreshToken(HttpServletRequest request, HttpServletResponse response) throws UserNotExistException{
+        TokenCookie tokenCookie = CookieUtil.resolveToken(request);
+        // refreshToken 검증
+        Cookie refreshTokenCookie = tokenCookie.getRefreshTokenCookie();
+        // refreshToken 없거나 이상이 있는 경우
+        if (refreshTokenCookie == null || !jwtUtil.isValid(refreshTokenCookie.getValue())) {
+            throw new TokenInvalidException("refreshToken 오류");
+        }
+
+        String userId = jwtUtil.getUserId(refreshTokenCookie.getValue());
+        log.debug("토큰 유저:{}", userId);
+
+        // accessToken 검증 및 재발급
+        validateAccessToken(userId, tokenCookie, response);
+
+        // 로그인 유지
+        authenticateUser(userId);
+    }
+    // accessToken 검증 후 오류시 재발급
+    private void validateAccessToken(String userId, TokenCookie tokenCookie, HttpServletResponse response) {
+        Cookie accessTokenCookie = tokenCookie.getAccessTokenCookie();
+
+        if (accessTokenCookie == null || !jwtUtil.isValid(accessTokenCookie.getValue())) {
+            // 유효하지 않은 경우 기존 쿠키 삭제 (accessTokenCookie가 null이 아닐 때만 해당)
+            if (accessTokenCookie != null) {
+                CookieUtil.deleteCookie(accessTokenCookie, response);
+            }
+            // 새로운 accessToken 생성
+            String newAccessToken = jwtUtil.createJwt(userId, 1000 * 60 * 60L * 3); // 1시간 유효기간
+            Cookie newCookie = new Cookie("accessToken", newAccessToken);
+            newCookie.setPath("/");
+            newCookie.setMaxAge(60 * 60 * 3);
+            response.addCookie(newCookie);
+        }
+    }
+
+    private void authenticateUser(String userId) throws UserNotExistException{
+        //user를 생성하여 값 set
+        User user = userRepository.findByUserIdAndDeletedAtIsNull(userId).orElseThrow(UserNotExistException::new);
+        //스프링 시큐리티 인증 토큰 생성 - 우리가 사용할 내용은 유저 객체
+        Authentication authToken = new UsernamePasswordAuthenticationToken(user, null, null);
+
+        //세션에 사용자 등록
+        SecurityContextHolder.getContext().setAuthentication(authToken);
+    }
+
+    private void deleteCookie(HttpServletRequest request, HttpServletResponse response){
         TokenCookie tokenCookie = CookieUtil.resolveToken(request);
         Cookie accessTokenCookie = tokenCookie.getAccessTokenCookie();
         Cookie refreshTokenCookie = tokenCookie.getRefreshTokenCookie();
 
-        // Cookie 검증
-        if (accessTokenCookie == null || refreshTokenCookie == null) {
-            // 남아있는 쿠키 제거
-            if (accessTokenCookie != null) {
-                accessTokenCookie.setPath("/");
-                accessTokenCookie.setMaxAge(0);
-                response.addCookie(accessTokenCookie);
-            }
-            if (refreshTokenCookie != null) {
-                refreshTokenCookie.setPath("/");
-                refreshTokenCookie.setMaxAge(0);
-                response.addCookie(refreshTokenCookie);
-            }
-
-            // 인증이 필요없는 요청들을 위해 계속 진행 - 로그인 상태 x, 로그인 시도
-            filterChain.doFilter(request, response);
-            return;
+        if(refreshTokenCookie != null) {
+            redisService.deleteValues(refreshTokenCookie.getValue());
+            CookieUtil.deleteCookie(refreshTokenCookie, response);
         }
 
-        // 토큰 파싱
-        String accessToken = accessTokenCookie.getValue();
-        String refreshToken = refreshTokenCookie.getValue();
-
-        // 유효성 검사 - refresh 토큰
-        if (!jwtUtil.isValid(refreshToken)) {
-            // 레디스에서 해당 토큰 제거
-            redisService.deleteValues(refreshToken);
-
-            // 해당 쿠키 제거
-            accessTokenCookie.setPath("/");
-            accessTokenCookie.setMaxAge(0);
-            response.addCookie(accessTokenCookie);
-
-            refreshTokenCookie.setPath("/");
-            refreshTokenCookie.setMaxAge(0);
-            response.addCookie(refreshTokenCookie);
-
-            // 에러 발생
-            response.setStatus(401);
-        } else {
-            String userId = jwtUtil.getUserId(refreshToken);
-            log.debug("토큰 유저:{}", userId);
-            // accessToken이 유효하지 않는 경우 accessToken 갱신
-            if (!jwtUtil.isValid(accessToken)) {
-                // 해당 쿠키 제거
-                accessTokenCookie.setPath("/");
-                accessTokenCookie.setMaxAge(0);
-                response.addCookie(accessTokenCookie);
-
-                // 토큰 갱신 후 accessToken 갱신
-                String newAccessToken = jwtUtil.createJwt(userId, 1000 * 60 * 60L);
-                Cookie newCookie = new Cookie("accessToken", newAccessToken);
-                response.addCookie(newCookie);
-            }
-
-            //user를 생성하여 값 set
-            User user;
-            try {
-                //DB에서 유저 정보 탐색
-                user = userRepository.findByUserIdAndDeletedAtIsNull(userId).orElseThrow(UserNotExistException::new);
-                //스프링 시큐리티 인증 토큰 생성 - 우리가 사용할 내용은 유저 객체
-                Authentication authToken = new UsernamePasswordAuthenticationToken(user, null, null);
-
-                //세션에 사용자 등록
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-
-                filterChain.doFilter(request, response);
-            } catch (Exception e) {
-                // 레디스에서 해당 쿠키 제거
-                redisService.deleteValues(refreshToken);
-
-                // 해당 쿠키 제거
-                accessTokenCookie.setPath("/");
-                accessTokenCookie.setMaxAge(0);
-                response.addCookie(accessTokenCookie);
-
-                refreshTokenCookie.setPath("/");
-                refreshTokenCookie.setMaxAge(0);
-                response.addCookie(refreshTokenCookie);
-
-                // 오류 발생
-                response.setStatus(401);
-            }
+        if(accessTokenCookie != null) {
+            CookieUtil.deleteCookie(accessTokenCookie, response);
         }
     }
 }
