@@ -26,6 +26,8 @@ import { profileThemeState } from '../../util/counter-slice';
 interface Prop {
     setWebSocketId: Dispatch<SetStateAction<string>>;
     setWebSocketClient: Dispatch<SetStateAction<Client>>;
+    setIngameTurn: React.Dispatch<React.SetStateAction<number>>;
+    setIngameTime: React.Dispatch<React.SetStateAction<string>>;
     client: Client;
     webSocketId: string;
     newsReceived: (turn: number, articleList: Article[]) => void;
@@ -69,6 +71,7 @@ export default function WebSocket(props: Prop) {
                         //공통 이벤트 수신
                         if (msg.isSuccess) {
                             const info = msg.body;
+                            console.log(info);
                             dispatch(productInfoState(info.productInfoList));
                             dispatch(
                                 buyableProductIdState(info.buyableProductIdList)
@@ -76,6 +79,9 @@ export default function WebSocket(props: Prop) {
                             dispatch(specialEventState(info.specialEventId));
                             //새 턴이 시작되었으니 이번 턴에 산 품목 개수는 0으로 초기화
                             dispatch(purchasedQuantityState(0));
+
+                            props.setIngameTurn(info.turn);
+                            props.setIngameTime(info.inGameTime);
 
                             //추가할 것)시간설정 로직
                         } else {

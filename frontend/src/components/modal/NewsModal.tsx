@@ -1,4 +1,4 @@
-import { SetStateAction } from 'react';
+import { SetStateAction, useEffect } from 'react';
 
 // import newsData from '../../dummy-data/article.json';
 import { Article } from '../../type/types';
@@ -20,6 +20,22 @@ export default function NewsModal(props: NewsType) {
     const day = (date % 30) + 1;
 
     const articleList = props.articleList;
+
+    useEffect(() => {
+        // ESC 키를 눌렀을 때 실행할 함수
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                props.setNewsFlag(false); // ESC 키가 눌리면 컴포넌트를 안 보이게 설정
+            }
+        };
+        // 컴포넌트가 마운트될 때 keydown 이벤트 리스너 추가
+        document.addEventListener('keydown', handleKeyDown);
+
+        // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
 
     return (
         <div className="absolute w-[70%] h-[95%] animation-modal ">

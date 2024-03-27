@@ -234,7 +234,7 @@ export default function GameStartComponent(props: startType) {
             </div>
             <div className="relative w-full h-[80%] flex flex-col justify-center items-center">
                 <div
-                    className="w-[100%] h-[50%]"
+                    className="w-[100%] h-[50%] animation-clockRotate"
                     style={{
                         backgroundImage:
                             'url(/src/assets/images/etc/text-start-title.png)',
@@ -256,6 +256,22 @@ export default function GameStartComponent(props: startType) {
 
                 {loginElement()}
             </div>
+            <img
+                className="absolute top-0 w-[30%] animation-move-left-to-right"
+                src="/src/assets/images/anim/cloud1.webp"
+                alt=""
+            />
+            <img
+                className="absolute top-[15%] w-[30%] -right-[25%] animation-move-right-to-left"
+                src="/src/assets/images/anim/cloud2.webp"
+                alt=""
+                style={{ animationDelay: '10s' }}
+            />
+            <img
+                className="absolute top-[40%] w-[30%] animation-move-right-to-left"
+                src="/src/assets/images/anim/cloud3.webp"
+                alt=""
+            />
         </section>
     );
 }

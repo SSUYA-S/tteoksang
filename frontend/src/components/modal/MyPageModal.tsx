@@ -61,6 +61,20 @@ export default function MyPageModal(props: MyPageType) {
         setTempFrame(profileFrame);
         setTempTheme(profileTheme);
         setTempIcon(profileIcon);
+
+        // ESC 키를 눌렀을 때 실행할 함수
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                props.setMypageFlag(false); // ESC 키가 눌리면 컴포넌트를 안 보이게 설정
+            }
+        };
+        // 컴포넌트가 마운트될 때 keydown 이벤트 리스너 추가
+        document.addEventListener('keydown', handleKeyDown);
+
+        // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
     }, []);
 
     const changeMenu = (prop: number) => {
@@ -572,7 +586,7 @@ export default function MyPageModal(props: MyPageType) {
             ) : (
                 <></>
             )}
-            <div className="w-[32%] h-[85%] flex flex-col py-[3.2vw] items-center bg-white border-[0.2vw] color-border-brown1 rounded-[1vw]">
+            <div className="w-[32%] h-[85%] flex flex-col py-[1vw] items-center bg-white border-[0.2vw] color-border-brown1 rounded-[1vw]">
                 <div
                     className="relative w-[13vw] border-[0.2vw]"
                     style={{ aspectRatio: 1 / 1 }}
@@ -631,7 +645,7 @@ export default function MyPageModal(props: MyPageType) {
                     </div>
                 </div>
                 <div className="w-[80%] flex flex-col color-border-subbold border-[0.2vw] mt-[2vw] px-[0.5vw]">
-                    <div className="pt-[0.2vw] text-[1vw] text-left pl-[1.5vw]">
+                    <div className="pt-[0.2vw] text-[1vw] text-left pl-[1vw]">
                         현재 착용 중인 아이템
                     </div>
                     <div className="w-full flex items-center justify-center">

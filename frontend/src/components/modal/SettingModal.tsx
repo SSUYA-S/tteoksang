@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { bgmState, themeState } from '../../util/counter-slice';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type settingType = {
     setSettingFlag: React.Dispatch<React.SetStateAction<boolean>>;
@@ -25,6 +25,22 @@ export default function SettingModal(props: settingType) {
         }, 1000); // 1초 후에 애니메이션 상태를 비활성화합니다.
     };
     //animation 효과
+
+    useEffect(() => {
+        // ESC 키를 눌렀을 때 실행할 함수
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                props.setSettingFlag(false); // ESC 키가 눌리면 컴포넌트를 안 보이게 설정
+            }
+        };
+        // 컴포넌트가 마운트될 때 keydown 이벤트 리스너 추가
+        document.addEventListener('keydown', handleKeyDown);
+
+        // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
 
     const onBgm = () => {
         dispatch(bgmState(true));

@@ -596,6 +596,7 @@ export default function GameComponent(props: GameType) {
                 >
                     <CircularTimer
                         duration={duration}
+                        ingameTime={ingameTime}
                         setTurnTimer={setTurnTimer}
                         setIngameTurn={setIngameTurn}
                     />
@@ -836,6 +837,8 @@ export default function GameComponent(props: GameType) {
                 newsReceived={newsReceived}
                 setStartFlag={props.setStartFlag}
                 reportReceived={reportReceived}
+                setIngameTurn={setIngameTurn}
+                setIngameTime={setIngameTime}
             />
             {isQtrReportAvail ? (
                 <QuarterReportModal
