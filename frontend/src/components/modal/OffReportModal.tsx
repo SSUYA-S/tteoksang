@@ -1,25 +1,25 @@
 import { useEffect, useRef, useState } from 'react';
 import RentFeeModal from './RentFeeModal';
-import { Title, Event, Product, QuarterReportType } from '../../type/types';
+import { Title, Event, Product, OfflineReportType } from '../../type/types';
 import { useSelector } from 'react-redux';
 import TitleChangeModal from './TitleChangeModal';
 import { Client } from '@stomp/stompjs';
 
 //dummy data(test 후 비활성화 필요)
-import Quarter from '../../dummy-data/report/quarter.json';
+import Off from '../../dummy-data/report/offline.json';
 
 interface Prop {
     titleList: Title[];
     eventList: Event[];
     productList: Product[];
-    setIsQtrReportAvail: React.Dispatch<React.SetStateAction<boolean>>;
+    setIsOffReportAvail: React.Dispatch<React.SetStateAction<boolean>>;
     webSocketId: string;
     webSocketClient: Client;
-    qtrReport: QuarterReportType | null;
+    offReport: OfflineReportType;
     setStartFlag: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function QuarterReportModal(props: Prop) {
+export default function OffReportModal(props: Prop) {
     const [mode, setMode] = useState<number>(0);
     const [year, setYear] = useState<number>(0);
     const [season, setSeason] = useState<string>('봄');
@@ -31,7 +31,7 @@ export default function QuarterReportModal(props: Prop) {
     const cropDescRef = useRef<HTMLDivElement>(null);
 
     //test 종료 후 이거 풀어
-    // const Quarter = props.qtrReport;
+    // const Off = props.qtrReport;
 
     /**이벤트 이미지 호버링하면 출력 */
     const hoverEventImg = (eventId: number) => {
@@ -101,7 +101,7 @@ export default function QuarterReportModal(props: Prop) {
 
     useEffect(() => {
         /**날짜 계산 */
-        const turn = Quarter.turn - 91;
+        const turn = Off.turn - 91;
         setYear(Math.floor((turn + 60) / 360));
         const month: number = ((Math.floor(turn / 30) + 2) % 12) + 1;
         if (month === 3) {
@@ -148,9 +148,9 @@ export default function QuarterReportModal(props: Prop) {
             <div className="absolute w-full h-full top-0 left-0 bg-black opacity-50 z-10 "></div>
             {mode === 0 ? (
                 <RentFeeModal
-                    rentFeeInfo={Quarter.rentFeeInfo}
-                    startTurn={Quarter.turn - 91}
-                    endTurn={Quarter.turn - 1}
+                    rentFeeInfo={Off.rentFeeInfo}
+                    startTurn={Off.turn - 91}
+                    endTurn={Off.turn - 1}
                     showReport={showReport}
                     productList={props.productList}
                     endGame={endGame}
@@ -174,7 +174,7 @@ export default function QuarterReportModal(props: Prop) {
                                             순이익
                                         </span>
                                         <span className="text-right">
-                                            {Quarter.quarterProfit.toLocaleString()}
+                                            {Off.quarterProfit.toLocaleString()}
                                         </span>
                                     </div>
                                     <div className="w-full flex justify-between text-[2vw]">
@@ -183,7 +183,7 @@ export default function QuarterReportModal(props: Prop) {
                                         </span>
                                         <span className="text-right">
                                             {(
-                                                -1 * Quarter.rentFee
+                                                -1 * Off.rentFee
                                             ).toLocaleString()}
                                         </span>
                                     </div>
@@ -195,8 +195,7 @@ export default function QuarterReportModal(props: Prop) {
                                         </span>
                                         <span className="text-right">
                                             {(
-                                                Quarter.quarterProfit -
-                                                Quarter.rentFee
+                                                Off.quarterProfit - Off.rentFee
                                             ).toLocaleString()}
                                         </span>
                                     </div>
@@ -306,7 +305,7 @@ export default function QuarterReportModal(props: Prop) {
                                     style={{ scrollbarWidth: 'thin' }}
                                 >
                                     <div className="flex flex-shrink-0">
-                                        {Quarter.inProductList.map((cropId) => {
+                                        {Off.inProductList.map((cropId) => {
                                             return (
                                                 <img
                                                     className="w-[6vw] h-[6vw] m-[1vw] aspect-square object-cover flex-shrink-0"
