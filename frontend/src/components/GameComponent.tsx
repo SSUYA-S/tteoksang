@@ -869,6 +869,8 @@ export default function GameComponent(props: GameType) {
                     setIsQtrReportAvail={setIsQtrReportAvail}
                     webSocketId={webSocketId}
                     webSocketClient={webSocketClient}
+                    qtrReport={qtrReport}
+                    setStartFlag={props.setStartFlag}
                 />
             ) : (
                 <></>

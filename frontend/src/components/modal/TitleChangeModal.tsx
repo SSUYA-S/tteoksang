@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Title } from '../../type/types';
+import { QuarterReportType, Title } from '../../type/types';
 import { useSelector } from 'react-redux';
 import { checkMyTitle } from '../../api/user';
 import { httpStatusCode } from '../../util/http-status';

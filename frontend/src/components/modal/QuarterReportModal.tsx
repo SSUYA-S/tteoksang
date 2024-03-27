@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import Quarter from '../../dummy-data/report/quarter.json';
 import RentFeeModal from './RentFeeModal';
-import { Title, Event, Product } from '../../type/types';
+import { Title, Event, Product, QuarterReportType } from '../../type/types';
 import { useSelector } from 'react-redux';
 import TitleChangeModal from './TitleChangeModal';
 import { Client } from '@stomp/stompjs';
+
+//dummy data(test 후 비활성화 필요)
+import Quarter from '../../dummy-data/report/quarter.json';
 
 interface Prop {
     titleList: Title[];
@@ -13,6 +15,8 @@ interface Prop {
     setIsQtrReportAvail: React.Dispatch<React.SetStateAction<boolean>>;
     webSocketId: string;
     webSocketClient: Client;
+    qtrReport: QuarterReportType;
+    setStartFlag: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function QuarterReportModal(props: Prop) {
@@ -20,10 +24,14 @@ export default function QuarterReportModal(props: Prop) {
     const [year, setYear] = useState<number>(0);
     const [season, setSeason] = useState<string>('봄');
     const [eventDescription, setEventDescription] = useState<string>('');
-    const [cropDescription, setCropDescription] = useState<string>('');
+    const [cropName, setCropName] = useState<string>('');
+    const [cropSeason, setCropSeason] = useState<string>('');
 
     const eventDescRef = useRef<HTMLDivElement>(null);
     const cropDescRef = useRef<HTMLDivElement>(null);
+
+    //test 종료 후 이거 풀어
+    // const Quarter = props.qtrReport;
 
     /**이벤트 이미지 호버링하면 출력 */
     const hoverEventImg = (eventId: number) => {
@@ -46,7 +54,25 @@ export default function QuarterReportModal(props: Prop) {
 
     /**작물 이미지 호버링 시 출력 */
     const hoverCropImg = (cropId: number) => {
-        setCropDescription(cropId + '작물 발동');
+        const crop: Product = props.productList[cropId - 1];
+        setCropName(crop.productName);
+        switch (crop.productType) {
+            case 'SPRING':
+                setCropSeason('봄');
+                break;
+            case 'SUMMER':
+                setCropSeason('여름');
+                break;
+            case 'FALL':
+                setCropSeason('가을');
+                break;
+            case 'WINTER':
+                setCropSeason('겨울');
+                break;
+            case 'ALL':
+                setCropSeason('연중 내내');
+                break;
+        }
         if (cropDescRef.current) {
             cropDescRef.current.style.opacity = '100';
             cropDescRef.current.style.transition = 'linear 0.5s';
@@ -68,11 +94,13 @@ export default function QuarterReportModal(props: Prop) {
         (state: any) => state.reduxFlag.myProfileSlice.title
     );
 
+    /**rentFeeModal에서 확인 누르면 보고서 보여지도록 만들기 */
     const showReport = () => {
         setMode(1);
     };
 
     useEffect(() => {
+        /**날짜 계산 */
         const turn = Quarter.turn - 91;
         setYear(Math.floor((turn + 60) / 360));
         const month: number = ((Math.floor(turn / 30) + 2) % 12) + 1;
@@ -87,6 +115,34 @@ export default function QuarterReportModal(props: Prop) {
         }
     }, []);
 
+    /**파산 시 게임 종료 */
+    const endGame = () => {
+        const webSocketId = props.webSocketId;
+        const client = props.webSocketClient;
+
+        //게임 포기 요청 보내기(webSocket)
+        client.publish({
+            destination: `/app/private/${webSocketId}`,
+            body: JSON.stringify({
+                type: 'GIVEUP_GAME',
+                body: {},
+            }),
+        });
+
+        //웹소켓 통신 비활성화
+        client.publish({
+            destination: `/app/private/${webSocketId}`,
+            body: JSON.stringify({
+                type: 'QUIT_GAME',
+                body: {},
+            }),
+        });
+        client.deactivate();
+
+        //메인 화면으로 나가기
+        props.setStartFlag(false);
+    };
+
     return (
         <>
             <div className="absolute w-full h-full top-0 left-0 bg-black opacity-50 z-10 "></div>
@@ -97,6 +153,7 @@ export default function QuarterReportModal(props: Prop) {
                     endTurn={Quarter.turn - 1}
                     showReport={showReport}
                     productList={props.productList}
+                    endGame={endGame}
                 />
             ) : mode === 1 ? (
                 <>
@@ -249,41 +306,26 @@ export default function QuarterReportModal(props: Prop) {
                                     style={{ scrollbarWidth: 'thin' }}
                                 >
                                     <div className="flex flex-shrink-0">
-                                        <img
-                                            className="w-[6vw] h-[6vw] m-[1vw] aspect-square object-cover flex-shrink-0"
-                                            src={`/src/assets/images/title/title(${titleId}).png`}
-                                            onMouseOver={() => hoverCropImg(1)}
-                                            onMouseLeave={endHoverCrop}
-                                        ></img>
-                                        <img
-                                            className="w-[6vw] h-[6vw] m-[1vw] aspect-square object-cover flex-shrink-0"
-                                            src={`/src/assets/images/title/title(${titleId}).png`}
-                                            onMouseOver={() => hoverCropImg(1)}
-                                            onMouseLeave={endHoverCrop}
-                                        ></img>
-                                        <img
-                                            className="w-[6vw] h-[6vw] m-[1vw] aspect-square object-cover flex-shrink-0"
-                                            src={`/src/assets/images/title/title(${titleId}).png`}
-                                            onMouseOver={() => hoverCropImg(1)}
-                                            onMouseLeave={endHoverCrop}
-                                        ></img>
-                                        <img
-                                            className="w-[6vw] h-[6vw] m-[1vw] aspect-square object-cover flex-shrink-0"
-                                            src={`/src/assets/images/title/title(${titleId}).png`}
-                                            onMouseOver={() => hoverCropImg(2)}
-                                            onMouseLeave={endHoverCrop}
-                                        ></img>
-                                        <img
-                                            className="w-[6vw] h-[6vw] m-[1vw] aspect-square object-cover flex-shrink-0"
-                                            src={`/src/assets/images/title/title(${titleId}).png`}
-                                            onMouseOver={() => hoverCropImg(2)}
-                                            onMouseLeave={endHoverCrop}
-                                        ></img>
+                                        {Quarter.inProductList.map((cropId) => {
+                                            return (
+                                                <img
+                                                    className="w-[6vw] h-[6vw] m-[1vw] aspect-square object-cover flex-shrink-0"
+                                                    src={`/src/assets/images/product/crop (${cropId}).png`}
+                                                    onMouseOver={() =>
+                                                        hoverCropImg(cropId)
+                                                    }
+                                                    onMouseLeave={endHoverCrop}
+                                                ></img>
+                                            );
+                                        })}
                                         <div
-                                            className="absolute w-full h-[10vw] top-[10vw] bg-black opacity-0 text-white -z-20"
+                                            className="absolute w-full h-[5.5vw] top-[10vw] px-[1vw] bg-black opacity-0 text-white -z-20"
                                             ref={cropDescRef}
                                         >
-                                            {cropDescription}
+                                            <p className="w-full text-left text-[2vw]">
+                                                {cropName}
+                                            </p>
+                                            <p className="w-full text-left text-[1.5vw]">{`제철 : ${cropSeason}`}</p>
                                         </div>
                                     </div>
                                 </div>

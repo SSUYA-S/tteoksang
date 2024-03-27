@@ -1,7 +1,7 @@
 {
     "turn": 361,
     "rentFeeInfo": {
-        "billType": "bankrupt",
+        "billType": "overdue",
         "rentFee": 10000,
         "productList": [
             {

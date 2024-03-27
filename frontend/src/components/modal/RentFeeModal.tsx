@@ -6,6 +6,7 @@ interface Prop {
     endTurn: number;
     showReport: () => void;
     productList: Product[];
+    endGame: () => void;
 }
 
 export default function RentFeeModal(props: Prop) {
@@ -104,7 +105,7 @@ export default function RentFeeModal(props: Prop) {
                     <p>GAME OVER...</p>
                 </div>
                 <div
-                    onClick={props.showReport}
+                    onClick={props.endGame}
                     className="w-[90%] p-[1vw] h-[10%] m-[1vw] border-[0.2vw] border-white text-2xl text-white flex justify-center items-center cursor-pointer"
                 >
                     ㅠㅠ 다시 시작해보자...
