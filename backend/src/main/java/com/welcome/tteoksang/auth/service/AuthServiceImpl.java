@@ -21,7 +21,7 @@ public class AuthServiceImpl implements AuthService {
         //관련 토큰 모두 레디스에서 제거
         String tokenKey = RedisPrefix.REFRESH_TOKEN.prefix() + userId;
         redisService.deleteValues(tokenKey);
-        log.debug("토큰 제거");
+        log.debug("Refresh 토큰 제거");
 
         String userInfoKey = RedisPrefix.USERINFO.prefix() + userId;
         redisService.deleteValues(userInfoKey);

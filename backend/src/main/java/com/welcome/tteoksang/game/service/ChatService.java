@@ -6,5 +6,5 @@ import com.welcome.tteoksang.user.dto.User;
 import java.util.Map;
 
 public interface ChatService {
-    Chat sendChat(User user, Map<String,Object> body);
+    Chat sendChat(String userId, Map<String,Object> body);
 }
