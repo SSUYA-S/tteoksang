@@ -862,6 +862,7 @@ export default function GameComponent(props: GameType) {
                     webSocketClient={webSocketClient}
                     hlfReport={hlfReport}
                     setStartFlag={props.setStartFlag}
+                    achievementInfo={initialData.achievementList}
                 />
             ) : (
                 <></>

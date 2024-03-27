@@ -99,17 +99,17 @@ export default function HalfPage2(props: Prop) {
         <>
             <div className="w-full h-full flex items-center">
                 <div className="w-[50%] h-full flex flex-col items-center px-[2vw] py-[1vh]">
-                    <p className="w-full text-left text-[2.5vw] my-[1vh]">
+                    <p className="w-full text-left text-[2.5vw] my-[0.5vh]">
                         수익
                     </p>
-                    <div className="w-full flex justify-between my-[1vh] text-[1.5vw]">
+                    <div className="w-full flex justify-between my-[0.5vh] text-[1.5vw]">
                         <p>작물 판매 비용</p>
                         <p>
                             {`+${receipt.totalProductIncome.toLocaleString()}G`}
                         </p>
                     </div>
                     {receipt.eventBonus >= 0 ? (
-                        <div className="w-full flex justify-between my-[1vh] text-[1.5vw]">
+                        <div className="w-full flex justify-between my-[0.5vh] text-[1.5vw]">
                             <p>이벤트 보너스</p>
                             <p>{`+${receipt.eventBonus.toLocaleString()}G`}</p>
                         </div>
@@ -119,26 +119,26 @@ export default function HalfPage2(props: Prop) {
                     <p className="w-full text-left text-[2.5vw] mt-[1.5vh]">
                         지출
                     </p>
-                    <div className="w-full flex justify-between my-[1vh] text-[1.5vw]">
+                    <div className="w-full flex justify-between my-[0.5vh] text-[1.5vw]">
                         <p>작물 구매 비용</p>
                         <p>
                             {`-${receipt.totalProductOutcome.toLocaleString()}G`}
                         </p>
                     </div>
-                    <div className="w-full flex justify-between my-[1vh] text-[1.5vw]">
+                    <div className="w-full flex justify-between my-[0.5vh] text-[1.5vw]">
                         <p>시설 업그레이드 비용</p>
                         <p>{`-${receipt.totalUpgradeFee.toLocaleString()}G`}</p>
                     </div>
-                    <div className="w-full flex justify-between my-[1vh] text-[1.5vw]">
+                    <div className="w-full flex justify-between my-[0.5vh] text-[1.5vw]">
                         <p>임대료</p>
                         <p>{`-${receipt.totalRentFee.toLocaleString()}G`}</p>
                     </div>
-                    <div className="w-full flex justify-between my-[1vh] text-[1.5vw]">
+                    <div className="w-full flex justify-between my-[0.5vh] text-[1.5vw]">
                         <p>판매 수수료</p>
                         <p>{`-${receipt.totalBrokerFee.toLocaleString()}G`}</p>
                     </div>
                     {receipt.eventBonus < 0 ? (
-                        <div className="w-full flex justify-between my-[1vh] text-[1.5vw]">
+                        <div className="w-full flex justify-between my-[0.5vh] text-[1.5vw]">
                             <p>이벤트 보너스</p>
                             <p>{`${receipt.eventBonus.toLocaleString()}G`}</p>
                         </div>
@@ -148,18 +148,18 @@ export default function HalfPage2(props: Prop) {
                 </div>
                 <div className="w-[0.2vw] h-[90%] color-bg-subbold"></div>
                 <div className="w-[50%] h-full flex flex-col px-[2vw] py-[1vh]">
-                    <div className="w-full flex justify-between text-[2vw] mt-[1vh]">
+                    <div className="w-full flex justify-between text-[1.5vw] mt-[1vh]">
                         <p>총 수입</p>
                         <p>{`+${receipt.totalIncome}G`}</p>
                     </div>
-                    <div className="w-full flex justify-between text-[2vw]">
+                    <div className="w-full flex justify-between text-[1.5vw]">
                         <p>총 지출</p>
                         <p>{`-${receipt.totalOutcome}G`}</p>
                     </div>
                     <div className="w-full h-[0.2vh]">
                         <div className="w-full h-full color-bg-subbold"></div>
                     </div>
-                    <div className="w-full flex justify-between text-[2vw] mb-[3vh]">
+                    <div className="w-full flex justify-between text-[1.5vw] mb-[3vh]">
                         <p>총 결산</p>
                         <p>{`${
                             receipt.totalIncome - receipt.totalOutcome
