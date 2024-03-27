@@ -141,7 +141,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         Optional<Title> title = titleRepository.findById(titleId);
         Optional<User> user = userRepository.findByUserId(userId);
         if (title.isEmpty()) {
-            throw new TitleNotExistException();
+            throw new TitleNotExistException("해당하는 칭호가 없습니다.");
         }
         //프로필 프레임 변경
         user.get().setTitle(title.get());

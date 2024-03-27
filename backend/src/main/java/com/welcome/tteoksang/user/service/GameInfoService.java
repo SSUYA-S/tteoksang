@@ -13,5 +13,5 @@ public interface GameInfoService {
 
     public void deleteGameInfo(String userId);
 
-    public void saveGameInfo(String userId);
+    public void loadGameInfo(String userId);
 }
