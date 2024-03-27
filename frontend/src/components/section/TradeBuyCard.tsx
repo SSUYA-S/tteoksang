@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { BuyInfo } from '../../type/types';
 
 interface BuyCardProps {
@@ -12,12 +12,14 @@ export default function TradeBuyCard({
 }: BuyCardProps) {
     const productNumber = buyableInfo.buyingInfo.productQuantity;
     const productTotalCost = buyableInfo.buyingInfo.productTotalCost;
+    const productId = buyableInfo.buyingInfo.productId;
     const productCost = buyableInfo.productInfo.productCost;
 
     /** changeProductNumber(changeValue)
      *  changeValue만큼 product의 수를 변동시킨다.
      * @param changeValue
      */
+
     const changeProductNumber = (changingValue: number) => {
         let changedValue = productNumber + changingValue;
         if (changedValue < 0) changedValue = 0;
@@ -42,14 +44,12 @@ export default function TradeBuyCard({
                         {'x' + buyableInfo.productInfo.productLimit}
                     </p>
                     <div
-                        className="h-[60%] bg-no-repeat"
+                        className={
+                            'w-fit h-[60%] bg-no-repeat mx-auto sprite-img-crop ' +
+                            `crop-img-${productId - 1}`
+                        }
                         style={{
-                            backgroundImage:
-                                'url(/src/assets/images/etc/crop-apple3.png)',
-                            backgroundPositionX: '50%',
-                            backgroundPositionY: '-10%',
-                            backgroundSize: 'contain ',
-                            backgroundRepeat: 'no-repeat',
+                            aspectRatio: 1 / 1,
                         }}
                     ></div>
                     <p className="h-[20%] text-[1.1vw] color-text-darkgray">
