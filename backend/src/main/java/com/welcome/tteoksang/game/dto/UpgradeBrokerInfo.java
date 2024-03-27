@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UpgradeVehicle {
+public class UpgradeBrokerInfo {
     private Long gold;
-    private Integer vehicleLevel;
+    private Integer brokerLevel;
 }

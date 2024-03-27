@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UpgradeWarehouse {
+public class UpgradeWarehouseInfo {
     private Long gold;
     private Integer warehouseLevel;
 }
