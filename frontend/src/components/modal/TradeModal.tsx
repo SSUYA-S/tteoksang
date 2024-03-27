@@ -90,8 +90,8 @@ export default function TradeModal(props: tradeType) {
 
             //집어넣기
             const product: BuyInfo = {
-                productName: props.productResource[id - 1].productName,
-                productInfo: productInfoAndEvent.productInfoList[id - 1],
+                productName: props.productResource[id].productName,
+                productInfo: productInfoAndEvent.productInfoList[id],
                 myProduct: myProduct,
                 buyingInfo: buyingInfo,
             };
@@ -105,8 +105,8 @@ export default function TradeModal(props: tradeType) {
         const myList: SellInfo[] = [];
         myProductList.map((product: ProductBucket) => {
             const id = product.productId;
-            const productName = props.productResource[id - 1].productName;
-            const productInfo = productInfoAndEvent.productInfoList[id - 1];
+            const productName = props.productResource[id].productName;
+            const productInfo = productInfoAndEvent.productInfoList[id];
             const sellingInfo: ProductBucket = {
                 productId: id,
                 productQuantity: 0,
@@ -163,8 +163,8 @@ export default function TradeModal(props: tradeType) {
             const prodId = product.productInfo.productId;
             //깊은 복사
             const newProductInfo: BuyInfo = {
-                productName: props.productResource[prodId - 1].productName,
-                productInfo: productInfoAndEvent.productInfoList[prodId - 1],
+                productName: props.productResource[prodId].productName,
+                productInfo: productInfoAndEvent.productInfoList[prodId],
                 myProduct: myProduct,
                 buyingInfo: buyingInfo,
             };
@@ -227,8 +227,8 @@ export default function TradeModal(props: tradeType) {
             const prodId = product.productInfo.productId;
             //깊은 복사
             const newProductInfo: SellInfo = {
-                productName: props.productResource[prodId - 1].productName,
-                productInfo: productInfoAndEvent.productInfoList[prodId - 1],
+                productName: props.productResource[prodId].productName,
+                productInfo: productInfoAndEvent.productInfoList[prodId],
                 myProduct: myProduct,
                 sellingInfo: sellingInfo,
             };
@@ -416,6 +416,7 @@ export default function TradeModal(props: tradeType) {
                         </div>
                         <div className="flex h-[80%] m-[0.4vw] flex-wrap overflow-y-auto">
                             {buyableProduct.map((product) => {
+                                console.log(product);
                                 return (
                                     <TradeBuyCard
                                         key={product.productInfo.productId}
@@ -509,8 +510,8 @@ export default function TradeModal(props: tradeType) {
                                                         {
                                                             props
                                                                 .productResource[
-                                                                product.productId -
-                                                                    1
+                                                                product
+                                                                    .productId
                                                             ].productName
                                                         }
                                                     </td>

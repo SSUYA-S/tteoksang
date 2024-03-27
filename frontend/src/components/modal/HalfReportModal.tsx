@@ -1,6 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import RentFeeModal from './RentFeeModal';
-import { Title, Event, Product, HalfReportType } from '../../type/types';
+import {
+    Title,
+    Event,
+    Product,
+    HalfReportType,
+    HalfReceipt,
+} from '../../type/types';
 import { useSelector } from 'react-redux';
 import TitleChangeModal from './TitleChangeModal';
 import { Client } from '@stomp/stompjs';
@@ -8,6 +14,8 @@ import { Client } from '@stomp/stompjs';
 //dummy data(test 후 비활성화 필요)
 import Half from '../../dummy-data/report/half.json';
 import HalfPage1 from '../section/HalfPage/HalfPage1';
+import HalfPage2 from '../section/HalfPage/HalfPage2';
+import HalfPage3 from '../section/HalfPage/HalfPage3';
 
 interface Prop {
     titleList: Title[];
@@ -27,6 +35,20 @@ export default function HalfReportModal(props: Prop) {
     // n년차 n반기 용
     const [year, setYear] = useState<number>(0);
     const [whatHalf, setWhatHalf] = useState<string>('상');
+
+    //반기 총 수익, 지출
+    const [halfIncome, setHalfIncome] = useState<number>(0);
+    const [halfOutcome, setHalfOutcome] = useState<number>(0);
+    const [receipt, setReceipt] = useState<HalfReceipt>({
+        totalProductIncome: 0,
+        totalProductOutcome: 0,
+        totalUpgradeFee: 0,
+        totalBrokerFee: 0,
+        totalRentFee: 0,
+        eventBonus: 0,
+        totalIncome: 0,
+        totalOutcome: 0,
+    });
 
     //test 종료 후 이거 풀어
     // const Half = props.hlfReport;
@@ -48,6 +70,34 @@ export default function HalfReportModal(props: Prop) {
         } else if (month === 9) {
             setWhatHalf('후');
         }
+
+        //반기 수익 계산
+        let income = Half.totalProductIncome;
+        let outcome =
+            Half.totalProductOutcome +
+            Half.totalBrokerFee +
+            Half.totalUpgradeFee +
+            Half.totalRentFee;
+        if (Half.eventBonus >= 0) {
+            income += Half.eventBonus;
+        } else {
+            //event bonus가 음수로 들어왔으니 -를 해줘야 지출로 더해짐
+            outcome += -Half.eventBonus;
+        }
+        setHalfIncome(income);
+        setHalfOutcome(outcome);
+
+        const newReceipt: HalfReceipt = {
+            totalProductIncome: Half.totalProductIncome,
+            totalProductOutcome: Half.totalProductOutcome,
+            totalUpgradeFee: Half.totalUpgradeFee,
+            totalBrokerFee: Half.totalBrokerFee,
+            totalRentFee: Half.totalRentFee,
+            eventBonus: Half.eventBonus,
+            totalIncome: income,
+            totalOutcome: outcome,
+        };
+        setReceipt(newReceipt);
     }, []);
 
     /**파산 시 게임 종료 */
@@ -83,7 +133,7 @@ export default function HalfReportModal(props: Prop) {
             <div className="absolute w-full h-full top-0 left-0 bg-black opacity-50 z-10 "></div>
             {mode === 0 ? (
                 <RentFeeModal
-                    rentFeeInfo={Half.rentFeeInfo}
+                    rentFeeInfo={Half.quarterReport.rentFeeInfo}
                     startTurn={Half.turn - 91}
                     endTurn={Half.turn - 1}
                     showReport={showReport}
@@ -94,10 +144,10 @@ export default function HalfReportModal(props: Prop) {
                 <>
                     {/* x버튼 */}
                     <div
-                        className="w-[60%] h-[60%] absolute left-[20%] top-[20%] color-border-subbold border-[0.5vw] bg-white z-10 flex items-center color-text-subbold"
+                        className="w-[60%] h-[70%] absolute left-[20%] top-[15%] color-border-subbold border-[0.5vw] bg-white z-10 flex items-center color-text-subbold"
                         style={{ transform: 'rotate(-5deg)' }}
                     ></div>
-                    <div className="w-[60%] h-[60%] absolute left-[20%] top-[20%] color-border-subbold border-[0.5vw] bg-white z-20 flex flex-col items-center color-text-subbold">
+                    <div className="w-[60%] h-[70%] absolute left-[20%] top-[15%] color-border-subbold border-[0.5vw] bg-white z-20 flex flex-col items-center color-text-subbold">
                         <div className="w-full h-[15%] px-[1vw] py-[1vh] flex justify-between items-center">
                             {page === 1 ? (
                                 <div className="w-[10%] h-full mx-[1.2vw] my-[1vh]"></div>
@@ -129,7 +179,7 @@ export default function HalfReportModal(props: Prop) {
                                 </div>
                             )}
                         </div>
-                        <div className="w-full px-[1vw] h-[0.1vh]">
+                        <div className="w-full px-[1vw] h-[0.3vh]">
                             <div className="w-full h-full color-bg-subbold"></div>
                         </div>
                         <div className="w-full h-[85%]">
@@ -141,6 +191,19 @@ export default function HalfReportModal(props: Prop) {
                                     productList={props.productList}
                                     webSocketClient={props.webSocketClient}
                                     webSocketId={props.webSocketId}
+                                    halfIncome={halfIncome}
+                                    halfOutcome={halfOutcome}
+                                    setMode={setMode}
+                                    inProductList={
+                                        Half.quarterReport.inProductList
+                                    }
+                                />
+                            ) : page === 2 ? (
+                                <HalfPage2 receipt={receipt} />
+                            ) : page === 3 ? (
+                                <HalfPage3
+                                    rankInfoList={Half.rankInfoList}
+                                    participantCount={Half.participantCount}
                                 />
                             ) : (
                                 <></>

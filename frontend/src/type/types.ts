@@ -362,3 +362,14 @@ export interface OfflineReportType {
     tteokrockStatistics: Stat;
     bestSellerStatistics: Stat;
 }
+
+export interface HalfReceipt {
+    totalProductIncome: number;
+    totalProductOutcome: number;
+    totalUpgradeFee: number;
+    totalBrokerFee: number;
+    totalRentFee: number;
+    eventBonus: number;
+    totalIncome: number;
+    totalOutcome: number;
+}
