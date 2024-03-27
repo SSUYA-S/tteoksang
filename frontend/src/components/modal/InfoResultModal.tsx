@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { LineChart } from '../element/LineChart';
 import finalreport from '../../dummy-data/report/final.json';
 import { BarChart } from '../element/BarChart';
-import { privateProdRep } from '../../type/types';
+import { AchievementReport, privateProdRep } from '../../type/types';
+import { HorizenBarChart } from '../element/HorizenBarChart';
 
 type infoResultType = {
     setInfoResultFlag: React.Dispatch<React.SetStateAction<boolean>>;
@@ -39,6 +40,18 @@ export default function InfoResultModal(props: infoResultType) {
         priTotalProductPurchaseQuantity,
         setPriTotalProductPurchaseQuantity,
     ] = useState<number[]>([]);
+    ////
+
+    //// 시설 관련
+    const [priWarehouseLevel, setPriWarehouseLevel] = useState<number>(1);
+    const [priBrokerLevel, setPriBrokerLevel] = useState<number>(1);
+    const [priVehicleLevel, setPriVehicleLevel] = useState<number>(1);
+    //// 시설 관련
+
+    //// 개인 정보
+    const [priPlayTime, setPriPlayTime] = useState<number>();
+    const [priAcievement, setPriAcievement] = useState<number[]>([]);
+    //// 개인 정보
     const [priProductLabels, setPriProductLabels] = useState<string[]>([]);
     const [page, setPage] = useState<number>(0);
     let labels = [
@@ -57,7 +70,14 @@ export default function InfoResultModal(props: infoResultType) {
             let totalIncome = 0;
             let totalOutcome = 0;
             let totalProfit = 0;
-            // 연도 map
+
+            ////// 시설관련
+            setPriVehicleLevel(finalreport.vehicleLevel);
+            setPriWarehouseLevel(finalreport.warehouseLevel);
+            setPriBrokerLevel(finalreport.brokerLevel);
+            setPriPlayTime(finalreport.privateAccPrivatePlayTime);
+            setPriAcievement(finalreport.achievementList);
+            // 연도별 작물 정보
             await finalreport.privateProductReportList.map((item) => {
                 let incomeValue = 0;
                 let outcomeValue = 0;
@@ -219,6 +239,21 @@ export default function InfoResultModal(props: infoResultType) {
         ],
     };
 
+    //// 시설 관련 ////
+    const priInfraData = {
+        labels: ['운송수단', '창고', '중개소'],
+        // priProductLabels,
+        datasets: [
+            {
+                label: '업그레이드',
+                data: [priVehicleLevel, priWarehouseLevel, priBrokerLevel],
+                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+            },
+        ],
+    };
+    //// 시설 관련 ////
+
     const changePage = (prop: number) => {
         setPage(prop);
     };
@@ -357,7 +392,7 @@ export default function InfoResultModal(props: infoResultType) {
                                     <p
                                         className="border-[0.2vw] color-border-subbold mx-[1vw] px-[1vw] py-[0.2vw] cursor-pointer"
                                         onClick={() => {
-                                            changePage(1);
+                                            changePage(2);
                                         }}
                                     >
                                         다음
@@ -472,7 +507,125 @@ export default function InfoResultModal(props: infoResultType) {
                         </div>
                         <div className="w-[30%] hull flex flex-col items-center justify-center">
                             <LineChart data={priTotalData} />
+                            <HorizenBarChart data={priInfraData} />
+                        </div>
+                    </div>
+                </>
+            );
+        } else if (page === 2) {
+            return (
+                <>
+                    <div className="w-full h-[25%] flex items-center justify-center">
+                        <div className="w-[35%] h-full px-[2vw] flex flex-col justify-center items-center">
+                            <p className="w-full text-start text-[2.4vw]">
+                                전체 결산
+                            </p>
+                            <div className="w-full text-start text-[1.8vw] flex justify-start items-center">
+                                <p>게임 통계 (1 / 2)</p>
+                                <p
+                                    className="border-[0.2vw] color-border-subbold mx-[1vw] px-[1vw] py-[0.2vw] cursor-pointer"
+                                    onClick={() => {
+                                        changePage(1);
+                                    }}
+                                >
+                                    이전
+                                </p>
+                                <p
+                                    className="border-[0.2vw] color-border-subbold mx-[1vw] px-[1vw] py-[0.2vw] cursor-pointer"
+                                    onClick={() => {
+                                        changePage(3);
+                                    }}
+                                >
+                                    다음
+                                </p>
+                            </div>
+                        </div>
+                        <div className="w-[65%] h-full flex items-center px-[2vw]">
+                            <div className="w-[30%] h-[60%] rounded-[0.8vw] border-[0.4vw] border-orange-300 flex flex-col items-center justify-center">
+                                <p className="w-full h-[30%] text-[1.6vw] bg-orange-300 flex justify-center items-center text-white">
+                                    플레이 시간
+                                </p>
+                                <p className="w-full bg-white h-[70%]  rounded-[0.8vw] text-[1.8vw] text-center flex items-center justify-center">
+                                    {priPlayTime}
+                                </p>
+                            </div>
+                            <div className="w-[5%]"></div>
+                            <div className="w-[30%] h-[60%] rounded-[0.8vw] border-[0.4vw] border-orange-300 flex flex-col items-center justify-center">
+                                <p className="w-full h-[30%] text-[1.6vw] bg-orange-300 flex justify-center items-center text-white">
+                                    획득 도전과제
+                                </p>
+                                <p className="w-full bg-white h-[70%]  rounded-[0.8vw] text-[1.8vw] text-center flex items-center justify-center">
+                                    {priAcievement.length}
+                                </p>
+                            </div>
+                            <div className="w-[5%]"></div>
+                            <div className="w-[30%] h-[60%] rounded-[0.8vw] border-[0.4vw] border-orange-300 flex flex-col items-center justify-center">
+                                <p className="w-full h-[30%] text-[1.6vw] bg-orange-300 flex justify-center items-center text-white">
+                                    거래 작물 수
+                                </p>
+                                <p className="w-full bg-white h-[70%]  rounded-[0.8vw] text-[1.8vw] text-center flex items-center justify-center">
+                                    {priTotalProfit?.toLocaleString()}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="w-full h-[75%] flex items-center justify-center">
+                        <div className="w-[60%] h-full flex items-center justify-center bg-slate-400">
+                            <div className="relative w-[90%] h-[90%] text-[2vw] p-[1vw] bg-white flex flex-col justify-between items-center border-[0.2vw] color-border-subbold rounded-[1vw]">
+                                <p className="w-full text-start">
+                                    구매 작물 TOP4
+                                </p>
+                                {priPurchaseFlag ? (
+                                    <BarChart
+                                        data={priTotalProductPurchaseData}
+                                    />
+                                ) : (
+                                    <BarChart
+                                        data={priTotalProductOutcomeData}
+                                    />
+                                )}
+                                <div className="absolute top-[1vw] right-[1vw]">
+                                    <p
+                                        className="text-[1.2vw] p-[0.6vw] border-[0.2vw] color-border-subbold rounded-[1vw] cursor-pointer "
+                                        onClick={() => {
+                                            changePriPurchaseBtn(true);
+                                        }}
+                                        style={
+                                            priPurchaseFlag
+                                                ? {
+                                                      backgroundColor:
+                                                          '#7e5a39',
+                                                      color: 'white',
+                                                  }
+                                                : {}
+                                        }
+                                    >
+                                        구매금액
+                                    </p>
+                                    <p
+                                        className="text-[1.2vw] p-[0.6vw] my-[0.4vw] border-[0.2vw] color-border-subbold rounded-[1vw] cursor-pointer "
+                                        onClick={() => {
+                                            changePriPurchaseBtn(false);
+                                        }}
+                                        style={
+                                            !priPurchaseFlag
+                                                ? {
+                                                      backgroundColor:
+                                                          '#7e5a39',
+                                                      color: 'white',
+                                                  }
+                                                : {}
+                                        }
+                                    >
+                                        구매량
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="w-[30%] hull flex flex-col items-center justify-center">
                             <LineChart data={priTotalData} />
+                            <HorizenBarChart data={priInfraData} />
                         </div>
                     </div>
                 </>
