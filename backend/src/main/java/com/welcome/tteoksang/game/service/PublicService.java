@@ -12,6 +12,7 @@ public interface PublicService {
 //  신문 발행
     void createNewspaper();
     void createEvent();
+    void updateTurn();
     public void fluctuateProduct();
     void updateFluctuationInfo();
     void sendPublicMessage(MessageType type, Object body);
