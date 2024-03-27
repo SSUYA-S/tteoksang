@@ -95,7 +95,7 @@ public class PublicServiceImpl implements PublicService {
             updateTurn();
             sendPublicMessage(MessageType.GET_PUBLIC_EVENT,
                     PublicEventInfo.builder()
-                            .ingameTime(LocalDateTime.now())
+                            .inGameTime(LocalDateTime.now())
                             .turn(ServerInfo.currentTurn)
                             .turnStartTime(ServerInfo.turnStartTime)
                             .specialEventId(ServerInfo.specialEventId)
