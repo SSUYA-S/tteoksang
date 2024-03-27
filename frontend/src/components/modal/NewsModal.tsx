@@ -22,7 +22,7 @@ export default function NewsModal(props: NewsType) {
     const articleList = props.articleList;
 
     return (
-        <div className="absolute w-[70%] h-[95%] animation-modal ">
+        <div className="absolute w-[70%] h-[95%] animation-modal z-20">
             <div className="h-[15%]"></div>
             <div
                 className="relative w-full h-[85%] flex flex-col items-center justify-start text-black rounded-[0.8vw]"
