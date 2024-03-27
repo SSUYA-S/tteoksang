@@ -403,32 +403,32 @@ export default function GameComponent(props: GameType) {
                 <></>
             )}
             <img
-                src={`/src/assets/images/background/bg-${profileTheme}-morning.png`}
+                src={`/src/assets/images/background/bg-${profileTheme}-morning.webp`}
                 className="bg-image -z-20"
                 style={{
                     opacity: theme === 'morning' ? '1' : '0',
                 }}
             />
             <img
-                src={`/src/assets/images/background/bg-${profileTheme}-evening.png`}
+                src={`/src/assets/images/background/bg-${profileTheme}-evening.webp`}
                 className="bg-image -z-20"
                 style={{
                     opacity: theme === 'evening' ? '1' : '0',
                 }}
             />
             <img
-                src={`/src/assets/images/background/bg-${profileTheme}-night.png`}
+                src={`/src/assets/images/background/bg-${profileTheme}-night.webp`}
                 className="bg-image -z-20"
                 style={{
                     opacity: theme === 'night' ? '1' : '0',
                 }}
             />
             <img
-                src={`/src/assets/images/background/bg-${profileTheme}-morning.png`}
+                src={`/src/assets/images/background/bg-${profileTheme}-morning.webp`}
                 className="bg-image -z-30"
             />
             <img
-                src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-morning.png`}
+                src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-morning.webp`}
                 className="bg-image -z-10"
                 style={{
                     opacity:
@@ -438,7 +438,7 @@ export default function GameComponent(props: GameType) {
                 }}
             />
             <img
-                src={`/src/assets/images/backgroundts/bg-${profileTheme}-morning-transparent.png`}
+                src={`/src/assets/images/backgroundts/bg-${profileTheme}-morning-transparent.webp`}
                 className="bg-image"
                 style={{
                     opacity:
@@ -448,7 +448,7 @@ export default function GameComponent(props: GameType) {
                 }}
             />
             <img
-                src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-evening.png`}
+                src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-evening.webp`}
                 className="bg-image -z-10"
                 style={{
                     opacity:
@@ -458,7 +458,7 @@ export default function GameComponent(props: GameType) {
                 }}
             />
             <img
-                src={`/src/assets/images/backgroundts/bg-${profileTheme}-evening-transparent.png`}
+                src={`/src/assets/images/backgroundts/bg-${profileTheme}-evening-transparent.webp`}
                 className="bg-image"
                 style={{
                     opacity:
@@ -468,7 +468,7 @@ export default function GameComponent(props: GameType) {
                 }}
             />
             <img
-                src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-night.png`}
+                src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-night.webp`}
                 className="bg-image -z-10"
                 style={{
                     opacity:
@@ -476,7 +476,7 @@ export default function GameComponent(props: GameType) {
                 }}
             />
             <img
-                src={`/src/assets/images/backgroundts/bg-${profileTheme}-night-transparent.png`}
+                src={`/src/assets/images/backgroundts/bg-${profileTheme}-night-transparent.webp`}
                 className="bg-image"
                 style={{
                     opacity:
@@ -484,14 +484,14 @@ export default function GameComponent(props: GameType) {
                 }}
             />
             <img
-                src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-morning.png`}
+                src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-morning.webp`}
                 className="bg-image -z-20"
                 style={{
                     opacity: themeModeSetting !== 0 ? '1' : '0',
                 }}
             />
             <img
-                src={`/src/assets/images/backgroundts/bg-${profileTheme}-morning-transparent.png`}
+                src={`/src/assets/images/backgroundts/bg-${profileTheme}-morning-transparent.webp`}
                 className="bg-image -z-10"
                 style={{
                     opacity: themeModeSetting !== 0 ? '1' : '0',

@@ -541,7 +541,7 @@ export default function MyPageModal(props: MyPageType) {
                                                         ? 'border-[0.2vw] border-green-400'
                                                         : '')
                                                 }
-                                                src={`/src/assets/images/background/bg-${theme.themeId}-morning.png`}
+                                                src={`/src/assets/images/background/bg-${theme.themeId}-morning.webp`}
                                                 alt=""
                                                 style={{ aspectRatio: 1 / 1 }}
                                                 onClick={() => {
@@ -675,7 +675,7 @@ export default function MyPageModal(props: MyPageType) {
                         >
                             <img
                                 className="w-full h-full object-cover "
-                                src={`/src/assets/images/background/bg-${tempTheme}-morning.png`}
+                                src={`/src/assets/images/background/bg-${tempTheme}-morning.webp`}
                                 alt=""
                                 style={{ aspectRatio: 1 / 1 }}
                             />
