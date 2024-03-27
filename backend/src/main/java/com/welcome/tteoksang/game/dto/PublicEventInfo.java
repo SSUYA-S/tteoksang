@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class PublicEventInfo {
-    LocalDateTime ingameTime;
+    LocalDateTime inGameTime;
     LocalDateTime turnStartTime;
     Integer turn;
     List<ProductInfo> productInfoList;

@@ -53,7 +53,7 @@ public class GameInfoServiceImpl implements GameInfoService {
     }
 
     // 게임 정보 레디스에 저장
-    public void saveGameInfo(String userId) {
+    public void loadGameInfo(String userId) {
         // DB에서 gameInfo 불러오기
         GameInfo gameInfo = searchGameInfo(userId);
         Map<Integer, Object> products;

@@ -27,18 +27,18 @@ public class CookieUtil {
                 .build();
     }
 
-//    public static Cookie searchCookie(String cookieName, HttpServletRequest request) {
-//        Cookie selectedCookie = null;
-//        Cookie[] cookies = request.getCookies();
-//        if (cookies != null) {
-//            for (Cookie cookie : cookies) {
-//                if (cookieName.equals(cookie.getName())) {
-//                    selectedCookie = cookie;
-//                }
-//            }
-//        }
-//        return selectedCookie;
-//    }
+    public static Cookie searchCookie(String cookieName, HttpServletRequest request) {
+        Cookie selectedCookie = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookieName.equals(cookie.getName())) {
+                    selectedCookie = cookie;
+                }
+            }
+        }
+        return selectedCookie;
+    }
 
     public static void deleteTokenCookie(HttpServletRequest request,
                                          HttpServletResponse response) {
@@ -47,13 +47,16 @@ public class CookieUtil {
         Cookie accessTokenCookie = tokenCookie.getAccessTokenCookie();
         Cookie refreshTokenCookie = tokenCookie.getRefreshTokenCookie();
 
-        // 해당 쿠키 제거
-        accessTokenCookie.setPath("/");
-        accessTokenCookie.setMaxAge(0);
-        response.addCookie(accessTokenCookie);
+        if(accessTokenCookie != null)
+            deleteCookie(accessTokenCookie, response);
+        if(refreshTokenCookie != null)
+            deleteCookie(refreshTokenCookie, response);
+    }
 
-        refreshTokenCookie.setPath("/");
-        refreshTokenCookie.setMaxAge(0);
-        response.addCookie(refreshTokenCookie);
+    public static void deleteCookie(Cookie currentCookie, HttpServletResponse response) {
+        // 해당 쿠키 제거
+        currentCookie.setPath("/");
+        currentCookie.setMaxAge(0);
+        response.addCookie(currentCookie);
     }
 }
