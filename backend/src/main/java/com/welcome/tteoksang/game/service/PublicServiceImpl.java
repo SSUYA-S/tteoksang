@@ -48,7 +48,7 @@ public class PublicServiceImpl implements PublicService {
     private final String PUBLIC_EVENT = "event";
     private final String NEWSPAPER = "news";
     Map<Integer, FluctationInfo> fluctationInfoMap;
-    List<ProductInfo> productInfoList;
+    Map<Integer,ServerProductInfo> productInfoMap;
 
 
     public void initSeason() {
@@ -63,27 +63,25 @@ public class PublicServiceImpl implements PublicService {
 
     private void initProductInfo() {
         fluctationInfoMap = new HashMap<>();
-        productInfoList = productRepository.findAll().stream().map(
-                (product) -> {
-                    ProductFluctuation fluctuation = productFluctuationRepository.findById(ProductFluctuationId.builder()
-                                    .countPerTenDays(0).productId(product.getProductId())
-                                    .build())
-                            .orElseThrow(ProductFluctuationNotFoundException::new);
-                    fluctationInfoMap.put(product.getProductId(), FluctationInfo.builder()
-                            .productAvgCost(product.getProductAvgCost())
-                            .minFluctuationRate(fluctuation.getMinFluctuationRate())
-                            .maxFluctuationRate(fluctuation.getMaxFluctuationRate())
-                            .EventEffect(0.0)
-                            .build());
+        productInfoMap=new HashMap<>();
 
-                    return ProductInfo.builder()
-                            .productId(product.getProductId())
-                            .productCost(product.getProductDefaultCost())
-                            .productFluctuation(0)
-                            .productMaxQuantity((int) (C / product.getProductAvgCost()))
-                            .build();
-                }
-        ).toList();
+        productRepository.findAll().stream().forEach((product)->{
+            ProductFluctuation fluctuation = productFluctuationRepository.findById(ProductFluctuationId.builder()
+                            .countPerTenDays(0).productId(product.getProductId())
+                            .build())
+                    .orElseThrow(ProductFluctuationNotFoundException::new);
+            fluctationInfoMap.put(product.getProductId(), FluctationInfo.builder()
+                    .productAvgCost(product.getProductAvgCost())
+                    .minFluctuationRate(fluctuation.getMinFluctuationRate())
+                    .maxFluctuationRate(fluctuation.getMaxFluctuationRate())
+                    .EventEffect(0.0)
+                    .build());
+            productInfoMap.put(product.getProductId(),ServerProductInfo.builder()
+                    .productCost(product.getProductDefaultCost())
+                    .productFluctuation(0)
+                    .productMaxQuantity((int) (C / product.getProductAvgCost()))
+                    .build());
+        });
     }
 
     //반기 스케쥴 등록/삭제
@@ -92,15 +90,23 @@ public class PublicServiceImpl implements PublicService {
             log.debug("EVENT!!");
         });
         scheduleService.register(FLUCTUATE, turnPeriod, () -> {
-            log.debug("fluctuate...");
+            log.debug("fluctuate..."+ServerInfo.currentTurn);
             fluctuateProduct();
+            updateTurn();
             sendPublicMessage(MessageType.GET_PUBLIC_EVENT,
                     PublicEventInfo.builder()
                             .ingameTime(LocalDateTime.now())
                             .turn(ServerInfo.currentTurn)
                             .turnStartTime(ServerInfo.turnStartTime)
                             .specialEventId(ServerInfo.specialEventId)
-                            .productInfoList(productInfoList)
+                            .productInfoList(productInfoMap.entrySet().stream().map((entry)->{
+                                return ProductInfo.builder()
+                                        .productId(entry.getKey())
+                                        .productCost(entry.getValue().getProductCost())
+                                        .productMaxQuantity(entry.getValue().getProductMaxQuantity())
+                                        .productFluctuation(entry.getValue().getProductFluctuation())
+                                        .build();
+                            }).toList())
                             .buyableProductList(new ArrayList<>())
                             .build());
         });
@@ -150,6 +156,11 @@ public class PublicServiceImpl implements PublicService {
         //영향 가는 농산물에 대해 FluctMap 변경시키기
     }
 
+    public void updateTurn(){
+        ServerInfo.currentTurn++;
+        ServerInfo.turnStartTime=LocalDateTime.now();
+    }
+
     //TODO- 상수 K 정의
     double K = 1.3;
 
@@ -157,8 +168,10 @@ public class PublicServiceImpl implements PublicService {
     public void fluctuateProduct() {
         //FluctMap에 따라 각 작물 가격 변동
         Random random = new Random(); // -> 싱글톤으로 만들어놔도 될듯
-        for (ProductInfo productInfo : productInfoList) {
-            FluctationInfo fluctationInfo = fluctationInfoMap.get(productInfo.getProductId());
+        for (Map.Entry<Integer, ServerProductInfo> entry : productInfoMap.entrySet()) {
+            Integer productId=entry.getKey();
+            ServerProductInfo productInfo=entry.getValue();
+            FluctationInfo fluctationInfo = fluctationInfoMap.get(productId);
             //random값 생성
             double value = random.nextDouble(fluctationInfo.getMinFluctuationRate(), fluctationInfo.getMaxFluctuationRate() + 0.001);
             //fluctuation k배하여 반영
@@ -184,7 +197,7 @@ public class PublicServiceImpl implements PublicService {
     }
 
     // /public에 메세지 발행
-    public void sendPublicMessage(MessageType type, @NotNull Object body) {
+    public void sendPublicMessage(MessageType type, Object body) {
         // TODO- check: isSuccess가 false가 될 일이... 있나....? 서버만이 보내는데?
         GameMessageRes messageRes = GameMessageRes.builder()
                 .type(type)
