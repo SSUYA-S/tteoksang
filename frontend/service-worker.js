@@ -158,6 +158,7 @@ const cacheFirst = async ({ request, preloadResponsePromise, fallbackUrl }) => {
 
 // fetch event
 self.addEventListener('fetch', (e) => {
+    console.log(e);
     if (
         e.request.url.includes('/oauth2/authorization/') ||
         e.request.url.includes('/oauth2/') ||

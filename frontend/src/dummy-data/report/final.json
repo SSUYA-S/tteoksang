@@ -23,7 +23,7 @@
                     "totalAccPrivateProductPurchaseQuantity": 200,
                     "totalAccPrivateProductOutcome": 2000000,
                     "totalAccPrivateProductSalesQuantity": 200,
-                    "totalAccPrivateProductIncome": 3000000,
+                    "totalAccPrivateProductIncome": 4000000,
                     "totalAccPrivateProductProfit": 900000,
                     "totalAccPrivateBrokerFee": 100000
                 },
@@ -32,7 +32,7 @@
                     "totalAccPrivateProductPurchaseQuantity": 200,
                     "totalAccPrivateProductOutcome": 2000000,
                     "totalAccPrivateProductSalesQuantity": 200,
-                    "totalAccPrivateProductIncome": 3000000,
+                    "totalAccPrivateProductIncome": 1000000,
                     "totalAccPrivateProductProfit": 900000,
                     "totalAccPrivateBrokerFee": 100000
                 }
@@ -46,7 +46,7 @@
                     "totalAccPrivateProductPurchaseQuantity": 200,
                     "totalAccPrivateProductOutcome": 2000000,
                     "totalAccPrivateProductSalesQuantity": 200,
-                    "totalAccPrivateProductIncome": 3000000,
+                    "totalAccPrivateProductIncome": 2000000,
                     "totalAccPrivateProductProfit": 900000,
                     "totalAccPrivateBrokerFee": 100000
                 },
@@ -64,7 +64,7 @@
                     "totalAccPrivateProductPurchaseQuantity": 200,
                     "totalAccPrivateProductOutcome": 2000000,
                     "totalAccPrivateProductSalesQuantity": 200,
-                    "totalAccPrivateProductIncome": 3000000,
+                    "totalAccPrivateProductIncome": 7000000,
                     "totalAccPrivateProductProfit": 900000,
                     "totalAccPrivateBrokerFee": 100000
                 }
@@ -76,9 +76,9 @@
                 {
                     "productId": 1,
                     "totalAccPrivateProductPurchaseQuantity": 200,
-                    "totalAccPrivateProductOutcome": 2000000,
+                    "totalAccPrivateProductOutcome": 5000000,
                     "totalAccPrivateProductSalesQuantity": 200,
-                    "totalAccPrivateProductIncome": 3000000,
+                    "totalAccPrivateProductIncome": 1000000,
                     "totalAccPrivateProductProfit": 900000,
                     "totalAccPrivateBrokerFee": 100000
                 },
