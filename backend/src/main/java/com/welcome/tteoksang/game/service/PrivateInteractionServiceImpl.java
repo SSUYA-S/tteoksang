@@ -5,6 +5,7 @@ import com.welcome.tteoksang.game.exception.BrokerNotExistException;
 import com.welcome.tteoksang.game.exception.InfraNotExistException;
 import com.welcome.tteoksang.game.exception.VehicleNotExistException;
 import com.welcome.tteoksang.game.exception.WarehouseNotExistException;
+import com.welcome.tteoksang.game.scheduler.ServerInfo;
 import com.welcome.tteoksang.redis.RedisPrefix;
 import com.welcome.tteoksang.redis.RedisService;
 import com.welcome.tteoksang.resource.dto.Broker;
@@ -16,12 +17,12 @@ import com.welcome.tteoksang.resource.repository.WarehouseRepository;
 import com.welcome.tteoksang.resource.type.MessageType;
 import com.welcome.tteoksang.user.dto.UserInfo;
 import com.welcome.tteoksang.user.exception.TitleNotExistException;
-import com.welcome.tteoksang.user.exception.UserNotExistException;
 import com.welcome.tteoksang.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,7 +32,7 @@ import java.util.Map;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class PrivateServiceImpl implements PrivateService {
+public class PrivateInteractionServiceImpl implements PrivateInteractionService {
 
     private final UserService userService;
     private final RedisService redisService;
@@ -41,7 +42,7 @@ public class PrivateServiceImpl implements PrivateService {
     private final VehicleRepository vehicleRepository;
 
     @Override
-    public Object[] changeTitle(LinkedHashMap<String, Object> body, int titleId, String userId){
+    public GameMessageInfo changeTitle(LinkedHashMap<String, Object> body, int titleId, String userId){
         boolean isSuccess = false;
         try {
             userService.updateUserTitle(titleId, userId);
@@ -50,11 +51,17 @@ public class PrivateServiceImpl implements PrivateService {
         catch (TitleNotExistException e) {
             log.error(e.getMessage());
         }
-        return new Object[]{body, isSuccess};
+        return GameMessageInfo.builder()
+                .body(body)
+                .isSuccess(isSuccess)
+                .build();
     }
 
     @Override
-    public Object[] upgradeWarehouse(LinkedHashMap<String, Object> body, String userId){
+    public GameMessageInfo buyProduct(LinkedHashMap<String, Object> body, String userId) {
+
+
+        // 유저의 게임 정보 가져오기
         RedisGameInfo redisGameInfo = getRedisGameInfo(userId);
         String redisGameInfoKey = RedisPrefix.INGAMEINFO.prefix() + userId;
         Object responseBody = body;
@@ -70,7 +77,7 @@ public class PrivateServiceImpl implements PrivateService {
                     redisGameInfo.setGold(remainGold);
                     redisGameInfo.setWarehouseLevel(nextWarehouseLevel);
 
-                    responseBody = UpgradeWarehouse.builder()
+                    responseBody = UpgradeWarehouseInfo.builder()
                             .gold(redisGameInfo.getGold())
                             .warehouseLevel(redisGameInfo.getWarehouseLevel())
                             .build();
@@ -85,11 +92,57 @@ public class PrivateServiceImpl implements PrivateService {
                 log.error("없는 창고 입니다.");
             }
         }
-        return new Object[]{responseBody, isSuccess};
+        return GameMessageInfo.builder()
+                .body(responseBody)
+                .isSuccess(isSuccess)
+                .build();
     }
 
     @Override
-    public Object[] upgradeBroker(LinkedHashMap<String, Object> body, String userId) {
+    public GameMessageInfo sellProduct(LinkedHashMap<String, Object> body, String userId) {
+        return null;
+    }
+
+    @Override
+    public GameMessageInfo upgradeWarehouse(LinkedHashMap<String, Object> body, String userId){
+        RedisGameInfo redisGameInfo = getRedisGameInfo(userId);
+        String redisGameInfoKey = RedisPrefix.INGAMEINFO.prefix() + userId;
+        Object responseBody = body;
+        boolean isSuccess = false;
+        if (redisGameInfo != null) {
+            int nextWarehouseLevel = redisGameInfo.getWarehouseLevel()+1;
+            try {
+                // 다음 레벨이 있는지 확인
+                brokerRepository.findById(nextWarehouseLevel).orElseThrow(BrokerNotExistException::new);
+                // 남은 금액 확인
+                long remainGold = calculateUpgradeFee(redisGameInfo.getGold(), MessageType.UPGRADE_WAREHOUSE, nextWarehouseLevel);
+                if (remainGold != -1) {
+                    redisGameInfo.setGold(remainGold);
+                    redisGameInfo.setWarehouseLevel(nextWarehouseLevel);
+
+                    responseBody = UpgradeWarehouseInfo.builder()
+                            .gold(redisGameInfo.getGold())
+                            .warehouseLevel(redisGameInfo.getWarehouseLevel())
+                            .build();
+
+                    redisService.setValues(redisGameInfoKey, redisGameInfo);
+                    isSuccess = true;
+                } else {
+                    log.debug("금액 부족");
+                }
+            }
+            catch (WarehouseNotExistException e){
+                log.error("없는 창고 입니다.");
+            }
+        }
+        return GameMessageInfo.builder()
+                .body(responseBody)
+                .isSuccess(isSuccess)
+                .build();
+    }
+
+    @Override
+    public GameMessageInfo upgradeBroker(LinkedHashMap<String, Object> body, String userId) {
         RedisGameInfo redisGameInfo = getRedisGameInfo(userId);
         String redisGameInfoKey = RedisPrefix.INGAMEINFO.prefix() + userId;
         Object responseBody = body;
@@ -105,7 +158,7 @@ public class PrivateServiceImpl implements PrivateService {
                     redisGameInfo.setGold(remainGold);
                     redisGameInfo.setBrokerLevel(nextBrokerLevel);
 
-                    responseBody = UpgradeBroker.builder()
+                    responseBody = UpgradeBrokerInfo.builder()
                             .gold(redisGameInfo.getGold())
                             .brokerLevel(redisGameInfo.getBrokerLevel())
                             .build();
@@ -121,11 +174,14 @@ public class PrivateServiceImpl implements PrivateService {
                 log.error("없는 환전소 입니다.");
             }
         }
-        return new Object[]{responseBody, isSuccess};
+        return GameMessageInfo.builder()
+                .body(responseBody)
+                .isSuccess(isSuccess)
+                .build();
     }
 
     @Override
-    public Object[] upgradeVehicle(LinkedHashMap<String, Object> body, String userId) {
+    public GameMessageInfo upgradeVehicle(LinkedHashMap<String, Object> body, String userId) {
         RedisGameInfo redisGameInfo = getRedisGameInfo(userId);
         String redisGameInfoKey = RedisPrefix.INGAMEINFO.prefix() + userId;
         Object responseBody = body;
@@ -141,7 +197,7 @@ public class PrivateServiceImpl implements PrivateService {
                     redisGameInfo.setGold(remainGold);
                     redisGameInfo.setVehicleLevel(nextVehicleLevel);
 
-                    responseBody = UpgradeVehicle.builder()
+                    responseBody = UpgradeVehicleInfo.builder()
                             .gold(redisGameInfo.getGold())
                             .vehicleLevel(redisGameInfo.getVehicleLevel())
                             .build();
@@ -156,125 +212,11 @@ public class PrivateServiceImpl implements PrivateService {
                 log.error("없는 운송수단 입니다.");
             }
         }
-        return new Object[]{responseBody, isSuccess};
+        return GameMessageInfo.builder()
+                .body(responseBody)
+                .isSuccess(isSuccess)
+                .build();
     }
-    @Override
-    public Object[] getTotalInfo(LinkedHashMap<String, Object> body, String userId, String webSocketId){
-        RedisGameInfo redisGameInfo = getRedisGameInfo(userId);
-        UserInfo userInfo = getUserInfo(userId, webSocketId);
-        Object responseBody = body;
-        boolean isSuccess = false;
-        if (redisGameInfo != null) {
-            responseBody = TotalInfo.builder()
-                    .gold(redisGameInfo.getGold())
-                    .privateEventId(redisGameInfo.getPrivateEventId())
-                    .specialEventId("없음")   // 서버의 특수 이벤트
-                    .inGameTime(LocalDateTime.now().toString())
-                    .turnStartTime(LocalDateTime.now().toString())    // 턴 시작 시간 => 서버에서 가져옴
-                    .turn(1)    // 서버의 턴 정보
-                    .themeId(userInfo.getThemeId())
-                    .products(redisGameInfo.getProducts())
-                    .productInfoList(new ArrayList<>())
-                    .buyAbleProductIdList(new ArrayList<>())
-                    .purchasedQuantity(redisGameInfo.getPurchaseQuantity())
-                    .warehouseLevel(redisGameInfo.getWarehouseLevel())
-                    .vehicleLevel(redisGameInfo.getVehicleLevel())
-                    .brokerLevel(redisGameInfo.getBrokerLevel())
-                    .build();
-            isSuccess = true;
-        } else {
-            log.error("없는 게임정보 입니다.");
-        }
-        return new Object[]{responseBody, isSuccess};
-    }
-
-    @Override
-    public Object[] getWarehouseInfo(LinkedHashMap<String, Object> body, String userId){
-        RedisGameInfo redisGameInfo = getRedisGameInfo(userId);
-        Object responseBody = body;
-        boolean isSuccess = false;
-        if (redisGameInfo != null) {
-            responseBody = UserWarehouseInfo.builder()
-                    .warehouseLevel(redisGameInfo.getWarehouseLevel())
-                    .vehicleLevel(redisGameInfo.getVehicleLevel())
-                    .brokerLevel(redisGameInfo.getBrokerLevel())
-                    .products(redisGameInfo.getProducts())
-                    .build();
-            isSuccess = true;
-        } else {
-            log.error("없는 게임정보 입니다.");
-        }
-        return new Object[]{responseBody, isSuccess};
-    }
-
-    @Override
-    public Object[] getInfraLevel(LinkedHashMap<String, Object> body, String userId) {
-        RedisGameInfo redisGameInfo = getRedisGameInfo(userId);
-        Object responseBody = body;
-        boolean isSuccess = false;
-        if (redisGameInfo != null) {
-            responseBody = UserInfraInfo.builder()
-                    .warehouseLevel(redisGameInfo.getWarehouseLevel())
-                    .vehicleLevel(redisGameInfo.getVehicleLevel())
-                    .brokerLevel(redisGameInfo.getBrokerLevel())
-                    .build();
-            isSuccess = true;
-        } else {
-            log.error("없는 게임정보 입니다.");
-        }
-        return new Object[]{responseBody, isSuccess};
-    }
-
-    @Override
-    public Object[] getMyGold(LinkedHashMap<String, Object> body, String userId) {
-        RedisGameInfo redisGameInfo = getRedisGameInfo(userId);
-        Object responseBody = body;
-        boolean isSuccess = false;
-        if (redisGameInfo != null) {
-            responseBody = new HashMap<>();
-            ((Map<String, Long>) responseBody).put("gold", redisGameInfo.getGold());
-            isSuccess = true;
-        } else {
-            log.error("없는 게임정보 입니다.");
-        }
-        return new Object[]{responseBody, isSuccess};
-    }
-
-    @Override
-    public Object[] getPrivateEvent(LinkedHashMap<String, Object> body, String userId) {
-        RedisGameInfo redisGameInfo = getRedisGameInfo(userId);
-        Object responseBody = body;
-        boolean isSuccess = false;
-        if (redisGameInfo != null) {
-            responseBody = new HashMap<>();
-            ((Map<String, Object>) responseBody).put("gold", redisGameInfo.getGold());
-            ((Map<String, Object>) responseBody).put("privateEventId", redisGameInfo.getPrivateEventId());
-            isSuccess = true;
-        } else {
-            log.error("없는 게임정보 입니다.");
-        }
-        return new Object[]{responseBody, isSuccess};
-    }
-
-    @Override
-    public Object[] getInGameTime(LinkedHashMap<String, Object> body, String userId) {
-        RedisGameInfo redisGameInfo = getRedisGameInfo(userId);
-        Object responseBody = body;
-        boolean isSuccess = false;
-        if (redisGameInfo != null) {
-            responseBody = UserInGameTimeInfo.builder()
-                    .inGameTime(LocalDateTime.now().toString())
-                    .turnStartTime(LocalDateTime.now().toString())
-                    .turn(1)
-                    .build();
-            isSuccess = true;
-        } else {
-            log.error("없는 게임정보 입니다.");
-        }
-        return new Object[]{responseBody, isSuccess};
-    }
-
-
     private RedisGameInfo getRedisGameInfo(String userId) {
         // 레디스에 있는 게임 정보 불러오기
         String redisGameInfoKey = RedisPrefix.INGAMEINFO.prefix() + userId;
@@ -283,13 +225,6 @@ public class PrivateServiceImpl implements PrivateService {
             redisGameInfo = (RedisGameInfo) redisService.getValues(redisGameInfoKey);
         }
         return redisGameInfo;
-    }
-    private UserInfo getUserInfo(String userId, String webSocketId) {
-        String userInfoKey = RedisPrefix.USERINFO.prefix() + userId;
-        // 레디스에서 유저 정보 가져오기
-        UserInfo userInfo = (UserInfo) redisService.getValues(userInfoKey);
-        log.debug("UserName : {}, webSocketId : {}", userInfo.getNickname(), webSocketId);
-        return userInfo;
     }
 
     private long calculateUpgradeFee(long currentGold, MessageType type, Integer level) throws InfraNotExistException {

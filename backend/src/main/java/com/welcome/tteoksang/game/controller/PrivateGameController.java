@@ -3,12 +3,8 @@ package com.welcome.tteoksang.game.controller;
 import com.welcome.tteoksang.game.dto.*;
 import com.welcome.tteoksang.game.dto.req.GameMessageReq;
 import com.welcome.tteoksang.game.dto.res.GameMessageRes;
-import com.welcome.tteoksang.game.dto.TotalInfo;
-import com.welcome.tteoksang.game.exception.BrokerNotExistException;
-import com.welcome.tteoksang.game.exception.VehicleNotExistException;
-import com.welcome.tteoksang.game.exception.WarehouseNotExistException;
-import com.welcome.tteoksang.game.service.PrivateService;
-import com.welcome.tteoksang.user.exception.TitleNotExistException;
+import com.welcome.tteoksang.game.service.PrivateInfoService;
+import com.welcome.tteoksang.game.service.PrivateInteractionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -19,7 +15,6 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Controller
@@ -27,7 +22,9 @@ import java.util.*;
 @RequiredArgsConstructor
 public class PrivateGameController {
 
-    private final PrivateService privateService;
+    private final PrivateInteractionService privateInteractionService;
+    private final PrivateInfoService privateInfoService;
+
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     @MessageMapping("/private/{webSocketId}") // 클라이언트에서 보낸 메시지를 받을 메서드 지정
@@ -50,107 +47,124 @@ public class PrivateGameController {
         LinkedHashMap<String, Object> body = gameMessageReq.getBody();
         Object responseBody = body;
         boolean isSuccess = false;
+        GameMessageInfo gameMessageInfo;
 
         // 메세지 타입에 따른 분기
         switch (gameMessageReq.getType()) {
             // 칭호 변경
             case CHANGE_TITLE: {
                 Integer titleId = (Integer) body.get("titleId");
-                Object[] result = privateService.changeTitle(body, titleId, userId);
-                responseBody = result[0];
-                isSuccess = (boolean) result[1];
+                gameMessageInfo = privateInteractionService.changeTitle(body, titleId, userId);
+                responseBody = gameMessageInfo.getBody();
+                isSuccess = gameMessageInfo.getIsSuccess();
                 break;
             }
             // 상품 구매
             case BUY_PRODUCT: {
-
+                gameMessageInfo = privateInteractionService.buyProduct(body, userId);
+                responseBody = gameMessageInfo.getBody();
+                isSuccess = gameMessageInfo.getIsSuccess();
+                break;
             }
             // 상품 판매
             case SELL_PRODUCT: {
-
+                gameMessageInfo = privateInteractionService.sellProduct(body, userId);
+                responseBody = gameMessageInfo.getBody();
+                isSuccess = gameMessageInfo.getIsSuccess();
+                break;
             }
             // 창고 업그레이드
             case UPGRADE_WAREHOUSE: {
-                Object[] result = privateService.upgradeWarehouse(body, userId);
-                responseBody = result[0];
-                isSuccess = (boolean) result[1];
+                gameMessageInfo = privateInteractionService.upgradeWarehouse(body, userId);
+                responseBody = gameMessageInfo.getBody();
+                isSuccess = gameMessageInfo.getIsSuccess();
                 break;
             }
+            // 교환소 업그레이드
             case UPGRADE_BROKER: {
-                Object[] result = privateService.upgradeBroker(body, userId);
-                responseBody = result[0];
-                isSuccess = (boolean) result[1];
+                gameMessageInfo = privateInteractionService.upgradeBroker(body, userId);
+                responseBody = gameMessageInfo.getBody();
+                isSuccess = gameMessageInfo.getIsSuccess();
                 break;
             }
+            // 운송수단 업그레이드
             case UPGRADE_VEHICLE: {
-                Object[] result = privateService.upgradeVehicle(body, userId);
-                responseBody = result[0];
-                isSuccess = (boolean) result[1];
+                gameMessageInfo = privateInteractionService.upgradeVehicle(body, userId);
+                responseBody = gameMessageInfo.getBody();
+                isSuccess = gameMessageInfo.getIsSuccess();
                 break;
             }
+            // 게임 초기 정보 불러오기
             case GET_TOTAL_INFO: {
-                // TODO:서버 게임 정보 불러오기
-
-                // TODO:레디스에 있는 개인별 게임 정보 반영
-                Object[] result = privateService.getTotalInfo(body, userId, webSocketId);
-                responseBody = result[0];
-                isSuccess = (boolean) result[1];
+                gameMessageInfo = privateInfoService.getTotalInfo(body, userId, webSocketId);
+                responseBody = gameMessageInfo.getBody();
+                isSuccess = gameMessageInfo.getIsSuccess();
                 break;
             }
+            // 창고 조회
             case GET_WAREHOUSE_INFO: {
-                Object[] result = privateService.getWarehouseInfo(body, userId);
-                responseBody = result[0];
-                isSuccess = (boolean) result[1];
+                gameMessageInfo = privateInfoService.getWarehouseInfo(body, userId);
+                responseBody = gameMessageInfo.getBody();
+                isSuccess = gameMessageInfo.getIsSuccess();
                 break;
             }
+            // 인프라 정보 조회
             case GET_INFRA_LEVEL: {
-                Object[] result = privateService.getInfraLevel(body, userId);
-                responseBody = result[0];
-                isSuccess = (boolean) result[1];
+                gameMessageInfo = privateInfoService.getInfraLevel(body, userId);
+                responseBody = gameMessageInfo.getBody();
+                isSuccess = gameMessageInfo.getIsSuccess();
                 break;
             }
+            // 현재 소지금 조회
             case GET_MY_GOLD: {
-                Object[] result = privateService.getMyGold(body, userId);
-                responseBody = result[0];
-                isSuccess = (boolean) result[1];
+                gameMessageInfo = privateInfoService.getMyGold(body, userId);
+                responseBody = gameMessageInfo.getBody();
+                isSuccess = gameMessageInfo.getIsSuccess();
                 break;
             }
+            // 현재 개인 이벤트 조회
             case GET_PRIVATE_EVENT: {
-                Object[] result = privateService.getPrivateEvent(body, userId);
-                responseBody = result[0];
-                isSuccess = (boolean) result[1];
+                gameMessageInfo = privateInfoService.getPrivateEvent(body, userId);
+                responseBody = gameMessageInfo.getBody();
+                isSuccess = gameMessageInfo.getIsSuccess();
                 break;
             }
+            // 서버 시간 조회
             case GET_INGAME_TIME: {
-                //TODO: 서버에 있는 게임 시간 불러오기
-
-                Object[] result = privateService.getInGameTime(body, userId);
-                responseBody = result[0];
-                isSuccess = (boolean) result[1];
+                gameMessageInfo = privateInfoService.getInGameTime(body, userId);
+                responseBody = gameMessageInfo.getBody();
+                isSuccess = gameMessageInfo.getIsSuccess();
                 break;
             }
+            // 게임 종료
             case QUIT_GAME: {
                 // 로그아웃 처리와 같음
 
             }
+            // 파산 신청
             case GIVEUP_GAME: {
 
             }
+            //
+            case ALERT_PLAYTIME: {
+                gameMessageInfo = privateInfoService.alertPlayTime(body, userId);
+                responseBody = gameMessageInfo.getBody();
+                isSuccess = gameMessageInfo.getIsSuccess();
+                break;
+            }
 
-            // 처리
-            default:
-                // 정의되지 않은 요청
+            // 정의되지 않은 요청
+            default: {
+                break;
+            }
         }
 
         // 클라이언트에게 응답 메시지 보내기
-        GameMessageRes gameMessageRes = new GameMessageRes();
-        gameMessageRes.setType(gameMessageReq.getType());
-        gameMessageRes.setIsSuccess(isSuccess);
-        gameMessageRes.setBody(responseBody); // 클라이언트에게 받은 메시지 그대로 반환
+        return GameMessageRes.builder()
+                .type(gameMessageReq.getType())
+                .isSuccess(isSuccess)
+                .body(responseBody)
+                .build();
 //        simpMessagingTemplate.convertAndSend("/topic/private/" + webSocketId, gameMessageRes);
-
-        return gameMessageRes; // 받은 메시지 그대로 반환
     }
-
-
 }

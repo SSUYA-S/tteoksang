@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UpgradeBroker {
-    private Long gold;
-    private Integer brokerLevel;
+public class GameMessageInfo {
+    private Boolean isSuccess;
+    private Object body;
 }
