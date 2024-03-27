@@ -40,6 +40,11 @@ export default function ChattingModal(props: Props) {
      *  메시지 전송
      */
     const sendMessage = () => {
+        if (message === '') {
+            console.log('아무거나 입력하세요');
+            return;
+        }
+
         const stompClient = props.client;
 
         const msg = JSON.stringify({
