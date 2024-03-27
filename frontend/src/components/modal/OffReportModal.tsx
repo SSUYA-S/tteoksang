@@ -101,7 +101,7 @@ export default function OffReportModal(props: Prop) {
 
     useEffect(() => {
         /**날짜 계산 */
-        const turn = Off.turn - 91;
+        const turn = Off.lastGameTurn - 91;
         setYear(Math.floor((turn + 60) / 360));
         const month: number = ((Math.floor(turn / 30) + 2) % 12) + 1;
         if (month === 3) {
@@ -149,8 +149,8 @@ export default function OffReportModal(props: Prop) {
             {mode === 0 ? (
                 <RentFeeModal
                     rentFeeInfo={Off.rentFeeInfo}
-                    startTurn={Off.turn - 91}
-                    endTurn={Off.turn - 1}
+                    startTurn={Off.lastGameTurn - 91}
+                    endTurn={Off.lastGameTurn - 1}
                     showReport={showReport}
                     productList={props.productList}
                     endGame={endGame}
@@ -174,7 +174,7 @@ export default function OffReportModal(props: Prop) {
                                             순이익
                                         </span>
                                         <span className="text-right">
-                                            {Off.quarterProfit.toLocaleString()}
+                                            {Off.quarterReport.quarterProfit.toLocaleString()}
                                         </span>
                                     </div>
                                     <div className="w-full flex justify-between text-[2vw]">
@@ -183,7 +183,7 @@ export default function OffReportModal(props: Prop) {
                                         </span>
                                         <span className="text-right">
                                             {(
-                                                -1 * Off.rentFee
+                                                -1 * Off.rentFeeInfo.rentFee
                                             ).toLocaleString()}
                                         </span>
                                     </div>
@@ -195,7 +195,7 @@ export default function OffReportModal(props: Prop) {
                                         </span>
                                         <span className="text-right">
                                             {(
-                                                Off.quarterProfit - Off.rentFee
+                                                Off.quarterReport.quarterProfit - Off.rentFeeInfo.rentFee
                                             ).toLocaleString()}
                                         </span>
                                     </div>
@@ -305,7 +305,7 @@ export default function OffReportModal(props: Prop) {
                                     style={{ scrollbarWidth: 'thin' }}
                                 >
                                     <div className="flex flex-shrink-0">
-                                        {Off.inProductList.map((cropId) => {
+                                        {Off.quarterReport.inProductList.map((cropId) => {
                                             return (
                                                 <img
                                                     className="w-[6vw] h-[6vw] m-[1vw] aspect-square object-cover flex-shrink-0"
@@ -335,7 +335,7 @@ export default function OffReportModal(props: Prop) {
                         <div
                             className="absolute text-[2vw] flex items-center justify-center text-white -top-[1.6vw] -right-[2vw] w-[4vw] h-[4vw] border-[0.4vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer z-30"
                             onClick={() => {
-                                props.setIsQtrReportAvail(false);
+                                props.setIsOffReportAvail(false);
                             }}
                         >
                             X
