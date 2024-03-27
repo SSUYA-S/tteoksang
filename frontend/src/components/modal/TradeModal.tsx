@@ -616,9 +616,7 @@ export default function TradeModal(props: tradeType) {
             {tradeElement()}
             <div
                 className="absolute text-[2vw] flex items-center justify-center text-white -top-[1.6vw] -right-[2vw] w-[4vw] h-[4vw] border-[0.4vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer"
-                onClick={() => {
-                    closeTradeModal;
-                }}
+                onClick={closeTradeModal}
             >
                 X
             </div>
