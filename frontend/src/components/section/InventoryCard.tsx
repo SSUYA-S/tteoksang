@@ -36,7 +36,7 @@ export default function InventoryCard({
                     <div
                         className={
                             'w-fit h-[60%] bg-no-repeat mx-auto sprite-img-crop ' +
-                            `crop-img-${myProduct.productId - 1}`
+                            `crop-img-${myProduct.productId}`
                         }
                         style={{
                             aspectRatio: 1 / 1,

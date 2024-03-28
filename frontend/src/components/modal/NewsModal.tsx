@@ -1,6 +1,5 @@
 import { SetStateAction, useEffect } from 'react';
 
-// import newsData from '../../dummy-data/article.json';
 import { Article } from '../../type/types';
 
 type NewsType = {
