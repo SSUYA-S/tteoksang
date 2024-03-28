@@ -29,9 +29,9 @@ public class PrivateInfoServiceImpl implements PrivateInfoService {
 
     @Override
     public GameMessageInfo getTotalInfo(LinkedHashMap<String, Object> body, String userId, String webSocketId){
-        // TODO:서버 게임 정보 불러오기
+        // FIXME:서버 게임 정보 불러오기
 
-        // TODO:레디스에 있는 개인별 게임 정보 반영
+        // FIXME:레디스에 있는 개인별 게임 정보 반영
         RedisGameInfo redisGameInfo = getRedisGameInfo(userId);
         UserInfo userInfo = getUserInfo(userId, webSocketId);
         Object responseBody = body;
@@ -146,7 +146,7 @@ public class PrivateInfoServiceImpl implements PrivateInfoService {
 
     @Override
     public GameMessageInfo getInGameTime(LinkedHashMap<String, Object> body, String userId) {
-        //TODO: 서버에 있는 게임 시간 불러오기
+        //FIXME: 서버에 있는 게임 시간 불러오기
         RedisGameInfo redisGameInfo = getRedisGameInfo(userId);
         Object responseBody = body;
         boolean isSuccess = false;
