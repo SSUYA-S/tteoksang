@@ -11,9 +11,6 @@ import { httpStatusCode } from '../util/http-status';
 import Stomp from '@stomp/stompjs';
 import { Client } from '@stomp/stompjs';
 
-//dummydata
-import totalInfo from '../dummy-data/total-info.json';
-
 import InventoryModal from './modal/InventoryModal';
 import InfraModal from './modal/InfraModal';
 import { goldState } from '../util/myproduct-slice';
@@ -235,18 +232,8 @@ export default function GameComponent(props: GameType) {
         }
     }, [cookies]);
 
-    /**초기정보 세팅 */
-    useEffect(() => {
-        //초기 정보 설정
-        setNowMoney(goldNumber);
-        dispatch(productInfoState(totalInfo.productInfoList));
-        dispatch(buyableProductIdState(totalInfo.buyableProductIdList));
-    }, [goldNumber]);
-
     //init
     useEffect(() => {
-        setIngameTurn(totalInfo.turn);
-
         const handleBeforeUnload = (e: BeforeUnloadEvent) => {
             e.preventDefault();
             e.returnValue =
@@ -319,13 +306,18 @@ export default function GameComponent(props: GameType) {
         setInventoryFlag(true);
     };
 
+    //gold update시 반영
+    useEffect(() => {
+        //애니메이션 트리거
+        updateNowMoney(goldNumber);
+    }, [goldNumber]);
     /**updateNowMoney(value)
      * 현재 nowMoney값을 value만큼 업데이트
      */
     const updateNowMoney = (value: number) => {
         // 돈 변화 애니메이션
         let originMoney = nowMoney;
-        const num = nowMoney + value;
+        const num = value;
         let moneylength = 0;
         // 빼기면
         moneylength = Math.abs(originMoney - num).toString().length;
@@ -367,9 +359,6 @@ export default function GameComponent(props: GameType) {
             }, 20);
         }
         // 돈 변화 애니메이션
-
-        //redux 반영
-        dispatch(goldState(num));
     };
 
     /**뉴스 수신 시 뉴스 정보 설정 함수 */
