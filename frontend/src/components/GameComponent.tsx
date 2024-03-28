@@ -875,6 +875,7 @@ export default function GameComponent(props: GameType) {
                     productList={initialData.productList}
                     webSocketId={webSocketId}
                     webSocketClient={webSocketClient}
+                    titleList={initialData.titleList}
                 />
             ) : (
                 <></>
