@@ -41,12 +41,12 @@ export default function TradeBuyCard({
             <div className="w-full h-[60%] flex">
                 <div className="w-[30%] h-full flex flex-col justify-between ">
                     <p className="h-[20%] text-[1.4vw] color-text-subbold pt-[0.5vw] ">
-                        {'x' + buyableInfo.productInfo.productLimit}
+                        {'x' + buyableInfo.productInfo.productMaxQuantity}
                     </p>
                     <div
                         className={
                             'w-fit h-[60%] bg-no-repeat mx-auto sprite-img-crop ' +
-                            `crop-img-${productId - 1}`
+                            `crop-img-${productId}`
                         }
                         style={{
                             aspectRatio: 1 / 1,

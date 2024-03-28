@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { LineChart } from '../element/LineChart';
-import finalreport from '../../dummy-data/report/final.json';
 import { BarChart } from '../element/BarChart';
 import { AchievementReport, privateProdRep } from '../../type/types';
 import { HorizenBarChart } from '../element/HorizenBarChart';
+
+//dummuy data
+import finalreport from '../../dummy-data/report/final.json';
 
 type infoResultType = {
     setInfoResultFlag: React.Dispatch<React.SetStateAction<boolean>>;
