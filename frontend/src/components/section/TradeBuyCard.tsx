@@ -23,8 +23,8 @@ export default function TradeBuyCard({
     const changeProductNumber = (changingValue: number) => {
         let changedValue = productNumber + changingValue;
         if (changedValue < 0) changedValue = 0;
-        if (changedValue > buyableInfo.productInfo.productLimit)
-            changedValue = buyableInfo.productInfo.productLimit;
+        if (changedValue > buyableInfo.productInfo.productMaxQuantity)
+            changedValue = buyableInfo.productInfo.productMaxQuantity;
         const changedCost = changedValue * productCost;
         updateBuyingList(
             buyableInfo.productInfo.productId,
