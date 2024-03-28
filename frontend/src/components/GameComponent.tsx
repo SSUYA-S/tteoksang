@@ -56,6 +56,7 @@ export default function GameComponent(props: GameType) {
     const [gameYear, setGameYear] = useState<number>(0);
     const [gameMonth, setGameMonth] = useState<number>(3);
     const [gameDay, setGameDay] = useState<number>(1);
+    const [seasonImg, setSeasonImg] = useState<string>('spring');
 
     const [playing, setPlaying] = useState<boolean>(false);
     const [audio, setAudio] = useState(
@@ -234,6 +235,17 @@ export default function GameComponent(props: GameType) {
 
     //init
     useEffect(() => {
+        // setIngameTurn(totalInfo.turn);
+        // console.log(totalInfo.turn);
+        // if (totalInfo.turn % 120 > 0 && totalInfo.turn % 120 < 31) {
+        //     setSeasonImg('spring');
+        // } else if (totalInfo.turn % 120 > 30 && totalInfo.turn % 120 < 61) {
+        //     setSeasonImg('summer');
+        // } else if (totalInfo.turn % 120 > 60 && totalInfo.turn % 120 < 91) {
+        //     setSeasonImg('fall');
+        // } else {
+        //     setSeasonImg('winter');
+        // }
         const handleBeforeUnload = (e: BeforeUnloadEvent) => {
             e.preventDefault();
             e.returnValue =
@@ -248,6 +260,16 @@ export default function GameComponent(props: GameType) {
 
     // 인게임 시간 설정
     useEffect(() => {
+        console.log(ingameTurn % 360);
+        if (ingameTurn % 360 > 0 && ingameTurn % 360 < 91) {
+            setSeasonImg('spring');
+        } else if (ingameTurn % 360 > 90 || ingameTurn % 360 < 181) {
+            setSeasonImg('summer');
+        } else if (ingameTurn % 360 > 180 && ingameTurn % 360 < 271) {
+            setSeasonImg('fall');
+        } else if (ingameTurn % 360 > 270 || ingameTurn % 360 === 0) {
+            setSeasonImg('winter');
+        }
         const date = ingameTurn - 1;
         setGameDay((date % 30) + 1);
         setGameMonth(((Math.floor(date / 30) + 2) % 12) + 1);
@@ -496,7 +518,7 @@ export default function GameComponent(props: GameType) {
             <div className="absolute w-[25%] h-[20%] top-[4%] left-[2%]">
                 <div className="relative w-full h-full flex items-center justify-center color-bg-main  border-[0.2vw] color-border-subbold rounded-[0.4vw] p-[1%] cursor-pointer">
                     <div
-                        className="relative w-full h-full flex"
+                        className="relative w-full h-full flex "
                         onClick={() => openMypageElement()}
                     >
                         <div
@@ -604,8 +626,7 @@ export default function GameComponent(props: GameType) {
                         <div
                             className="absolute w-[60%] h-[60%] z-20 bg-no-repeat bg-center"
                             style={{
-                                backgroundImage:
-                                    'url(/src/assets/images/icon/ui-season-spring.png)',
+                                backgroundImage: `url(/src/assets/images/icon/ui-season-${seasonImg}.png)`,
                                 backgroundSize: 'contain ',
                                 backgroundPosition: 'center',
                                 backgroundRepeat: 'no-repeat',
@@ -616,98 +637,117 @@ export default function GameComponent(props: GameType) {
             </div>
 
             {/* 좌측 하단 ui */}
-            <div className="absolute w-[40%] h-[20%] bottom-[2%] left-[1%]">
-                <div className="relative w-full h-full flex items-center justify-center">
+            <div className="absolute w-[40%] h-[20%] bottom-[4%] left-[1%]">
+                <div className="relative w-full h-full flex items-center justify-start">
                     <div
-                        className="w-[19%] h-[100%] bg-no-repeat cursor-pointer"
-                        style={{
-                            backgroundImage:
-                                'url(/src/assets/images/icon/ui-icon-trade.png)',
-                            backgroundSize: 'contain ',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat',
-                        }}
+                        className="w-[19%] h-[100%] cursor-pointer"
                         onClick={() => {
                             openTradeElement();
                         }}
-                    />
+                    >
+                        <img
+                            className="w-full"
+                            src="/src/assets/images/icon/ui-icon-trade.webp"
+                            alt=""
+                            style={{ aspectRatio: 1 / 1 }}
+                        />
+                        <img
+                            src="/src/assets/images/icon/ui-icon-trade-text.webp"
+                            alt=""
+                        />
+                    </div>
+
                     <div
-                        className="w-[19%] h-[100%] bg-no-repeat cursor-pointer mx-[0.4vw]"
-                        style={{
-                            backgroundImage:
-                                'url(/src/assets/images/icon/ui-icon-facility.png)',
-                            backgroundSize: 'contain ',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat',
-                        }}
+                        className="w-[19%] h-[100%] cursor-pointer"
                         onClick={() => {
                             openFacilityElement();
                         }}
-                    />
+                    >
+                        <img
+                            className="w-full"
+                            src="/src/assets/images/icon/ui-icon-facility.webp"
+                            alt=""
+                            style={{ aspectRatio: 1 / 1 }}
+                        />
+                        <img
+                            src="/src/assets/images/icon/ui-icon-facility-text.webp"
+                            alt=""
+                        />
+                    </div>
                     <div
-                        className="w-[19%] h-[100%] bg-no-repeat cursor-pointer"
-                        style={{
-                            backgroundImage:
-                                'url(/src/assets/images/icon/ui-icon-inventory.png)',
-                            backgroundSize: 'contain ',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat',
-                        }}
+                        className="w-[19%] h-[100%] cursor-pointer"
                         onClick={() => {
                             openInventoryElement();
                         }}
-                    />
+                    >
+                        <img
+                            className="w-full"
+                            src="/src/assets/images/icon/ui-icon-inventory.webp"
+                            alt=""
+                            style={{ aspectRatio: 1 / 1 }}
+                        />
+                        <img
+                            src="/src/assets/images/icon/ui-icon-inventory-text.webp"
+                            alt=""
+                        />
+                    </div>
                     <div
-                        className="w-[19%] h-[100%] bg-no-repeat cursor-pointer"
-                        style={{
-                            backgroundImage:
-                                'url(/src/assets/images/icon/ui-icon-newspaper.png)',
-                            backgroundSize: 'contain ',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat',
-                        }}
+                        className="w-[19%] h-[100%] cursor-pointer"
                         onClick={() => {
                             openNewsElement();
                         }}
-                    />
-                    <div
-                        className="w-[19%] h-[100%] bg-no-repeat cursor-pointer"
-                        style={{
-                            backgroundImage:
-                                'url(/src/assets/images/icon/ui-icon-accident.png)',
-                            backgroundSize: 'contain ',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat',
-                        }}
-                    />
+                    >
+                        <img
+                            className="w-full"
+                            src="/src/assets/images/icon/ui-icon-newspaper.webp"
+                            alt=""
+                            style={{ aspectRatio: 1 / 1 }}
+                        />
+                        <img
+                            src="/src/assets/images/icon/ui-icon-newspaper-text.webp"
+                            alt=""
+                        />
+                    </div>
                 </div>
             </div>
 
             {/* 우측 하단 ui */}
-            <div className="absolute w-[12%] h-[20%]  bottom-[2%] right-[1%]">
-                <div className="relative w-full h-full flex items-center justify-center">
+            <div className="absolute w-[40%] h-[20%]  bottom-[4%] right-[1%]">
+                <div className="relative w-full h-full flex items-center justify-end">
                     <div
-                        className="w-[50%] h-[100%]  bg-no-repeat cursor-pointer"
-                        style={{
-                            backgroundImage:
-                                'url(/src/assets/images/icon/ui-icon-setting.png)',
-                            backgroundSize: 'contain ',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat',
+                        className="w-[19%] h-[100%] cursor-pointer"
+                        onClick={() => {
+                            openSettingElement();
                         }}
-                        onClick={() => openSettingElement()}
-                    />
+                    >
+                        <img
+                            className="w-full"
+                            src="/src/assets/images/icon/ui-icon-setting.webp"
+                            alt=""
+                            style={{ aspectRatio: 1 / 1 }}
+                        />
+                        <img
+                            src="/src/assets/images/icon/ui-icon-setting-text.webp"
+                            alt=""
+                        />
+                    </div>
                     <div
-                        className="w-[50%] h-[100%]  bg-no-repeat cursor-pointer"
-                        style={{
-                            backgroundImage:
-                                'url(/src/assets/images/icon/ui-icon-quit.png)',
-                            backgroundSize: 'contain ',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat',
+                        className="w-[19%] h-[100%] cursor-pointer"
+                        onClick={() => {
+                            proceedLogout();
                         }}
-                        onClick={proceedLogout}
-                    />
+                    >
+                        <img
+                            className="w-full"
+                            src="/src/assets/images/icon/ui-icon-quit.webp"
+                            alt=""
+                            style={{ aspectRatio: 1 / 1 }}
+                        />
+                        <img
+                            src="/src/assets/images/icon/ui-icon-quit-text.webp"
+                            alt=""
+                        />
+                    </div>
                 </div>
             </div>
 
