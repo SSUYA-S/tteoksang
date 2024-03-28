@@ -110,7 +110,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**").permitAll()  // 인증 및 토큰 재발급 허용
                         .requestMatchers("/resources/**").permitAll() //리소스 불러오기 허용
                         .requestMatchers("/game/**").permitAll() // 웹소켓 허용
-                        .requestMatchers("/error").permitAll() // 에러메세지 처리
+                        .requestMatchers("/error/**").permitAll() // 에러메세지 처리
                         .requestMatchers("/js/**").permitAll()
                         .requestMatchers("/test/**").permitAll()
                         .anyRequest().authenticated());
