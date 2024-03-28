@@ -168,8 +168,13 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
                         .purchasedQuantity(redisGameInfo.getPurchaseQuantity())
                         .build();
             } catch (Exception e) {
+                isSuccess = false;
                 log.error(e.getMessage());
             }
+        }
+        else {
+            isSuccess = false;
+            log.error("없는 게임 정보입니다.");
         }
         return GameMessageInfo.builder()
                 .body(responseBody)
@@ -273,8 +278,13 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
                         .purchasedQuantity(redisGameInfo.getPurchaseQuantity())
                         .build();
             } catch (Exception e) {
+                isSuccess = false;
                 log.error(e.getMessage());
             }
+        }
+        else {
+            isSuccess = false;
+            log.error("없는 게임 정보입니다.");
         }
         return GameMessageInfo.builder()
                 .body(responseBody)
@@ -313,6 +323,9 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
                 log.error("없는 창고 입니다.");
             }
         }
+        else {
+            log.error("없는 게임 정보입니다.");
+        }
         return GameMessageInfo.builder()
                 .body(responseBody)
                 .isSuccess(isSuccess)
@@ -350,6 +363,9 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
                 log.error("없는 환전소 입니다.");
             }
         }
+        else {
+            log.error("없는 게임 정보입니다.");
+        }
         return GameMessageInfo.builder()
                 .body(responseBody)
                 .isSuccess(isSuccess)
@@ -386,6 +402,9 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
             } catch (VehicleNotExistException e) {
                 log.error("없는 운송수단 입니다.");
             }
+        }
+        else {
+            log.error("없는 게임 정보입니다.");
         }
         return GameMessageInfo.builder()
                 .body(responseBody)
