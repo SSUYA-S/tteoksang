@@ -35,6 +35,21 @@ export default function InfraModal(props: InfraType) {
         (state: any) => state.reduxFlag.myProductSlice.brokerLevel
     );
 
+    useEffect(() => {
+        // ESC 키를 눌렀을 때 실행할 함수
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                props.setFacilityFlag(false); // ESC 키가 눌리면 컴포넌트를 안 보이게 설정
+            }
+        };
+        // 컴포넌트가 마운트될 때 keydown 이벤트 리스너 추가
+        document.addEventListener('keydown', handleKeyDown);
+
+        // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
     useEffect(() => {}, [warehouseLevel, vehicleLevel, brokerLevel]);
 
     const dispatch = useDispatch();

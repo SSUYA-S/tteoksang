@@ -59,44 +59,62 @@ export default function TradeModal(props: tradeType) {
 
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        // ESC 키를 눌렀을 때 실행할 함수
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                props.setTradeFlag(false); // ESC 키가 눌리면 컴포넌트를 안 보이게 설정
+            }
+        };
+        // 컴포넌트가 마운트될 때 keydown 이벤트 리스너 추가
+        document.addEventListener('keydown', handleKeyDown);
+
+        // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
     /**초기 로딩 */
     useEffect(() => {
         //구매 품목 관련 로드
         const buyable: BuyInfo[] = [];
-        productInfoAndEvent.buyableProductIdList.map((id: number) => {
-            //내 보유 품목 조회
-            //평균 구매가 계산 위해
-            const myProduct: ProductBucket = {
-                productId: id,
-                productQuantity: 0,
-                productTotalCost: 0,
-            };
+        if (productInfoAndEvent.buyableProductIdList) {
+            productInfoAndEvent.buyableProductIdList.map((id: number) => {
+                //내 보유 품목 조회
+                //평균 구매가 계산 위해
+                const myProduct: ProductBucket = {
+                    productId: id,
+                    productQuantity: 0,
+                    productTotalCost: 0,
+                };
 
-            for (let i = 0; i < myProductList.length; i++) {
-                const product = myProductList[i];
-                if (product.productId === id) {
-                    myProduct.productQuantity = product.productQuantity;
-                    myProduct.productTotalCost = product.productTotalCost;
-                    break;
+                for (let i = 0; i < myProductList.length; i++) {
+                    const product = myProductList[i];
+                    if (product.productId === id) {
+                        myProduct.productQuantity = product.productQuantity;
+                        myProduct.productTotalCost = product.productTotalCost;
+                        break;
+                    }
                 }
-            }
 
-            //살 정보 관련
-            const buyingInfo: ProductBucket = {
-                productId: id,
-                productQuantity: 0,
-                productTotalCost: 0,
-            };
+                //살 정보 관련
+                const buyingInfo: ProductBucket = {
+                    productId: id,
+                    productQuantity: 0,
+                    productTotalCost: 0,
+                };
 
-            //집어넣기
-            const product: BuyInfo = {
-                productName: props.productResource[id - 1].productName,
-                productInfo: productInfoAndEvent.productInfoList[id - 1],
-                myProduct: myProduct,
-                buyingInfo: buyingInfo,
-            };
-            buyable.push(product);
-        });
+                //집어넣기
+                const product: BuyInfo = {
+                    productName: props.productResource[id - 1].productName,
+                    productInfo: productInfoAndEvent.productInfoList[id - 1],
+                    myProduct: myProduct,
+                    buyingInfo: buyingInfo,
+                };
+                buyable.push(product);
+            });
+        }
+
         setBuyableProduct(buyable);
 
         //판매 품목 관련 로드
@@ -483,15 +501,16 @@ export default function TradeModal(props: tradeType) {
         } else if (tradeTab === 2) {
             return (
                 <>
-                    <div className="w-[80%] h-full">
-                        <div className="h-[15%] flex justify-between items-end pb-4">
-                            <p className="text-[2.4vw] color-text-textcolor">
+                    <div className="w-[88%] h-full">
+                        <div className="h-[15%] flex justify-between items-end pb-[0.4vw]">
+                            <p className="text-[3vw] color-text-textcolor">
                                 오늘의 시세
                             </p>
                         </div>
-                        <div className="flex h-[80%] m-4 flex-wrap bg-white rounded-xl border-4 border-black p-2">
-                            <table className="w-[100%] h-[100%] text-4xl overflow-y-scroll table-auto">
-                                <tr className="border-y-4 border-black">
+                        <div className="flex flex-col h-[80%] m-[0.2vw] flex-wrap overflow-auto bg-white rounded-[1vw] border-[0.3vw] color-border-subbold p-[0.4vw]">
+                            <table className="relative w-[100%] h-[100%] text-[1.4vw] table-auto">
+                                <tr className="relative border-b-[0.2vw] color-border-subbold">
+                                    <th>작물</th>
                                     <th>품목</th>
                                     <th>개당가격</th>
                                     <th>보유개수</th>
@@ -502,10 +521,22 @@ export default function TradeModal(props: tradeType) {
                                         if (product.productId !== 0) {
                                             return (
                                                 <tr
-                                                    className="border-y-2 border-black"
+                                                    className="relative border-y-[0.2vw] border-black"
                                                     key={product.productId}
                                                 >
-                                                    <td>
+                                                    <div
+                                                        className={
+                                                            'w-fit h-[60%] bg-no-repeat mx-auto sprite-img-crop ' +
+                                                            `crop-img-${
+                                                                product.productId -
+                                                                1
+                                                            }`
+                                                        }
+                                                        style={{
+                                                            aspectRatio: 1 / 1,
+                                                        }}
+                                                    ></div>
+                                                    <td className="py-[1vw]">
                                                         {
                                                             props
                                                                 .productResource[
