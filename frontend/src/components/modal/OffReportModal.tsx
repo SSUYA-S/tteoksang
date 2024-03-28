@@ -1,8 +1,9 @@
-import { OfflineReportType, Product } from '../../type/types';
+import { OfflineReportType, Product, Title } from '../../type/types';
 import offlineData from '../../dummy-data/report/offline.json';
 import { useEffect, useState } from 'react';
 import RentFeeModal from './RentFeeModal';
 import { Client } from '@stomp/stompjs';
+import TitleChangeModal from './TitleChangeModal';
 
 interface Prop {
     offReport: OfflineReportType | null;
@@ -11,6 +12,7 @@ interface Prop {
     productList: Product[];
     webSocketId: string;
     webSocketClient: Client;
+    titleList: Title[];
 }
 
 export default function OffReportModal(props: Prop) {
@@ -18,12 +20,15 @@ export default function OffReportModal(props: Prop) {
     const Off = offlineData;
     // const Off = props.offReport;
 
-    const nowTurn = 125;
+    const nowTurn = 121;
     // const nowTurn = props.nowTurn;
 
     //0: 임대료, 1: 보고서
     const [mode, setMode] = useState<number>(0);
+    //어떤 종류? 분기, 반기, 여러 반기
     const [reportType, setReportType] = useState<number>(0);
+    //페이지
+    const [page, setPage] = useState<number>(1);
 
     const showReport = () => {
         setMode(1);
@@ -105,8 +110,66 @@ export default function OffReportModal(props: Prop) {
                     productList={props.productList}
                     endGame={endGame}
                 />
+            ) : mode === 1 ? (
+                <>
+                    {/* x버튼 */}
+                    <div
+                        className="w-[60%] h-[70%] absolute left-[20%] top-[15%] color-border-subbold border-[0.5vw] bg-white z-10 flex items-center color-text-subbold"
+                        style={{ transform: 'rotate(-5deg)' }}
+                    ></div>
+                    <div className="w-[60%] h-[70%] absolute left-[20%] top-[15%] color-border-subbold border-[0.5vw] bg-white z-20 flex flex-col items-center color-text-subbold">
+                        <div className="w-full h-[15%] px-[1vw] py-[1vh] flex justify-between items-center">
+                            {reportType === 0 || page === 1 ? (
+                                <div className="w-[10%] h-full mx-[1.2vw] my-[1vh]"></div>
+                            ) : (
+                                <div
+                                    className="w-[10%] h-full mx-[1.2vw] my-[1vh] border-[0.3vw] color-border-subbold cursor-pointer flex justify-center items-center"
+                                    onClick={() => {
+                                        if (page > 1) {
+                                            setPage((prev) => prev - 1);
+                                        }
+                                    }}
+                                >
+                                    <p className="text-[1.5vw]">이전</p>
+                                </div>
+                            )}
+                            <p className="text-[2vw]">{`미접속 결산`}</p>
+                            {reportType === 0 || page === 4 ? (
+                                <div className="w-[10%] h-full mx-[1.2vw] my-[1vh]"></div>
+                            ) : (
+                                <div
+                                    className="w-[10%] h-full mx-[1.2vw] my-[1vh] border-[0.3vw] color-border-subbold cursor-pointer flex justify-center items-center"
+                                    onClick={() => {
+                                        if (page < 4) {
+                                            setPage((prev) => prev + 1);
+                                        }
+                                    }}
+                                >
+                                    <p className="text-[1.5vw]">다음</p>
+                                </div>
+                            )}
+                        </div>
+                        <div className="w-full px-[1vw] h-[0.3vh]">
+                            <div className="w-full h-full color-bg-subbold"></div>
+                        </div>
+                        <div className="w-full h-[85%]"></div>
+                        <div
+                            className="absolute text-[2vw] flex items-center justify-center text-white -top-[1.6vw] -right-[2vw] w-[4vw] h-[4vw] border-[0.4vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer z-30"
+                            onClick={() => {
+                                props.setIsOffReportAvail(false);
+                            }}
+                        >
+                            X
+                        </div>
+                    </div>
+                </>
             ) : (
-                <></>
+                <TitleChangeModal
+                    setMode={setMode}
+                    titleList={props.titleList}
+                    webSocketId={props.webSocketId}
+                    webSocketClient={props.webSocketClient}
+                />
             )}
         </>
     );
