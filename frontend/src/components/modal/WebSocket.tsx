@@ -73,9 +73,9 @@ export default function WebSocket(props: Prop) {
                             const info = msg.body;
                             console.log(info);
                             dispatch(productInfoState(info.productInfoList));
-                            dispatch(
-                                buyableProductIdState(info.buyableProductIdList)
-                            );
+                            // dispatch(
+                            //     buyableProductIdState(info.buyableProductIdList)
+                            // );
                             dispatch(specialEventState(info.specialEventId));
                             //새 턴이 시작되었으니 이번 턴에 산 품목 개수는 0으로 초기화
                             dispatch(purchasedQuantityState(0));
