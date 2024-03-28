@@ -28,13 +28,17 @@ import {
 } from '../type/types';
 import { themeModeState } from '../util/counter-slice';
 import { checkMyProfile, withdrawal } from '../api/user';
-import ErrorModal from './modal/ErrorModal';
-import WarningModal from './modal/ErrorModal';
+import WarningModal from './modal/WarningModal';
 import ChattingModal from './modal/ChattingModal';
 import WebSocket from './modal/WebSocket';
 import QuarterReportModal from './modal/QuarterReportModal';
 import { Cookies } from 'react-cookie';
 import HalfReportModal from './modal/HalfReportModal';
+import {
+    buyableProductIdState,
+    productInfoState,
+} from '../util/product-and-event';
+import OffReportModal from './modal/OffReportModal';
 
 type GameType = {
     initialData: InitialData;
@@ -88,9 +92,9 @@ export default function GameComponent(props: GameType) {
 
     /**결산 모달 관련 useState */
     const [isQtrReportAvail, setIsQtrReportAvail] = useState<boolean>(false); //분기
-    const [isHlfReportAvail, setIsHlfReportAvail] = useState<boolean>(true); //반기
+    const [isHlfReportAvail, setIsHlfReportAvail] = useState<boolean>(false); //반기
     const [isFinReportAvail, setIsFinReportAvail] = useState<boolean>(false); //전체
-    const [isOffReportAvail, setIsOffReportAvail] = useState<boolean>(false); //미접
+    const [isOffReportAvail, setIsOffReportAvail] = useState<boolean>(true); //미접
 
     const [qtrReport, setQtrReport] = useState<QuarterReportType | null>(null); //분기
     const [hlfReport, setHlfReport] = useState<HalfReportType | null>(null); //반기
@@ -235,6 +239,8 @@ export default function GameComponent(props: GameType) {
     useEffect(() => {
         //초기 정보 설정
         setNowMoney(goldNumber);
+        dispatch(productInfoState(totalInfo.productInfoList));
+        dispatch(buyableProductIdState(totalInfo.buyableProductIdList));
     }, [goldNumber]);
 
     //init
@@ -323,11 +329,6 @@ export default function GameComponent(props: GameType) {
         let moneylength = 0;
         // 빼기면
         moneylength = Math.abs(originMoney - num).toString().length;
-        console.log('자잔');
-        console.log('돈 num : ' + num);
-        console.log('돈 originMoney :' + originMoney);
-        console.log(Math.abs(originMoney - num).toString());
-        console.log(moneylength);
 
         let count = 0;
 
@@ -864,6 +865,20 @@ export default function GameComponent(props: GameType) {
                     webSocketClient={webSocketClient}
                     hlfReport={hlfReport}
                     setStartFlag={props.setStartFlag}
+                    achievementInfo={initialData.achievementList}
+                />
+            ) : (
+                <></>
+            )}
+            {isOffReportAvail ? (
+                <OffReportModal
+                    offReport={offReport}
+                    setIsOffReportAvail={setIsOffReportAvail}
+                    nowTurn={ingameTurn}
+                    productList={initialData.productList}
+                    webSocketId={webSocketId}
+                    webSocketClient={webSocketClient}
+                    titleList={initialData.titleList}
                 />
             ) : (
                 <></>
