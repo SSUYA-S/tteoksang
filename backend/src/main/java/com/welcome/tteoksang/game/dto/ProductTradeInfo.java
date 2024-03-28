@@ -11,5 +11,5 @@ import lombok.*;
 public class ProductTradeInfo {
     private Integer productId;
     private Integer productQuantity;
-    private Integer productTotalCost;
+    private Long productTotalCost;
 }
