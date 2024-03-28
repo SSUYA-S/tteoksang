@@ -52,6 +52,9 @@ public class GameInfo implements Serializable {
     @Column(name = "purchase_quantity")
     private Integer purchaseQuantity;
 
+    @Column(name = "total_product_quantity")
+    private Integer totalProductQuantity;
+
     @Lob
     @Column(name = "products")
     private byte[] products;    // 사용시 역직렬화

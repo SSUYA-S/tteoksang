@@ -9,6 +9,7 @@ create table if not exists game_info(
     last_play_turn int not null,
     last_connect_time timestamp not null,
     purchase_quantity int not null,
+    total_product_quantity int not null,
     products blob not null,
     rent_fee bigint not null,
     foreign key(user_id) references user(user_id),
