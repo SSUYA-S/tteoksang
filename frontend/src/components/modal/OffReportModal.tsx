@@ -1,147 +1,113 @@
-// import { useEffect, useRef, useState } from 'react';
-// import RentFeeModal from './RentFeeModal';
-// import { Title, Event, Product, OfflineReportType } from '../../type/types';
-// import { useSelector } from 'react-redux';
-// import TitleChangeModal from './TitleChangeModal';
-// import { Client } from '@stomp/stompjs';
+import { OfflineReportType, Product } from '../../type/types';
+import offlineData from '../../dummy-data/report/offline.json';
+import { useEffect, useState } from 'react';
+import RentFeeModal from './RentFeeModal';
+import { Client } from '@stomp/stompjs';
 
-// //dummy data(test 후 비활성화 필요)
-// import Off from '../../dummy-data/report/offline.json';
-
-// interface Prop {
-//     titleList: Title[];
-//     eventList: Event[];
-//     productList: Product[];
-//     setIsOffReportAvail: React.Dispatch<React.SetStateAction<boolean>>;
-//     webSocketId: string;
-//     webSocketClient: Client;
-//     offReport: OfflineReportType;
-//     setStartFlag: React.Dispatch<React.SetStateAction<boolean>>;
-// }
+interface Prop {
+    offReport: OfflineReportType | null;
+    setIsOffReportAvail: React.Dispatch<React.SetStateAction<boolean>>;
+    nowTurn: number;
+    productList: Product[];
+    webSocketId: string;
+    webSocketClient: Client;
+}
 
 export default function OffReportModal(props: Prop) {
-    // const [mode, setMode] = useState<number>(0);
-    // const [year, setYear] = useState<number>(0);
-    // const [season, setSeason] = useState<string>('봄');
-    // const [eventDescription, setEventDescription] = useState<string>('');
-    // const [cropName, setCropName] = useState<string>('');
-    // const [cropSeason, setCropSeason] = useState<string>('');
+    //data load 부분(데이터 도착시 주석 처리 바람)
+    const Off = offlineData;
+    // const Off = props.offReport;
 
-    // const eventDescRef = useRef<HTMLDivElement>(null);
-    // const cropDescRef = useRef<HTMLDivElement>(null);
+    const nowTurn = 125;
+    // const nowTurn = props.nowTurn;
 
-    // //test 종료 후 이거 풀어
-    // // const Off = props.qtrReport;
+    //0: 임대료, 1: 보고서
+    const [mode, setMode] = useState<number>(0);
+    const [reportType, setReportType] = useState<number>(0);
 
-    // /**이벤트 이미지 호버링하면 출력 */
-    // const hoverEventImg = (eventId: number) => {
-    //     setEventDescription(eventId + '이벤트 발동');
-    //     if (eventDescRef.current) {
-    //         eventDescRef.current.style.opacity = '100';
-    //         eventDescRef.current.style.transition = 'linear 0.5s';
-    //         eventDescRef.current.style.zIndex = '30';
-    //     }
-    // };
+    const showReport = () => {
+        setMode(1);
+    };
 
-    // /**이벤트 이미지 호버링 끝나면 출력 */
-    // const endHoverEvent = () => {
-    //     if (eventDescRef.current) {
-    //         eventDescRef.current.style.opacity = '0';
-    //         eventDescRef.current.style.transition = 'linear 0.5s';
-    //         eventDescRef.current.style.zIndex = '-20';
-    //     }
-    // };
+    useEffect(() => {
+        //분기가 안 지난 경우는 아얘 정보가 오지 않으니 고려 안함.
+        //몇개 반기, 분기가 지나갔는지 파악
+        //1.각 turn수를 바탕으로 해당 분기가 몇 년 몇 월 시작인지 찾기
+        //2. 이를 토대로 몇 개의 반기가 지나갔는지 계산하기
+        //3. 2개이상 -> reportType 2, 1개 -> reportType 1, 0개 -> reportType 0
+        //0개 분기가 지나간 경우는 서버에서 정보가 전해지지 않는다. 무조건 1개 분기에 대한 정보는 있으니, 그를 기준으로 하자
 
-    // /**작물 이미지 호버링 시 출력 */
-    // const hoverCropImg = (cropId: number) => {
-    //     const crop: Product = props.productList[cropId - 1];
-    //     setCropName(crop.productName);
-    //     switch (crop.productType) {
-    //         case 'SPRING':
-    //             setCropSeason('봄');
-    //             break;
-    //         case 'SUMMER':
-    //             setCropSeason('여름');
-    //             break;
-    //         case 'FALL':
-    //             setCropSeason('가을');
-    //             break;
-    //         case 'WINTER':
-    //             setCropSeason('겨울');
-    //             break;
-    //         case 'ALL':
-    //             setCropSeason('연중 내내');
-    //             break;
-    //     }
-    //     if (cropDescRef.current) {
-    //         cropDescRef.current.style.opacity = '100';
-    //         cropDescRef.current.style.transition = 'linear 0.5s';
-    //         cropDescRef.current.style.zIndex = '30';
-    //     }
-    // };
+        //지난 턴의 분기 시작은?
+        let lastYear = Math.floor((Off.lastGameTurn - 1 + 60) / 360);
+        let lastMonth =
+            ((Math.floor((Off.lastGameTurn - 1) / 30) + 2) % 12) + 1;
+        if (lastMonth <= 2) {
+            lastMonth = 12;
+            lastYear -= 1;
+        } else if (lastMonth <= 5) {
+            lastMonth = 3;
+        } else if (lastMonth <= 8) {
+            lastMonth = 6;
+        } else if (lastMonth <= 11) {
+            lastMonth = 9;
+        }
+        //lastMonth === 12면 수정 불필요
 
-    // /**작물 이미지 호버링 끝나면 출력 */
-    // const endHoverCrop = () => {
-    //     if (cropDescRef.current) {
-    //         cropDescRef.current.style.opacity = '0';
-    //         cropDescRef.current.style.transition = 'linear 0.5s';
-    //         cropDescRef.current.style.zIndex = '-20';
-    //     }
-    // };
+        //이번 정산 턴 기준은?
+        let nowYear = Math.floor((nowTurn - 1 + 60) / 360);
+        let nowMonth = ((Math.floor((nowTurn - 1) / 30) + 2) % 12) + 1;
+        if (nowMonth <= 2) {
+            nowMonth = 12;
+            nowYear -= 1;
+        } else if (nowMonth <= 5) {
+            nowMonth = 3;
+        } else if (nowMonth <= 8) {
+            nowMonth = 6;
+        } else if (nowMonth <= 11) {
+            nowMonth = 9;
+        }
 
-    // //title 가져오기
-    // const titleId = useSelector(
-    //     (state: any) => state.reduxFlag.myProfileSlice.title
-    // );
+        const lastHlf = 2 * lastYear + Math.floor((lastMonth - 1) / 6);
+        const nowHlf = 2 * nowYear + Math.floor((nowMonth - 1) / 6);
+        if (nowHlf - lastHlf >= 2) {
+            setReportType(2);
+        } else if (nowHlf - lastHlf == 1) {
+            setReportType(1);
+        } else {
+            setReportType(0);
+        }
+    }, []);
 
-    // /**rentFeeModal에서 확인 누르면 보고서 보여지도록 만들기 */
-    // const showReport = () => {
-    //     setMode(1);
-    // };
+    /**파산 시 게임 종료 */
+    const endGame = () => {
+        const webSocketId = props.webSocketId;
+        const client = props.webSocketClient;
 
-    // useEffect(() => {
-    //     /**날짜 계산 */
-    //     const turn = Off.turn - 91;
-    //     setYear(Math.floor((turn + 60) / 360));
-    //     const month: number = ((Math.floor(turn / 30) + 2) % 12) + 1;
-    //     if (month === 3) {
-    //         setSeason('봄');
-    //     } else if (month === 6) {
-    //         setSeason('여름');
-    //     } else if (month === 9) {
-    //         setSeason('가을');
-    //     } else {
-    //         setSeason('겨울');
-    //     }
-    // }, []);
+        //게임 포기 요청 보내기(webSocket)
+        client.publish({
+            destination: `/app/private/${webSocketId}`,
+            body: JSON.stringify({
+                type: 'GIVEUP_GAME',
+                body: {},
+            }),
+        });
+    };
 
-    // /**파산 시 게임 종료 */
-    // const endGame = () => {
-    //     const webSocketId = props.webSocketId;
-    //     const client = props.webSocketClient;
-
-    //     //게임 포기 요청 보내기(webSocket)
-    //     client.publish({
-    //         destination: `/app/private/${webSocketId}`,
-    //         body: JSON.stringify({
-    //             type: 'GIVEUP_GAME',
-    //             body: {},
-    //         }),
-    //     });
-
-    //     //웹소켓 통신 비활성화
-    //     client.publish({
-    //         destination: `/app/private/${webSocketId}`,
-    //         body: JSON.stringify({
-    //             type: 'QUIT_GAME',
-    //             body: {},
-    //         }),
-    //     });
-    //     client.deactivate();
-
-    //     //메인 화면으로 나가기
-    //     props.setStartFlag(false);
-    // };
-
-    return <></>;
+    return (
+        <>
+            <div className="absolute w-full h-full top-0 left-0 bg-black opacity-50 z-10 "></div>
+            {mode === 0 ? (
+                <RentFeeModal
+                    rentFeeInfo={Off.rentFeeInfo}
+                    startTurn={Off.lastGameTurn}
+                    endTurn={nowTurn - 1}
+                    showReport={showReport}
+                    productList={props.productList}
+                    endGame={endGame}
+                />
+            ) : (
+                <></>
+            )}
+        </>
+    );
 }
