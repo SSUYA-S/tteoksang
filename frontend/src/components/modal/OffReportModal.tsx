@@ -1,9 +1,10 @@
-import { OfflineReportType, Product, Title } from '../../type/types';
+import { Event, OfflineReportType, Product, Title } from '../../type/types';
 import offlineData from '../../dummy-data/report/offline.json';
 import { useEffect, useState } from 'react';
 import RentFeeModal from './RentFeeModal';
 import { Client } from '@stomp/stompjs';
 import TitleChangeModal from './TitleChangeModal';
+import OffQuarterPage1 from '../../components/section/OffPage/OffQuarterPage1.tsx';
 
 interface Prop {
     offReport: OfflineReportType | null;
@@ -13,6 +14,7 @@ interface Prop {
     webSocketId: string;
     webSocketClient: Client;
     titleList: Title[];
+    eventList: Event[];
 }
 
 export default function OffReportModal(props: Prop) {
@@ -152,7 +154,27 @@ export default function OffReportModal(props: Prop) {
                         <div className="w-full px-[1vw] h-[0.3vh]">
                             <div className="w-full h-full color-bg-subbold"></div>
                         </div>
-                        <div className="w-full h-[85%]"></div>
+                        <div className="w-full h-[85%]">
+                            {reportType === 0 ? (
+                                <OffQuarterPage1
+                                    turn={props.nowTurn}
+                                    lastTurn={Off.lastGameTurn}
+                                    titleList={props.titleList}
+                                    eventList={props.eventList}
+                                    productList={props.productList}
+                                    webSocketClient={props.webSocketClient}
+                                    webSocketId={props.webSocketId}
+                                    halfIncome={Off.quarterReport.quarterProfit}
+                                    halfOutcome={Off.quarterReport.rentFee}
+                                    setMode={setMode}
+                                    inProductList={
+                                        Off.quarterReport.inProductList
+                                    }
+                                />
+                            ) : (
+                                <></>
+                            )}
+                        </div>
                         <div
                             className="absolute text-[2vw] flex items-center justify-center text-white -top-[1.6vw] -right-[2vw] w-[4vw] h-[4vw] border-[0.4vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer z-30"
                             onClick={() => {
