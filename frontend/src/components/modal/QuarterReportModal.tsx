@@ -54,7 +54,7 @@ export default function QuarterReportModal(props: Prop) {
 
     /**작물 이미지 호버링 시 출력 */
     const hoverCropImg = (cropId: number) => {
-        const crop: Product = props.productList[cropId - 1];
+        const crop: Product = props.productList[cropId];
         setCropName(crop.productName);
         switch (crop.productType) {
             case 'SPRING':
