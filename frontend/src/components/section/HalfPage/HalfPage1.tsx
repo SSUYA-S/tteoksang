@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Title, Event, Product, QuarterReportType } from '../../../type/types';
+import { Title, Event, Product } from '../../../type/types';
 import { useSelector } from 'react-redux';
 import { Client } from '@stomp/stompjs';
 
