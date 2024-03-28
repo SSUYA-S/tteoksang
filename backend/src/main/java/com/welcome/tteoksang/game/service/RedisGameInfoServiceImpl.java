@@ -42,6 +42,7 @@ public class RedisGameInfoServiceImpl implements RedisGameInfoService {
                         .lastPlayTurn(redisGameInfo.getLastPlayTurn())
                         .lastConnectTime(LocalDateTime.now())
                         .purchaseQuantity(redisGameInfo.getPurchaseQuantity())
+                        .totalProductQuantity(redisGameInfo.getTotalProductQuantity())
                         .products(gameInfoProducts)
                         .rentFee(redisGameInfo.getRentFee())
                         .build();

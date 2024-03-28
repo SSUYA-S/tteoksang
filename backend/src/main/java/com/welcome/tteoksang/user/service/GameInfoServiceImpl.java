@@ -1,6 +1,7 @@
 package com.welcome.tteoksang.user.service;
 
 import com.welcome.tteoksang.game.dto.RedisGameInfo;
+import com.welcome.tteoksang.game.dto.UserProductInfo;
 import com.welcome.tteoksang.redis.RedisPrefix;
 import com.welcome.tteoksang.redis.RedisSerializationUtil;
 import com.welcome.tteoksang.redis.RedisService;
@@ -56,7 +57,7 @@ public class GameInfoServiceImpl implements GameInfoService {
     public void loadGameInfo(String userId) {
         // DB에서 gameInfo 불러오기
         GameInfo gameInfo = searchGameInfo(userId);
-        Map<Integer, Object> products;
+        Map<Integer, UserProductInfo> products;
         String gameInfoKey = RedisPrefix.INGAMEINFO.prefix() + userId;
         if (gameInfo != null) {
             // 농산물 데이터 역직렬화
@@ -74,7 +75,7 @@ public class GameInfoServiceImpl implements GameInfoService {
             gameInfo = GameInfo.builder()
                     .userId(userId)
                     .gameId(1)// 현재 게임 ID
-                    .gold(1234L)
+                    .gold(10000000L)
                     .warehouseLevel(1)
                     .vehicleLevel(1)
                     .brokerLevel(1)
@@ -82,6 +83,7 @@ public class GameInfoServiceImpl implements GameInfoService {
                     .lastPlayTurn(1)
                     .lastConnectTime(LocalDateTime.now())
                     .purchaseQuantity(0)
+                    .totalProductQuantity(0)
                     .rentFee(0L)
                     .build();
         }
@@ -96,6 +98,7 @@ public class GameInfoServiceImpl implements GameInfoService {
                 .privateEventId(gameInfo.getPrivateEventId())
                 .lastPlayTurn(gameInfo.getLastPlayTurn())
                 .lastConnectTime(gameInfo.getLastConnectTime())
+                .totalProductQuantity(gameInfo.getTotalProductQuantity())
                 .purchaseQuantity(gameInfo.getPurchaseQuantity())
                 .products(products) // 작물 데이터가 있는 경우 들어감
                 .rentFee(gameInfo.getRentFee())
