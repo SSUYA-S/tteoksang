@@ -69,7 +69,7 @@ public class GameInfoServiceImpl implements GameInfoService {
                     gameInfo.getWarehouseLevel(), gameInfo.getVehicleLevel(), products.toString()
             );
         }
-        // TODO:게임 데이터가 없는 경우 새로운 게임
+        // FIXME:게임 데이터가 없는 경우 새로운 게임
         else {
             products = new HashMap<>();
             gameInfo = GameInfo.builder()

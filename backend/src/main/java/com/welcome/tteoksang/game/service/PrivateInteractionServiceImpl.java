@@ -36,6 +36,8 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
     private final BrokerRepository brokerRepository;
     private final VehicleRepository vehicleRepository;
 
+    final double DISCOUNT_RATE = 100.0; // 할인율을 %로 표현
+
     // 한턴에 살 수 있는 양
     private final int SERVERQUANTITY = 100;
 
@@ -63,7 +65,7 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
         boolean isSuccess = true;
         if (redisGameInfo != null) {
             // 유저가 가진 농산물 정보 불러오기
-            // TODO: 서버에서 수량 제한을 여기서 설정
+            // FIXME: 서버에서 수량 제한을 여기서 설정
 
             // 초기 설정
             Map<Integer, UserProductInfo> products = redisGameInfo.getProducts();
@@ -186,7 +188,7 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
         // 게임 정보가 있는 경우 판매
         if (redisGameInfo != null) {
             // 유저가 가진 농산물 정보 불러오기
-            // TODO: 서버에서 수량 제한을 여기서 설정
+            // FIXME: 서버에서 수량 제한을 여기서 설정
 
             // 초기 설정
             Map<Integer, UserProductInfo> products = redisGameInfo.getProducts();
@@ -206,7 +208,7 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
             int pastTotalProductQuantity = redisGameInfo.getTotalProductQuantity();
 
             try {
-                // TODO: 클라이언트에서 구매한 농산물의 수량, 각 농산물의 총 가격 합을 보내줌 이걸 서버 가격으로 바꿔야 됨
+                // FIXME: 클라이언트에서 구매한 농산물의 수량, 각 농산물의 총 가격 합을 보내줌 이걸 서버 가격으로 바꿔야 됨
                 // body에 있는 구매 정보 파싱
                 Map<Integer, UserProductInfo> messageProductsMap = getProductBody(body);
 
@@ -242,7 +244,10 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
                     totalProductQuantity -= messagePurchaseQuantity;
 
                     // 판매 후 금액
-                    remainGold += (long) (messageProductTotalCost * Math.ceil((double) (100 - productCharge) /100)); //FIXME: 서버 가격으러 변경해야 됨
+                    double chargeRate = (DISCOUNT_RATE - productCharge) / DISCOUNT_RATE;
+                    long adjustedCost = (long) (messageProductTotalCost * Math.ceil(chargeRate));
+                    remainGold += adjustedCost;
+//                    remainGold += (long) (messageProductTotalCost * Math.ceil((double) (100 - productCharge) /100)); //FIXME: 서버 가격으러 변경해야 됨
 
                     // product 반영
                     products.replace(messageProductId, UserProductInfo.builder()
