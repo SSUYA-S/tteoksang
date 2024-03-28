@@ -59,60 +59,63 @@ public class GameInfoServiceImpl implements GameInfoService {
         GameInfo gameInfo = searchGameInfo(userId);
         Map<Integer, UserProductInfo> products;
         String gameInfoKey = RedisPrefix.INGAMEINFO.prefix() + userId;
-        if (gameInfo != null) {
-            // 농산물 데이터 역직렬화
-            products = RedisSerializationUtil.deserializeMap(gameInfo.getProducts());
+        // 동시 접속인지 확인
+        if (!redisService.hasKey(gameInfoKey)) {
+            if (gameInfo != null) {
+                // 농산물 데이터 역직렬화
+                products = RedisSerializationUtil.deserializeMap(gameInfo.getProducts());
 
-            // 게임 데이터 불러오기 위한 정보 확인
-            log.debug("[InGameChannelInterceptor] - inGameInfo : {}, {}, {}, {}, {}"
-                    , gameInfo.getGameId(), gameInfo.getGold(),
-                    gameInfo.getWarehouseLevel(), gameInfo.getVehicleLevel(), products.toString()
-            );
-        }
-        // FIXME:게임 데이터가 없는 경우 새로운 게임
-        else {
-            products = new HashMap<>();
-            gameInfo = GameInfo.builder()
-                    .userId(userId)
-                    .gameId(1)// 현재 게임 ID
-                    .gold(10000000L)
-                    .warehouseLevel(1)
-                    .vehicleLevel(1)
-                    .brokerLevel(1)
-                    .privateEventId("없음")
-                    .lastPlayTurn(1)
-                    .lastConnectTime(LocalDateTime.now())
-                    .purchaseQuantity(0)
-                    .totalProductQuantity(0)
-                    .rentFee(0L)
+                // 게임 데이터 불러오기 위한 정보 확인
+                log.debug("[InGameChannelInterceptor] - inGameInfo : {}, {}, {}, {}, {}"
+                        , gameInfo.getGameId(), gameInfo.getGold(),
+                        gameInfo.getWarehouseLevel(), gameInfo.getVehicleLevel(), products.toString()
+                );
+            }
+            // FIXME:게임 데이터가 없는 경우 새로운 게임
+            else {
+                products = new HashMap<>();
+                gameInfo = GameInfo.builder()
+                        .userId(userId)
+                        .gameId(1)// 현재 게임 ID
+                        .gold(10000000L)
+                        .warehouseLevel(1)
+                        .vehicleLevel(1)
+                        .brokerLevel(1)
+                        .privateEventId("없음")
+                        .lastPlayTurn(1)
+                        .lastConnectTime(LocalDateTime.now())
+                        .purchaseQuantity(0)
+                        .totalProductQuantity(0)
+                        .rentFee(0L)
+                        .build();
+            }
+
+            // 레디스에 이전 게임 데이터 저장
+            RedisGameInfo redisGameInfo = RedisGameInfo.builder()
+                    .gameId(gameInfo.getGameId())
+                    .gold(gameInfo.getGold())
+                    .warehouseLevel(gameInfo.getWarehouseLevel())
+                    .vehicleLevel(gameInfo.getVehicleLevel())
+                    .brokerLevel(gameInfo.getBrokerLevel())
+                    .privateEventId(gameInfo.getPrivateEventId())
+                    .lastPlayTurn(gameInfo.getLastPlayTurn())
+                    .lastConnectTime(gameInfo.getLastConnectTime())
+                    .totalProductQuantity(gameInfo.getTotalProductQuantity())
+                    .purchaseQuantity(gameInfo.getPurchaseQuantity())
+                    .products(products) // 작물 데이터가 있는 경우 들어감
+                    .rentFee(gameInfo.getRentFee())
                     .build();
+
+            redisService.setValues(gameInfoKey, redisGameInfo);
+
+            RedisGameInfo redisGameInfoData = (RedisGameInfo) redisService.getValues(gameInfoKey);
+            log.debug("[InGameChannelInterceptor] - redisGameInfoData : {}, {}, {}, {}"
+                    , redisGameInfoData.getGameId(), redisGameInfoData.getGold(),
+                    redisGameInfoData.getWarehouseLevel(), redisGameInfoData.getVehicleLevel()
+            );
+
+            // DB 게임 데이터 제거
+            deleteGameInfo(userId);
         }
-
-        // 레디스에 이전 게임 데이터 저장
-        RedisGameInfo redisGameInfo = RedisGameInfo.builder()
-                .gameId(gameInfo.getGameId())
-                .gold(gameInfo.getGold())
-                .warehouseLevel(gameInfo.getWarehouseLevel())
-                .vehicleLevel(gameInfo.getVehicleLevel())
-                .brokerLevel(gameInfo.getBrokerLevel())
-                .privateEventId(gameInfo.getPrivateEventId())
-                .lastPlayTurn(gameInfo.getLastPlayTurn())
-                .lastConnectTime(gameInfo.getLastConnectTime())
-                .totalProductQuantity(gameInfo.getTotalProductQuantity())
-                .purchaseQuantity(gameInfo.getPurchaseQuantity())
-                .products(products) // 작물 데이터가 있는 경우 들어감
-                .rentFee(gameInfo.getRentFee())
-                .build();
-
-        redisService.setValues(gameInfoKey, redisGameInfo);
-
-        RedisGameInfo redisGameInfoData = (RedisGameInfo) redisService.getValues(gameInfoKey);
-        log.debug("[InGameChannelInterceptor] - redisGameInfoData : {}, {}, {}, {}"
-                , redisGameInfoData.getGameId(), redisGameInfoData.getGold(),
-                redisGameInfoData.getWarehouseLevel(), redisGameInfoData.getVehicleLevel()
-        );
-
-        // DB 게임 데이터 제거
-        deleteGameInfo(userId);
     }
 }
