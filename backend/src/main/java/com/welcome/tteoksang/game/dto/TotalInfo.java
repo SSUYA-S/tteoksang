@@ -19,7 +19,7 @@ public class TotalInfo {
     private String turnStartTime;
     private Integer turn;
     private Integer themeId;
-    private Map<Integer, Object> products; // 유저가 가지고 있는 농산물 정보
+    private Map<Integer, UserProductInfo> products; // 유저가 가지고 있는 농산물 정보
     private List<ProductInfo> productInfoList; // 서버 내 농산물 정보
     private List<Integer> buyAbleProductIdList;
     private Integer purchasedQuantity;

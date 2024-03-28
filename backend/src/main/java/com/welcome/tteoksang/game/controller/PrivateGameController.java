@@ -3,6 +3,7 @@ package com.welcome.tteoksang.game.controller;
 import com.welcome.tteoksang.game.dto.*;
 import com.welcome.tteoksang.game.dto.req.GameMessageReq;
 import com.welcome.tteoksang.game.dto.res.GameMessageRes;
+import com.welcome.tteoksang.game.scheduler.ServerInfo;
 import com.welcome.tteoksang.game.service.PrivateInfoService;
 import com.welcome.tteoksang.game.service.PrivateInteractionService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,8 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Controller
@@ -61,16 +64,40 @@ public class PrivateGameController {
             }
             // 상품 구매
             case BUY_PRODUCT: {
-                gameMessageInfo = privateInteractionService.buyProduct(body, userId);
-                responseBody = gameMessageInfo.getBody();
-                isSuccess = gameMessageInfo.getIsSuccess();
+                Integer messageTurn = (Integer) body.get("currentTurn");
+                if(messageTurn == ServerInfo.currentTurn) {
+                    gameMessageInfo = privateInteractionService.buyProduct(body, userId);
+                    responseBody = gameMessageInfo.getBody();
+                    isSuccess = gameMessageInfo.getIsSuccess();
+                }
+                // 메세지가 온 시간과 서버 시간의 차이가 5초 이내면 메세지 처리
+                else if(messageTurn == ServerInfo.currentTurn-1) {
+                    Duration duration = Duration.between(ServerInfo.turnStartTime, LocalDateTime.now());
+                    if(duration.toSeconds() > 5)
+                        break;
+                    gameMessageInfo = privateInteractionService.buyProduct(body, userId);
+                    responseBody = gameMessageInfo.getBody();
+                    isSuccess = gameMessageInfo.getIsSuccess();
+                }
                 break;
             }
             // 상품 판매
             case SELL_PRODUCT: {
-                gameMessageInfo = privateInteractionService.sellProduct(body, userId);
-                responseBody = gameMessageInfo.getBody();
-                isSuccess = gameMessageInfo.getIsSuccess();
+                Integer messageTurn = (Integer) body.get("currentTurn");
+                if(messageTurn == ServerInfo.currentTurn) {
+                    gameMessageInfo = privateInteractionService.sellProduct(body, userId);
+                    responseBody = gameMessageInfo.getBody();
+                    isSuccess = gameMessageInfo.getIsSuccess();
+                }
+                // 메세지가 온 시간과 서버 시간의 차이가 5초 이내면 메세지 처리
+                else if(messageTurn == ServerInfo.currentTurn-1) {
+                    Duration duration = Duration.between(ServerInfo.turnStartTime, LocalDateTime.now());
+                    if(duration.toSeconds() > 5)
+                        break;
+                    gameMessageInfo = privateInteractionService.sellProduct(body, userId);
+                    responseBody = gameMessageInfo.getBody();
+                    isSuccess = gameMessageInfo.getIsSuccess();
+                }
                 break;
             }
             // 창고 업그레이드
