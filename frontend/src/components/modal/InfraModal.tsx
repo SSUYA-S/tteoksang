@@ -50,7 +50,17 @@ export default function InfraModal(props: InfraType) {
             document.removeEventListener('keydown', handleKeyDown);
         };
     }, []);
-    useEffect(() => {}, [warehouseLevel, vehicleLevel, brokerLevel]);
+
+    useEffect(() => {
+        //facility level upgrade후 redux 변화 반영
+        if (facilityType === 1) {
+            setNowLevel(vehicleLevel);
+        } else if (facilityType === 2) {
+            setNowLevel(warehouseLevel);
+        } else if (facilityType === 3) {
+            setNowLevel(brokerLevel);
+        }
+    }, [warehouseLevel, vehicleLevel, brokerLevel]);
 
     const dispatch = useDispatch();
 
@@ -79,26 +89,6 @@ export default function InfraModal(props: InfraType) {
     };
 
     const upgradeFacility = () => {
-        let upgradeFee: number = 0;
-
-        if (facilityType === 1) {
-            upgradeFee =
-                props.infraInfo.vehicleInfoList[nowLevel - 1].vehicleUpgradeFee;
-            dispatch(vehicleLevelState(nowLevel + 1));
-        } else if (facilityType === 2) {
-            upgradeFee =
-                props.infraInfo.warehouseInfoList[nowLevel - 1]
-                    .warehouseUpgradeFee;
-            dispatch(warehouseLevelState(nowLevel + 1));
-        } else if (facilityType === 3) {
-            upgradeFee =
-                props.infraInfo.brokerInfoList[nowLevel - 1].brokerUpgradeFee;
-            dispatch(brokerLevelState(nowLevel + 1));
-        }
-        props.updateNowMoney(-1 * upgradeFee);
-
-        setNowLevel((prev) => prev + 1);
-
         //이게 찐
         let typeMsg: string = '';
         if (facilityType === 1) {

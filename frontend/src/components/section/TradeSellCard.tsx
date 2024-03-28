@@ -52,7 +52,7 @@ export default function TradeSellCard({
                     <div
                         className={
                             'w-fit h-[60%] bg-no-repeat mx-auto sprite-img-crop ' +
-                            `crop-img-${productId - 1}`
+                            `crop-img-${productId}`
                         }
                         style={{
                             aspectRatio: 1 / 1,
