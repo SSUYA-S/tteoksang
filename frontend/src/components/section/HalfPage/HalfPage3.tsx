@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RankReportType } from '../../../type/types';
 import { useSelector } from 'react-redux';
 import {
@@ -50,7 +50,7 @@ export default function HalfPage3(props: Prop) {
         indexAxis: 'y' as const,
         elements: {
             bar: {
-                borderWidth: 2,
+                borderWidth: 1,
             },
         },
         responsive: true,
@@ -185,7 +185,7 @@ export default function HalfPage3(props: Prop) {
                     </div>
                 </div>
                 {/* 통계 자료 보여주기 */}
-                <Bar options={options} data={data} />
+                <Bar options={options} data={data} height={'50%'} />
             </div>
         </>
     );
