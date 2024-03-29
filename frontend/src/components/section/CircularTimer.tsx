@@ -4,18 +4,23 @@ import { themeState } from '../../util/counter-slice';
 
 interface CircularTimerProps {
     duration: number;
+    ingameTime: string;
     setTurnTimer: React.Dispatch<React.SetStateAction<number>>;
     setIngameTurn: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const CircularTimer: React.FC<CircularTimerProps> = ({
     duration,
+    ingameTime,
     setTurnTimer,
     setIngameTurn,
 }) => {
     const [timer, setTimer] = useState<number>(duration);
     const [percent, setPercent] = useState<number>(100);
     useEffect(() => {
+        setTimer(duration);
+        setPercent(100);
+        setTurnTimer(duration);
         const intervalId = setInterval(() => {
             setTimer((prevTimer) => {
                 let newTimer = prevTimer - 1;
@@ -24,13 +29,10 @@ const CircularTimer: React.FC<CircularTimerProps> = ({
 
                 //배경 바꾸기 (오토여야함)
                 // console.log(newTimer);
-                if (newTimer % 5 === 0) {
-                    setTurnTimer(newTimer);
-                }
+                setTurnTimer(newTimer);
 
                 if (newTimer === 0) {
                     newTimer = duration;
-                    setIngameTurn((prev) => prev + 1);
                     setPercent((newTimer / duration) * 100);
                 }
                 return newTimer;
@@ -38,7 +40,7 @@ const CircularTimer: React.FC<CircularTimerProps> = ({
         }, 1000);
 
         return () => clearInterval(intervalId);
-    }, [duration]);
+    }, [duration, ingameTime]);
 
     const timerStyle: React.CSSProperties = {
         width: '100%',

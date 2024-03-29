@@ -1,0 +1,389 @@
+.sprite-img-crop {
+    height: 100%;
+}
+
+.crop-img-0 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 0 0 no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-1 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 14% 0 no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-2 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 0% 14% no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-3 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 14% 14%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-4 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 28% 0 no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-5 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 28% 14%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-6 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 28% 28%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-7 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 0 28% no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-8 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 43% 14%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-9 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 0% 42% no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-10 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 14% 29%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-11 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 42% 42%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-12 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 43% 0% no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-13 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 58% 14%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-14 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 58% 28%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-15 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 58% 42%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-16 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 1% 57% no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-17 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 15% 57%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-18 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 29% 57%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-19 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 43% 57%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-20 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 43% 28%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-21 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 57% 57%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-22 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 14% 43%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-23 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 71% 0% no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-24 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 28% 43%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-25 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 14% 71%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-26 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 71% 14%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-27 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 57% 0% no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-28 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 0 71% no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-29 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 71% 71%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-30 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 57% 71%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-31 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 71% 57%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-32 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 71% 29%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-33 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 85% 14%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-34 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 28% 71%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-35 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 85% 42%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-36 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 0% 85% no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-37 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 14% 86%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-38 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 72% 42%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-39 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 28% 86%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-40 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 85% 0% no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-41 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 42% 71%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-42 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 42% 85%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-43 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 85% 28%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-44 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 56% 85%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-45 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 85% 71%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-46 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 85% 57%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-47 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 70% 85%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-49 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 85% 85%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-48 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 100% 43%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-50 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 100% 0%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-51 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 100% 14%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-52 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 100% 28%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-53 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 100% 85%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-54 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 0% 100%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-55 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 100% 71%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
+
+.crop-img-56 {
+    background: url('/src/assets/images/crop/crop-sprites.png') 100% 56%
+        no-repeat;
+    -webkit-background-size: 800% 800%;
+    background-size: 800% 800%;
+}
