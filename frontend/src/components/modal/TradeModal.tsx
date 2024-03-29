@@ -391,12 +391,12 @@ export default function TradeModal(props: tradeType) {
         if (tradeTab === 0) {
             return (
                 <>
-                    <div className="w-[60%] h-full">
-                        <div className="h-[15%] flex justify-between items-end pb-[0.2vh]">
+                    <div className="w-[55%] h-full">
+                        <div className="h-[18%] flex justify-between items-end pb-[0.2vh]">
                             <p className="text-[3vw] color-text-textcolor">
                                 물품 구매
                             </p>
-                            <div className="w-[35%] flex justify-between text-[1.6vw] color-text-textcolor">
+                            <div className="w-[40%] flex justify-between text-[1.6vw] color-text-textcolor me-[1vw]">
                                 <p>예상 창고 용량</p>
                                 <p>
                                     {totalNumber}/
@@ -408,7 +408,7 @@ export default function TradeModal(props: tradeType) {
                                 </p>
                             </div>
                         </div>
-                        <div className="flex h-[80%] m-[0.4vw] flex-wrap overflow-y-auto">
+                        <div className="flex h-[75%] m-[0.4vw] flex-wrap overflow-y-auto">
                             {buyableProduct.map((product) => {
                                 return (
                                     <TradeBuyCard
@@ -423,7 +423,7 @@ export default function TradeModal(props: tradeType) {
                             })}
                         </div>
                     </div>
-                    <div className="w-[28%] h-full p-[0.4vw]">
+                    <div className="w-[28%] h-full p-[0.4vw] flex items-center">
                         <TradeBuyReceipt
                             buyableInfoList={buyableProduct}
                             maximumBuyable={maximumBuyableAmount.current}
@@ -435,12 +435,12 @@ export default function TradeModal(props: tradeType) {
         } else if (tradeTab === 1) {
             return (
                 <>
-                    <div className="w-[60%] h-full">
-                        <div className="h-[15%] flex justify-between items-end pb-[0.2vh]">
+                    <div className="w-[55%] h-full">
+                        <div className="h-[18%] flex justify-between items-end pb-[0.2vh]">
                             <p className="text-[3vw] color-text-textcolor">
                                 물품 판매
                             </p>
-                            <div className="w-[35%] flex justify-between text-[1.6vw] color-text-textcolor">
+                            <div className="w-[40%] flex justify-between text-[1.6vw] color-text-textcolor me-[1vw]">
                                 <p>예상 창고 용량</p>
                                 <p>
                                     {totalNumber}/
@@ -452,19 +452,23 @@ export default function TradeModal(props: tradeType) {
                                 </p>
                             </div>
                         </div>
-                        <div className="flex h-[80%] m-[0.4vw] flex-wrap overflow-y-auto">
+                        <div className="flex h-[75%] m-[0.4vw] flex-wrap overflow-y-auto">
                             {sellingProductList.map((product) => {
                                 return (
-                                    <TradeSellCard
-                                        key={product.productInfo.productId}
-                                        sellInfo={product}
-                                        updateSellingList={updateSellingList}
-                                    />
+                                    <>
+                                        <TradeSellCard
+                                            key={product.productInfo.productId}
+                                            sellInfo={product}
+                                            updateSellingList={
+                                                updateSellingList
+                                            }
+                                        />
+                                    </>
                                 );
                             })}
                         </div>
                     </div>
-                    <div className="w-[28%] h-full p-[0.4vw]">
+                    <div className="w-[28%] h-full p-[0.4vw] flex items-center">
                         <TradeSellReceipt
                             sellableInfoList={sellingProductList}
                             fee={
@@ -481,12 +485,12 @@ export default function TradeModal(props: tradeType) {
             return (
                 <>
                     <div className="w-[88%] h-full">
-                        <div className="h-[15%] flex justify-between items-end pb-[0.4vw]">
+                        <div className="h-[18%] flex justify-between items-end pb-[0.2vh]">
                             <p className="text-[3vw] color-text-textcolor">
                                 오늘의 시세
                             </p>
                         </div>
-                        <div className="flex flex-col h-[80%] m-[0.2vw] flex-wrap overflow-auto bg-white rounded-[1vw] border-[0.3vw] color-border-subbold p-[0.4vw]">
+                        <div className="flex flex-col w-[94%] h-[70%] m-[0.2vw] flex-wrap overflow-auto bg-white rounded-[1vw] border-[0.3vw] color-border-subbold p-[0.4vw]">
                             <table className="relative w-[100%] h-[100%] text-[1.4vw] table-auto">
                                 <tr className="relative border-b-[0.2vw] color-border-subbold">
                                     <th>작물</th>
@@ -563,8 +567,16 @@ export default function TradeModal(props: tradeType) {
         }
     };
     return (
-        <section className="relative w-[80%] h-[80%] flex justify-center items-center border-[0.4vw] color-border-sublight color-bg-main rounded-[1vw] z-50 animation-modal mt-[1vh]">
-            <div className="w-[12%] h-full">
+        <section
+            className="relative w-[80%] h-[86%] flex justify-center items-center color-border-sublight z-50 animation-modal mt-[1vh]"
+            style={{
+                background: 'url(/src/assets/images/layout/ui-board.webp)',
+                backgroundSize: 'cover',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
+            }}
+        >
+            <div className="w-[12%] h-full ms-[2vw]">
                 <div className="h-[15%]" />
                 <div className="flex flex-col items-center ">
                     <div

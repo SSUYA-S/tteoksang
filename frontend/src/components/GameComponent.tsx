@@ -13,7 +13,6 @@ import { Client } from '@stomp/stompjs';
 
 import InventoryModal from './modal/InventoryModal';
 import InfraModal from './modal/InfraModal';
-import { goldState } from '../util/myproduct-slice';
 
 import {
     Article,
@@ -24,17 +23,13 @@ import {
     QuarterReportType,
 } from '../type/types';
 import { themeModeState } from '../util/counter-slice';
-import { checkMyProfile, withdrawal } from '../api/user';
+import { withdrawal } from '../api/user';
 import WarningModal from './modal/WarningModal';
 import ChattingModal from './modal/ChattingModal';
 import WebSocket from './modal/WebSocket';
 import QuarterReportModal from './modal/QuarterReportModal';
 import { Cookies } from 'react-cookie';
 import HalfReportModal from './modal/HalfReportModal';
-import {
-    buyableProductIdState,
-    productInfoState,
-} from '../util/product-and-event';
 import OffReportModal from './modal/OffReportModal';
 
 type GameType = {
@@ -933,6 +928,7 @@ export default function GameComponent(props: GameType) {
                     webSocketClient={webSocketClient}
                     titleList={initialData.titleList}
                     eventList={initialData.eventList}
+                    achievementInfo={initialData.achievementList}
                 />
             ) : (
                 <></>

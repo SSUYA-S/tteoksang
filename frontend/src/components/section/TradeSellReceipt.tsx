@@ -19,7 +19,7 @@ export default function TradeSellReceipt({
     const totalProfit = totalCost - totalFee;
 
     return (
-        <div className="w-full h-full flex flex-col justify-between items-center bg-white color-text-textcolor border-[0.4vw] rounded-[1vw] color-border-subbold">
+        <div className="w-[90%] h-[80%] flex flex-col justify-between items-center bg-white color-text-textcolor border-[0.4vw] rounded-[1vw] color-border-subbold">
             <p className="h-[15%] text-[2.4vw] flex items-center justify-center">
                 판매 영수증
             </p>
