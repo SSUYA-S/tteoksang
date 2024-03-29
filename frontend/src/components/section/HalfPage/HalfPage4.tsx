@@ -28,7 +28,15 @@ export default function HalfPage4(props: Prop) {
                     </div>
                     <div className="w-full h-[35%] flex justify-around">
                         <div className="w-[50%] h-full flex flex-col items-center">
-                            <img className="w-[5vw] h-[5vw]" src="/그거" />
+                            <div
+                                className={
+                                    'w-[6vw] h-[6vw] bg-no-repeat mx-auto sprite-img-crop ' +
+                                    `crop-img-${props.tteoksangStatistics.values[0].productId}`
+                                }
+                                style={{
+                                    aspectRatio: 1 / 1,
+                                }}
+                            ></div>
                             <p className="text-[1vw]">최다 떡상</p>
                             <p className="text-[1.5vw]">
                                 {`${
@@ -42,7 +50,15 @@ export default function HalfPage4(props: Prop) {
                             </p>
                         </div>
                         <div className="w-[50%] h-full flex flex-col items-center">
-                            <img className="w-[5vw] h-[5vw]" src="/그거" />
+                            <div
+                                className={
+                                    'w-[6vw] h-[6vw] bg-no-repeat mx-auto sprite-img-crop ' +
+                                    `crop-img-${props.tteokrockStatistics.values[0].productId}`
+                                }
+                                style={{
+                                    aspectRatio: 1 / 1,
+                                }}
+                            ></div>
                             <p className="text-[1vw]">최다 떡락</p>
                             <p className="text-[1.5vw]">
                                 {`${
@@ -62,7 +78,15 @@ export default function HalfPage4(props: Prop) {
                     </div>
                     <div className="w-full h-[35%] flex justify-around">
                         <div className="w-[50%] h-full flex flex-col items-center">
-                            <img className="w-[5vw] h-[5vw]" src="/그거" />
+                            <div
+                                className={
+                                    'w-[6vw] h-[6vw] bg-no-repeat mx-auto sprite-img-crop ' +
+                                    `crop-img-${props.bestSellerStatistics.values[0].productId}`
+                                }
+                                style={{
+                                    aspectRatio: 1 / 1,
+                                }}
+                            ></div>
                             <p className="text-[1vw]">최다 거래</p>
                             <p className="text-[1.5vw]">
                                 {`${
@@ -74,15 +98,32 @@ export default function HalfPage4(props: Prop) {
                             </p>
                         </div>
                         <div className="w-[50%] h-full flex flex-col items-center">
-                            <img className="w-[5vw] h-[5vw]" src="/그거" />
-                            <p className="text-[1vw]">2위</p>
+                            <div
+                                className={
+                                    'w-[6vw] h-[6vw] bg-no-repeat mx-auto sprite-img-crop ' +
+                                    `crop-img-${
+                                        props.bestSellerStatistics.values[
+                                            props.bestSellerStatistics.values
+                                                .length - 1
+                                        ].productId
+                                    }`
+                                }
+                                style={{
+                                    aspectRatio: 1 / 1,
+                                }}
+                            ></div>
+                            <p className="text-[1vw]">최소 거래</p>
                             <p className="text-[1.5vw]">
                                 {`${
                                     props.productList[
-                                        props.bestSellerStatistics.values[1]
-                                            .productId
+                                        props.bestSellerStatistics.values[
+                                            props.bestSellerStatistics.values
+                                                .length - 1
+                                        ].productId
                                     ].productName
-                                } : ${props.bestSellerStatistics.values[1].value.toLocaleString()}`}
+                                } : ${props.bestSellerStatistics.values[
+                                    props.bestSellerStatistics.values.length - 1
+                                ].value.toLocaleString()}`}
                             </p>
                         </div>
                     </div>
