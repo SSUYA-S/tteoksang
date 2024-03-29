@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import {
     Product,
     Stat,
@@ -12,15 +13,61 @@ interface Prop {
     bestSellerStatistics: Stat;
     achievementInfo: Achievement[];
     achievementList: AchievementReport[];
+    newTteoksang: Stat;
+    newTteokrock: Stat;
+    newBestSeller: Stat;
 }
 
-export default function OffHalfPage4(props: Prop) {
+export default function OffManyHalfPage4(props: Prop) {
+    const [isRecent, setIsRecent] = useState<boolean>(false);
+    const [tteoksang, setTteoksang] = useState<Stat>(props.tteoksangStatistics);
+    const [tteokrock, setTteokrock] = useState<Stat>(props.tteokrockStatistics);
+    const [bestSeller, setBestSeller] = useState<Stat>(
+        props.bestSellerStatistics
+    );
+
+    useEffect(() => {
+        if (isRecent) {
+            setTteoksang(props.tteoksangStatistics);
+            setTteokrock(props.tteokrockStatistics);
+            setBestSeller(props.bestSellerStatistics);
+        } else {
+            setTteoksang(props.newTteoksang);
+            setTteokrock(props.newTteokrock);
+            setBestSeller(props.newBestSeller);
+        }
+    }, [isRecent]);
+
+    const toggle = () => {
+        setIsRecent((prev) => !prev);
+    };
+
     return (
         <>
             <div className="w-full h-full flex items-center">
                 <div className="w-[50%] h-full flex flex-col p-[1vw]">
-                    <div className="w-full h-[10%] text-[2vw] text-left color-text-subbold">
-                        통계
+                    <div className="w-full h-[10%] text-[2vw] text-left color-text-subbold flex justify-between">
+                        <p>통계</p>
+                        <div
+                            className={`relative w-[50%] h-full text-[1.5vw] color-border-subbold border-[0.1vw] flex justify-center items-center rounded-[5vh] cursor-pointer  ${
+                                isRecent ? 'color-bg-subbold' : 'bg-white'
+                            }`}
+                            onClick={toggle}
+                        >
+                            <div
+                                className={`absolute top-[50%] h-[90%] aspect-square color-border-subbold border-[0.1vw] rounded-[5vh] bg-white`}
+                                style={{
+                                    left: isRecent ? '90%' : '10%',
+                                    transition: 'all linear 0.3s',
+                                    transform: 'translate(-50%, -50%)',
+                                }}
+                            ></div>
+                            {isRecent ? (
+                                <p className="text-white">최신</p>
+                            ) : (
+                                <p className="">과거</p>
+                            )}
+                        </div>
                     </div>
                     {/* 이번 반기 최대 떡상/떡락 */}
                     <div className="w-full h-[10%] text-[1.5vw] text-left color-text-subbold">
@@ -31,7 +78,7 @@ export default function OffHalfPage4(props: Prop) {
                             <div
                                 className={
                                     'w-[6vw] h-[6vw] bg-no-repeat mx-auto sprite-img-crop ' +
-                                    `crop-img-${props.tteoksangStatistics.values[0].productId}`
+                                    `crop-img-${tteoksang.values[0].productId}`
                                 }
                                 style={{
                                     aspectRatio: 1 / 1,
@@ -41,19 +88,16 @@ export default function OffHalfPage4(props: Prop) {
                             <p className="text-[1.5vw]">
                                 {`${
                                     props.productList[
-                                        props.tteoksangStatistics.values[0]
-                                            .productId
+                                        tteoksang.values[0].productId
                                     ].productName
-                                } : ${
-                                    props.tteoksangStatistics.values[0].value
-                                }%`}
+                                } : ${tteoksang.values[0].value}%`}
                             </p>
                         </div>
                         <div className="w-[50%] h-full flex flex-col items-center">
                             <div
                                 className={
                                     'w-[6vw] h-[6vw] bg-no-repeat mx-auto sprite-img-crop ' +
-                                    `crop-img-${props.tteokrockStatistics.values[0].productId}`
+                                    `crop-img-${tteokrock.values[0].productId}`
                                 }
                                 style={{
                                     aspectRatio: 1 / 1,
@@ -63,12 +107,9 @@ export default function OffHalfPage4(props: Prop) {
                             <p className="text-[1.5vw]">
                                 {`${
                                     props.productList[
-                                        props.tteokrockStatistics.values[0]
-                                            .productId
+                                        tteokrock.values[0].productId
                                     ].productName
-                                } : ${
-                                    props.tteokrockStatistics.values[0].value
-                                }%`}
+                                } : ${tteokrock.values[0].value}%`}
                             </p>
                         </div>
                     </div>
@@ -81,7 +122,7 @@ export default function OffHalfPage4(props: Prop) {
                             <div
                                 className={
                                     'w-[6vw] h-[6vw] bg-no-repeat mx-auto sprite-img-crop ' +
-                                    `crop-img-${props.bestSellerStatistics.values[0].productId}`
+                                    `crop-img-${bestSeller.values[0].productId}`
                                 }
                                 style={{
                                     aspectRatio: 1 / 1,
@@ -91,10 +132,9 @@ export default function OffHalfPage4(props: Prop) {
                             <p className="text-[1.5vw]">
                                 {`${
                                     props.productList[
-                                        props.bestSellerStatistics.values[0]
-                                            .productId
+                                        bestSeller.values[0].productId
                                     ].productName
-                                } : ${props.bestSellerStatistics.values[0].value.toLocaleString()}`}
+                                } : ${bestSeller.values[0].value.toLocaleString()}`}
                             </p>
                         </div>
                         <div className="w-[50%] h-full flex flex-col items-center">
@@ -102,9 +142,8 @@ export default function OffHalfPage4(props: Prop) {
                                 className={
                                     'w-[6vw] h-[6vw] bg-no-repeat mx-auto sprite-img-crop ' +
                                     `crop-img-${
-                                        props.bestSellerStatistics.values[
-                                            props.bestSellerStatistics.values
-                                                .length - 1
+                                        bestSeller.values[
+                                            bestSeller.values.length - 1
                                         ].productId
                                     }`
                                 }
@@ -116,13 +155,12 @@ export default function OffHalfPage4(props: Prop) {
                             <p className="text-[1.5vw]">
                                 {`${
                                     props.productList[
-                                        props.bestSellerStatistics.values[
-                                            props.bestSellerStatistics.values
-                                                .length - 1
+                                        bestSeller.values[
+                                            bestSeller.values.length - 1
                                         ].productId
                                     ].productName
-                                } : ${props.bestSellerStatistics.values[
-                                    props.bestSellerStatistics.values.length - 1
+                                } : ${bestSeller.values[
+                                    bestSeller.values.length - 1
                                 ].value.toLocaleString()}`}
                             </p>
                         </div>
