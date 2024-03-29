@@ -65,32 +65,30 @@ export default function MainPage() {
     }, []);
 
     useEffect(() => {
-        // if (checksumData.checksumList.length > 0) {
-            const resourceCall = [
-                resourceAchievement(),
-                resourceEvent(),
-                resourceInfra(),
-                resourceMessageType(),
-                resourceProduct(),
-                resourceProfileFrame(),
-                resourceProfileIcon(),
-                resourceTheme(),
-                resourceTitle(),
-            ];
-            Promise.all(resourceCall).then((result) => {
-                result.map((item) => {
-                    const objectKey = Object.keys(item.data);
-                    // console.log(item.data);
+        const resourceCall = [
+            resourceAchievement(),
+            resourceEvent(),
+            resourceInfra(),
+            resourceMessageType(),
+            resourceProduct(),
+            resourceProfileFrame(),
+            resourceProfileIcon(),
+            resourceTheme(),
+            resourceTitle(),
+        ];
+        Promise.all(resourceCall).then((result) => {
+            result.map((item) => {
+                const objectKey = Object.keys(item.data);
+                // console.log(item.data);
 
-                    // 데이터 저장
-                    pushInitialData(objectKey.toString(), item);
-                    const hashMD5 = createMD5(JSON.stringify(item.data));
-                    changeNewChecksum(objectKey.toString(), hashMD5);
+                // 데이터 저장
+                pushInitialData(objectKey.toString(), item);
+                const hashMD5 = createMD5(JSON.stringify(item.data));
+                changeNewChecksum(objectKey.toString(), hashMD5);
 
-                    // console.log(hashMD5);
-                });
+                // console.log(hashMD5);
             });
-        // }
+        });
     }, [checksumData]);
 
     useEffect(() => {

@@ -159,12 +159,7 @@ const cacheFirst = async ({ request, preloadResponsePromise, fallbackUrl }) => {
 // fetch event
 self.addEventListener('fetch', (e) => {
     console.log(e);
-    if (
-        e.request.url.includes('/oauth2/authorization/') ||
-        e.request.url.includes('/oauth2/') ||
-        e.request.url.includes('auth') ||
-        e.request.url.includes('google')
-    ) {
+    if (e.request.url.includes('/api/oauth2/authorization/google')) {
         console.log('서비스 워커가 요청 가로챔 ' + e.request.url);
         console.log('구글 요청은 가로채지 않고 돌려보냄');
         return;
