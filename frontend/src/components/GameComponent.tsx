@@ -53,6 +53,7 @@ export default function GameComponent(props: GameType) {
     const [duration, setDuration] = useState<number>(20);
     const [ingameTurn, setIngameTurn] = useState<number>(1);
     const [ingameTime, setIngameTime] = useState<string>('00:03:00');
+    const [turnStartTime, setTurnStartTime] = useState<string>('00:03:00');
     const [gameYear, setGameYear] = useState<number>(0);
     const [gameMonth, setGameMonth] = useState<number>(3);
     const [gameDay, setGameDay] = useState<number>(1);
@@ -235,17 +236,16 @@ export default function GameComponent(props: GameType) {
 
     //init
     useEffect(() => {
-        // setIngameTurn(totalInfo.turn);
-        // console.log(totalInfo.turn);
-        // if (totalInfo.turn % 120 > 0 && totalInfo.turn % 120 < 31) {
-        //     setSeasonImg('spring');
-        // } else if (totalInfo.turn % 120 > 30 && totalInfo.turn % 120 < 61) {
-        //     setSeasonImg('summer');
-        // } else if (totalInfo.turn % 120 > 60 && totalInfo.turn % 120 < 91) {
-        //     setSeasonImg('fall');
-        // } else {
-        //     setSeasonImg('winter');
-        // }
+        console.log(ingameTurn % 360);
+        if (ingameTurn % 360 > 0 && ingameTurn % 360 < 91) {
+            setSeasonImg('spring');
+        } else if (ingameTurn % 360 > 90 || ingameTurn % 360 < 181) {
+            setSeasonImg('summer');
+        } else if (ingameTurn % 360 > 180 && ingameTurn % 360 < 271) {
+            setSeasonImg('fall');
+        } else if (ingameTurn % 360 > 270 || ingameTurn % 360 === 0) {
+            setSeasonImg('winter');
+        }
         const handleBeforeUnload = (e: BeforeUnloadEvent) => {
             e.preventDefault();
             e.returnValue =
@@ -263,7 +263,7 @@ export default function GameComponent(props: GameType) {
         console.log(ingameTurn % 360);
         if (ingameTurn % 360 > 0 && ingameTurn % 360 < 91) {
             setSeasonImg('spring');
-        } else if (ingameTurn % 360 > 90 || ingameTurn % 360 < 181) {
+        } else if (ingameTurn % 360 > 90 && ingameTurn % 360 < 181) {
             setSeasonImg('summer');
         } else if (ingameTurn % 360 > 180 && ingameTurn % 360 < 271) {
             setSeasonImg('fall');
@@ -308,24 +308,47 @@ export default function GameComponent(props: GameType) {
 
     const openTradeElement = () => {
         setTradeFlag(true);
+        setMyPageFlag(false);
         setFacilityFlag(false);
+        setNewsFlag(false);
+        setInventoryFlag(false);
     };
     const openFacilityElement = () => {
         setFacilityFlag(true);
+        setMyPageFlag(false);
         setTradeFlag(false);
+        setNewsFlag(false);
+        setInventoryFlag(false);
     };
     const openNewsElement = () => {
+        setFacilityFlag(false);
+        setTradeFlag(false);
+        setMyPageFlag(false);
         setNewsFlag(true);
+        setInventoryFlag(false);
     };
     const openSettingElement = () => {
+        setTradeFlag(false);
+        setFacilityFlag(false);
+        setNewsFlag(false);
+        setMyPageFlag(false);
         setSettingFlag(true);
+        setInventoryFlag(false);
     };
     const openMypageElement = () => {
+        setTradeFlag(false);
+        setFacilityFlag(false);
+        setNewsFlag(false);
         setMyPageFlag(true);
+        setInventoryFlag(false);
     };
 
     const openInventoryElement = () => {
         setInventoryFlag(true);
+        setTradeFlag(false);
+        setFacilityFlag(false);
+        setNewsFlag(false);
+        setMyPageFlag(false);
     };
 
     //gold update시 반영
@@ -869,6 +892,7 @@ export default function GameComponent(props: GameType) {
                 reportReceived={reportReceived}
                 setIngameTurn={setIngameTurn}
                 setIngameTime={setIngameTime}
+                setTurnStartTime={setTurnStartTime}
             />
             {isQtrReportAvail ? (
                 <QuarterReportModal
