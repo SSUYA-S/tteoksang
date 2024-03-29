@@ -121,7 +121,7 @@ export default function InfraModal(props: InfraType) {
                     <div className="w-full h-[20%] flex items-center justify-center text-[2vw]">
                         업그레이드 하고 싶은 항목을 클릭하세요.
                     </div>
-                    <div className="relative w-full h-[80%] flex items-end justify-around">
+                    <div className="relative w-full h-[80%] flex items-end justify-around pb-[1vw]">
                         <div
                             className="w-[33%] h-[80%] cursor-pointer flex flex-col justify-end"
                             onClick={() => {
@@ -409,7 +409,7 @@ export default function InfraModal(props: InfraType) {
                 className="relative w-[94%] h-[90%]"
                 style={{
                     backgroundImage:
-                        'url(/src/assets/images/etc/facility-bg.png)',
+                        'url(/src/assets/images/etc/facility-bg.webp)',
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                     backgroundRepeat: 'no-repeat',
