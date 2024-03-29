@@ -35,6 +35,7 @@ interface Prop {
     setWebSocketClient: Dispatch<SetStateAction<Client>>;
     setIngameTurn: React.Dispatch<React.SetStateAction<number>>;
     setIngameTime: React.Dispatch<React.SetStateAction<string>>;
+    setTurnStartTime: React.Dispatch<React.SetStateAction<string>>;
     client: Client;
     webSocketId: string;
     newsReceived: (turn: number, articleList: Article[]) => void;
@@ -69,14 +70,17 @@ export default function WebSocket(props: Prop) {
                                     //공통 이벤트 수신
                                     if (msg.isSuccess) {
                                         const info = msg.body;
+                                        console.log(info);
                                         dispatch(
                                             productInfoState(
                                                 info.productInfoList
                                             )
                                         );
-                                        // dispatch(
-                                        //     buyableProductIdState(info.buyAbleProductIdList)
-                                        // );
+                                        dispatch(
+                                            buyableProductIdState(
+                                                info.buyAbleProductIdList
+                                            )
+                                        );
                                         dispatch(
                                             specialEventState(
                                                 info.specialEventId
@@ -87,6 +91,9 @@ export default function WebSocket(props: Prop) {
 
                                         props.setIngameTurn(info.turn);
                                         props.setIngameTime(info.inGameTime);
+                                        props.setTurnStartTime(
+                                            info.turnStartTime
+                                        );
 
                                         //추가할 것)시간설정 로직
                                     } else {
