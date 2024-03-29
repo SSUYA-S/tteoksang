@@ -109,10 +109,15 @@ public class UserController {
                 );
     }
 
+    @DeleteMapping("/new-game")
+    public void resetGame(@AuthenticationPrincipal User user) {
+        gameInfoService.startNewGame(user.getUserId());
+    }
+
     @DeleteMapping
     public ResponseEntity<Void> deleteUser(HttpServletRequest request,
-                                             HttpServletResponse response,
-                                             @AuthenticationPrincipal User user) throws URISyntaxException {
+                                           HttpServletResponse response,
+                                           @AuthenticationPrincipal User user) throws URISyntaxException {
         userService.deleteUser(user);
         CookieUtil.deleteTokenCookie(request, response);
         return ResponseEntity.ok().build();
