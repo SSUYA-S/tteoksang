@@ -1,7 +1,6 @@
 package com.welcome.tteoksang.game.exhandler;
 
-import com.welcome.tteoksang.game.exception.WarehouseNotExistException;
-import com.welcome.tteoksang.game.exception.WebSocketIdNotExistException;
+import com.welcome.tteoksang.game.exception.*;
 import com.welcome.tteoksang.user.exception.TitleNotExistException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,6 +55,42 @@ public class GameExceptionHandler {
     makeErrorMessage(errorMessage, e);
 
     errorMessage.append("없는 창고 입니다.");
+    return ResponseEntity.badRequest().body(errorMessage.toString());
+  }
+
+  @ExceptionHandler(BrokerNotExistException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  protected ResponseEntity<String> brokerNotExistsExceptionHandler(
+          BrokerNotExistException e) {
+    StringBuilder errorMessage = new StringBuilder();
+
+    makeErrorMessage(errorMessage, e);
+
+    errorMessage.append("없는 교환소 입니다.");
+    return ResponseEntity.badRequest().body(errorMessage.toString());
+  }
+
+  @ExceptionHandler(VehicleNotExistException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  protected ResponseEntity<String> vehicleNotExistsExceptionHandler(
+          VehicleNotExistException e) {
+    StringBuilder errorMessage = new StringBuilder();
+
+    makeErrorMessage(errorMessage, e);
+
+    errorMessage.append("없는 운송수단 입니다.");
+    return ResponseEntity.badRequest().body(errorMessage.toString());
+  }
+
+  @ExceptionHandler(PurchaseException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  protected ResponseEntity<String> purchaseExceptionHandler(
+          PurchaseException e) {
+    StringBuilder errorMessage = new StringBuilder();
+
+    makeErrorMessage(errorMessage, e);
+
+    errorMessage.append("구매 오류 입니다.");
     return ResponseEntity.badRequest().body(errorMessage.toString());
   }
 }

@@ -1,13 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import TradeBuyReceipt from '../section/TradeBuyReceipt';
 import TradeBuyCard from '../section/TradeBuyCard';
 import TradeSellCard from '../section/TradeSellCard';
 import TradeSellReceipt from '../section/TradeSellReceipt';
 import { InfraList, Product } from '../../type/types';
-
-//import dummy datas
-// import infraInfo from '../../dummy-data/resource/Infra.json';
-// import productResource from '../../dummy-data/resource/Product.json';
 
 import { myProductState } from '../../util/myproduct-slice';
 import { useDispatch, useSelector } from 'react-redux';
@@ -45,88 +41,129 @@ export default function TradeModal(props: tradeType) {
     );
 
     const myProductList = myProductInfo.myProductList;
+
+    //최대 구매 가능 값 갱신
+    const maximumBuyableAmount = useRef<number>(0);
+    useEffect(() => {
+        maximumBuyableAmount.current = Math.min(
+            props.infraInfo.warehouseInfoList[myProductInfo.warehouseLevel - 1]
+                .warehouseCapacity,
+            props.infraInfo.vehicleInfoList[myProductInfo.vehicleLevel - 1]
+                .vehicleCapacity
+        );
+        maximumBuyableAmount.current -= myProductInfo.purchasedQuantity;
+    }, [
+        myProductInfo.purchasedQuantity,
+        myProductInfo.warehouseLevel,
+        myProductInfo.vehicleLevel,
+        props.infraInfo.warehouseInfoList,
+        props.infraInfo.vehicleInfoList,
+    ]);
     //구매 가능 검증용 변수, 창고에 있는 재고 불러와 계산하는 로직 추가
-    let maximumBuyableAmount = Math.min(
-        props.infraInfo.warehouseInfoList[myProductInfo.warehouseLevel - 1]
-            .warehouseCapacity,
-        props.infraInfo.vehicleInfoList[myProductInfo.vehicleLevel - 1]
-            .vehicleCapacity
-    );
-    maximumBuyableAmount -= myProductInfo.purchasedQuantity;
 
     //현재 창고 내 재고
     const [nowStock, setNowStock] = useState<number>(0);
 
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        // ESC 키를 눌렀을 때 실행할 함수
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                props.setTradeFlag(false); // ESC 키가 눌리면 컴포넌트를 안 보이게 설정
+            }
+        };
+        // 컴포넌트가 마운트될 때 keydown 이벤트 리스너 추가
+        document.addEventListener('keydown', handleKeyDown);
+
+        // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
     /**초기 로딩 */
     useEffect(() => {
         //구매 품목 관련 로드
         const buyable: BuyInfo[] = [];
-        productInfoAndEvent.buyableProductIdList.map((id: number) => {
-            //내 보유 품목 조회
-            //평균 구매가 계산 위해
-            const myProduct: ProductBucket = {
-                productId: id,
-                productQuantity: 0,
-                productTotalCost: 0,
-            };
-
-            for (let i = 0; i < myProductList.length; i++) {
-                const product = myProductList[i];
-                if (product.productId === id) {
-                    myProduct.productQuantity = product.productQuantity;
-                    myProduct.productTotalCost = product.productTotalCost;
-                    break;
+        if (productInfoAndEvent.buyableProductIdList) {
+            productInfoAndEvent.buyableProductIdList.map((id: number) => {
+                //내 보유 품목 조회
+                //평균 구매가 계산 위해
+                const myProduct: ProductBucket = {
+                    productId: id,
+                    productQuantity: 0,
+                    productTotalCost: 0,
+                };
+                //내가 가진 정보로부터 평균가 계산
+                for (let i = 0; i < myProductList.length; i++) {
+                    const product = myProductList[i];
+                    if (product.productId === id) {
+                        myProduct.productQuantity = product.productQuantity;
+                        myProduct.productTotalCost = product.productTotalCost;
+                        break;
+                    }
                 }
-            }
 
-            //살 정보 관련
-            const buyingInfo: ProductBucket = {
-                productId: id,
-                productQuantity: 0,
-                productTotalCost: 0,
-            };
+                //살 정보 관련
+                const buyingInfo: ProductBucket = {
+                    productId: id,
+                    productQuantity: 0,
+                    productTotalCost: 0,
+                };
 
-            //집어넣기
-            const product: BuyInfo = {
-                productName: props.productResource[id - 1].productName,
-                productInfo: productInfoAndEvent.productInfoList[id - 1],
-                myProduct: myProduct,
-                buyingInfo: buyingInfo,
-            };
-            buyable.push(product);
-        });
+                //집어넣기
+                const product: BuyInfo = {
+                    productName: props.productResource[id].productName,
+                    productInfo: productInfoAndEvent.productInfoList[id],
+                    myProduct: myProduct,
+                    buyingInfo: buyingInfo,
+                };
+                buyable.push(product);
+            });
+        }
         setBuyableProduct(buyable);
 
         //판매 품목 관련 로드
         let stock = 0; //현재 창고 내 재고 조사
 
+        //판매 가능한 것 === 내가 보유한 것
+        //고로, 해당 정보 바탕으로 로드
         const myList: SellInfo[] = [];
-        myProductList.map((product: ProductBucket) => {
-            const id = product.productId;
-            const productName = props.productResource[id - 1].productName;
-            const productInfo = productInfoAndEvent.productInfoList[id - 1];
-            const sellingInfo: ProductBucket = {
-                productId: id,
-                productQuantity: 0,
-                productTotalCost: 0,
-            };
+        //없으면 생략
+        if (myProductList.length !== 0) {
+            myProductList.map((product: ProductBucket) => {
+                const id = product.productId;
+                const productName = props.productResource[id].productName;
+                const productInfo = productInfoAndEvent.productInfoList[id];
+                const sellingInfo: ProductBucket = {
+                    productId: id,
+                    productQuantity: 0,
+                    productTotalCost: 0,
+                };
 
-            const result: SellInfo = {
-                productName: productName,
-                productInfo: productInfo,
-                myProduct: product,
-                sellingInfo: sellingInfo,
-            };
-            myList.push(result);
+                const result: SellInfo = {
+                    productName: productName,
+                    productInfo: productInfo,
+                    myProduct: product,
+                    sellingInfo: sellingInfo,
+                };
+                myList.push(result);
 
-            stock += product.productQuantity;
-        });
+                stock += product.productQuantity;
+            });
+        }
+        //판매 정보 갱신
         setSellingProductList(myList);
+
+        //내 현재 재고 갱신
         setTotalNumber(stock);
         setNowStock(stock);
-    }, [myProductInfo, productInfoAndEvent]);
+    }, [
+        myProductInfo,
+        productInfoAndEvent,
+        props.productResource,
+        myProductList,
+    ]);
 
     const changeTab = (prop: number) => {
         setTradeTab(prop);
@@ -163,8 +200,8 @@ export default function TradeModal(props: tradeType) {
             const prodId = product.productInfo.productId;
             //깊은 복사
             const newProductInfo: BuyInfo = {
-                productName: props.productResource[prodId - 1].productName,
-                productInfo: productInfoAndEvent.productInfoList[prodId - 1],
+                productName: props.productResource[prodId].productName,
+                productInfo: productInfoAndEvent.productInfoList[prodId],
                 myProduct: myProduct,
                 buyingInfo: buyingInfo,
             };
@@ -177,8 +214,9 @@ export default function TradeModal(props: tradeType) {
             newList.push(newProductInfo);
         });
         //구매 가능 수량 초과
+        console.log(maximumBuyableAmount.current);
         if (
-            totalBuyNum > maximumBuyableAmount ||
+            totalBuyNum > maximumBuyableAmount.current ||
             totalBuyCost > props.nowMoney
         ) {
             console.log('구매 가능 초과');
@@ -227,8 +265,8 @@ export default function TradeModal(props: tradeType) {
             const prodId = product.productInfo.productId;
             //깊은 복사
             const newProductInfo: SellInfo = {
-                productName: props.productResource[prodId - 1].productName,
-                productInfo: productInfoAndEvent.productInfoList[prodId - 1],
+                productName: props.productResource[prodId].productName,
+                productInfo: productInfoAndEvent.productInfoList[prodId],
                 myProduct: myProduct,
                 sellingInfo: sellingInfo,
             };
@@ -246,55 +284,23 @@ export default function TradeModal(props: tradeType) {
 
     const sellProduct = (value: number) => {
         //판매 금액 표시
-        props.updateNowMoney(value);
-        let total = 0;
-        const newList: SellInfo[] = [];
-        const myNewProductList: ProductBucket[] = [];
-        sellingProductList.map((product) => {
-            const avgCost =
-                product.myProduct.productTotalCost /
-                product.myProduct.productQuantity;
-            const newQuantity =
-                product.myProduct.productQuantity -
-                product.sellingInfo.productQuantity;
-            total += newQuantity;
-            //없으면 추가 안함
-            if (newQuantity !== 0) {
-                const newSellInfo: SellInfo = {
-                    productName: product.productName,
-                    productInfo: product.productInfo,
-                    myProduct: {
-                        productId: product.myProduct.productId,
-                        productQuantity: newQuantity,
-                        productTotalCost: newQuantity * avgCost,
-                    },
-                    sellingInfo: {
-                        productId: product.myProduct.productId,
-                        productQuantity: 0,
-                        productTotalCost: 0,
-                    },
-                };
-                newList.push(newSellInfo);
-                myNewProductList.push(newSellInfo.myProduct);
-            }
-        });
-        setNowStock(total);
-        setSellingProductList(newList);
-        dispatch(myProductState(myNewProductList));
 
-        //물론 이제 이걸로 다 고칠 것이다.
         //웹 소켓 통신
-        const newSellList: ProductBucket[] = [];
+        const newSellList: any = {};
         sellingProductList.map((product) => {
             if (product.sellingInfo.productQuantity !== 0) {
-                newSellList.push(product.sellingInfo);
+                const key = product.sellingInfo.productId;
+                newSellList[`${key}`] = {
+                    productQuantity: product.sellingInfo.productQuantity,
+                    productTotalCost: product.sellingInfo.productTotalCost,
+                };
             }
         });
 
         const sellMsg = JSON.stringify({
             type: 'SELL_PRODUCT',
             body: {
-                productList: newSellList,
+                products: newSellList,
                 currentTurn: props.turn,
             },
         });
@@ -308,58 +314,23 @@ export default function TradeModal(props: tradeType) {
     };
 
     const buyProduct = (a: number) => {
-        const myNewProductList: ProductBucket[] = [];
-        //함수 복사
-        myProductList.map((product: ProductBucket) => {
-            myNewProductList.push({
-                productId: product.productId,
-                productQuantity: product.productQuantity,
-                productTotalCost: product.productTotalCost,
-            });
-        });
-        //재고 추가
-        buyableProduct.map((product) => {
-            //구매 상품이면
-            if (product.buyingInfo.productQuantity !== 0) {
-                //탐색
-                let flag = true;
-                for (let i = 0; i < myProductList.length; i++) {
-                    if (
-                        myNewProductList[i].productId ===
-                        product.buyingInfo.productId
-                    ) {
-                        console.log(myNewProductList[i]);
-                        myNewProductList[i].productQuantity +=
-                            product.buyingInfo.productQuantity;
-                        myNewProductList[i].productTotalCost +=
-                            product.buyingInfo.productTotalCost;
-                        flag = false;
-                        break;
-                    }
-                }
-                //못찾으면 추가
-                if (flag) {
-                    myNewProductList.push(product.buyingInfo);
-                }
-            }
-        });
-        // console.log(myNewProductList);
-        dispatch(myProductState(myNewProductList));
-        props.updateNowMoney(a);
-
         //webSocket으로 대체 예정
         //아래가 그 코드
-        const newBuyList: ProductBucket[] = [];
+        const newBuyList: any = {};
         buyableProduct.map((product) => {
             if (product.buyingInfo.productQuantity !== 0) {
-                newBuyList.push(product.buyingInfo);
+                const key = product.buyingInfo.productId;
+                newBuyList[`${key}`] = {
+                    productQuantity: product.buyingInfo.productQuantity,
+                    productTotalCost: product.buyingInfo.productTotalCost,
+                };
             }
         });
 
         const buyMsg = JSON.stringify({
             type: 'BUY_PRODUCT',
             body: {
-                productList: newBuyList,
+                products: newBuyList,
                 currentTurn: props.turn,
             },
         });
@@ -429,7 +400,7 @@ export default function TradeModal(props: tradeType) {
                     <div className="w-[28%] h-full p-[0.4vw]">
                         <TradeBuyReceipt
                             buyableInfoList={buyableProduct}
-                            maximumBuyable={maximumBuyableAmount}
+                            maximumBuyable={maximumBuyableAmount.current}
                             buyProduct={buyProduct}
                         />
                     </div>
@@ -483,15 +454,16 @@ export default function TradeModal(props: tradeType) {
         } else if (tradeTab === 2) {
             return (
                 <>
-                    <div className="w-[80%] h-full">
-                        <div className="h-[15%] flex justify-between items-end pb-4">
-                            <p className="text-[2.4vw] color-text-textcolor">
+                    <div className="w-[88%] h-full">
+                        <div className="h-[15%] flex justify-between items-end pb-[0.4vw]">
+                            <p className="text-[3vw] color-text-textcolor">
                                 오늘의 시세
                             </p>
                         </div>
-                        <div className="flex h-[80%] m-4 flex-wrap bg-white rounded-xl border-4 border-black p-2">
-                            <table className="w-[100%] h-[100%] text-4xl overflow-y-scroll table-auto">
-                                <tr className="border-y-4 border-black">
+                        <div className="flex flex-col h-[80%] m-[0.2vw] flex-wrap overflow-auto bg-white rounded-[1vw] border-[0.3vw] color-border-subbold p-[0.4vw]">
+                            <table className="relative w-[100%] h-[100%] text-[1.4vw] table-auto">
+                                <tr className="relative border-b-[0.2vw] color-border-subbold">
+                                    <th>작물</th>
                                     <th>품목</th>
                                     <th>개당가격</th>
                                     <th>보유개수</th>
@@ -502,15 +474,24 @@ export default function TradeModal(props: tradeType) {
                                         if (product.productId !== 0) {
                                             return (
                                                 <tr
-                                                    className="border-y-2 border-black"
+                                                    className="relative border-y-[0.2vw] border-black"
                                                     key={product.productId}
                                                 >
-                                                    <td>
+                                                    <div
+                                                        className={
+                                                            'w-fit h-[60%] bg-no-repeat mx-auto sprite-img-crop ' +
+                                                            `crop-img-${product.productId}`
+                                                        }
+                                                        style={{
+                                                            aspectRatio: 1 / 1,
+                                                        }}
+                                                    ></div>
+                                                    <td className="py-[1vw]">
                                                         {
                                                             props
                                                                 .productResource[
-                                                                product.productId -
-                                                                    1
+                                                                product
+                                                                    .productId
                                                             ].productName
                                                         }
                                                     </td>
@@ -616,9 +597,7 @@ export default function TradeModal(props: tradeType) {
             {tradeElement()}
             <div
                 className="absolute text-[2vw] flex items-center justify-center text-white -top-[1.6vw] -right-[2vw] w-[4vw] h-[4vw] border-[0.4vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer"
-                onClick={() => {
-                    closeTradeModal;
-                }}
+                onClick={closeTradeModal}
             >
                 X
             </div>

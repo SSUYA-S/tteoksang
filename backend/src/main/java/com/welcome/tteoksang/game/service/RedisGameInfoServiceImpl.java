@@ -28,7 +28,7 @@ public class RedisGameInfoServiceImpl implements RedisGameInfoService {
             RedisGameInfo redisGameInfo = (RedisGameInfo) redisService.getValues(gameInfoKey);
 
             if (redisGameInfo != null) {
-                // TODO: 상품 직렬화 과정이 필요함
+                // FIXME: 상품 직렬화 과정이 필요함
                 byte[] gameInfoProducts = RedisSerializationUtil.serializeMap(redisGameInfo.getProducts());
                 // 엔티티로 저장
                 GameInfo gameInfo = GameInfo.builder()
@@ -42,6 +42,7 @@ public class RedisGameInfoServiceImpl implements RedisGameInfoService {
                         .lastPlayTurn(redisGameInfo.getLastPlayTurn())
                         .lastConnectTime(LocalDateTime.now())
                         .purchaseQuantity(redisGameInfo.getPurchaseQuantity())
+                        .totalProductQuantity(redisGameInfo.getTotalProductQuantity())
                         .products(gameInfoProducts)
                         .rentFee(redisGameInfo.getRentFee())
                         .build();

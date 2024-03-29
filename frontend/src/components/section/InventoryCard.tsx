@@ -34,14 +34,12 @@ export default function InventoryCard({
                         {'x' + productNumber}
                     </p>
                     <div
-                        className="h-[60%] bg-no-repeat"
+                        className={
+                            'w-fit h-[60%] bg-no-repeat mx-auto sprite-img-crop ' +
+                            `crop-img-${myProduct.productId}`
+                        }
                         style={{
-                            backgroundImage:
-                                'url(/src/assets/images/etc/crop-mango.png)',
-                            backgroundPositionX: '50%',
-                            backgroundPositionY: '-10%',
-                            backgroundSize: 'contain ',
-                            backgroundRepeat: 'no-repeat',
+                            aspectRatio: 1 / 1,
                         }}
                     ></div>
                     <p className="h-[20%] text-[1.1vw] color-text-darkgray">

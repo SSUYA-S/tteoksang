@@ -14,19 +14,19 @@
     ],
     "productInfoList": [
         {
-            "productId": 1,
+            "productId": 0,
             "productCost": 100,
             "productLimit": 100,
             "productFluctuation": 0.12
         },
         {
-            "productId": 2,
+            "productId": 1,
             "productCost": 300,
             "productLimit": 200,
             "productFluctuation": 0.15
         }
     ],
-    "buyableProductIdList": [1, 2],
+    "buyableProductIdList": [0, 1],
     "purchasedQuantity": 30,
     "warehouseLevel": 2,
     "vehicleLevel": 3,

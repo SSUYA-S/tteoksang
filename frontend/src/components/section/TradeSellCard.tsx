@@ -18,7 +18,7 @@ export default function TradeSellCard({
     }
 
     const profit = Math.floor(sellInfo.productInfo.productCost - myAvg);
-
+    const productId = sellInfo.sellingInfo.productId;
     const productNumber = sellInfo.sellingInfo.productQuantity;
     const productCost = sellInfo.sellingInfo.productTotalCost;
 
@@ -50,14 +50,12 @@ export default function TradeSellCard({
                         {'x' + sellInfo.myProduct.productQuantity}
                     </p>
                     <div
-                        className="h-[60%] bg-no-repeat"
+                        className={
+                            'w-fit h-[60%] bg-no-repeat mx-auto sprite-img-crop ' +
+                            `crop-img-${productId}`
+                        }
                         style={{
-                            backgroundImage:
-                                'url(/src/assets/images/etc/crop-mango.png)',
-                            backgroundPositionX: '50%',
-                            backgroundPositionY: '-10%',
-                            backgroundSize: 'contain ',
-                            backgroundRepeat: 'no-repeat',
+                            aspectRatio: 1 / 1,
                         }}
                     ></div>
                     <p className="h-[20%] text-[1.1vw] color-text-darkgray">
@@ -67,7 +65,7 @@ export default function TradeSellCard({
                 <div className="w-[70%] h-full flex flex-col justify-center">
                     <div className="h-[0%]"></div>
                     <div className="w-full h-[80%] flex flex-col items-center justify-start px-[1.0vw]">
-                        <div className="w-full flex justify-between text-[1.3vw] my-[0.8vh]">
+                        <div className="w-full flex justify-between text-[1.3vw] my-[0.4vh]">
                             <p className="color-text-subbold">전일 대비</p>
                             <p className="color-text-blue3">
                                 {sellInfo.productInfo.productFluctuation > 0 ? (
@@ -97,7 +95,7 @@ export default function TradeSellCard({
                             </p>
                             <p className="color-text-subbold">{myAvg}G</p>
                         </div>
-                        <div className="w-full flex justify-between text-[1.3vw] my-[0.8vh] pb-[1vh]">
+                        <div className="w-full flex justify-between text-[1.3vw] my-[0.4vh] pb-[1vh]">
                             <p className="color-text-subbold">구매 대비 이익</p>
                             <p className="color-text-blue3">
                                 {profit > 0 ? (
@@ -116,15 +114,15 @@ export default function TradeSellCard({
                             </p>
                         </div>
                     </div>
-                    <div className="w-full h-[20%] flex justify-center items-center">
+                    <div className="w-full h-[20%] flex justify-center items-center mb-[0.8vh]">
                         <div
-                            className="flex py-[0.2vw] px-[0.4vw] text-[1.3vw] mx-[0.2vw] color-text-orange1 rounded-lg color-bg-yellow1 cursor-pointer"
+                            className="flex py-[0.2vw] px-[0.4vw] text-[1.3vw] mx-[0.2vw] color-text-orange1 rounded-[0.4vw] color-bg-yellow1 cursor-pointer"
                             onClick={() => changeProductNumber(-10)}
                         >
                             ◀
                         </div>
                         <div
-                            className="flex py-[0.2vw] px-[0.4vw] text-[1.3vw] mx-[0.2vw] color-text-orange1 rounded-lg color-bg-yellow1 cursor-pointer"
+                            className="flex py-[0.2vw] px-[0.4vw] text-[1.3vw] mx-[0.2vw] color-text-orange1 rounded-[0.4vw] color-bg-yellow1 cursor-pointer"
                             onClick={() => changeProductNumber(-1)}
                         >
                             ◀

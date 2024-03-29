@@ -11,9 +11,6 @@ import { httpStatusCode } from '../util/http-status';
 import Stomp from '@stomp/stompjs';
 import { Client } from '@stomp/stompjs';
 
-//dummydata
-import totalInfo from '../dummy-data/total-info.json';
-
 import InventoryModal from './modal/InventoryModal';
 import InfraModal from './modal/InfraModal';
 import { goldState } from '../util/myproduct-slice';
@@ -28,13 +25,17 @@ import {
 } from '../type/types';
 import { themeModeState } from '../util/counter-slice';
 import { checkMyProfile, withdrawal } from '../api/user';
-import ErrorModal from './modal/ErrorModal';
-import WarningModal from './modal/ErrorModal';
+import WarningModal from './modal/WarningModal';
 import ChattingModal from './modal/ChattingModal';
 import WebSocket from './modal/WebSocket';
 import QuarterReportModal from './modal/QuarterReportModal';
 import { Cookies } from 'react-cookie';
 import HalfReportModal from './modal/HalfReportModal';
+import {
+    buyableProductIdState,
+    productInfoState,
+} from '../util/product-and-event';
+import OffReportModal from './modal/OffReportModal';
 
 type GameType = {
     initialData: InitialData;
@@ -55,6 +56,7 @@ export default function GameComponent(props: GameType) {
     const [gameYear, setGameYear] = useState<number>(0);
     const [gameMonth, setGameMonth] = useState<number>(3);
     const [gameDay, setGameDay] = useState<number>(1);
+    const [seasonImg, setSeasonImg] = useState<string>('spring');
 
     const [playing, setPlaying] = useState<boolean>(false);
     const [audio, setAudio] = useState(
@@ -88,9 +90,9 @@ export default function GameComponent(props: GameType) {
 
     /**결산 모달 관련 useState */
     const [isQtrReportAvail, setIsQtrReportAvail] = useState<boolean>(false); //분기
-    const [isHlfReportAvail, setIsHlfReportAvail] = useState<boolean>(true); //반기
+    const [isHlfReportAvail, setIsHlfReportAvail] = useState<boolean>(false); //반기
     const [isFinReportAvail, setIsFinReportAvail] = useState<boolean>(false); //전체
-    const [isOffReportAvail, setIsOffReportAvail] = useState<boolean>(false); //미접
+    const [isOffReportAvail, setIsOffReportAvail] = useState<boolean>(true); //미접
 
     const [qtrReport, setQtrReport] = useState<QuarterReportType | null>(null); //분기
     const [hlfReport, setHlfReport] = useState<HalfReportType | null>(null); //반기
@@ -231,16 +233,19 @@ export default function GameComponent(props: GameType) {
         }
     }, [cookies]);
 
-    /**초기정보 세팅 */
-    useEffect(() => {
-        //초기 정보 설정
-        setNowMoney(goldNumber);
-    }, [goldNumber]);
-
     //init
     useEffect(() => {
-        setIngameTurn(totalInfo.turn);
-
+        // setIngameTurn(totalInfo.turn);
+        // console.log(totalInfo.turn);
+        // if (totalInfo.turn % 120 > 0 && totalInfo.turn % 120 < 31) {
+        //     setSeasonImg('spring');
+        // } else if (totalInfo.turn % 120 > 30 && totalInfo.turn % 120 < 61) {
+        //     setSeasonImg('summer');
+        // } else if (totalInfo.turn % 120 > 60 && totalInfo.turn % 120 < 91) {
+        //     setSeasonImg('fall');
+        // } else {
+        //     setSeasonImg('winter');
+        // }
         const handleBeforeUnload = (e: BeforeUnloadEvent) => {
             e.preventDefault();
             e.returnValue =
@@ -255,6 +260,16 @@ export default function GameComponent(props: GameType) {
 
     // 인게임 시간 설정
     useEffect(() => {
+        console.log(ingameTurn % 360);
+        if (ingameTurn % 360 > 0 && ingameTurn % 360 < 91) {
+            setSeasonImg('spring');
+        } else if (ingameTurn % 360 > 90 || ingameTurn % 360 < 181) {
+            setSeasonImg('summer');
+        } else if (ingameTurn % 360 > 180 && ingameTurn % 360 < 271) {
+            setSeasonImg('fall');
+        } else if (ingameTurn % 360 > 270 || ingameTurn % 360 === 0) {
+            setSeasonImg('winter');
+        }
         const date = ingameTurn - 1;
         setGameDay((date % 30) + 1);
         setGameMonth(((Math.floor(date / 30) + 2) % 12) + 1);
@@ -313,21 +328,21 @@ export default function GameComponent(props: GameType) {
         setInventoryFlag(true);
     };
 
+    //gold update시 반영
+    useEffect(() => {
+        //애니메이션 트리거
+        updateNowMoney(goldNumber);
+    }, [goldNumber]);
     /**updateNowMoney(value)
      * 현재 nowMoney값을 value만큼 업데이트
      */
     const updateNowMoney = (value: number) => {
         // 돈 변화 애니메이션
         let originMoney = nowMoney;
-        const num = nowMoney + value;
+        const num = value;
         let moneylength = 0;
         // 빼기면
         moneylength = Math.abs(originMoney - num).toString().length;
-        console.log('자잔');
-        console.log('돈 num : ' + num);
-        console.log('돈 originMoney :' + originMoney);
-        console.log(Math.abs(originMoney - num).toString());
-        console.log(moneylength);
 
         let count = 0;
 
@@ -366,9 +381,6 @@ export default function GameComponent(props: GameType) {
             }, 20);
         }
         // 돈 변화 애니메이션
-
-        //redux 반영
-        dispatch(goldState(num));
     };
 
     /**뉴스 수신 시 뉴스 정보 설정 함수 */
@@ -403,32 +415,32 @@ export default function GameComponent(props: GameType) {
                 <></>
             )}
             <img
-                src={`/src/assets/images/background/bg-${profileTheme}-morning.png`}
+                src={`/src/assets/images/background/bg-${profileTheme}-morning.webp`}
                 className="bg-image -z-20"
                 style={{
                     opacity: theme === 'morning' ? '1' : '0',
                 }}
             />
             <img
-                src={`/src/assets/images/background/bg-${profileTheme}-evening.png`}
+                src={`/src/assets/images/background/bg-${profileTheme}-evening.webp`}
                 className="bg-image -z-20"
                 style={{
                     opacity: theme === 'evening' ? '1' : '0',
                 }}
             />
             <img
-                src={`/src/assets/images/background/bg-${profileTheme}-night.png`}
+                src={`/src/assets/images/background/bg-${profileTheme}-night.webp`}
                 className="bg-image -z-20"
                 style={{
                     opacity: theme === 'night' ? '1' : '0',
                 }}
             />
             <img
-                src={`/src/assets/images/background/bg-${profileTheme}-morning.png`}
+                src={`/src/assets/images/background/bg-${profileTheme}-morning.webp`}
                 className="bg-image -z-30"
             />
             <img
-                src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-morning.png`}
+                src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-morning.webp`}
                 className="bg-image -z-10"
                 style={{
                     opacity:
@@ -438,7 +450,7 @@ export default function GameComponent(props: GameType) {
                 }}
             />
             <img
-                src={`/src/assets/images/backgroundts/bg-${profileTheme}-morning-transparent.png`}
+                src={`/src/assets/images/backgroundts/bg-${profileTheme}-morning-transparent.webp`}
                 className="bg-image"
                 style={{
                     opacity:
@@ -448,7 +460,7 @@ export default function GameComponent(props: GameType) {
                 }}
             />
             <img
-                src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-evening.png`}
+                src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-evening.webp`}
                 className="bg-image -z-10"
                 style={{
                     opacity:
@@ -458,7 +470,7 @@ export default function GameComponent(props: GameType) {
                 }}
             />
             <img
-                src={`/src/assets/images/backgroundts/bg-${profileTheme}-evening-transparent.png`}
+                src={`/src/assets/images/backgroundts/bg-${profileTheme}-evening-transparent.webp`}
                 className="bg-image"
                 style={{
                     opacity:
@@ -468,7 +480,7 @@ export default function GameComponent(props: GameType) {
                 }}
             />
             <img
-                src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-night.png`}
+                src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-night.webp`}
                 className="bg-image -z-10"
                 style={{
                     opacity:
@@ -476,7 +488,7 @@ export default function GameComponent(props: GameType) {
                 }}
             />
             <img
-                src={`/src/assets/images/backgroundts/bg-${profileTheme}-night-transparent.png`}
+                src={`/src/assets/images/backgroundts/bg-${profileTheme}-night-transparent.webp`}
                 className="bg-image"
                 style={{
                     opacity:
@@ -484,14 +496,14 @@ export default function GameComponent(props: GameType) {
                 }}
             />
             <img
-                src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-morning.png`}
+                src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-morning.webp`}
                 className="bg-image -z-20"
                 style={{
                     opacity: themeModeSetting !== 0 ? '1' : '0',
                 }}
             />
             <img
-                src={`/src/assets/images/backgroundts/bg-${profileTheme}-morning-transparent.png`}
+                src={`/src/assets/images/backgroundts/bg-${profileTheme}-morning-transparent.webp`}
                 className="bg-image -z-10"
                 style={{
                     opacity: themeModeSetting !== 0 ? '1' : '0',
@@ -506,7 +518,7 @@ export default function GameComponent(props: GameType) {
             <div className="absolute w-[25%] h-[20%] top-[4%] left-[2%]">
                 <div className="relative w-full h-full flex items-center justify-center color-bg-main  border-[0.2vw] color-border-subbold rounded-[0.4vw] p-[1%] cursor-pointer">
                     <div
-                        className="relative w-full h-full flex"
+                        className="relative w-full h-full flex "
                         onClick={() => openMypageElement()}
                     >
                         <div
@@ -596,6 +608,7 @@ export default function GameComponent(props: GameType) {
                 >
                     <CircularTimer
                         duration={duration}
+                        ingameTime={ingameTime}
                         setTurnTimer={setTurnTimer}
                         setIngameTurn={setIngameTurn}
                     />
@@ -613,8 +626,7 @@ export default function GameComponent(props: GameType) {
                         <div
                             className="absolute w-[60%] h-[60%] z-20 bg-no-repeat bg-center"
                             style={{
-                                backgroundImage:
-                                    'url(/src/assets/images/icon/ui-season-spring.png)',
+                                backgroundImage: `url(/src/assets/images/icon/ui-season-${seasonImg}.png)`,
                                 backgroundSize: 'contain ',
                                 backgroundPosition: 'center',
                                 backgroundRepeat: 'no-repeat',
@@ -625,98 +637,117 @@ export default function GameComponent(props: GameType) {
             </div>
 
             {/* 좌측 하단 ui */}
-            <div className="absolute w-[40%] h-[20%] bottom-[2%] left-[1%]">
-                <div className="relative w-full h-full flex items-center justify-center">
+            <div className="absolute w-[40%] h-[20%] bottom-[4%] left-[1%]">
+                <div className="relative w-full h-full flex items-center justify-start">
                     <div
-                        className="w-[19%] h-[100%] bg-no-repeat cursor-pointer"
-                        style={{
-                            backgroundImage:
-                                'url(/src/assets/images/icon/ui-icon-trade.png)',
-                            backgroundSize: 'contain ',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat',
-                        }}
+                        className="w-[19%] h-[100%] cursor-pointer"
                         onClick={() => {
                             openTradeElement();
                         }}
-                    />
+                    >
+                        <img
+                            className="w-full"
+                            src="/src/assets/images/icon/ui-icon-trade.webp"
+                            alt=""
+                            style={{ aspectRatio: 1 / 1 }}
+                        />
+                        <img
+                            src="/src/assets/images/icon/ui-icon-trade-text.webp"
+                            alt=""
+                        />
+                    </div>
+
                     <div
-                        className="w-[19%] h-[100%] bg-no-repeat cursor-pointer mx-[0.4vw]"
-                        style={{
-                            backgroundImage:
-                                'url(/src/assets/images/icon/ui-icon-facility.png)',
-                            backgroundSize: 'contain ',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat',
-                        }}
+                        className="w-[19%] h-[100%] cursor-pointer"
                         onClick={() => {
                             openFacilityElement();
                         }}
-                    />
+                    >
+                        <img
+                            className="w-full"
+                            src="/src/assets/images/icon/ui-icon-facility.webp"
+                            alt=""
+                            style={{ aspectRatio: 1 / 1 }}
+                        />
+                        <img
+                            src="/src/assets/images/icon/ui-icon-facility-text.webp"
+                            alt=""
+                        />
+                    </div>
                     <div
-                        className="w-[19%] h-[100%] bg-no-repeat cursor-pointer"
-                        style={{
-                            backgroundImage:
-                                'url(/src/assets/images/icon/ui-icon-inventory.png)',
-                            backgroundSize: 'contain ',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat',
-                        }}
+                        className="w-[19%] h-[100%] cursor-pointer"
                         onClick={() => {
                             openInventoryElement();
                         }}
-                    />
+                    >
+                        <img
+                            className="w-full"
+                            src="/src/assets/images/icon/ui-icon-inventory.webp"
+                            alt=""
+                            style={{ aspectRatio: 1 / 1 }}
+                        />
+                        <img
+                            src="/src/assets/images/icon/ui-icon-inventory-text.webp"
+                            alt=""
+                        />
+                    </div>
                     <div
-                        className="w-[19%] h-[100%] bg-no-repeat cursor-pointer"
-                        style={{
-                            backgroundImage:
-                                'url(/src/assets/images/icon/ui-icon-newspaper.png)',
-                            backgroundSize: 'contain ',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat',
-                        }}
+                        className="w-[19%] h-[100%] cursor-pointer"
                         onClick={() => {
                             openNewsElement();
                         }}
-                    />
-                    <div
-                        className="w-[19%] h-[100%] bg-no-repeat cursor-pointer"
-                        style={{
-                            backgroundImage:
-                                'url(/src/assets/images/icon/ui-icon-accident.png)',
-                            backgroundSize: 'contain ',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat',
-                        }}
-                    />
+                    >
+                        <img
+                            className="w-full"
+                            src="/src/assets/images/icon/ui-icon-newspaper.webp"
+                            alt=""
+                            style={{ aspectRatio: 1 / 1 }}
+                        />
+                        <img
+                            src="/src/assets/images/icon/ui-icon-newspaper-text.webp"
+                            alt=""
+                        />
+                    </div>
                 </div>
             </div>
 
             {/* 우측 하단 ui */}
-            <div className="absolute w-[12%] h-[20%]  bottom-[2%] right-[1%]">
-                <div className="relative w-full h-full flex items-center justify-center">
+            <div className="absolute w-[40%] h-[20%]  bottom-[4%] right-[1%]">
+                <div className="relative w-full h-full flex items-center justify-end">
                     <div
-                        className="w-[50%] h-[100%]  bg-no-repeat cursor-pointer"
-                        style={{
-                            backgroundImage:
-                                'url(/src/assets/images/icon/ui-icon-setting.png)',
-                            backgroundSize: 'contain ',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat',
+                        className="w-[19%] h-[100%] cursor-pointer"
+                        onClick={() => {
+                            openSettingElement();
                         }}
-                        onClick={() => openSettingElement()}
-                    />
+                    >
+                        <img
+                            className="w-full"
+                            src="/src/assets/images/icon/ui-icon-setting.webp"
+                            alt=""
+                            style={{ aspectRatio: 1 / 1 }}
+                        />
+                        <img
+                            src="/src/assets/images/icon/ui-icon-setting-text.webp"
+                            alt=""
+                        />
+                    </div>
                     <div
-                        className="w-[50%] h-[100%]  bg-no-repeat cursor-pointer"
-                        style={{
-                            backgroundImage:
-                                'url(/src/assets/images/icon/ui-icon-quit.png)',
-                            backgroundSize: 'contain ',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat',
+                        className="w-[19%] h-[100%] cursor-pointer"
+                        onClick={() => {
+                            proceedLogout();
                         }}
-                        onClick={proceedLogout}
-                    />
+                    >
+                        <img
+                            className="w-full"
+                            src="/src/assets/images/icon/ui-icon-quit.webp"
+                            alt=""
+                            style={{ aspectRatio: 1 / 1 }}
+                        />
+                        <img
+                            src="/src/assets/images/icon/ui-icon-quit-text.webp"
+                            alt=""
+                        />
+                    </div>
                 </div>
             </div>
 
@@ -836,6 +867,8 @@ export default function GameComponent(props: GameType) {
                 newsReceived={newsReceived}
                 setStartFlag={props.setStartFlag}
                 reportReceived={reportReceived}
+                setIngameTurn={setIngameTurn}
+                setIngameTime={setIngameTime}
             />
             {isQtrReportAvail ? (
                 <QuarterReportModal
@@ -861,6 +894,20 @@ export default function GameComponent(props: GameType) {
                     webSocketClient={webSocketClient}
                     hlfReport={hlfReport}
                     setStartFlag={props.setStartFlag}
+                    achievementInfo={initialData.achievementList}
+                />
+            ) : (
+                <></>
+            )}
+            {isOffReportAvail ? (
+                <OffReportModal
+                    offReport={offReport}
+                    setIsOffReportAvail={setIsOffReportAvail}
+                    nowTurn={ingameTurn}
+                    productList={initialData.productList}
+                    webSocketId={webSocketId}
+                    webSocketClient={webSocketClient}
+                    titleList={initialData.titleList}
                 />
             ) : (
                 <></>
