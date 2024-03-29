@@ -29,8 +29,9 @@ export default function TradeSellCard({
     const changeProductNumber = (changingValue: number) => {
         let changedValue = productNumber + changingValue;
         if (changedValue < 0) changedValue = 0;
-        if (changedValue > sellInfo.myProduct.productQuantity)
+        if (changedValue > sellInfo.myProduct.productQuantity) {
             changedValue = sellInfo.myProduct.productQuantity;
+        }
         const changedCost = changedValue * sellInfo.productInfo.productCost;
         updateSellingList(
             sellInfo.productInfo.productId,
@@ -154,7 +155,13 @@ export default function TradeSellCard({
                 >
                     최소
                 </div>
-                <div className="h-[70%] py-[0.2vw] px-[0.6vw] flex items-center text-[1.3vw] mx-[0.2vw] color-bg-orange1 rounded-[0.4vw] text-white cursor-pointer">
+                <div
+                    className="h-[70%] py-[0.2vw] px-[0.6vw] flex items-center text-[1.3vw] mx-[0.2vw] color-bg-orange1 rounded-[0.4vw] text-white cursor-pointer"
+                    onClick={() => {
+                        console.log('Hello');
+                        changeProductNumber(sellInfo.myProduct.productQuantity);
+                    }}
+                >
                     최대
                 </div>
                 <div className="w-[60%] h-[70%] py-[0.2vw] px-4 flex items-center justify-center text-[2.4vw] mx-[0.2vw] color-bg-orange1 rounded-[0.4vw] text-white cursor-default">

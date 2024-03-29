@@ -5,6 +5,7 @@ import { Client } from '@stomp/stompjs';
 
 interface Prop {
     turn: number;
+    lastTurn: number;
     titleList: Title[];
     eventList: Event[];
     productList: Product[];
@@ -16,8 +17,7 @@ interface Prop {
     inProductList: number[];
 }
 
-//반기 보고서 1페이지(분기 보고서)
-export default function HalfPage1(props: Prop) {
+export default function OffQuarterPage(props: Prop) {
     const [timeDuration1, setTimeDuration1] = useState<string>('');
     const [timeDuration2, setTimeDuration2] = useState<string>('');
     const [nowSeason, setNowSeason] = useState<string>('');
@@ -90,21 +90,42 @@ export default function HalfPage1(props: Prop) {
         (state: any) => state.reduxFlag.myProfileSlice.title
     );
 
+    //turn수로 날짜 계산 함수
+    const calculateDate = (turn: number) => {
+        const date: number = turn - 1;
+        const day: number = (date % 30) + 1;
+        const month: number = ((Math.floor(date / 30) + 2) % 12) + 1;
+        const year: number = Math.floor((date + 60) / 360);
+        //string 변환
+        const dayString = day < 10 ? '0' + day : '' + day;
+        const monthString = month < 10 ? '0' + month : '' + month;
+        const yearString = year < 10 ? '0' + year : '' + year;
+
+        return `${yearString}.${monthString}.${dayString}`;
+    };
+
     useEffect(() => {
-        //시작 날짜 기준
-        const turn = props.turn - 181;
-        const year = Math.floor((turn + 60) / 360);
-        const month: number = ((Math.floor(turn / 30) + 2) % 12) + 1;
-        if (month === 3) {
-            setTimeDuration1(`${year}년차 봄 ~ ${year}년차 여름`);
-            setTimeDuration2(`(0${year}.03.01 ~ 0${year}.08.30)`);
-            setNowSeason(`현재 계절 : ${year}년차 가을`);
-        } else if (month === 9) {
-            setTimeDuration1(`${year}년차 가을 ~ ${year}년차 겨울`);
-            setTimeDuration2(`(0${year}.09.01 ~ 0${year + 1}.02.30)`);
-            setNowSeason(`현재 계절 : ${year + 1}년차 봄`);
+        //현재 날짜 기준
+        const nowString = calculateDate(props.turn);
+        const lastString = calculateDate(props.lastTurn);
+        setTimeDuration1(`${lastString} ~ ${nowString}`);
+        setTimeDuration2(`(${lastString} ~ ${nowString})`);
+
+        //계절 구하기
+        const year: number = Math.floor((props.turn + 60) / 360);
+        const month: number = ((Math.floor(props.turn - 1 / 30) + 2) % 12) + 1;
+        if (month < 3) {
+            setNowSeason(`${year - 1}년차 봄`);
+        } else if (month < 6) {
+            setNowSeason(`${year}년차 봄`);
+        } else if (month < 9) {
+            setNowSeason(`${year}년차 여름`);
+        } else if (month < 12) {
+            setNowSeason(`${year}년차 가을`);
+        } else {
+            setNowSeason(`${year}년차 겨울`);
         }
-    }, [props.turn]);
+    }, []);
 
     return (
         <>
@@ -122,7 +143,7 @@ export default function HalfPage1(props: Prop) {
                                 <div>{props.halfIncome.toLocaleString()}</div>
                             </div>
                             <div className="w-full flex justify-between">
-                                <div>지출</div>
+                                <div>임대료</div>
                                 <div>
                                     {(-1 * props.halfOutcome).toLocaleString()}
                                 </div>
@@ -136,7 +157,7 @@ export default function HalfPage1(props: Prop) {
                                 <div className="color-bg-subbold w-full h-full"></div>
                             </div>
                             <div className="w-full flex justify-between">
-                                <div>반기 순이익</div>
+                                <div>당기 순이익</div>
                                 <div>
                                     {(
                                         props.halfIncome - props.halfOutcome
@@ -240,14 +261,19 @@ export default function HalfPage1(props: Prop) {
                             <div className="flex flex-shrink-0">
                                 {props.inProductList.map((cropId) => {
                                     return (
-                                        <img
-                                            className="w-[6vw] h-[6vw] m-[1vw] aspect-square object-cover flex-shrink-0"
-                                            src={`/src/assets/images/product/crop (${cropId}).png`}
+                                        <div
+                                            className={
+                                                'w-[6vw] h-[6vw] bg-no-repeat mx-auto sprite-img-crop ' +
+                                                `crop-img-${cropId}`
+                                            }
+                                            style={{
+                                                aspectRatio: 1 / 1,
+                                            }}
                                             onMouseOver={() =>
                                                 hoverCropImg(cropId)
                                             }
                                             onMouseLeave={endHoverCrop}
-                                        ></img>
+                                        ></div>
                                     );
                                 })}
                                 <div

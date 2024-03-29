@@ -6,7 +6,7 @@ import TradeSellReceipt from '../section/TradeSellReceipt';
 import { InfraList, Product } from '../../type/types';
 
 import { myProductState } from '../../util/myproduct-slice';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { BuyInfo, SellInfo, ProductBucket } from '../../type/types';
 import { productInfoAndEventState } from '../../util/product-and-event';
 import { Client } from '@stomp/stompjs';
@@ -30,7 +30,10 @@ export default function TradeModal(props: tradeType) {
         []
     );
     const [buyableProduct, setBuyableProduct] = useState<BuyInfo[]>([]);
+
+    //현재 장바구니 기준 재고, 돈
     const [totalNumber, setTotalNumber] = useState<number>(0);
+    const [totalCost, setTotalCost] = useState<number>(0);
 
     //useSelector
     const myProductInfo: myProductState = useSelector(
@@ -63,8 +66,6 @@ export default function TradeModal(props: tradeType) {
 
     //현재 창고 내 재고
     const [nowStock, setNowStock] = useState<number>(0);
-
-    const dispatch = useDispatch();
 
     useEffect(() => {
         // ESC 키를 눌렀을 때 실행할 함수
@@ -163,6 +164,7 @@ export default function TradeModal(props: tradeType) {
         productInfoAndEvent,
         props.productResource,
         myProductList,
+        tradeTab,
     ]);
 
     const changeTab = (prop: number) => {
@@ -214,7 +216,7 @@ export default function TradeModal(props: tradeType) {
             newList.push(newProductInfo);
         });
         //구매 가능 수량 초과
-        console.log(maximumBuyableAmount.current);
+        // console.log(maximumBuyableAmount.current);
         if (
             totalBuyNum > maximumBuyableAmount.current ||
             totalBuyCost > props.nowMoney
@@ -234,8 +236,29 @@ export default function TradeModal(props: tradeType) {
             return;
         } else {
             setTotalNumber(totalBuyNum);
+            setTotalCost(totalBuyCost);
             setBuyableProduct(newList);
         }
+    };
+
+    /**최대값 계산 */
+    const calculateMaximumValue = (id: number, nowValue: number) => {
+        const productInfo = productInfoAndEvent.productInfoList[id];
+
+        //일단 남은 최대 구매 가능량 기준으로 계산
+        let maxAddValue = maximumBuyableAmount.current - totalNumber - nowValue;
+        //품목당 구매 가능 최대량을 초과하는가?
+        if (maxAddValue + nowValue > productInfo.productMaxQuantity) {
+            maxAddValue = productInfo.productMaxQuantity - nowValue;
+        }
+
+        //품목당 구매 가능 최대량을 초과하는가?
+        if (maxAddValue * productInfo.productCost > props.nowMoney) {
+            maxAddValue =
+                (props.nowMoney - totalCost) / productInfo.productCost;
+        }
+
+        return maxAddValue;
     };
 
     /** udpateSellingList(id, changedValue, changedCost)
@@ -282,7 +305,7 @@ export default function TradeModal(props: tradeType) {
         setSellingProductList(newList);
     };
 
-    const sellProduct = (value: number) => {
+    const sellProduct = () => {
         //판매 금액 표시
 
         //웹 소켓 통신
@@ -313,7 +336,7 @@ export default function TradeModal(props: tradeType) {
         }
     };
 
-    const buyProduct = (a: number) => {
+    const buyProduct = () => {
         //webSocket으로 대체 예정
         //아래가 그 코드
         const newBuyList: any = {};
@@ -392,6 +415,9 @@ export default function TradeModal(props: tradeType) {
                                         key={product.productInfo.productId}
                                         buyableInfo={product}
                                         updateBuyingList={updateBuyingList}
+                                        calculateMaximumValue={
+                                            calculateMaximumValue
+                                        }
                                     />
                                 );
                             })}

@@ -4,7 +4,7 @@ import { BuyInfo } from '../../type/types';
 interface BuyReceiptProps {
     buyableInfoList: BuyInfo[];
     maximumBuyable: number;
-    buyProduct: (a: number) => void;
+    buyProduct: () => void;
 }
 
 export default function TradeBuyReceipt({
@@ -63,7 +63,7 @@ export default function TradeBuyReceipt({
                 </div>
                 <div
                     className="my-[0.4vw] py-[0.4vw] border-[0.2vw] rounded-[1vw] color-border-subbold cursor-pointer hover:color-bg-subbold hover:text-white"
-                    onClick={() => buyProduct(-1 * totalCost)}
+                    onClick={buyProduct}
                 >
                     구매
                 </div>

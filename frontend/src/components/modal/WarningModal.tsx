@@ -16,13 +16,13 @@ export default function WarningModal(props: WarningProps) {
                 </div>
                 <div className="h-[30%] flex justify-around">
                     <div
-                        className="w-[40%] h-full color-border-subbold color-text-subbold border-[0.2vw] text-[2vw] flex justify-center items-center"
+                        className="w-[40%] h-full color-border-subbold color-text-subbold border-[0.2vw] text-[2vw] flex justify-center items-center cursor-pointer"
                         onClick={props.handleCancel}
                     >
                         {props.cancelMessage}
                     </div>
                     <div
-                        className="w-[40%] h-full color-bg-subbold color-text-main text-[2vw] flex justify-center items-center"
+                        className="w-[40%] h-full color-bg-subbold color-text-main text-[2vw] flex justify-center items-center cursor-pointer"
                         onClick={props.handleOK}
                     >
                         {props.okMessage}
