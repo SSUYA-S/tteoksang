@@ -14,7 +14,7 @@ services:
       - namenode:/opt/hadoop/dfs/name # namenode data mount
       - namenode:/opt/spark/eventLog # spark history log data mount
       - namenode:/opt/hadoop/yarn/timeline # yarn timeline data mount
-      - /home/ec2-user/testdata:/testdata
+      - /home/ubuntu/testdata:/testdata
 
   datanode01:
     <<: *datanode_base
@@ -78,7 +78,7 @@ services:
     volumes:
       - namenode:/opt/spark/eventLog
       - /env/hadoop-eco/hadoop/zeppelin/notebook:/zeppelin-0.10.1-bin-all/notebook
-      - /home/ec2-user/testdata:/testdata
+      - /home/ubuntu/testdata:/testdata
 
 volumes:
   namenode:
