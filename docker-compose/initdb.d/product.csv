@@ -33,7 +33,7 @@ product_id,product_code,product_name,product_type,product_default_cost,product_a
 31,255,피망,SPRING,4945,4337.0,kg
 32,256,파프리카,FALL,5894,5100.0,kg
 33,257,멜론,SUMMER,4377,3666.0,kg
-34,258,깐마늘(국산),ALL,6442,6397.0,kg
+34,258,깐마늘,ALL,6442,6397.0,kg
 35,279,알배기배추,FALL,0,1480.0,kg
 36,280,브로콜리,SUMMER,0,2010.0,kg
 37,312,참깨,FALL,12889,13000.0,kg
