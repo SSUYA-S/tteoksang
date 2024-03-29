@@ -405,7 +405,7 @@ export default function InfraModal(props: InfraType) {
     };
     return (
         <section
-            className="relative w-[80%] h-[80%] flex justify-center items-center z-50 animation-modal "
+            className="relative w-[80%] h-[84%] flex justify-center items-center z-50 animation-modal "
             style={{
                 background: 'url(/src/assets/images/layout/ui-board.webp)',
                 backgroundSize: 'cover',
