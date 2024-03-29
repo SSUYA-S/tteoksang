@@ -404,9 +404,17 @@ export default function InfraModal(props: InfraType) {
         }
     };
     return (
-        <section className="relative w-[80%] h-[80%] flex justify-center items-center border-[0.4vw] color-border-sublight color-bg-main rounded-[1vw] z-50 animation-modal ">
+        <section
+            className="relative w-[80%] h-[84%] flex justify-center items-center z-50 animation-modal "
+            style={{
+                background: 'url(/src/assets/images/layout/ui-board.webp)',
+                backgroundSize: 'cover',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
+            }}
+        >
             <div
-                className="relative w-[94%] h-[90%]"
+                className="relative w-[90%] h-[90%] rounded-[2vw]"
                 style={{
                     backgroundImage:
                         'url(/src/assets/images/etc/facility-bg.webp)',
