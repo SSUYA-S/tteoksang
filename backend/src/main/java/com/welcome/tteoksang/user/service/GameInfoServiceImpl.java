@@ -37,6 +37,33 @@ public class GameInfoServiceImpl implements GameInfoService {
                     .build();
         }
     }
+    
+    @Override
+    public void startNewGame(String userId) {
+        GameInfo prevGameInfo = gameInfoRepository.findById(userId).orElse(null);
+        int newGameId = 1;
+        if(prevGameInfo != null)
+            newGameId = prevGameInfo.getGameId() + 1;
+        byte[] newProducts = RedisSerializationUtil.serializeMap(new HashMap<>());
+
+        GameInfo newGameInfo = GameInfo.builder()
+                .userId(userId)
+                .gameId(newGameId)// 새로운 게임 ID
+                .gold(10000000L)
+                .warehouseLevel(1)
+                .vehicleLevel(1)
+                .brokerLevel(1)
+                .privateEventId("없음")
+                .lastPlayTurn(1)
+                .products(newProducts)
+                .lastConnectTime(LocalDateTime.now())
+                .purchaseQuantity(0)
+                .totalProductQuantity(0)
+                .rentFee(0L)
+                .build();
+
+        updateGameInfo(newGameInfo);
+    }
 
     @Override
     public GameInfo searchGameInfo(String userId) {

@@ -5,13 +5,15 @@ import com.welcome.tteoksang.user.dto.PreviousPlayInfo;
 
 public interface GameInfoService {
 
-    public PreviousPlayInfo searchPreviousPlayInfo(String userId);
+    PreviousPlayInfo searchPreviousPlayInfo(String userId);
 
-    public GameInfo searchGameInfo(String userId);
+    GameInfo searchGameInfo(String userId);
 
-    public void updateGameInfo(GameInfo gameInfo);
+    void updateGameInfo(GameInfo gameInfo);
 
-    public void deleteGameInfo(String userId);
+    void deleteGameInfo(String userId);
 
-    public void loadGameInfo(String userId);
+    void loadGameInfo(String userId);
+
+    void  startNewGame(String userId);
 }
