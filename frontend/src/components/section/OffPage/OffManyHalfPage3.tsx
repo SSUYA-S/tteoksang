@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RankReportType } from '../../../type/types';
 import { useSelector } from 'react-redux';
 import {
@@ -15,12 +15,26 @@ import { Bar } from 'react-chartjs-2';
 interface Prop {
     participantCount: number;
     rankInfoList: RankReportType[];
+    recentRankInfoList: RankReportType[];
 }
 
-export default function HalfPage3(props: Prop) {
+export default function OffManyHalfPage3(props: Prop) {
     //rankMode 0:판매왕, 1:부자, 2:큰손, 3:벼락부자, 4:떡상
     const [rankMode, setRankMode] = useState<number>(0);
-    const rankInfoList = props.rankInfoList;
+    //isRecent
+    const [isRecent, setIsRecent] = useState<boolean>(false);
+
+    const [rankInfoList, setRankInfoList] = useState<RankReportType[]>(
+        props.rankInfoList
+    );
+
+    useEffect(() => {
+        if (isRecent) {
+            setRankInfoList(props.recentRankInfoList);
+        } else {
+            setRankInfoList(props.rankInfoList);
+        }
+    }, [isRecent]);
 
     const userNickname = useSelector(
         (state: any) => state.reduxFlag.myProfileSlice.userNickname
@@ -93,11 +107,38 @@ export default function HalfPage3(props: Prop) {
         ],
     };
 
+    /**토글 이벤트 */
+    const toggle = () => {
+        setIsRecent((prev) => !prev);
+    };
+
     return (
         <>
             <div className="w-full h-full p-[1.5vw] flex flex-col items-center">
                 {/* 랭킹 라벨 */}
-                <div className="w-full text-left text-[2vw]">랭킹</div>
+                <div className="w-full h-[10%] flex justify-between">
+                    <p className="h-full text-[2vw]">랭킹</p>
+                    <div
+                        className={`relative w-[16%] h-full text-[1.5vw] color-border-subbold border-[0.1vw] flex justify-center items-center rounded-[5vh] cursor-pointer  ${
+                            isRecent ? 'color-bg-subbold' : 'bg-white'
+                        }`}
+                        onClick={toggle}
+                    >
+                        <div
+                            className={`absolute top-[50%] h-[90%] aspect-square color-border-subbold border-[0.1vw] rounded-[5vh] bg-white`}
+                            style={{
+                                left: isRecent ? '85%' : '15%',
+                                transition: 'all linear 0.3s',
+                                transform: 'translate(-50%, -50%)',
+                            }}
+                        ></div>
+                        {isRecent ? (
+                            <p className="text-white">최신</p>
+                        ) : (
+                            <p className="">과거</p>
+                        )}
+                    </div>
+                </div>
                 {/* 랭킹 버튼 */}
                 <div className="w-full flex justify-start text-[1.5vw]">
                     {rankInfoList.map((rankInfo, index) => {

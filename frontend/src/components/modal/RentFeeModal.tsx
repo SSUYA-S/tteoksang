@@ -74,7 +74,7 @@ export default function RentFeeModal(props: Prop) {
                         if (index !== rentFeeInfo.productList.length - 1) {
                             returnString += ', ';
                         }
-                        console.log(returnString);
+                        // console.log(returnString);
                         return <span>{returnString}</span>;
                     })}
                     <span>]</span>

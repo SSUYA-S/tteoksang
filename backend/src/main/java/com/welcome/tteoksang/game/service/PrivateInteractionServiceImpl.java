@@ -272,10 +272,9 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
 
                 List<ProductTradeInfo> newProductList = getProductList(products);
                 // 메세지 바디에 모든 농산물 정보를 저장
-                responseBody = BuyProductInfo.builder()
+                responseBody = SellProductInfo.builder()
                         .gold(redisGameInfo.getGold())
                         .productList(newProductList)
-                        .purchasedQuantity(redisGameInfo.getPurchaseQuantity())
                         .build();
             } catch (Exception e) {
                 isSuccess = false;
