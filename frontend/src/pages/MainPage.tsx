@@ -65,7 +65,7 @@ export default function MainPage() {
     }, []);
 
     useEffect(() => {
-        if (checksumData.checksumList.length > 0) {
+        // if (checksumData.checksumList.length > 0) {
             const resourceCall = [
                 resourceAchievement(),
                 resourceEvent(),
@@ -90,7 +90,7 @@ export default function MainPage() {
                     // console.log(hashMD5);
                 });
             });
-        }
+        // }
     }, [checksumData]);
 
     useEffect(() => {
