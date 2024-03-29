@@ -4,7 +4,11 @@ import { useEffect, useState } from 'react';
 import RentFeeModal from './RentFeeModal';
 import { Client } from '@stomp/stompjs';
 import TitleChangeModal from './TitleChangeModal';
-import OffQuarterPage1 from '../../components/section/OffPage/OffQuarterPage1.tsx';
+import OffQuarterPage from '../../components/section/OffPage/OffQuarterPage';
+import OffHalfPage1 from '../section/OffPage/OffHalfPage1';
+import OffHalfPage2 from '../section/OffPage/OffHalfPage2';
+import OffHalfPage3 from '../section/OffPage/OffHalfPage3';
+import OffHalfPage4 from '../section/OffPage/OffHalfPage4';
 
 interface Prop {
     offReport: OfflineReportType | null;
@@ -156,7 +160,7 @@ export default function OffReportModal(props: Prop) {
                         </div>
                         <div className="w-full h-[85%]">
                             {reportType === 0 ? (
-                                <OffQuarterPage1
+                                <OffQuarterPage
                                     turn={props.nowTurn}
                                     lastTurn={Off.lastGameTurn}
                                     titleList={props.titleList}
@@ -171,6 +175,16 @@ export default function OffReportModal(props: Prop) {
                                         Off.quarterReport.inProductList
                                     }
                                 />
+                            ) : reportType === 1 ? (
+                                page === 1 ? (
+                                    <OffHalfPage1 />
+                                ) : page === 2 ? (
+                                    <OffHalfPage2 />
+                                ) : page === 3 ? (
+                                    <OffHalfPage3 />
+                                ) : (
+                                    <OffHalfPage4 />
+                                )
                             ) : (
                                 <></>
                             )}
