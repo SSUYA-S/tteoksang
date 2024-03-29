@@ -463,41 +463,6 @@ export default function TradeModal(props: tradeType) {
                                                 updateSellingList
                                             }
                                         />
-                                        <TradeSellCard
-                                            key={product.productInfo.productId}
-                                            sellInfo={product}
-                                            updateSellingList={
-                                                updateSellingList
-                                            }
-                                        />
-                                        <TradeSellCard
-                                            key={product.productInfo.productId}
-                                            sellInfo={product}
-                                            updateSellingList={
-                                                updateSellingList
-                                            }
-                                        />
-                                        <TradeSellCard
-                                            key={product.productInfo.productId}
-                                            sellInfo={product}
-                                            updateSellingList={
-                                                updateSellingList
-                                            }
-                                        />
-                                        <TradeSellCard
-                                            key={product.productInfo.productId}
-                                            sellInfo={product}
-                                            updateSellingList={
-                                                updateSellingList
-                                            }
-                                        />
-                                        <TradeSellCard
-                                            key={product.productInfo.productId}
-                                            sellInfo={product}
-                                            updateSellingList={
-                                                updateSellingList
-                                            }
-                                        />
                                     </>
                                 );
                             })}
