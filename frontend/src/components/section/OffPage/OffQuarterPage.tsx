@@ -17,7 +17,7 @@ interface Prop {
     inProductList: number[];
 }
 
-export default function OffQuarterPage1(props: Prop) {
+export default function OffQuarterPage(props: Prop) {
     const [timeDuration1, setTimeDuration1] = useState<string>('');
     const [timeDuration2, setTimeDuration2] = useState<string>('');
     const [nowSeason, setNowSeason] = useState<string>('');
@@ -125,7 +125,7 @@ export default function OffQuarterPage1(props: Prop) {
         } else {
             setNowSeason(`${year}년차 겨울`);
         }
-    }, [props.turn, props.lastTurn]);
+    }, []);
 
     return (
         <>

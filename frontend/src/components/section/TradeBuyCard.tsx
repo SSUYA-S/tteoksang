@@ -1,14 +1,15 @@
-import { useState, useRef, useEffect } from 'react';
 import { BuyInfo } from '../../type/types';
 
 interface BuyCardProps {
     buyableInfo: BuyInfo;
     updateBuyingList: (x: number, y: number, z: number) => void;
+    calculateMaximumValue: (id: number, nowValue: number) => number;
 }
 
 export default function TradeBuyCard({
     buyableInfo,
     updateBuyingList,
+    calculateMaximumValue,
 }: BuyCardProps) {
     const productNumber = buyableInfo.buyingInfo.productQuantity;
     const productTotalCost = buyableInfo.buyingInfo.productTotalCost;
@@ -31,6 +32,14 @@ export default function TradeBuyCard({
             changedValue,
             changedCost
         );
+    };
+
+    const changeToMax = () => {
+        const maxAddValue = calculateMaximumValue(
+            buyableInfo.productInfo.productId,
+            productNumber
+        );
+        changeProductNumber(maxAddValue);
     };
 
     return (
@@ -137,7 +146,10 @@ export default function TradeBuyCard({
                 >
                     최소
                 </div>
-                <div className="h-[70%] py-[0.2vw] px-[0.6vw] flex items-center text-[1.3vw] mx-[0.2vw] color-bg-orange1 rounded-[0.4vw] text-white cursor-pointer">
+                <div
+                    className="h-[70%] py-[0.2vw] px-[0.6vw] flex items-center text-[1.3vw] mx-[0.2vw] color-bg-orange1 rounded-[0.4vw] text-white cursor-pointer"
+                    onClick={changeToMax}
+                >
                     최대
                 </div>
                 <div className="w-[60%] h-[70%] py-[0.2vw] px-4 flex items-center justify-center text-[2.4vw] mx-[0.2vw] color-bg-orange1 rounded-[0.4vw] text-white cursor-default">
