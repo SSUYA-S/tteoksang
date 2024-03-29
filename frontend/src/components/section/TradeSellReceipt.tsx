@@ -3,7 +3,7 @@ import { SellInfo } from '../../type/types';
 interface SellReceiptProps {
     sellableInfoList: SellInfo[];
     fee: number;
-    sellProduct: (a: number) => void;
+    sellProduct: () => void;
 }
 
 export default function TradeSellReceipt({
@@ -59,7 +59,7 @@ export default function TradeSellReceipt({
                 </div>
                 <div
                     className="my-[0.4vw] py-[0.4vw] border-[0.2vw] rounded-[1vw] color-border-subbold cursor-pointer hover:color-bg-subbold hover:text-white"
-                    onClick={() => sellProduct(totalProfit)}
+                    onClick={sellProduct}
                 >
                     판매
                 </div>
