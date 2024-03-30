@@ -47,7 +47,8 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
     implementation "org.springframework.boot:spring-boot-starter-data-mongodb"
 
-
+    implementation "com.github.danielwegener:logback-kafka-appender:0.1.0"
+    implementation 'net.logstash.logback:logstash-logback-encoder:5.2'
 }
 
 tasks.named('test') {
