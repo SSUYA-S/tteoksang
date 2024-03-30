@@ -36,6 +36,8 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
     private final BrokerRepository brokerRepository;
     private final VehicleRepository vehicleRepository;
 
+    final double DISCOUNT_RATE = 100.0; // 할인율을 %로 표현
+
     // 한턴에 살 수 있는 양
     private final int SERVERQUANTITY = 100;
 
@@ -63,7 +65,7 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
         boolean isSuccess = true;
         if (redisGameInfo != null) {
             // 유저가 가진 농산물 정보 불러오기
-            // TODO: 서버에서 수량 제한을 여기서 설정
+            // FIXME: 서버에서 수량 제한을 여기서 설정
 
             // 초기 설정
             Map<Integer, UserProductInfo> products = redisGameInfo.getProducts();
@@ -80,14 +82,14 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
             // 창고에 있는 전체 수량
             int totalProductQuantity = redisGameInfo.getTotalProductQuantity();
 
-            // 소지 금액, 구매 최대 수량, 창고 남은 수량, 을 넘어가면 롤백하기 위해 깊은 복사
+            // 소지 금액, 소지한 농산물량, 한 시즌 농산물 구매량, 구매 최대 수량, 창고 남은 수량, 을 넘어가면 롤백하기 위해 깊은 복사
             Map<Integer, UserProductInfo> pastProducts = new HashMap<>(products);
-            long pastGold = redisGameInfo.getGold();
-            int pastPurchaseQuantity = redisGameInfo.getPurchaseQuantity();
-            int pastTotalProductQuantity = redisGameInfo.getTotalProductQuantity();
+            long pastGold = redisGameInfo.getGold();    // 과거 소지 금액
+            int pastPurchaseQuantity = redisGameInfo.getPurchaseQuantity(); // 과거 구매 가능 수량
+            int pastTotalProductQuantity = redisGameInfo.getTotalProductQuantity(); // 창고의 농산물양
 
             try {
-                // TODO: 클라이언트에서 구매한 농산물의 수량, 각 농산물의 총 가격 합을 보내줌 이걸 서버 가격으로 바꿔야 됨
+                // FIXME: 클라이언트에서 구매한 농산물의 수량, 각 농산물의 총 가격 합을 보내줌 이걸 서버 가격으로 바꿔야 됨
                 // body에 있는 구매 정보 파싱
                 Map<Integer, UserProductInfo> messageProductsMap = getProductBody(body);
 
@@ -96,19 +98,23 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
                     Integer messageProductId = messageProduct.getKey();
                     UserProductInfo messageProductInfo = messageProduct.getValue();
 
+                    int messagePurchaseQuantity = messageProductInfo.getProductQuantity();  // 메세지 구매량
+                    long messageProductTotalCost = messageProductInfo.getProductTotalCost(); // 메세지 총 금액
+
                     // 소지금보다 금액이 높으면, 한 턴에 구매할 수 있는 농산물 수량보다 높으면, 창고의 남은 자리가 없으면 구매불가, 롤백
-                    if (remainGold < messageProductInfo.getProductTotalCost()
-                            || remainPurchaseQuantity < messageProductInfo.getProductQuantity()
-                            || remainWarehouseQuantity < messageProductInfo.getProductQuantity()
+                    if (remainGold < messageProductTotalCost
+                            || remainPurchaseQuantity < messagePurchaseQuantity
+                            || remainWarehouseQuantity < messagePurchaseQuantity
                     ) {
                         products = pastProducts;    // 과거 작물 정보
                         remainGold = pastGold;      // 과거 골드 정보
-                        turnPurchaseQuantity = pastPurchaseQuantity;
+                        turnPurchaseQuantity = pastPurchaseQuantity;    // 과거 한턴에 구매 가능량
+
                         totalProductQuantity = pastTotalProductQuantity;    // 과거 가지고 있는 전체 물량
                         isSuccess = false;
-                        if (remainGold < messageProductInfo.getProductTotalCost())
+                        if (remainGold < messageProductTotalCost)
                             log.error("구매 실패입니다.");
-                        else if (remainPurchaseQuantity < messageProductInfo.getProductQuantity())
+                        else if (remainPurchaseQuantity < messagePurchaseQuantity)
                             log.error("구매 제한을 넘습니다.");
                         else
                             log.error("창고에 남은 자리가 없습니다.");
@@ -117,28 +123,31 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
 
                     // 이미 가지고 있는 작물
                     if (products.containsKey(messageProductId)) {
-
-                        // 레디스 내부에 저장된 나의 농산물 정보 갱신
                         UserProductInfo redisProductInfo = products.get(messageProductId);
-                        redisProductInfo.setProductQuantity(redisProductInfo.getProductQuantity() + messageProductInfo.getProductQuantity());
-                        redisProductInfo.setProductTotalCost(redisProductInfo.getProductTotalCost() + messageProductInfo.getProductTotalCost());
-                        products.put(messageProductId, redisProductInfo);
+
+                        // 나의 농산물 정보 갱신
+                        products.put(messageProductId, UserProductInfo.builder()
+                                .productQuantity(redisProductInfo.getProductQuantity() + messagePurchaseQuantity)
+                                .productPurchaseQuantity(redisProductInfo.getProductPurchaseQuantity() + messagePurchaseQuantity)
+                                .productTotalCost(redisProductInfo.getProductTotalCost() + messageProductInfo.getProductTotalCost())
+                                .build());
                     }
                     // 새로운 작물 추가
                     else {
                         products.put(messageProductId, UserProductInfo.builder()
-                                .productQuantity(messageProductInfo.getProductQuantity())
-                                .productTotalCost(messageProductInfo.getProductTotalCost())
+                                .productQuantity(messagePurchaseQuantity)
+                                .productPurchaseQuantity(messagePurchaseQuantity)
+                                .productTotalCost(messageProductTotalCost)
                                 .build()
                         );
                     }
 
                     // 갱신
-                    remainGold -= messageProductInfo.getProductTotalCost();
-                    turnPurchaseQuantity += messageProductInfo.getProductQuantity();
-                    remainPurchaseQuantity -= messageProductInfo.getProductQuantity();
-                    remainWarehouseQuantity -= messageProductInfo.getProductQuantity();
-                    totalProductQuantity += messageProductInfo.getProductQuantity();
+                    remainGold -= messageProductTotalCost;      // 구매 후 남은 금액
+                    turnPurchaseQuantity += messagePurchaseQuantity;    // 이번 턴 구매량
+                    remainPurchaseQuantity -= messagePurchaseQuantity;  // 남은 구매 가능량
+                    remainWarehouseQuantity -= messagePurchaseQuantity; // 남은 창고 공간
+                    totalProductQuantity += messagePurchaseQuantity;    // 전체 농산물 양
                 }
 
                 // 레디스 갱신
@@ -153,13 +162,19 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
                 List<ProductTradeInfo> newProductList = getProductList(products);
 
                 // 메세지 바디에 모든 농산물 정보를 저장
-                responseBody = SellProductInfo.builder()
+                responseBody = BuyProductInfo.builder()
                         .gold(redisGameInfo.getGold())
                         .productList(newProductList)
+                        .purchasedQuantity(redisGameInfo.getPurchaseQuantity())
                         .build();
             } catch (Exception e) {
+                isSuccess = false;
                 log.error(e.getMessage());
             }
+        }
+        else {
+            isSuccess = false;
+            log.error("없는 게임 정보입니다.");
         }
         return GameMessageInfo.builder()
                 .body(responseBody)
@@ -178,7 +193,7 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
         // 게임 정보가 있는 경우 판매
         if (redisGameInfo != null) {
             // 유저가 가진 농산물 정보 불러오기
-            // TODO: 서버에서 수량 제한을 여기서 설정
+            // FIXME: 서버에서 수량 제한을 여기서 설정
 
             // 초기 설정
             Map<Integer, UserProductInfo> products = redisGameInfo.getProducts();
@@ -195,11 +210,10 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
             // 소지 금액, 구매 최대 수량, 창고 남은 수량, 을 넘어가면 롤백하기 위해 깊은 복사
             Map<Integer, UserProductInfo> pastProducts = new HashMap<>(products);
             long pastGold = redisGameInfo.getGold();
-            long pastProductTotalCost = 0;
             int pastTotalProductQuantity = redisGameInfo.getTotalProductQuantity();
 
             try {
-                // TODO: 클라이언트에서 구매한 농산물의 수량, 각 농산물의 총 가격 합을 보내줌 이걸 서버 가격으로 바꿔야 됨
+                // FIXME: 클라이언트에서 구매한 농산물의 수량, 각 농산물의 총 가격 합을 보내줌 이걸 서버 가격으로 바꿔야 됨
                 // body에 있는 구매 정보 파싱
                 Map<Integer, UserProductInfo> messageProductsMap = getProductBody(body);
 
@@ -209,9 +223,13 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
                     Integer messageProductId = messageProduct.getKey();
                     UserProductInfo messageProductInfo = messageProduct.getValue();
 
+                    int messagePurchaseQuantity = messageProductInfo.getProductQuantity();  // 메세지 판매량
+                    long messageProductTotalCost = messageProductInfo.getProductTotalCost(); // 메세지 총 금액
+
+                    UserProductInfo redisProductInfo = products.get(messageProductId);
                     // 메세지에 해당하는 작물이 있을때, 현재 가지고 있는 수량 안의 판매 요청 처리
                     if (!products.containsKey(messageProductId) ||
-                            products.get(messageProductId).getProductQuantity() < messageProductInfo.getProductQuantity()) {
+                            redisProductInfo.getProductQuantity() < messagePurchaseQuantity) {
 
                         products = pastProducts;    // 과거 작물 정보
                         remainGold = pastGold;      // 과거 골드 정보
@@ -220,25 +238,29 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
 
                         if (!products.containsKey(messageProductId))
                             log.error("해당 작물 없음");
-                        else if (products.get(messageProductId).getProductQuantity() < messageProductInfo.getProductQuantity())
+                        else if (redisProductInfo.getProductQuantity() < messagePurchaseQuantity)
                             log.error("작물이 부족합니다.");
                         break;
                     }
                     // 판매 처리
                     // 해당 농산물의 남은 수량
-                    int remainQuantity = products.get(messageProductId).getProductQuantity() - messageProductInfo.getProductQuantity();
+                    int remainQuantity = redisProductInfo.getProductQuantity() - messagePurchaseQuantity;
                     // 남은 전체 농산물 수량
-                    totalProductQuantity -= messageProductInfo.getProductQuantity();
+                    totalProductQuantity -= messagePurchaseQuantity;
 
                     // 판매 후 금액
-                    remainGold += ((long) messageProductInfo.getProductTotalCost() * (100 - productCharge)); //TODO: 서버 가격으러 변경해야 됨
-
-                    // 해당 농산물의 총 금액
-                    int productTotalCost = products.get(messageProductId).getProductTotalCost() - messageProductInfo.getProductTotalCost();
+                    double chargeRate = (DISCOUNT_RATE - productCharge) / DISCOUNT_RATE;
+                    long adjustedCost = (long) (messageProductTotalCost * Math.ceil(chargeRate));
+                    remainGold += adjustedCost;
+//                    remainGold += (long) (messageProductTotalCost * Math.ceil((double) (100 - productCharge) /100)); //FIXME: 서버 가격으러 변경해야 됨
 
                     // product 반영
-                    products.replace(messageProductId, UserProductInfo.builder().productQuantity(remainQuantity)
-                            .productTotalCost(productTotalCost).build());
+                    products.replace(messageProductId, UserProductInfo.builder()
+                            .productQuantity(remainQuantity)
+                            .productPurchaseQuantity(redisProductInfo.getProductPurchaseQuantity())
+                            .productTotalCost(redisProductInfo.getProductTotalCost())
+                            .build()
+                    );
                 }
 
                 // 레디스 갱신
@@ -250,14 +272,18 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
 
                 List<ProductTradeInfo> newProductList = getProductList(products);
                 // 메세지 바디에 모든 농산물 정보를 저장
-                responseBody = BuyProductInfo.builder()
+                responseBody = SellProductInfo.builder()
                         .gold(redisGameInfo.getGold())
                         .productList(newProductList)
-                        .purchasedQuantity(redisGameInfo.getPurchaseQuantity())
                         .build();
             } catch (Exception e) {
+                isSuccess = false;
                 log.error(e.getMessage());
             }
+        }
+        else {
+            isSuccess = false;
+            log.error("없는 게임 정보입니다.");
         }
         return GameMessageInfo.builder()
                 .body(responseBody)
@@ -296,6 +322,9 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
                 log.error("없는 창고 입니다.");
             }
         }
+        else {
+            log.error("없는 게임 정보입니다.");
+        }
         return GameMessageInfo.builder()
                 .body(responseBody)
                 .isSuccess(isSuccess)
@@ -333,6 +362,9 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
                 log.error("없는 환전소 입니다.");
             }
         }
+        else {
+            log.error("없는 게임 정보입니다.");
+        }
         return GameMessageInfo.builder()
                 .body(responseBody)
                 .isSuccess(isSuccess)
@@ -362,12 +394,16 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
                             .build();
 
                     redisService.setValues(redisGameInfoKey, redisGameInfo);
+                    isSuccess = true;
                 } else {
                     log.debug("금액 부족");
                 }
             } catch (VehicleNotExistException e) {
                 log.error("없는 운송수단 입니다.");
             }
+        }
+        else {
+            log.error("없는 게임 정보입니다.");
         }
         return GameMessageInfo.builder()
                 .body(responseBody)

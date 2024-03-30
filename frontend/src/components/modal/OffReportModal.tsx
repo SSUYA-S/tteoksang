@@ -1,9 +1,23 @@
-import { OfflineReportType, Product, Title } from '../../type/types';
+import {
+    Event,
+    OfflineReportType,
+    Product,
+    Title,
+    HalfReceipt,
+    Achievement,
+} from '../../type/types';
 import offlineData from '../../dummy-data/report/offline.json';
 import { useEffect, useState } from 'react';
 import RentFeeModal from './RentFeeModal';
 import { Client } from '@stomp/stompjs';
 import TitleChangeModal from './TitleChangeModal';
+import OffQuarterPage from '../../components/section/OffPage/OffQuarterPage';
+import OffHalfPage1 from '../section/OffPage/OffHalfPage1';
+import OffHalfPage2 from '../section/OffPage/OffHalfPage2';
+import OffHalfPage3 from '../section/OffPage/OffHalfPage3';
+import OffHalfPage4 from '../section/OffPage/OffHalfPage4';
+import OffManyHalfPage3 from '../section/OffPage/OffManyHalfPage3';
+import OffManyHalfPage4 from '../section/OffPage/OffManyHalfPage4';
 
 interface Prop {
     offReport: OfflineReportType | null;
@@ -13,6 +27,8 @@ interface Prop {
     webSocketId: string;
     webSocketClient: Client;
     titleList: Title[];
+    eventList: Event[];
+    achievementInfo: Achievement[];
 }
 
 export default function OffReportModal(props: Prop) {
@@ -20,7 +36,7 @@ export default function OffReportModal(props: Prop) {
     const Off = offlineData;
     // const Off = props.offReport;
 
-    const nowTurn = 121;
+    const nowTurn = 500;
     // const nowTurn = props.nowTurn;
 
     //0: 임대료, 1: 보고서
@@ -33,6 +49,20 @@ export default function OffReportModal(props: Prop) {
     const showReport = () => {
         setMode(1);
     };
+
+    //반기 총 수익, 지출
+    const [halfIncome, setHalfIncome] = useState<number>(0);
+    const [halfOutcome, setHalfOutcome] = useState<number>(0);
+    const [receipt, setReceipt] = useState<HalfReceipt>({
+        totalProductIncome: 0,
+        totalProductOutcome: 0,
+        totalUpgradeFee: 0,
+        totalBrokerFee: 0,
+        totalRentFee: 0,
+        eventBonus: 0,
+        totalIncome: 0,
+        totalOutcome: 0,
+    });
 
     useEffect(() => {
         //분기가 안 지난 경우는 아얘 정보가 오지 않으니 고려 안함.
@@ -80,6 +110,41 @@ export default function OffReportModal(props: Prop) {
             setReportType(1);
         } else {
             setReportType(0);
+        }
+
+        //반기 보고서는 존재하는가?
+        if (Off) {
+            //반기 보고서 존재 시
+            console.log(Off.halfReport);
+            if (Off.halfReport !== null || Off.halfReport !== undefined) {
+                //반기 수익 계산
+                let income = Off.halfReport.totalProductIncome;
+                let outcome =
+                    Off.halfReport.totalProductOutcome +
+                    Off.halfReport.totalBrokerFee +
+                    Off.halfReport.totalUpgradeFee +
+                    Off.halfReport.totalRentFee;
+                if (Off.halfReport.eventBonus >= 0) {
+                    income += Off.halfReport.eventBonus;
+                } else {
+                    //event bonus가 음수로 들어왔으니 -를 해줘야 지출로 더해짐
+                    outcome += -Off.halfReport.eventBonus;
+                }
+                setHalfIncome(income);
+                setHalfOutcome(outcome);
+
+                const newReceipt: HalfReceipt = {
+                    totalProductIncome: Off.halfReport.totalProductIncome,
+                    totalProductOutcome: Off.halfReport.totalProductOutcome,
+                    totalUpgradeFee: Off.halfReport.totalUpgradeFee,
+                    totalBrokerFee: Off.halfReport.totalBrokerFee,
+                    totalRentFee: Off.halfReport.totalRentFee,
+                    eventBonus: Off.halfReport.eventBonus,
+                    totalIncome: income,
+                    totalOutcome: outcome,
+                };
+                setReceipt(newReceipt);
+            }
         }
     }, []);
 
@@ -152,7 +217,123 @@ export default function OffReportModal(props: Prop) {
                         <div className="w-full px-[1vw] h-[0.3vh]">
                             <div className="w-full h-full color-bg-subbold"></div>
                         </div>
-                        <div className="w-full h-[85%]"></div>
+                        <div className="w-full h-[85%]">
+                            {reportType === 0 ? (
+                                <OffQuarterPage
+                                    turn={props.nowTurn}
+                                    lastTurn={Off.lastGameTurn}
+                                    titleList={props.titleList}
+                                    eventList={props.eventList}
+                                    productList={props.productList}
+                                    webSocketClient={props.webSocketClient}
+                                    webSocketId={props.webSocketId}
+                                    halfIncome={Off.quarterReport.quarterProfit}
+                                    halfOutcome={Off.quarterReport.rentFee}
+                                    setMode={setMode}
+                                    inProductList={
+                                        Off.quarterReport.inProductList
+                                    }
+                                />
+                            ) : reportType === 1 ? (
+                                page === 1 ? (
+                                    <OffHalfPage1
+                                        turn={props.nowTurn}
+                                        lastTurn={Off.lastGameTurn}
+                                        titleList={props.titleList}
+                                        eventList={props.eventList}
+                                        productList={props.productList}
+                                        webSocketClient={props.webSocketClient}
+                                        webSocketId={props.webSocketId}
+                                        halfIncome={halfIncome}
+                                        halfOutcome={halfOutcome}
+                                        setMode={setMode}
+                                        inProductList={
+                                            Off.quarterReport.inProductList
+                                        }
+                                    />
+                                ) : page === 2 ? (
+                                    <OffHalfPage2 receipt={receipt} />
+                                ) : page === 3 ? (
+                                    <OffHalfPage3
+                                        participantCount={
+                                            Off.halfReport.participantCount
+                                        }
+                                        rankInfoList={
+                                            Off.halfReport.rankInfoList
+                                        }
+                                    />
+                                ) : (
+                                    <OffHalfPage4
+                                        productList={props.productList}
+                                        tteoksangStatistics={
+                                            Off.halfReport.tteoksangStatistics
+                                        }
+                                        tteokrockStatistics={
+                                            Off.halfReport.tteokrockStatistics
+                                        }
+                                        bestSellerStatistics={
+                                            Off.halfReport.bestSellerStatistics
+                                        }
+                                        achievementInfo={props.achievementInfo}
+                                        achievementList={
+                                            Off.halfReport.achievementList
+                                        }
+                                    />
+                                )
+                            ) : reportType === 2 ? (
+                                page === 1 ? (
+                                    <OffHalfPage1
+                                        turn={props.nowTurn}
+                                        lastTurn={Off.lastGameTurn}
+                                        titleList={props.titleList}
+                                        eventList={props.eventList}
+                                        productList={props.productList}
+                                        webSocketClient={props.webSocketClient}
+                                        webSocketId={props.webSocketId}
+                                        halfIncome={halfIncome}
+                                        halfOutcome={halfOutcome}
+                                        setMode={setMode}
+                                        inProductList={
+                                            Off.quarterReport.inProductList
+                                        }
+                                    />
+                                ) : page === 2 ? (
+                                    <OffHalfPage2 receipt={receipt} />
+                                ) : page === 3 ? (
+                                    <OffManyHalfPage3
+                                        participantCount={
+                                            Off.halfReport.participantCount
+                                        }
+                                        rankInfoList={
+                                            Off.halfReport.rankInfoList
+                                        }
+                                        recentRankInfoList={Off.rankInfoList}
+                                    />
+                                ) : (
+                                    <OffManyHalfPage4
+                                        productList={props.productList}
+                                        tteoksangStatistics={
+                                            Off.halfReport.tteoksangStatistics
+                                        }
+                                        tteokrockStatistics={
+                                            Off.halfReport.tteokrockStatistics
+                                        }
+                                        bestSellerStatistics={
+                                            Off.halfReport.bestSellerStatistics
+                                        }
+                                        achievementInfo={props.achievementInfo}
+                                        achievementList={
+                                            Off.halfReport.achievementList
+                                        }
+                                        newTteoksang={Off.tteoksangStatistics}
+                                        newTteokrock={Off.tteokrockStatistics}
+                                        newBestSeller={Off.bestSellerStatistics}
+                                    />
+                                )
+                            ) : (
+                                <></>
+                            )}
+                        </div>
                         <div
                             className="absolute text-[2vw] flex items-center justify-center text-white -top-[1.6vw] -right-[2vw] w-[4vw] h-[4vw] border-[0.4vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer z-30"
                             onClick={() => {

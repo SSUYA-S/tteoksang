@@ -4,7 +4,7 @@ import { BuyInfo } from '../../type/types';
 interface BuyReceiptProps {
     buyableInfoList: BuyInfo[];
     maximumBuyable: number;
-    buyProduct: (a: number) => void;
+    buyProduct: () => void;
 }
 
 export default function TradeBuyReceipt({
@@ -16,7 +16,15 @@ export default function TradeBuyReceipt({
     let totalCost = 0;
 
     return (
-        <div className="w-full h-full flex flex-col justify-between items-center bg-white color-text-textcolor border-[0.4vw] rounded-[1vw] color-border-subbold">
+        <div
+            className="w-[90%] h-[85%] flex flex-col justify-between items-center bg-white color-text-textcolor rounded-[1vw]"
+            style={{
+                background: 'url(/src/assets/images/layout/receipt.webp)',
+                backgroundSize: 'contain',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
+            }}
+        >
             <p className="h-[15%] text-[2.4vw] flex items-center justify-center">
                 구매 영수증
             </p>
@@ -49,7 +57,7 @@ export default function TradeBuyReceipt({
                     }
                 })}
             </div>
-            <div className="w-[90%] text-[1.2vw]">
+            <div className="w-[80%] text-[1.2vw] pb-[1.2vw]">
                 <p>---------------------</p>
                 <div className="flex items-center justify-between">
                     <p>총 구매 가능</p>
@@ -62,8 +70,8 @@ export default function TradeBuyReceipt({
                     <p>{totalCost.toLocaleString()}</p>
                 </div>
                 <div
-                    className="my-[0.4vw] py-[0.4vw] border-[0.2vw] rounded-[1vw] color-border-subbold cursor-pointer hover:color-bg-subbold hover:text-white"
-                    onClick={() => buyProduct(-1 * totalCost)}
+                    className="w-[80%] text-center my-[0.4vw] mx-auto py-[0.4vw] border-[0.2vw] rounded-[1vw] color-border-subbold cursor-pointer hover:color-bg-subbold hover:text-white"
+                    onClick={buyProduct}
                 >
                     구매
                 </div>

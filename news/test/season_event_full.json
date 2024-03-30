@@ -1,0 +1,1696 @@
+{
+  "data": [
+    {
+      "productName": "배추",
+      "eventValue": "+",
+      "eventContent": "작황 부진으로 가격이 상승",
+      "eventHeadline": "비상! 농산물 가격 강세가 계속될 것인가!",
+      "eventName": "가뭄",
+      "eventVariance": "10.0",
+      "eventType": "SPRING"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "산지가 적은 여름철 고랭지 배추와 다르다. 유통업계에선 '반값' 배추를 내세우며 김장철 물가 잡기가 한창이다.",
+      "eventHeadline": "김장철 가을 배추, ‘반값’으로 물가 잡기가 한창!",
+      "eventName": "흉작",
+      "eventValue": "+",
+      "eventVariance": "5.9",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "시금치",
+      "eventContent": "도매가격이 전월 대비 44% 떨어졌다.",
+      "eventHeadline": "도매가격 하락 속, 시금치 가격 동반 하락 예상!",
+      "eventName": "흉작",
+      "eventValue": "-",
+      "eventVariance": "44.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "무",
+      "eventContent": "도매가격이 전월 대비 23% 떨어졌다.",
+      "eventHeadline": "무 가격 급락 예상, 도매가격 23% 하락!",
+      "eventName": "흉작",
+      "eventValue": "-",
+      "eventVariance": "23.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "당근",
+      "eventContent": "도매가격이 전월 대비 24% 떨어졌다.",
+      "eventHeadline": "당근 가격도 급락! 도매시장에서 24% 하락!",
+      "eventName": "흉작",
+      "eventValue": "-",
+      "eventVariance": "24.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "태풍으로 배추 정식이 늦어져 수확 물량 예측이 어려워 산지 추가 확보에 심혈을 기울이고 있으며, 새로 계약한 산지를 통해 전체 배추 물량의 30% 가량을 공급받을 예정입니다.",
+      "eventHeadline": "김장철을 앞두고 대형 마트가 ‘금 배추’로 산지 추가 확보에 나서게 되나..!",
+      "eventName": "폭우",
+      "eventValue": "+",
+      "eventVariance": "105.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "올해는 태백시 매봉산 고랭지의 작황이 부진해 공급이 부족한 상황이어서 안반데기 지역 계약면적을 추가한 것입니다.",
+      "eventHeadline": "공급 부족으로 마트가 새로운 배추 산지 계약면적을 추가하다..!",
+      "eventName": "흉작",
+      "eventValue": "+",
+      "eventVariance": "0.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "배추 평균 도매가가 평년 대비 105% 상승한 가운데 소매 가격도 상승했습니다.",
+      "eventHeadline": "배추 가격 상승으로 김장 시즌 가파른 도래..!",
+      "eventName": "풍작",
+      "eventValue": "+",
+      "eventVariance": "105.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "기상 악화로 생육 저하가 예상되어 배추 가격 맞추기가 어려워졌습니다.",
+      "eventHeadline": "기상 악화로 배추 가격 맞추기 어려워져..!",
+      "eventName": "폭우",
+      "eventValue": "+",
+      "eventVariance": "0.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "신선한 김치 만들 준비하세요!",
+      "eventHeadline": "김장철, 배추값 폭등할 것인가!",
+      "eventName": "흉작",
+      "eventValue": "+",
+      "eventVariance": "7.5",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "무",
+      "eventContent": "김장철을 맞아 안정적인 공급이 예상됩니다.",
+      "eventHeadline": "김장 채소, 무값 급락하게 되나..!",
+      "eventName": "흉작",
+      "eventValue": "-",
+      "eventVariance": "5.2",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "내달 중 수급 안정 대책 발표 예정",
+      "eventHeadline": "김장 채소, 수급 안정을 위한 대책 발표한다!",
+      "eventName": "사회 이슈",
+      "eventValue": "+",
+      "eventVariance": "랜덤한 값",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "가을철 배추와 무의 본격 출하로 공급 여건 개선",
+      "eventHeadline": "배추, 공급 안정을 위한 전방위 노력!",
+      "eventName": "풍작",
+      "eventValue": "+",
+      "eventVariance": "0.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "무",
+      "eventContent": "가을철 배추와 무의 본격 출하로 공급 여건 개선",
+      "eventHeadline": "무, 공급 안정을 위한 전방위 노력!",
+      "eventName": "풍작",
+      "eventValue": "+",
+      "eventVariance": "0.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "폭등한 가격, 한 달 전보다 2 배, 1년 전보다는 2.3 배 올랐습니다.",
+      "eventHeadline": "배추 도매가, 폭등하다!",
+      "eventName": "풍작",
+      "eventValue": "+",
+      "eventVariance": "122.5",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "무",
+      "eventContent": "가격 급등, 1년 전의 2.5 배로 상승했습니다.",
+      "eventHeadline": "무 가격 급등, 증가하나..!",
+      "eventName": "풍작",
+      "eventValue": "+",
+      "eventVariance": "150.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "양파",
+      "eventContent": "1년 전의 1.6 배로 상승했습니다.",
+      "eventHeadline": "양파 가격 오름, 증가세 이어가나..!",
+      "eventName": "풍작",
+      "eventValue": "+",
+      "eventVariance": "60.6",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "사과",
+      "eventContent": "폭우와 이른 추석으로 수확이 앞당겨져 부족한 대과로 가격이 상승했습니다.",
+      "eventHeadline": "폭우와 이른 추석, 사과 가격 급등 예고!",
+      "eventName": "폭우",
+      "eventValue": "+",
+      "eventVariance": "30.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "수박",
+      "eventContent": "폭우와 이른 추석으로 수확이 앞당겨져 부족한 과일로 가격이 상승했습니다.",
+      "eventHeadline": "급증하는 수박값, 추석과 폭우로 인한 영향!",
+      "eventName": "폭우",
+      "eventValue": "+",
+      "eventVariance": "35.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "배",
+      "eventContent": "폭우로 인한 농작물 피해와 이른 추석으로 수확이 앞당겨져 부족한 과일로 가격이 상승했습니다.",
+      "eventHeadline": "폭우와 이른 추석, 배 값 급등 예상!",
+      "eventName": "폭우",
+      "eventValue": "+",
+      "eventVariance": "20.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "무",
+      "eventContent": "폭우와 이른 추석으로 수확이 앞당겨져 부족한 채소로 가격이 상승했습니다.",
+      "eventHeadline": "채소값 급등! 폭우와 이른 추석의 영향",
+      "eventName": "폭우",
+      "eventValue": "+",
+      "eventVariance": "60.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "감자",
+      "eventContent": "폭우와 이른 추석으로 수확이 앞당겨져 부족한 채소로 가격이 상승했습니다.",
+      "eventHeadline": "폭우와 이른 추석, 감자값 급등 예상!",
+      "eventName": "폭우",
+      "eventValue": "+",
+      "eventVariance": "40.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "노지 생산 품목이 폭우로 피해를 입어 가격이 상승하게 되나..!",
+      "eventHeadline": "폭우로 농작물에 타격! 추석 성수품도 올랐나..!",
+      "eventName": "폭우",
+      "eventValue": "+",
+      "eventVariance": "72.7",
+      "eventType": "ALL"
+    },
+    {
+      "productName": "상추",
+      "eventContent": "여름철 무더위와 가뭄으로 가격이 치솟았는데...",
+      "eventHeadline": "가을 무더위에 상큼함이 더해지던 상추, 가격 급등할 것인가..!",
+      "eventName": "가뭄",
+      "eventValue": "+",
+      "eventVariance": "63.1",
+      "eventType": "SUMMER"
+    },
+    {
+      "productName": "시금치",
+      "eventContent": "더위와 가뭄으로 가격이 치솟았는데...",
+      "eventHeadline": "시원한 초록빛, 더위와 가뭄을 이겨낼 수 있을까..!",
+      "eventName": "가뭄",
+      "eventValue": "+",
+      "eventVariance": "70.6",
+      "eventType": "SUMMER"
+    },
+    {
+      "productName": "깻잎",
+      "eventContent": "폭우로 피해를 입어 가격이 상승하게 되나..!",
+      "eventHeadline": "소중한 간장장아찌 재료, 폭우에 위협받는 깻잎의 운명은..!",
+      "eventName": "폭우",
+      "eventValue": "+",
+      "eventVariance": "32.8",
+      "eventType": "ALL"
+    },
+    {
+      "productName": "오이",
+      "eventContent": "폭우로 피해를 입어 가격이 상승하게 되나..!",
+      "eventHeadline": "한 입 베어먹는 상쾌함, 폭우에 휩싸인 오이의 운명은..!",
+      "eventName": "폭우",
+      "eventValue": "+",
+      "eventVariance": "73.0",
+      "eventType": "ALL"
+    },
+    {
+      "productName": "호박",
+      "eventContent": "폭우로 피해를 입어 가격이 상승하게 되나..!",
+      "eventHeadline": "날개 단 호박, 폭우에 물들인다면 가격은 오를 것인가..!",
+      "eventName": "폭우",
+      "eventValue": "+",
+      "eventVariance": "73.0",
+      "eventType": "ALL"
+    },
+    {
+      "productName": "열무",
+      "eventContent": "여름철 무더위와 가뭄으로 가격이 치솟았는데...",
+      "eventHeadline": "더위와 가뭄 속에서 자란 열무, 가격은 더 올라갈까..!",
+      "eventName": "가뭄",
+      "eventValue": "+",
+      "eventVariance": "63.5",
+      "eventType": "SUMMER"
+    },
+    {
+      "productName": "부추",
+      "eventContent": "여름철 무더위와 가뭄으로 가격이 치솟았는데...",
+      "eventHeadline": "상큼한 냄새 가득한 부추, 여름 무더위를 이겨낼 수 있을까..!",
+      "eventName": "가뭄",
+      "eventValue": "+",
+      "eventVariance": "56.2",
+      "eventType": "SUMMER"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "식탁에 자주 오르는 배추가격이 고공 행진하면서 서민들의 시름이 깊어지고 있다. 특히 여름 배추는 올해 특히 가격이 높아 지는 것을 체감하고 있다.",
+      "eventHeadline": "여름의 폭등! 배추가격 상승세 이어질 것인가!",
+      "eventName": "흉작",
+      "eventValue": "+",
+      "eventVariance": "72.7",
+      "eventType": "SUMMER"
+    },
+    {
+      "productName": "오이",
+      "eventContent": "식탁에 자주 오르는 오이가격이 급등하면서 수요가 늘고 있다.",
+      "eventHeadline": "급등한 오이! 수요 늘며 물가 상승 압력 증가하나!",
+      "eventName": "흉작",
+      "eventValue": "+",
+      "eventVariance": "73.0",
+      "eventType": "SUMMER"
+    },
+    {
+      "productName": "시금치",
+      "eventContent": "채소 중 시금치가격이 급등하여 농산물 가격 상승세가 예상된다.",
+      "eventHeadline": "급등한 시금치! 작황 부진으로 농산물 가격 상승 예상되나!",
+      "eventName": "흉작",
+      "eventValue": "+",
+      "eventVariance": "70.6",
+      "eventType": "SPRING"
+    },
+    {
+      "productName": "상추",
+      "eventContent": "채소 중 상추가격이 상승하여 성수품 수요가 늘어나고 있으며, 가격이 크게 올랐다.",
+      "eventHeadline": "성수품 수요 증가! 상추가격 급등한 것에 서민들 시름..!",
+      "eventName": "흉작",
+      "eventValue": "+",
+      "eventVariance": "63.1",
+      "eventType": "SPRING"
+    },
+    {
+      "productName": "양파",
+      "eventContent": "양파 생산량 감소",
+      "eventHeadline": "양파값 오름세, 얼마나 더 올라갈까..!",
+      "eventName": "흉작",
+      "eventValue": "+",
+      "eventVariance": "39.1",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "마늘",
+      "eventContent": "마늘 생산량 감소",
+      "eventHeadline": "마늘가 언제까지 올라갈까..!",
+      "eventName": "흉작",
+      "eventValue": "+",
+      "eventVariance": "11.5",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "재배 면적이 작년보다 줄어들었고 작황 부진으로 생산비가 오르는 상황",
+      "eventHeadline": "김장 배추, 농민들의 우려..!",
+      "eventName": "흉작",
+      "eventValue": "+",
+      "eventVariance": "5.6",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "무",
+      "eventContent": "재배 면적이 작년보다 줄어들었고 작황 부진으로 생산비가 오르는 상황",
+      "eventHeadline": "김장 물가 애그 플레이션..!",
+      "eventName": "흉작",
+      "eventValue": "+",
+      "eventVariance": "3.6",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "마늘",
+      "eventContent": "재배 면적이 작년보다 줄어들었고 작황 부진으로 생산비가 오르는 상황",
+      "eventHeadline": "김장에 부담될 마늘",
+      "eventName": "흉작",
+      "eventValue": "+",
+      "eventVariance": "N/A",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "양파",
+      "eventContent": "재배 면적이 작년보다 줄어들었고 작황 부진으로 생산비가 오르는 상황",
+      "eventHeadline": "가을 재배 면적 감소, 양파 물가 상승..!",
+      "eventName": "흉작",
+      "eventValue": "+",
+      "eventVariance": "N/A",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "올해 배추 가격 하락세❗️",
+      "eventHeadline": "배추 가격 하락, 농민들 '당황스러워'🥬",
+      "eventName": "사회 이슈",
+      "eventValue": "-",
+      "eventVariance": "12.8",
+      "eventType": "WINTER"
+    },
+    {
+      "productName": "무",
+      "eventContent": "최근 무 가격 하락세 발생❗️",
+      "eventHeadline": "급락한 무 가격, 소비자 '만족'할 수 있을까?🥦",
+      "eventName": "사회 이슈",
+      "eventValue": "-",
+      "eventVariance": "10.3",
+      "eventType": "WINTER"
+    },
+    {
+      "productName": "대파",
+      "eventContent": "최근 대파 가격 하락세 발생❗️",
+      "eventHeadline": "하락한 대파 가격, 소비자 '기뻐해야 할까?'🌱",
+      "eventName": "사회 이슈",
+      "eventValue": "-",
+      "eventVariance": "1.0",
+      "eventType": "WINTER"
+    },
+    {
+      "productName": "쪽파",
+      "eventContent": "쪽파 가격 하락세❗️",
+      "eventHeadline": "쪽파 가격 하락, 봄이 '가까워지나요?'🌿",
+      "eventName": "사회 이슈",
+      "eventValue": "-",
+      "eventVariance": "1.0",
+      "eventType": "SPRING"
+    },
+    {
+      "productName": "양파",
+      "eventContent": "양파 가격 하락세❗️",
+      "eventHeadline": "양파 가격, 향후 '뚝뚝 떨어질까요?'🧅",
+      "eventName": "사회 이슈",
+      "eventValue": "-",
+      "eventVariance": "1.0",
+      "eventType": "WINTER"
+    },
+    {
+      "productName": "미나리",
+      "eventContent": "미나리 가격 상승세❗️",
+      "eventHeadline": "녹색 식물 미나리 가격 '급등'할 것인가?🌿",
+      "eventName": "사회 이슈",
+      "eventValue": "+",
+      "eventVariance": "랜덤",
+      "eventType": "WINTER"
+    },
+    {
+      "productName": "생강",
+      "eventContent": "생강 가격 상승세❗️",
+      "eventHeadline": "바로 생강, 뜨거워지고 '할 것인가?'🔥",
+      "eventName": "사회 이슈",
+      "eventValue": "+",
+      "eventVariance": "랜덤",
+      "eventType": "WINTER"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "성수기를 맞아 출하량이 늘고 있는",
+      "eventHeadline": "배추 가격, 어느 정도로 하락할 것인가!",
+      "eventName": "폭작",
+      "eventValue": "-",
+      "eventVariance": "5.1",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "고춧가루",
+      "eventContent": "",
+      "eventHeadline": "고춧가루 가격의 변화, 예측불허!",
+      "eventName": "흉작",
+      "eventValue": "-",
+      "eventVariance": "0.2",
+      "eventType": "AUTUMN"
+    },
+    {
+      "productName": "마늘",
+      "eventContent": "",
+      "eventHeadline": "마늘 가격, 무엇을 하게 되나..!",
+      "eventName": "흉작",
+      "eventValue": "-",
+      "eventVariance": "3.2",
+      "eventType": "AUTUMN"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "산지 출하량 증가와 대형 유통업체 할인 행사의 영향으로 가격 하락",
+      "eventHeadline": "김장 재료 대형 할인 행사로..!",
+      "eventName": "흉작",
+      "eventValue": "-",
+      "eventVariance": "4.5",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "무",
+      "eventContent": "산지 출하량 증가와 대형 유통업체 할인 행사의 영향으로 가격 하락",
+      "eventHeadline": "김장 재료 대형 할인 행사로..!",
+      "eventName": "흉작",
+      "eventValue": "-",
+      "eventVariance": "6.5",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "쪽파",
+      "eventContent": "가격 하락",
+      "eventHeadline": "봄내음 가득한 시원한..!",
+      "eventName": "흉작",
+      "eventValue": "-",
+      "eventVariance": "12.6",
+      "eventType": "ALL"
+    },
+    {
+      "productName": "고춧가루",
+      "eventContent": "가격 하락",
+      "eventHeadline": "매콤한 요리 비법..!",
+      "eventName": "흉작",
+      "eventValue": "-",
+      "eventVariance": "3.4",
+      "eventType": "ALL"
+    },
+    {
+      "productName": "멸치 액 젓",
+      "eventContent": "가격 하락",
+      "eventHeadline": "바다 향취 가득한..!",
+      "eventName": "흉작",
+      "eventValue": "-",
+      "eventVariance": "2.9",
+      "eventType": "ALL"
+    },
+    {
+      "productName": "미나리",
+      "eventContent": "가격 하락",
+      "eventHeadline": "푸른 계절을 떠나는..!",
+      "eventName": "흉작",
+      "eventValue": "-",
+      "eventVariance": "-.6",
+      "eventType": "ALL"
+    },
+    {
+      "productName": "갓",
+      "eventContent": "가격 상승",
+      "eventHeadline": "봄을 알리는 한 줄기..!",
+      "eventName": "흉작",
+      "eventValue": "+",
+      "eventVariance": "6.5",
+      "eventType": "ALL"
+    },
+    {
+      "productName": "대파",
+      "eventContent": "가격 상승",
+      "eventHeadline": "푸릇한 상쾌함이..!",
+      "eventName": "흉작",
+      "eventValue": "+",
+      "eventVariance": "1.9",
+      "eventType": "ALL"
+    },
+    {
+      "productName": "양파",
+      "eventContent": "가격 상승",
+      "eventHeadline": "독특한 맛이..!",
+      "eventName": "흉작",
+      "eventValue": "+",
+      "eventVariance": "1.6",
+      "eventType": "ALL"
+    },
+    {
+      "productName": "생강",
+      "eventContent": "가격 상승",
+      "eventHeadline": "포근한 계절에 어울리는..!",
+      "eventName": "흉작",
+      "eventValue": "+",
+      "eventVariance": "1.5",
+      "eventType": "ALL"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "올해는 여름 배추 생산량이 줄어들었으나 9월 중순 이후 준 고랭지 배추 출하로 인해 가격이 하락하였고, 김장철 배추 출하로 인해 가격 하락폭이 더 커지고 있습니다.",
+      "eventHeadline": "가을을 맞이한 배추, 어서 반값 얻어라!",
+      "eventName": "흉작",
+      "eventValue": "-",
+      "eventVariance": "0.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "출하량 증가로 김장 재료 중 비중이 큰 배추 가격이 하락함",
+      "eventHeadline": "배추 폭락! 가을 김장을 준비할 시간..!",
+      "eventName": "풍작",
+      "eventValue": "-",
+      "eventVariance": "9.1",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "고춧가루",
+      "eventContent": "낮은 생산비용으로 인한 낮은 소비자 가격",
+      "eventHeadline": "고춧가루 가격 하락, 얼큰한 요리가 더욱 즐거워지나..!",
+      "eventName": "풍작",
+      "eventValue": "-",
+      "eventVariance": "6.8",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "깐 마늘",
+      "eventContent": "생산량 증가로 인한 시장 공급량 증가",
+      "eventHeadline": "깐 마늘 값 락다운! 요리는 매콤해지나..!",
+      "eventName": "풍작",
+      "eventValue": "-",
+      "eventVariance": "5.4",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "쪽파",
+      "eventContent": "계절적 수확량이 증가하여 가격 하락",
+      "eventHeadline": "쪽파 값 급락! 요리 솜씨 발휘할 때..!",
+      "eventName": "풍작",
+      "eventValue": "-",
+      "eventVariance": "22.8",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "새우젓",
+      "eventContent": "생산량 증가와 유통비용 절감으로 인한 저렴한 가격",
+      "eventHeadline": "새우젓 값 대폭 하락, 푸짐한 밥상을 차려보겠나..!",
+      "eventName": "풍작",
+      "eventValue": "-",
+      "eventVariance": "22.9",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "작년보다 크게 오른 도매가격! 내달에는 안정화될 것으로 전망",
+      "eventHeadline": "폭등 예고! 내달 안정화를 할 것인가!",
+      "eventName": "폭등",
+      "eventValue": "+",
+      "eventVariance": "24.0",
+      "eventType": "WINTER"
+    },
+    {
+      "productName": "무",
+      "eventContent": "도매가격 2.3 배로 급등 예상",
+      "eventHeadline": "급등! 놀라운 2.3 배 예측됨",
+      "eventName": "폭등",
+      "eventValue": "+",
+      "eventVariance": "130.4",
+      "eventType": "WINTER"
+    },
+    {
+      "productName": "당근",
+      "eventContent": "가격 2.7 배로 오를 것으로 예상",
+      "eventHeadline": "가격 2.7 배 급등! 대책 필요할 듯!",
+      "eventName": "폭등",
+      "eventValue": "+",
+      "eventVariance": "170.5",
+      "eventType": "WINTER"
+    },
+    {
+      "productName": "감자",
+      "eventContent": "1.3 배 급증할 것으로 예상",
+      "eventHeadline": "급증 예고! 대책이 시급하다..!",
+      "eventName": "폭등",
+      "eventValue": "+",
+      "eventVariance": "35.1",
+      "eventType": "WINTER"
+    },
+    {
+      "productName": "양파",
+      "eventContent": "1.6 배까지 비싸질 것으로 예상",
+      "eventHeadline": "가장 높은 1.6 배 전망! 대책 필요",
+      "eventName": "폭등",
+      "eventValue": "+",
+      "eventVariance": "60.0",
+      "eventType": "WINTER"
+    },
+    {
+      "productName": "상추",
+      "eventContent": "잦은 강우와 태풍으로 인한 안정세로 접어들음",
+      "eventHeadline": "강우와 태풍, 상추 가격을 안정세로!",
+      "eventName": "폭우",
+      "eventValue": "-",
+      "eventVariance": "랜덤",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "애호박",
+      "eventContent": "잦은 강우와 태풍으로 인한 안정세로 접어들음",
+      "eventHeadline": "강우와 태풍, 애호박 가격을 안정세로!",
+      "eventName": "폭우",
+      "eventValue": "-",
+      "eventVariance": "랜덤",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "현재 가격이 높았던 품목들도 고랭지 출하 예정으로 점차 안정될 것으로 예상",
+      "eventHeadline": "고랭지 출하로 배추 가격 안정화할 것인가!",
+      "eventName": "폭우",
+      "eventValue": "-",
+      "eventVariance": "랜덤",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "무",
+      "eventContent": "현재 가격이 높았던 품목들도 고랭지 출하 예정으로 점차 안정될 것으로 예상",
+      "eventHeadline": "고랭지 출하로 무 가격 안정화할 것인가!",
+      "eventName": "폭우",
+      "eventValue": "-",
+      "eventVariance": "랜덤",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "때 이른 폭염으로 배추 출하량이 줄어 채소 도맷값이 다음 달에도 오름세를 이어 갈 것으로 전망된다.",
+      "eventHeadline": "배추, 채소 도맷값 오름세를 이어 갈 것인가!",
+      "eventName": "폭염",
+      "eventValue": "+",
+      "eventVariance": "0.0",
+      "eventType": "SUMMER"
+    },
+    {
+      "productName": "무",
+      "eventContent": "때 이른 폭염으로 무 출하량이 줄어 채소 도맷값이 다음 달에도 오름세를 이어 갈 것으로 전망된다.",
+      "eventHeadline": "무, 채소 도맷값 오름세를 그대로 이어받나..!",
+      "eventName": "폭염",
+      "eventValue": "+",
+      "eventVariance": "0.0",
+      "eventType": "SUMMER"
+    },
+    {
+      "productName": "오이",
+      "eventContent": "폭염과 잦은 비로 작황이 나빠지며 농산물 가격이 큰 폭으로 상승",
+      "eventHeadline": "오이, 올해 가장 큰 폭등을 하게 되나..!",
+      "eventName": "흉작",
+      "eventValue": "+",
+      "eventVariance": "73.0",
+      "eventType": "SUMMER"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "폭염과 잦은 비로 작황이 나빠지며 농산물 가격이 큰 폭으로 상승",
+      "eventHeadline": "배추, 폭등의 극을 선보일 것인가..!",
+      "eventName": "흉작",
+      "eventValue": "+",
+      "eventVariance": "72.7",
+      "eventType": "SUMMER"
+    },
+    {
+      "productName": "상추",
+      "eventContent": "폭염과 잦은 비로 작황이 나빠지며 농산물 가격이 큰 폭으로 상승",
+      "eventHeadline": "상추, 급등의 전조가 되나..!",
+      "eventName": "흉작",
+      "eventValue": "+",
+      "eventVariance": "63.1",
+      "eventType": "SUMMER"
+    },
+    {
+      "productName": "파",
+      "eventContent": "폭염과 잦은 비로 작황이 나빠지며 농산물 가격이 큰 폭으로 상승",
+      "eventHeadline": "파, 압도적 상승세를 나타낼까..!",
+      "eventName": "흉작",
+      "eventValue": "+",
+      "eventVariance": "48.5",
+      "eventType": "SUMMER"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "추석 이후 배추 가격이 급등하고 수급이 불안정한 상황 속에서 비축 배축 3,000 톤을 공급하고, 조기 공급하기로 한 600 톤의 수출 김치용 배추로 인해 가격이 유지될 수 있으며, 11월 이후 김장철을 대비해 수급 안정 대책 발표 예정",
+      "eventHeadline": "급등한 배추 가격, 수급 불안정... 대책 발표할 것인가!",
+      "eventName": "사회 이슈",
+      "eventValue": "+",
+      "eventVariance": "0.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "양배추",
+      "eventContent": "추석 이후 양배추 가격은 평년보다 내렸다.",
+      "eventHeadline": "가격 하락세... 양배추의 운명은?",
+      "eventName": "사회 이슈",
+      "eventValue": "-",
+      "eventVariance": "0.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "시금치",
+      "eventContent": "추석 이후 시금치 가격은 평년보다 내렸다.",
+      "eventHeadline": "가격 하락세... 시금치의 운명은?",
+      "eventName": "사회 이슈",
+      "eventValue": "-",
+      "eventVariance": "0.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "깻잎",
+      "eventContent": "추석 이후 깻잎 가격은 평년보다 내렸다.",
+      "eventHeadline": "가격 하락세... 깻잎의 운명은?",
+      "eventName": "사회 이슈",
+      "eventValue": "-",
+      "eventVariance": "0.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "대파",
+      "eventContent": "추석 이후 대파 가격은 평년보다 내렸다.",
+      "eventHeadline": "가격 하락세... 대파의 운명은?",
+      "eventName": "사회 이슈",
+      "eventValue": "-",
+      "eventVariance": "0.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "무",
+      "eventContent": "추석 이후 무 가격이 하락세다.",
+      "eventHeadline": "가격 추락... 무의 운명은?",
+      "eventName": "사회 이슈",
+      "eventValue": "-",
+      "eventVariance": "0.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "양파",
+      "eventContent": "추석 이후 양파 가격이 하락세다.",
+      "eventHeadline": "가격 추락... 양파의 운명은?",
+      "eventName": "사회 이슈",
+      "eventValue": "-",
+      "eventVariance": "0.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "고추",
+      "eventContent": "품귀 현상 우려로 11월 이후 김장철 대비를 위한 고추 수급 안정 대책 발표 예정",
+      "eventHeadline": "김장을 위한 준비... 고추 공급 대책 나서게 되나..!",
+      "eventName": "사회 이슈",
+      "eventValue": "+",
+      "eventVariance": "0.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "마늘",
+      "eventContent": "품귀 현상 우려로 11월 이후 김장철 대비를 위한 마늘 수급 안정 대책 발표 예정",
+      "eventHeadline": "김장을 위한 준비... 마늘 공급 대책 나서게 되나..!",
+      "eventName": "사회 이슈",
+      "eventValue": "+",
+      "eventVariance": "0.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "오이",
+      "eventContent": "폭염과 잦은 비로 작황이 나빠지면서 물가가 상승하게 되나..!",
+      "eventHeadline": "작황 나빠져 물가 상승 이끌어오는 폭염과 잦은 비!",
+      "eventName": "폭염",
+      "eventValue": "+",
+      "eventVariance": "73.0",
+      "eventType": "SUMMER"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "농산물 값 폭등으로 물가가 상승하게 되나..!",
+      "eventHeadline": "가파른 농산물 값 폭등, 물가 상승하게 되나..!",
+      "eventName": "풍작",
+      "eventValue": "+",
+      "eventVariance": "72.7",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "상추",
+      "eventContent": "파 농산물 값 폭등으로 상승하게 되나..!",
+      "eventHeadline": "놀라운 상추 값 급등, 물가 상승 유발하나..!",
+      "eventName": "풍작",
+      "eventValue": "+",
+      "eventVariance": "63.1",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "파",
+      "eventContent": "가공식품 가격상승으로 물가 상승하게 되나..!",
+      "eventHeadline": "놀라운 파 가격 급등! 물가 상승하게 되나..!",
+      "eventName": "사회 이슈",
+      "eventValue": "+",
+      "eventVariance": "48.5",
+      "eventType": "ALL"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "농촌경제연구원 보고서에 따르면 배추의 도매가격이 크게 상승할 것으로 예상됨.",
+      "eventHeadline": "한파가 더해지며 배추 가격 폭등 예상, 농가들은 고심할 것인가!",
+      "eventName": "한파",
+      "eventValue": "+",
+      "eventVariance": "121.8",
+      "eventType": "WINTER"
+    },
+    {
+      "productName": "건고추",
+      "eventContent": "농촌경제연구원 보고서에 따르면 건고추 생육이 전년 대비 부진한 상황.",
+      "eventHeadline": "생육 기 가뭄과 병해충 증가, 건고추 어려움에 부딪히게 되나..!",
+      "eventName": "흉작",
+      "eventValue": "+",
+      "eventVariance": "랜덤",
+      "eventType": "SUMMER"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "평년보다 부진한 배추 작황",
+      "eventHeadline": "배추, 작황 부진으로 인한 가격 변동 예상",
+      "eventName": "흉작",
+      "eventValue": "+",
+      "eventVariance": "70.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "당근",
+      "eventContent": "지난달 대비 34.0% 상승",
+      "eventHeadline": "당근 시세 급등 예상",
+      "eventName": "ALL",
+      "eventValue": "+",
+      "eventVariance": "34.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "무",
+      "eventContent": "도매가격 9.0% 상승",
+      "eventHeadline": "무 가격 상승세 지속 예정",
+      "eventName": "ALL",
+      "eventValue": "+",
+      "eventVariance": "9.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "양배추",
+      "eventContent": "도매가격 5.0% 상승",
+      "eventHeadline": "양배추 값 오름 예상",
+      "eventName": "ALL",
+      "eventValue": "+",
+      "eventVariance": "5.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "국제 곡물가격 상승과 환율 상승, 여름 폭염과 잦은 호우로 인한 작황부진 등의 영향으로 가격이 2배 넘게 올랐습니다.",
+      "eventHeadline": "올해 폭염, 환율 급등으로 배추 가격 폭등!",
+      "eventName": "폭염",
+      "eventValue": "+",
+      "eventVariance": "136.3",
+      "eventType": "SUMMER"
+    },
+    {
+      "productName": "무",
+      "eventContent": "국제 곡물가격 상승과 환율 상승, 여름 폭염과 잦은 호우로 인한 작황부진 등의 영향으로 가격이 2.5배 상승했습니다.",
+      "eventHeadline": "무 가격 급등! 환율 변동과 폭염에 주목",
+      "eventName": "폭염",
+      "eventValue": "+",
+      "eventVariance": "150.1",
+      "eventType": "SUMMER"
+    },
+    {
+      "productName": "당근",
+      "eventContent": "국제 곡물가격 상승과 환율 상승, 여름 폭염과 잦은 호우로 인한 작황부진 등의 영향으로 가격이 2배 수준으로 상승했습니다.",
+      "eventHeadline": "당근 시장서 뜨거운 갈비 날개짓, 농산물값 급상승은 계속될 것인가..!",
+      "eventName": "폭염",
+      "eventValue": "+",
+      "eventVariance": "100",
+      "eventType": "SUMMER"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "태풍의 영향으로 배추 생산이 어려워져 공급 물량이 예상보다 부족한 상황에서 매년보다 가격이 상승하고 있다.",
+      "eventHeadline": "태풍 휩쓸고 가자! 배추 가격 폭등 하다..!",
+      "eventName": "폭우",
+      "eventValue": "+",
+      "eventVariance": "68.3",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "올해는 기상 악화와 추석 수요 증가로 인해 공급량 변동이 예상됩니다.",
+      "eventHeadline": "한파가 끝나고 봄날씨가 찾아왔다!",
+      "eventName": "한파",
+      "eventValue": "+",
+      "eventVariance": "3.5",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "무",
+      "eventContent": "소고기·돼지고기 가격 하락 추세",
+      "eventHeadline": "추석 끝나고 가을 상쾌한 바람이 불어오다!",
+      "eventName": "풍작",
+      "eventValue": "-",
+      "eventVariance": "2.1",
+      "eventType": "ALL"
+    },
+    {
+      "productName": "양파",
+      "eventContent": "소고기·돼지고기 가격 하락 추세",
+      "eventHeadline": "추석 끝나고 가을 상쾌한 바람이 불어오다!",
+      "eventName": "풍작",
+      "eventValue": "-",
+      "eventVariance": "2.1",
+      "eventType": "ALL"
+    },
+    {
+      "productName": "상추",
+      "eventContent": "소고기·돼지고기 가격 하락 추세",
+      "eventHeadline": "추석 끝나고 가을 상쾌한 바람이 불어오다!",
+      "eventName": "풍작",
+      "eventValue": "-",
+      "eventVariance": "2.1",
+      "eventType": "ALL"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "작황 부진으로 인한 강세",
+      "eventHeadline": "작황 부진! 농산물 강세는 계속될 것인가..!",
+      "eventName": "풍작",
+      "eventValue": "+",
+      "eventVariance": "7.7",
+      "eventType": "SPRING"
+    },
+    {
+      "productName": "상추",
+      "eventContent": "농산물 유통정보에 따른 오름세",
+      "eventHeadline": "농산물 가격 강! 유통정보대로 오름세",
+      "eventName": "풍작",
+      "eventValue": "+",
+      "eventVariance": "6.3",
+      "eventType": "SPRING"
+    },
+    {
+      "productName": "시금치",
+      "eventContent": "작황 부진으로 인한 높은 평년 대비 상승",
+      "eventHeadline": "작황 부진에 의한 가파른 상승세",
+      "eventName": "풍작",
+      "eventValue": "+",
+      "eventVariance": "28.5",
+      "eventType": "SPRING"
+    },
+    {
+      "productName": "양배추",
+      "eventContent": "작황 부진으로 예년 대비 급등",
+      "eventHeadline": "작황 부진! 양배추 가격 급등할 것인가..!",
+      "eventName": "풍작",
+      "eventValue": "+",
+      "eventVariance": "29.1",
+      "eventType": "SPRING"
+    },
+    {
+      "productName": "깻잎",
+      "eventContent": "풍작으로 부상",
+      "eventHeadline": "깻잎 가격, 풍작에 의한 상승세 예상",
+      "eventName": "풍작",
+      "eventValue": "+",
+      "eventVariance": "21.7",
+      "eventType": "SPRING"
+    },
+    {
+      "productName": "무",
+      "eventContent": "지난해 재배면적 감소와 기상 요인으로 상승",
+      "eventHeadline": "기상 요인에 주목! 무 가격 상승 예상",
+      "eventName": "풍작",
+      "eventValue": "+",
+      "eventVariance": "15.6",
+      "eventType": "SPRING"
+    },
+    {
+      "productName": "열무",
+      "eventContent": "저온 현상과 가뭄으로 평년 대비 상승",
+      "eventHeadline": "가뭄에 주의! 열무 가격 급등 예상",
+      "eventName": "풍작",
+      "eventValue": "+",
+      "eventVariance": "58.6",
+      "eventType": "SPRING"
+    },
+    {
+      "productName": "오이",
+      "eventContent": "작황 부진으로 인한 상승",
+      "eventHeadline": "작황 부진! 오이 가격 상승세",
+      "eventName": "풍작",
+      "eventValue": "+",
+      "eventVariance": "14.3",
+      "eventType": "SPRING"
+    },
+    {
+      "productName": "토마토",
+      "eventContent": "평년 대비 상승세",
+      "eventHeadline": "토마토 가격, 오름세 지속될 것인가..!",
+      "eventName": "풍작",
+      "eventValue": "+",
+      "eventVariance": "4.8",
+      "eventType": "SPRING"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "공급 산지를 확대하고 절임 배추를 반값에 판매한다.",
+      "eventHeadline": "공급 산지 확대로 배추 가격 천정부지! 절임 배추 할인 온다!",
+      "eventName": "흉작",
+      "eventValue": "-",
+      "eventVariance": "93.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "올해 김장할 때 드는 비용이 작년 대비 싸졌다!",
+      "eventHeadline": "배추, 올해는 더 싸게 할 것인가!",
+      "eventName": "풍작",
+      "eventValue": "-",
+      "eventVariance": "12.8",
+      "eventType": "WINTER"
+    },
+    {
+      "productName": "무",
+      "eventContent": "일주일 내내 무는 싸졌습니다!",
+      "eventHeadline": "무, 가격 하락세 지속할 것인가!",
+      "eventName": "ALL",
+      "eventValue": "-",
+      "eventVariance": "10.3",
+      "eventType": "WINTER"
+    },
+    {
+      "productName": "대파",
+      "eventContent": "",
+      "eventHeadline": "",
+      "eventName": "ALL",
+      "eventValue": "-",
+      "eventVariance": "2.0",
+      "eventType": "WINTER"
+    },
+    {
+      "productName": "쪽파",
+      "eventContent": "",
+      "eventHeadline": "",
+      "eventName": "ALL",
+      "eventValue": "-",
+      "eventVariance": "2.0",
+      "eventType": "WINTER"
+    },
+    {
+      "productName": "양파",
+      "eventContent": "",
+      "eventHeadline": "",
+      "eventName": "ALL",
+      "eventValue": "-",
+      "eventVariance": "2.0",
+      "eventType": "WINTER"
+    },
+    {
+      "productName": "미나리",
+      "eventContent": "김장철 수요와 비교해 공급량 부족으로 더 비싸졌다!",
+      "eventHeadline": "미나리, 값비싸게 하게 되나..!",
+      "eventName": "흉작",
+      "eventValue": "+",
+      "eventVariance": "랜덤",
+      "eventType": "WINTER"
+    },
+    {
+      "productName": "생강",
+      "eventContent": "김장철 수요와 비교해 공급량 부족으로 더 비싸졌다!",
+      "eventHeadline": "생강, 값비싸게 하게 되나..!",
+      "eventName": "흉작",
+      "eventValue": "+",
+      "eventVariance": "랜덤",
+      "eventType": "WINTER"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "성수기를 맞아 출하량이 늘고 있는 배추의 가격이 하락했습니다.",
+      "eventHeadline": "봄이 왔는데 배추값 또 낮아지나..!",
+      "eventName": "풍작",
+      "eventValue": "-",
+      "eventVariance": "5.1",
+      "eventType": "SPRING"
+    },
+    {
+      "productName": "무",
+      "eventContent": "무의 가격이 하락했습니다.",
+      "eventHeadline": "길쭉이도 싸졌다!",
+      "eventName": "풍작",
+      "eventValue": "-",
+      "eventVariance": "랜덤",
+      "eventType": "SPRING"
+    },
+    {
+      "productName": "쪽파",
+      "eventContent": "쪽파의 가격이 하락했습니다.",
+      "eventHeadline": "쪽파값이 뚝뚝 떨어진다!",
+      "eventName": "풍작",
+      "eventValue": "-",
+      "eventVariance": "랜덤",
+      "eventType": "SPRING"
+    },
+    {
+      "productName": "마늘",
+      "eventContent": "마늘의 가격이 하락했습니다.",
+      "eventHeadline": "마늘값 뚝뚝 내려..!",
+      "eventName": "풍작",
+      "eventValue": "-",
+      "eventVariance": "랜덤",
+      "eventType": "SPRING"
+    },
+    {
+      "productName": "대파",
+      "eventContent": "대파의 가격이 상승했습니다.",
+      "eventHeadline": "대파값 오르는데..!",
+      "eventName": "풍작",
+      "eventValue": "+",
+      "eventVariance": "3.6",
+      "eventType": "SPRING"
+    },
+    {
+      "productName": "생강",
+      "eventContent": "생강의 가격이 상승했습니다.",
+      "eventHeadline": "생강값 또 오르나..!",
+      "eventName": "풍작",
+      "eventValue": "+",
+      "eventVariance": "2.9",
+      "eventType": "SPRING"
+    },
+    {
+      "productName": "건고추",
+      "eventContent": "정부는 김장철 건고추 비축물량을 시장에 공급할 계획입니다.",
+      "eventHeadline": "김장철 건고추 대란 예고..!",
+      "eventName": "사회 이슈",
+      "eventValue": "+",
+      "eventVariance": "랜덤",
+      "eventType": "WINTER"
+    },
+    {
+      "productName": "양파",
+      "eventContent": "정부는 양파 비축물량을 시장에 공급할 계획입니다.",
+      "eventHeadline": "양파 대란 예고..!",
+      "eventName": "사회 이슈",
+      "eventValue": "랜덤",
+      "eventVariance": "랜덤",
+      "eventType": "WINTER"
+    },
+    {
+      "productName": "소금",
+      "eventContent": "",
+      "eventHeadline": "",
+      "eventName": "사회 이슈",
+      "eventValue": "랜덤",
+      "eventVariance": "랜덤",
+      "eventType": "WINTER"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "올여름 폭염과 태풍의 영향으로 크게 올랐던 가격이 본격적인 김장철이 시작되면서 큰 폭으로 떨어지며 안정세를 유지할 것으로 전망됩니다.",
+      "eventHeadline": "김장철, 배추 가격 안정세 유지할 것인가!",
+      "eventName": "폭염",
+      "eventValue": "-",
+      "eventVariance": "알 수 없음",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "올 여름 폭염과 태풍의 영향으로 크게 올랐던 가격이 본격적인 김장철이 시작되면서 큰 폭으로 떨어지며 안정세를 유지할 것으로 전망됩니다.",
+      "eventHeadline": "김장철, 배추 가격 안정세 유지할 것인가!",
+      "eventName": "폭염",
+      "eventValue": "-",
+      "eventVariance": "알 수 없음",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "올여름 폭염과 태풍의 영향으로 크게 올랐던 배추 가격이 본격적인 김장철 시작과 함께 큰 폭으로 떨어졌습니다.",
+      "eventHeadline": "배추, 가을김장이 시작되며 폭락할 것이다!",
+      "eventName": "폭염",
+      "eventValue": "-",
+      "eventVariance": "하락",
+      "eventType": "SUMMER"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "올가을 배추 생산량이 지난해보다 10.4% 증가할 것으로 예측되고 품질도 양호할 것으로 보여서 김장철 배추 가격은 안정세를 유지할 것으로 전망했습니다.",
+      "eventHeadline": "배추, 생산량 10.4% 급증으로 김장철 안정세를 유지할 것이다!",
+      "eventName": "풍작",
+      "eventValue": "+",
+      "eventVariance": "랜덤",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "여름에는 '금 배추'라는 얘기가 나왔지만, 가을에는 재배면적이 늘고 작황이 좋아져서 작년보다 가격이 내려갔습니다. 고춧가루나 생강, 소금은 비와 태풍으로 인해 상승했으나 정부의 대규모 비축물량 방출로 마늘과 고추 가격이 낮아졌습니다. 김장 적정시기는 하루 평균 기온이 4도 이하, 최저 기온이 0도 이하일 때이며, 올해 김장 적기는 평년보다 조금 빠르다는 예상이 있습니다.",
+      "eventHeadline": "가을에는 배추값 하락! 마늘과 고추는 가격 안정화될 것인가!",
+      "eventName": "가뭄",
+      "eventValue": "-",
+      "eventVariance": "0.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "고춧가루",
+      "eventContent": "비와 태풍으로 인해 고춧가루 가격이 상승했습니다.",
+      "eventHeadline": "고춧가루 가격, 비와 태풍에 밀렸다!",
+      "eventName": "폭우",
+      "eventValue": "+",
+      "eventVariance": "0.0",
+      "eventType": "SUMMER"
+    },
+    {
+      "productName": "생강",
+      "eventContent": "비와 태풍으로 인해 생강 가격이 상승했습니다.",
+      "eventHeadline": "생강값, 폭우와 태풍의 타격은 어디까지!",
+      "eventName": "폭우",
+      "eventValue": "+",
+      "eventVariance": "0.0",
+      "eventType": "SUMMER"
+    },
+    {
+      "productName": "소금",
+      "eventContent": "비와 태풍으로 인해 소금 가격이 상승했습니다.",
+      "eventHeadline": "태풍과 함께 소금값 치솟았다!",
+      "eventName": "폭우",
+      "eventValue": "+",
+      "eventVariance": "0.0",
+      "eventType": "SUMMER"
+    },
+    {
+      "productName": "마늘",
+      "eventContent": "정부의 대규모 비축물량 방출로 마늘 가격이 낮아졌습니다.",
+      "eventHeadline": "비축물량 방출로 마늘값 하락! 추가 조치 없을까!",
+      "eventName": "사회 이슈",
+      "eventValue": "-",
+      "eventVariance": "0.0",
+      "eventType": "ALL"
+    },
+    {
+      "productName": "고추",
+      "eventContent": "정부의 대규모 비축물량 방출로 고추 가격이 낮아졌습니다.",
+      "eventHeadline": "비축물량 방출로 고추값 하락! 예비 대책은 필요할까!",
+      "eventName": "사회 이슈",
+      "eventValue": "-",
+      "eventVariance": "0.0",
+      "eventType": "ALL"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "가을 배추 출하량이 증가하면서 김장비용이 감소했습니다.",
+      "eventHeadline": "가을 배추 출하량 증가로 김장비용 하락할 것인가!",
+      "eventName": "풍작",
+      "eventValue": "-",
+      "eventVariance": "9.1",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "고춧가루",
+      "eventContent": "가격이 지난해 대비 낮아졌습니다.",
+      "eventHeadline": "고춧가루 값 낮아져 매운 맛은 유지하게 되나..!",
+      "eventName": "풍작",
+      "eventValue": "-",
+      "eventVariance": "6.8",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "깐 마늘",
+      "eventContent": "가격이 지난해 대비 낮아졌습니다.",
+      "eventHeadline": "깐 마늘 값 하락, 요리는 물론 건강식품도 부담이 줄어들까!",
+      "eventName": "풍작",
+      "eventValue": "-",
+      "eventVariance": "5.4",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "쪽파",
+      "eventContent": "가격이 지난해 대비 낮아졌습니다.",
+      "eventHeadline": "쪽파 값 급락, 가을의 신선한 풍경을 느낄 수 있을지..!",
+      "eventName": "풍작",
+      "eventValue": "-",
+      "eventVariance": "22.8",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "새우젓",
+      "eventContent": "가격이 지난해 대비 낮아졌습니다.",
+      "eventHeadline": "새우젓 값 폭락, 김치의 맛은 변함없이 유지될까!",
+      "eventName": "풍작",
+      "eventValue": "-",
+      "eventVariance": "22.9",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "소금",
+      "eventContent": "가격 변동 요인을 찾을 수 없습니다.",
+      "eventHeadline": "",
+      "eventName": "",
+      "eventValue": "-",
+      "eventVariance": "10.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "양파",
+      "eventContent": "김치 속 재료로 많이 사용되며 추가되었습니다.",
+      "eventHeadline": "김치의 '양' 과 '파' 추가, 가을 맞이 소비자들은 만족할까!",
+      "eventName": "풍작",
+      "eventValue": "+",
+      "eventVariance": "10.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "가을 태풍의 영향으로 크게 올랐던 가격이 김장철을 앞두고 큰 폭으로 내렸습니다.",
+      "eventHeadline": "가을 태풍의 영향으로 크게 하락하다!",
+      "eventName": "풍작",
+      "eventValue": "-",
+      "eventVariance": "알 수 없음",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "무",
+      "eventContent": "가을 태풍의 영향으로 크게 올랐던 가격이 김장철을 앞두고 큰 폭으로 내렸습니다.",
+      "eventHeadline": "가을 태풍의 영향으로 크게 하락하다!",
+      "eventName": "풍작",
+      "eventValue": "-",
+      "eventVariance": "알 수 없음",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "쪽파",
+      "eventContent": "시장에서 찾아볼 수 없는 변동 요인",
+      "eventHeadline": "시장에서 찾아볼 수 없는 변동!",
+      "eventName": "사회 이슈",
+      "eventValue": "-",
+      "eventVariance": "랜덤한 값",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "건고추",
+      "eventContent": "전년 대비 16% 상승한 도매가격을 기록",
+      "eventHeadline": "전년대비 크게 상승하다!",
+      "eventName": "ALL",
+      "eventValue": "+",
+      "eventVariance": "16.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "대파",
+      "eventContent": "전년 대비 15.3% 상승한 도매가격을 기록",
+      "eventHeadline": "전년대비 크게 상승하다!",
+      "eventName": "ALL",
+      "eventValue": "+",
+      "eventVariance": "15.3",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "양파",
+      "eventContent": "예상되는 68%의 급등",
+      "eventHeadline": "예상되는 대폭 상승하다!",
+      "eventName": "ALL",
+      "eventValue": "+",
+      "eventVariance": "68.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "마늘",
+      "eventContent": "정부 비축 해둔 1만 톤의 공급 증가",
+      "eventHeadline": "비축으로 인한 공급 늘다!",
+      "eventName": "사회 이슈",
+      "eventValue": "-",
+      "eventVariance": "랜덤한 값",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "수박",
+      "eventContent": "여름 휴가철을 앞두고 수요 급증",
+      "eventHeadline": "여름 휴가철이 오기도 전! 수요가 급증, 가격 급상승 중이다.",
+      "eventName": "사회 이슈",
+      "eventValue": "+",
+      "eventVariance": "0.0",
+      "eventType": "SUMMER"
+    },
+    {
+      "productName": "양배추",
+      "eventContent": "일교차로 인한 가격 상승",
+      "eventHeadline": "일교차에 주요 농산물 가격 상승! 봄 가을로, 양배추 가격 오름세가 이어진다.",
+      "eventName": "폭락",
+      "eventValue": "+",
+      "eventVariance": "0.0",
+      "eventType": "SPRING"
+    },
+    {
+      "productName": "깻잎",
+      "eventContent": "일교차로 인한 가격 상승",
+      "eventHeadline": "일교차에 주요 농산물 가격 상승! 봄 가을로, 깻잎 가격 폭등!",
+      "eventName": "폭락",
+      "eventValue": "+",
+      "eventVariance": "0.0",
+      "eventType": "SPRING"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "일교차로 인한 가격 상승",
+      "eventHeadline": "일교차의 영향! 배추 가격 상승세!",
+      "eventName": "폭락",
+      "eventValue": "+",
+      "eventVariance": "0.0",
+      "eventType": "SPRING"
+    },
+    {
+      "productName": "열무",
+      "eventContent": "일교차로 인한 가격 상승",
+      "eventHeadline": "봄 가을 일교차 탓! 열무 가격 미친 상승 중이다.",
+      "eventName": "폭락",
+      "eventValue": "+",
+      "eventVariance": "0.0",
+      "eventType": "SPRING"
+    },
+    {
+      "productName": "시금치",
+      "eventContent": "일교차로 인한 가격 상승",
+      "eventHeadline": "봄 가을 일교차 탓! 시금치 가격 오름세가 이어진다.",
+      "eventName": "폭락",
+      "eventValue": "+",
+      "eventVariance": "0.0",
+      "eventType": "SPRING"
+    },
+    {
+      "productName": "망고",
+      "eventContent": "여름 휴가철을 앞두고 수요 급증",
+      "eventHeadline": "본격 여름전야! 망고 가격 폭등, 인기 폭발 중이다.",
+      "eventName": "사회 이슈",
+      "eventValue": "+",
+      "eventVariance": "0.0",
+      "eventType": "SUMMER"
+    },
+    {
+      "productName": "바나나",
+      "eventContent": "여름 휴가철을 앞두고 수요 급증",
+      "eventHeadline": "본격 여름전야! 바나나 가격 급등, 시선집중 중이다.",
+      "eventName": "사회 이슈",
+      "eventValue": "+",
+      "eventVariance": "0.0",
+      "eventType": "SUMMER"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "폭우, 태풍 영향으로 생산량 감소",
+      "eventHeadline": "김장할 때 좀 더 상황이 괜찮아 질 것인가!",
+      "eventName": "폭우",
+      "eventValue": "+",
+      "eventVariance": "100.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "올해 배추 가격이 상승 중이며 도매가격도 1.5 배 수준으로 상승할 전망입니다.",
+      "eventHeadline": "한국 농촌경제연구원, 배추 가격 급등! 도매가격 1.5 배 예상될 것인가!",
+      "eventName": "흉작",
+      "eventValue": "+",
+      "eventVariance": "23.3",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "여름철 폭우와 폭염에 태풍까지 겹쳐 배추 값 급등!",
+      "eventHeadline": "급등하는 배추값, 어디까지 상승할 것인가!",
+      "eventName": "폭우",
+      "eventValue": "+",
+      "eventVariance": "50.0",
+      "eventType": "SUMMER"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "새로운 공급업체 추가로 전체 물량의 30% 증가 예정!",
+      "eventHeadline": "배추 공급 급증, 얼마나 할 것인가!",
+      "eventName": "사회 이슈",
+      "eventValue": "+",
+      "eventVariance": "30.0",
+      "eventType": "SUMMER"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "배추 200 톤 구매 시세의 절반가격으로 협의!",
+      "eventHeadline": "배추 대량 구매 협의, 얼마까지 낮출 것인가!",
+      "eventName": "사회 이슈",
+      "eventValue": "-",
+      "eventVariance": "50.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "기상 여건이 좋지 않아 생육이 저하됐으며 조기 수확 및 수급 대책 발표 예정",
+      "eventHeadline": "기상 여건 악화, 배추 가격 급등..! 대책 발표 예정",
+      "eventName": "흉작",
+      "eventValue": "+",
+      "eventVariance": "0.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "양배추",
+      "eventContent": "도매가격이 낮아져 하락세, 소매가격도 하락 반영 예정",
+      "eventHeadline": "양배추 도매가 하락..! 소매가격 반영 예정",
+      "eventName": "사회 이슈",
+      "eventValue": "-",
+      "eventVariance": "0.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "시금치",
+      "eventContent": "도매가격이 하락세로 평년보다 낮아졌으며 소매가격에도 반영될 전망",
+      "eventHeadline": "시금치 도매가 하락..! 소매가격에도 영향 예상",
+      "eventName": "사회 이슈",
+      "eventValue": "-",
+      "eventVariance": "0.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "깻잎",
+      "eventContent": "도매가격이 평년보다 낮아져 하락세, 소매가격도 하락 예상",
+      "eventHeadline": "깻잎 도매가 평년보다 낮아져..! 소매가격 하락 예상",
+      "eventName": "사회 이슈",
+      "eventValue": "-",
+      "eventVariance": "0.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "대파",
+      "eventContent": "도매가격이 낮아져 평년보다 하락세, 소매가격에도 영향 예상",
+      "eventHeadline": "대파 도매가 평년보다 낮아져..! 소매가격 하락 예상",
+      "eventName": "사회 이슈",
+      "eventValue": "-",
+      "eventVariance": "0.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "폭발적 수요로 가격 급등!",
+      "eventHeadline": "배추값 폭등! 김장할 엄두가 안 나요..!",
+      "eventName": "사회 이슈",
+      "eventValue": "+",
+      "eventVariance": "50.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "무",
+      "eventContent": "고랭지 수확 시작으로 값 상승 예상",
+      "eventHeadline": "무값 급등! 김장할 엄두가 안 나요..!",
+      "eventName": "사회 이슈",
+      "eventValue": "+",
+      "eventVariance": "50.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "쪽파",
+      "eventContent": "수요 증가로 가격 상승",
+      "eventHeadline": "쪽파값 급등! 김장할 엄두가 안 나요..!",
+      "eventName": "사회 이슈",
+      "eventValue": "+",
+      "eventVariance": "50.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "올해 여름 비가 자주 내리고 일조 시간이 줄어 병해가 확산해 배추 생산량이 감소하여 도매가 상승",
+      "eventHeadline": "비가 더 많이 내려 부진한 배추 작황, 가격 상승할 것인가!",
+      "eventName": "폭우",
+      "eventValue": "+",
+      "eventVariance": "9.0",
+      "eventType": "SUMMER"
+    },
+    {
+      "productName": "무",
+      "eventContent": "무 도매가격이 9.0% 상승하여 이달 가격 상승 전망",
+      "eventHeadline": "무 가격 상승, 더 오를 것인가!",
+      "eventName": "폭우",
+      "eventValue": "+",
+      "eventVariance": "9.0",
+      "eventType": "SUMMER"
+    },
+    {
+      "productName": "양배추",
+      "eventContent": "양배추 도매가격이 5.0% 상승하여 이달 가격 상승 전망",
+      "eventHeadline": "양배추 가격 오름세, 계속 할 것인가!",
+      "eventName": "폭우",
+      "eventValue": "+",
+      "eventVariance": "5.0",
+      "eventType": "SUMMER"
+    },
+    {
+      "productName": "무",
+      "eventContent": "이번 달에 태풍 피해 등으로 무 가격 상승세가 계속 이어질 전망입니다.",
+      "eventHeadline": "태풍 피해로 무 가격 상승! 무엇을 할 것인가!",
+      "eventName": "풍작",
+      "eventValue": "+",
+      "eventVariance": "9.0",
+      "eventType": "SUMMER"
+    },
+    {
+      "productName": "양배추",
+      "eventContent": "이번 달에 태풍 피해 등으로 양배추 가격 상승세가 계속 이어질 전망입니다.",
+      "eventHeadline": "태풍 피해로 양배추 가격 상승! 어떻게 대처하게 되나..!",
+      "eventName": "풍작",
+      "eventValue": "+",
+      "eventVariance": "5.0",
+      "eventType": "SUMMER"
+    },
+    {
+      "productName": "배추",
+      "eventContent": "올 여름 폭염과 폭우로 작황이 좋지 않았고, 태풍으로 남부 지방의 일부 배추 밭이 피해를 입어 공급이 줄어들었습니다.",
+      "eventHeadline": "폭염과 태풍이 더 쑥쑥! 배추값 '폭등할 것인가!'",
+      "eventName": "풍작",
+      "eventValue": "+",
+      "eventVariance": "100.0",
+      "eventType": "SUMMER"
+    },
+    {
+      "productName": "애호박",
+      "eventContent": "가격이 줄줄이 뛰면서 올해 추석 차례상 비용이 증가했습니다.",
+      "eventHeadline": "추석 가격 폭등! 애호박값 '하게 되나..!'",
+      "eventName": "사회 이슈",
+      "eventValue": "+",
+      "eventVariance": "15.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "오이",
+      "eventContent": "가격이 줄줄이 뛰면서 올해 추석 차례상 비용이 증가했습니다.",
+      "eventHeadline": "화목한 가족 모임 위해! 오이값 '할 것인가!'",
+      "eventName": "사회 이슈",
+      "eventValue": "+",
+      "eventVariance": "15.0",
+      "eventType": "FALL"
+    },
+    {
+      "productName": "풋고추",
+      "eventContent": "가격이 줄줄이 뛰면서 올해 추석 차례상 비용이 증가했습니다.",
+      "eventHeadline": "매운맛 대열에 합류! 풋고추값 '하게 되나..!'",
+      "eventName": "사회 이슈",
+      "eventValue": "+",
+      "eventVariance": "15.0",
+      "eventType": "FALL"
+    }
+  ]
+}

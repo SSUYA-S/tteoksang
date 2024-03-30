@@ -3,7 +3,7 @@ import { SellInfo } from '../../type/types';
 interface SellReceiptProps {
     sellableInfoList: SellInfo[];
     fee: number;
-    sellProduct: (a: number) => void;
+    sellProduct: () => void;
 }
 
 export default function TradeSellReceipt({
@@ -19,7 +19,15 @@ export default function TradeSellReceipt({
     const totalProfit = totalCost - totalFee;
 
     return (
-        <div className="w-full h-full flex flex-col justify-between items-center bg-white color-text-textcolor border-[0.4vw] rounded-[1vw] color-border-subbold">
+        <div
+            className="w-[90%] h-[85%] flex flex-col justify-between items-center bg-white color-text-textcolor rounded-[1vw]"
+            style={{
+                background: 'url(/src/assets/images/layout/receipt.webp)',
+                backgroundSize: 'contain',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
+            }}
+        >
             <p className="h-[15%] text-[2.4vw] flex items-center justify-center">
                 판매 영수증
             </p>
@@ -46,20 +54,19 @@ export default function TradeSellReceipt({
                     }
                 })}
             </div>
-            <div className="w-[90%] text-[1.2vw]">
+            <div className="w-[80%] text-[1.2vw] pb-[1.2vw]">
                 <p>---------------------</p>
                 <div className="flex items-center justify-between">
                     <p>수수료</p>
                     <p>{totalFee.toLocaleString()}</p>
                 </div>
-                <p>---------------------</p>
                 <div className="flex items-center justify-between">
                     <p>총 판매 금액</p>
                     <p>{totalProfit.toLocaleString()}</p>
                 </div>
                 <div
-                    className="my-[0.4vw] py-[0.4vw] border-[0.2vw] rounded-[1vw] color-border-subbold cursor-pointer hover:color-bg-subbold hover:text-white"
-                    onClick={() => sellProduct(totalProfit)}
+                    className="w-[80%] text-center my-[0.4vw] mx-auto py-[0.4vw] border-[0.2vw] rounded-[1vw] color-border-subbold cursor-pointer hover:color-bg-subbold hover:text-white"
+                    onClick={sellProduct}
                 >
                     판매
                 </div>

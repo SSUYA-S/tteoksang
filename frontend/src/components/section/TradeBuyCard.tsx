@@ -1,14 +1,15 @@
-import { useState, useRef, useEffect } from 'react';
 import { BuyInfo } from '../../type/types';
 
 interface BuyCardProps {
     buyableInfo: BuyInfo;
     updateBuyingList: (x: number, y: number, z: number) => void;
+    calculateMaximumValue: (id: number, nowValue: number) => number;
 }
 
 export default function TradeBuyCard({
     buyableInfo,
     updateBuyingList,
+    calculateMaximumValue,
 }: BuyCardProps) {
     const productNumber = buyableInfo.buyingInfo.productQuantity;
     const productTotalCost = buyableInfo.buyingInfo.productTotalCost;
@@ -23,8 +24,8 @@ export default function TradeBuyCard({
     const changeProductNumber = (changingValue: number) => {
         let changedValue = productNumber + changingValue;
         if (changedValue < 0) changedValue = 0;
-        if (changedValue > buyableInfo.productInfo.productLimit)
-            changedValue = buyableInfo.productInfo.productLimit;
+        if (changedValue > buyableInfo.productInfo.productMaxQuantity)
+            changedValue = buyableInfo.productInfo.productMaxQuantity;
         const changedCost = changedValue * productCost;
         updateBuyingList(
             buyableInfo.productInfo.productId,
@@ -33,20 +34,28 @@ export default function TradeBuyCard({
         );
     };
 
+    const changeToMax = () => {
+        const maxAddValue = calculateMaximumValue(
+            buyableInfo.productInfo.productId,
+            productNumber
+        );
+        changeProductNumber(maxAddValue);
+    };
+
     return (
-        <div className="w-[50%] h-[50%] bg-white color-border-subbold border-[0.2vw] rounded-[0.8vw]">
+        <div className="w-[48%] h-[48%] bg-white color-border-subbold border-[0.2vw] rounded-[0.8vw] mx-[0.2vw] my-[0.2vw]">
             <p className="w-full h-[15%] flex justify-center items-center text-center text-[1.4vw] color-bg-brown1 color-text-main rounded-ss-[0.4vw] rounded-se-[0.4vw]">
                 {buyableInfo.productName}
             </p>
             <div className="w-full h-[60%] flex">
                 <div className="w-[30%] h-full flex flex-col justify-between ">
                     <p className="h-[20%] text-[1.4vw] color-text-subbold pt-[0.5vw] ">
-                        {'x' + buyableInfo.productInfo.productLimit}
+                        {'x' + buyableInfo.productInfo.productMaxQuantity}
                     </p>
                     <div
                         className={
                             'w-fit h-[60%] bg-no-repeat mx-auto sprite-img-crop ' +
-                            `crop-img-${productId - 1}`
+                            `crop-img-${productId}`
                         }
                         style={{
                             aspectRatio: 1 / 1,
@@ -99,28 +108,28 @@ export default function TradeBuyCard({
                     </div>
                     <div className="w-full h-[20%] flex justify-center items-center">
                         <div
-                            className="flex py-[0.2vw] px-[0.4vw] text-[1.3vw] mx-[0.2vw] color-text-orange1 rounded-lg color-bg-yellow1 cursor-pointer"
+                            className="flex py-[0.2vw] px-[0.4vw] text-[1.1vw] mx-[0.2vw] color-text-orange1 rounded-[0.4vw] color-bg-yellow1 cursor-pointer"
                             onClick={() => changeProductNumber(-10)}
                         >
                             ◀
                         </div>
                         <div
-                            className="flex py-[0.2vw] px-[0.4vw] text-[1.3vw] mx-[0.2vw] color-text-orange1 rounded-lg color-bg-yellow1 cursor-pointer"
+                            className="flex py-[0.2vw] px-[0.4vw] text-[1.1vw] mx-[0.2vw] color-text-orange1 rounded-[0.4vw] color-bg-yellow1 cursor-pointer"
                             onClick={() => changeProductNumber(-1)}
                         >
                             ◀
                         </div>
-                        <div className="py-[0.2vw] px-[1.4vw] mx-[0.4vw] text-[1.6vw] text-white color-bg-orange1 rounded-[0.4vw] cursor-default">
+                        <div className="py-[0.1vw] px-[1.2vw] mx-[0.4vw] text-[1.6vw] text-white color-bg-orange1 rounded-[0.4vw] cursor-default">
                             {productNumber}
                         </div>
                         <div
-                            className="flex py-[0.2vw] px-[0.4vw] text-[1.3vw] mx-[0.2vw] color-text-orange1 rounded-[0.4vw] color-bg-yellow1 cursor-pointer"
+                            className="flex py-[0.2vw] px-[0.4vw] text-[1.1vw] mx-[0.2vw] color-text-orange1 rounded-[0.4vw] color-bg-yellow1 cursor-pointer"
                             onClick={() => changeProductNumber(1)}
                         >
                             ▶
                         </div>
                         <div
-                            className="flex py-[0.2vw] px-[0.4vw] text-[1.3vw] mx-[0.2vw] color-text-orange1 rounded-[0.4vw] color-bg-yellow1 cursor-pointer"
+                            className="flex py-[0.2vw] px-[0.4vw] text-[1.1vw] mx-[0.2vw] color-text-orange1 rounded-[0.4vw] color-bg-yellow1 cursor-pointer"
                             onClick={() => changeProductNumber(10)}
                         >
                             ▶
@@ -130,17 +139,20 @@ export default function TradeBuyCard({
             </div>
             <div className="h-[25%] flex items-center justify-center">
                 <div
-                    className="h-[70%] py-[0.2vw] px-[0.6vw] flex items-center text-[1.3vw] mx-[0.2vw] color-bg-orange1 rounded-[0.4vw] text-white cursor-pointer"
+                    className="h-[70%] py-[0.2vw] px-[0.6vw] flex items-center text-[1.1vw] mx-[0.2vw] color-bg-orange1 rounded-[0.4vw] text-white cursor-pointer"
                     onClick={() => {
                         changeProductNumber(productNumber * -1);
                     }}
                 >
                     최소
                 </div>
-                <div className="h-[70%] py-[0.2vw] px-[0.6vw] flex items-center text-[1.3vw] mx-[0.2vw] color-bg-orange1 rounded-[0.4vw] text-white cursor-pointer">
+                <div
+                    className="h-[70%] py-[0.2vw] px-[0.6vw] flex items-center text-[1.1vw] mx-[0.2vw] color-bg-orange1 rounded-[0.4vw] text-white cursor-pointer"
+                    onClick={changeToMax}
+                >
                     최대
                 </div>
-                <div className="w-[60%] h-[70%] py-[0.2vw] px-4 flex items-center justify-center text-[2.4vw] mx-[0.2vw] color-bg-orange1 rounded-[0.4vw] text-white cursor-default">
+                <div className="w-[60%] h-[70%] py-[0.2vw] px-4 flex items-center justify-center text-[1.8vw] mx-[0.2vw] color-bg-orange1 rounded-[0.4vw] text-white cursor-default">
                     {productTotalCost.toLocaleString()}
                 </div>
             </div>

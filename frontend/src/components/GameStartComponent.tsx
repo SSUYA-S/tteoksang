@@ -25,7 +25,7 @@ import {
     buyableProductIdState,
 } from '../util/product-and-event';
 import { Achievement, ProfileFrame, ProfileIcon, Title } from '../type/types';
-import { checkMyProfile } from '../api/user';
+import { checkMyPrevious, checkMyProfile } from '../api/user';
 import { httpStatusCode } from '../util/http-status';
 import { profileData } from '../type/types';
 import {
@@ -56,6 +56,11 @@ export default function GameStartComponent(props: startType) {
     const [audio, setAudio] = useState(
         new Audio('/src/assets/bgm/start_theme_bgm.mp3')
     );
+
+    //이전 기록이 존재하는가?
+    const [isPreviousExist, setIsPreviousExist] = useState<boolean>(false);
+    const [lastPlayTime, setLastPlayTime] = useState<string>('');
+
     const bgmSetting = useSelector((state: any) => state.reduxFlag.bgmFlag);
 
     const dispatch = useDispatch();
@@ -79,6 +84,8 @@ export default function GameStartComponent(props: startType) {
         //로그인 표시
         window.location.href = import.meta.env.VITE_REACT_GOOGLE_LOGIN_URL;
     };
+
+    /**게임 시작 */
     const onReady = () => {
         audio.pause();
         props.setStartFlag(true);
@@ -106,59 +113,105 @@ export default function GameStartComponent(props: startType) {
                 });
 
             setLoginFlag(true);
+
+            //이전 기록 조회
+            checkMyPrevious()
+                .then((res) => {
+                    if (res.status === httpStatusCode.OK) {
+                        const data = res.data;
+                        if (data.isExist) {
+                            setIsPreviousExist(true);
+                            setLastPlayTime(
+                                data.previousPlayInfo.previousPlayDate.replace(
+                                    'T',
+                                    ' '
+                                )
+                            );
+                            console.log(data);
+                        } else {
+                            setIsPreviousExist(false);
+                        }
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
         }
     }, [cookies]);
+
+    useEffect(() => {
+        if (loginFlag) {
+            console.log('ㅈㅈㄷㅈㄷ');
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker
+                    .register('/sw.js')
+                    .then((registration) => {
+                        console.log(
+                            'Service worker registered successfully',
+                            registration
+                        );
+                    })
+                    .catch((error) => {
+                        console.log(
+                            'Service worker registration failed',
+                            error
+                        );
+                    });
+            } else {
+                console.log('Service workers are not supported.');
+            }
+        }
+    }, [loginFlag]);
 
     /** loadGameData()
      *  게임 정보를 불러옵니다.
      */
-    const loadGameData = () => {
-        //dummy data로부터 정보 불러오기
-        //totalInfo
-        dispatch(goldState(totalInfo.gold));
-        dispatch(privateEventState(totalInfo.privateEventId));
-        dispatch(specialEventState(totalInfo.specialEventId));
-        dispatch(myProductState(totalInfo.productList));
-        dispatch(productInfoState(totalInfo.productInfoList));
-        dispatch(buyableProductIdState(totalInfo.buyableProductIdList));
-        dispatch(purchasedQuantityState(totalInfo.purchasedQuantity));
-        dispatch(warehouseLevelState(totalInfo.warehouseLevel));
-        dispatch(vehicleLevelState(totalInfo.vehicleLevel));
-        dispatch(brokerLevelState(totalInfo.brokerLevel));
-    };
+    // const loadGameData = () => {
+    //     //dummy data로부터 정보 불러오기
+    //     //totalInfo
+    //     dispatch(goldState(totalInfo.gold));
+    //     dispatch(privateEventState(totalInfo.privateEventId));
+    //     dispatch(specialEventState(totalInfo.specialEventId));
+    //     dispatch(myProductState(totalInfo.productList));
+    //     dispatch(productInfoState(totalInfo.productInfoList));
+    //     dispatch(buyableProductIdState(totalInfo.buyableProductIdList));
+    //     dispatch(purchasedQuantityState(totalInfo.purchasedQuantity));
+    //     dispatch(warehouseLevelState(totalInfo.warehouseLevel));
+    //     dispatch(vehicleLevelState(totalInfo.vehicleLevel));
+    //     dispatch(brokerLevelState(totalInfo.brokerLevel));
+    // };
 
     const loginElement = () => {
         if (loginFlag) {
             return (
-                <div className="w-full h-[30%] flex flex-col items-center justify-center">
+                <div className="w-full h-[40%] flex flex-col items-center justify-center">
+                    {isPreviousExist ? (
+                        <>
+                            <div
+                                className="relative w-[40%] h-[55%] cursor-pointer bg-[#FFE27B] border-black border-[0.5vw] flex flex-col justify-center items-center p-[0.5vw]"
+                                onClick={() => {
+                                    // loadGameData();
+                                    onReady();
+                                }}
+                            >
+                                <p className="text-[3vw]">이어하기</p>
+                                <p className="text-[2vw]">{`마지막 플레이 시간 : ${lastPlayTime}`}</p>
+                            </div>
+                            <div className="h-[5%]"></div>
+                        </>
+                    ) : (
+                        <></>
+                    )}
+
                     <div
-                        className="w-[100%] h-[45%] cursor-pointer"
-                        style={{
-                            backgroundImage:
-                                'url(/src/assets/images/etc/btn-game-resume.png)',
-                            backgroundSize: 'contain ',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat',
-                        }}
+                        className="relative w-[40%] h-[40%] cursor-pointer bg-[#FFF6D6] border-black border-[0.5vw] flex justify-center items-center p-[0.5vw]"
                         onClick={() => {
-                            loadGameData();
+                            //게임 포기 로직 추가
                             onReady();
                         }}
-                    ></div>
-                    <div className="h-[10%]"></div>
-                    <div
-                        className="w-[100%] h-[45%] cursor-pointer"
-                        style={{
-                            backgroundImage:
-                                'url(/src/assets/images/etc/btn-game-new.png)',
-                            backgroundSize: 'contain ',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat',
-                        }}
-                        onClick={() => {
-                            onReady();
-                        }}
-                    ></div>
+                    >
+                        <p className="text-[3vw]">시작하기</p>
+                    </div>
                 </div>
             );
         } else {

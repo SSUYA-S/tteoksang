@@ -10,7 +10,7 @@ export interface ProductBucket {
 export interface ProductInfo {
     productId: number;
     productCost: number;
-    productLimit: number;
+    productMaxQuantity: number;
     productFluctuation: number;
 }
 
