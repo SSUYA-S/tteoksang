@@ -232,7 +232,6 @@ public class PublicServiceImpl implements PublicService {
         }
         //TODO- redis에 서버 정보 저장
 
-        serverInfo.setBuyableProducts(buyableProducts);
         redisService.setValues("SERVER_INFO", serverInfo);
     }
 
