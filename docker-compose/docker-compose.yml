@@ -168,13 +168,13 @@ services:
     image: ssuyas/tteoksang-initializer
     container_name: TteoksangInitializer
     environment:
-      MONGO_USERNAME: ${MONGO_USER_NAME}
-      MONGO_PASSWORD: ${MONGO_USER_PASSWORD}
-      HOST_NAME: ${MONGO_HOST_NAME}
+      MONGO_DB_ROOT_USER_NAME: ${MONGO_DB_ROOT_USER_NAME}
+      MONGO_DB_ROOT_USER_PASSWORD: ${MONGO_DB_ROOT_USER_PASSWORD}
+      HOST_NAME: ${HOST_NAME}
       DB_NAME: ${DB_NAME}
     volumes:
       - ./mongodb/filtered_season_event.json:/event.json
-    command: ["/bin/sh", "-c", "mongoimport --username=$MONGO_USERNAME --password=$MONGO_PASSWORD --host=TteoksangMongoDB --port=27017 --drop --db=$DB_NAME --collection=event --file=event.json --jsonArray --authenticationDatabase=admin"]
+    command: ["/bin/sh", "-c", "mongoimport --username=MONGO_DB_ROOT_USER_NAME --password=MONGO_DB_ROOT_USER_PASSWORD --host=$HOST_NAME --port=27017 --drop --db=$DB_NAME --collection=event --file=event.json --jsonArray --authenticationDatabase=admin"]
 
   zookeeper:
     image: bitnami/zookeeper:3.8.3
