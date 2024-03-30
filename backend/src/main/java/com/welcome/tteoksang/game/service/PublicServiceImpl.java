@@ -9,6 +9,7 @@ import com.welcome.tteoksang.game.repository.ProductFluctuationRepository;
 import com.welcome.tteoksang.game.repository.ServerSeasonInfoRepository;
 import com.welcome.tteoksang.game.scheduler.ScheduleService;
 import com.welcome.tteoksang.game.scheduler.ServerInfo;
+import com.welcome.tteoksang.redis.RedisPrefix;
 import com.welcome.tteoksang.redis.RedisService;
 import com.welcome.tteoksang.resource.dto.Event;
 import com.welcome.tteoksang.resource.repository.EventRepository;
@@ -68,7 +69,6 @@ public class PublicServiceImpl implements PublicService {
     //게임 내 필요 상수 정의
     private int NEWS_NUM = 2;
     private int BUYABLE_PRODUCT_NUM = 6;
-//    private int COMMON_EVENT_NUM;
 
     ServerInfo serverInfo = new ServerInfo();
 
@@ -164,7 +164,7 @@ public class PublicServiceImpl implements PublicService {
 
     //실행======================
 
-    //TODO- 계절마다 이벤트 변경
+    //계절마다 나타나는 작물, 이벤트 리스트 변경
     public void updateQuarterYearList() {
         ProductType currentSeason;
         switch ((ServerInfo.currentTurn % 360) / 90) {
@@ -189,9 +189,9 @@ public class PublicServiceImpl implements PublicService {
 
     //뉴스 발행
     public void createNewspaper() {
-        // `ALL`, `현재 계절` 인 이벤트 중 랜덤하게 4개 이벤트 후보 뽑아서 저장
         int n = occurableEventList.size();
         List<Article> articles = new ArrayList<>();
+        //TODO- 현재 이벤트의 중복 허용. 중복 허용할지 말지 확정 필요
         random.ints(NEWS_NUM, 0, n).forEach(
                 (index) -> {
                     // Headline 담아서 List<Article> 제작
@@ -206,7 +206,7 @@ public class PublicServiceImpl implements PublicService {
         // /public으로 아티클 리스트 보내기
         sendPublicMessage(MessageType.GET_NEWSPAPER, articles);
         // 아티클 리스트 저장해두기
-        redisService.setValues("SERVER_NEWS", articles);
+        redisService.setValues(RedisPrefix.SERVER_NEWS.prefix(), articles);
         log.info(serverInfo.getSeasonId() + " || eventSize: " + occurableEventList.size());
         log.info(articles.toString());
 //        System.out.println((ServerInfo)redisService.getValues("SERVER_INFO"));
@@ -230,9 +230,7 @@ public class PublicServiceImpl implements PublicService {
             nextEvent = null;
             updateQuarterYearList();
         }
-        //TODO- redis에 서버 정보 저장
-
-        redisService.setValues("SERVER_INFO", serverInfo);
+        redisService.setValues(RedisPrefix.SERVER_INFO.prefix(), serverInfo);
     }
 
     //TODO- 상수 K 정의
@@ -258,7 +256,7 @@ public class PublicServiceImpl implements PublicService {
     }
 
     //구매가능 작물 리스트 변동
-    public void changeBuyableProductList(){
+    public void updateBuyableProduct(){
         Set<Integer> buyableProductIndex=new HashSet<>(BUYABLE_PRODUCT_NUM);
         int possibleProductNum=occurableProductIdList.size();
         while(buyableProductIndex.size()<BUYABLE_PRODUCT_NUM){
@@ -270,20 +268,7 @@ public class PublicServiceImpl implements PublicService {
         serverInfo.setBuyableProducts(buyableProductIndex.stream().map(i -> occurableProductIdList.get(i)).toList());
     }
 
-    private void updateBuyableProduct() {
-        List<Integer> buyableProducts = new ArrayList<>(BUYABLE_PRODUCT_NUM);
-        for (Map.Entry<Integer, ServerProductInfo> entry : serverInfo.getProductInfoMap().entrySet()) {
-            Integer productId = entry.getKey();
-            ServerProductInfo productInfo = entry.getValue();
-            FluctationInfo fluctationInfo = fluctationInfoMap.get(productId);
-            //random값 생성
-            double value = random.nextDouble(fluctationInfo.getMinFluctuationRate(), fluctationInfo.getMaxFluctuationRate() + 0.001);
-            //fluctuation k배하여 반영
-
-        }
-    }
-
-    //가격 범위 변동 -> fluctMap 업데이트
+    //가격 범위 변동 -> fluctMap 업데이트: 10일마다 실행
     public void updateFluctuationInfo() {
         int countPerTenDays = ServerInfo.currentTurn / 10;
         fluctationInfoMap.entrySet().stream().forEach(
@@ -314,7 +299,7 @@ public class PublicServiceImpl implements PublicService {
 
 
     public List<Article> searchNewspaper() {
-        return (List<Article>) redisService.getValues("SERVER_NEWS");
+        return (List<Article>) redisService.getValues(RedisPrefix.SERVER_NEWS.prefix());
     }
 
     public PublicEventInfo searchPublicEvent() {
