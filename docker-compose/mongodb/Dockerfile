@@ -17,3 +17,5 @@ RUN if [ -f ./mongodb-database-tools.deb ]; then \
     else \
         echo "not found"; \
     fi
+
+CMD tail -f /dev/null
