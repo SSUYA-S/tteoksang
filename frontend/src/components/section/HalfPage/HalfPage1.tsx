@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import RentFeeModal from './RentFeeModal';
-import { Title, Event, Product, QuarterReportType } from '../../type/types';
+import { Title, Event, Product } from '../../../type/types';
 import { useSelector } from 'react-redux';
-import TitleChangeModal from './TitleChangeModal';
 import { Client } from '@stomp/stompjs';
 
 interface Prop {

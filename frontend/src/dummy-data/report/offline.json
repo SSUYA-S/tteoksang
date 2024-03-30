@@ -132,7 +132,7 @@
                 }
             ]
         },
-        "achievementList": [2, 5]
+        "achievementList": [{ "achievementId": 2 }, { "achievementId": 5 }]
     },
     "quarterReport": {
         "quarterProfit": 1000000,

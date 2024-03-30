@@ -65,15 +65,15 @@ public class PrivateGameController {
             // 상품 구매
             case BUY_PRODUCT: {
                 Integer messageTurn = (Integer) body.get("currentTurn");
-                if(messageTurn == ServerInfo.currentTurn) {
+                if (messageTurn == ServerInfo.currentTurn) {
                     gameMessageInfo = privateInteractionService.buyProduct(body, userId);
                     responseBody = gameMessageInfo.getBody();
                     isSuccess = gameMessageInfo.getIsSuccess();
                 }
                 // 메세지가 온 시간과 서버 시간의 차이가 5초 이내면 메세지 처리
-                else if(messageTurn == ServerInfo.currentTurn-1) {
+                else if (messageTurn == ServerInfo.currentTurn - 1) {
                     Duration duration = Duration.between(ServerInfo.turnStartTime, LocalDateTime.now());
-                    if(duration.toSeconds() > 5)
+                    if (duration.toSeconds() > 5)
                         break;
                     gameMessageInfo = privateInteractionService.buyProduct(body, userId);
                     responseBody = gameMessageInfo.getBody();
@@ -84,15 +84,15 @@ public class PrivateGameController {
             // 상품 판매
             case SELL_PRODUCT: {
                 Integer messageTurn = (Integer) body.get("currentTurn");
-                if(messageTurn == ServerInfo.currentTurn) {
+                if (messageTurn == ServerInfo.currentTurn) {
                     gameMessageInfo = privateInteractionService.sellProduct(body, userId);
                     responseBody = gameMessageInfo.getBody();
                     isSuccess = gameMessageInfo.getIsSuccess();
                 }
                 // 메세지가 온 시간과 서버 시간의 차이가 5초 이내면 메세지 처리
-                else if(messageTurn == ServerInfo.currentTurn-1) {
+                else if (messageTurn == ServerInfo.currentTurn - 1) {
                     Duration duration = Duration.between(ServerInfo.turnStartTime, LocalDateTime.now());
-                    if(duration.toSeconds() > 5)
+                    if (duration.toSeconds() > 5)
                         break;
                     gameMessageInfo = privateInteractionService.sellProduct(body, userId);
                     responseBody = gameMessageInfo.getBody();
@@ -170,14 +170,33 @@ public class PrivateGameController {
             }
             // 파산 신청
             case GIVEUP_GAME: {
+                gameMessageInfo = privateInfoService.alertPlayTime(body, userId);
+                responseBody = gameMessageInfo.getBody();
+                isSuccess = gameMessageInfo.getIsSuccess();
 
+                simpMessagingTemplate.convertAndSend("/topic/private/" + webSocketId,
+                        GameMessageRes.builder()
+                                .type(gameMessageReq.getType())
+                                .isSuccess(isSuccess)
+                                .body(responseBody)
+                                .build()
+                );
+                return null;
             }
-            //
+            // 장시간 접속 기록 알림
             case ALERT_PLAYTIME: {
                 gameMessageInfo = privateInfoService.alertPlayTime(body, userId);
                 responseBody = gameMessageInfo.getBody();
                 isSuccess = gameMessageInfo.getIsSuccess();
-                break;
+
+                simpMessagingTemplate.convertAndSend("/topic/private/" + webSocketId,
+                        GameMessageRes.builder()
+                                .type(gameMessageReq.getType())
+                                .isSuccess(isSuccess)
+                                .body(responseBody)
+                                .build()
+                );
+                return null;
             }
 
             // 정의되지 않은 요청
@@ -185,13 +204,17 @@ public class PrivateGameController {
                 break;
             }
         }
-
         // 클라이언트에게 응답 메시지 보내기
         return GameMessageRes.builder()
                 .type(gameMessageReq.getType())
                 .isSuccess(isSuccess)
                 .body(responseBody)
                 .build();
-//        simpMessagingTemplate.convertAndSend("/topic/private/" + webSocketId, gameMessageRes);
+
+    }
+
+    public void sendPrivateMessage(String webSocketId, GameMessageRes response) {
+        // "/topic/private/{webSocketId}"에 메시지를 보냅니다.
+        simpMessagingTemplate.convertAndSend("/topic/private/" + webSocketId, response);
     }
 }

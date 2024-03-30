@@ -12,7 +12,5 @@ export const handshake = (websocketId: string) => {
         reconnectDelay: 5000,
     });
 
-    stompClient.activate();
-
     return stompClient;
 };

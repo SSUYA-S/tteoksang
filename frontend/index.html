@@ -21,24 +21,5 @@
         <div id="root"></div>
         <script type="module" src="/src/main.tsx"></script>
         <!-- 서비스 워커 작동을 위한 스크립트 -->
-        <script>
-            if ('serviceWorker' in navigator) {
-                // Register a service worker hosted at the root of the
-                // site using the default scope.
-                navigator.serviceWorker
-                    .register('/')
-                    .then((registration) => {
-                        console.log(
-                            'Service worker registration succeeded:',
-                            registration
-                        );
-                    })
-                    .catch((err) => {
-                        console.log('Service worker registration failed:', err);
-                    });
-            } else {
-                console.log('Service workers are not supported.');
-            }
-        </script>
     </body>
 </html>

@@ -44,15 +44,14 @@ export default function InventoryModal(props: inventoryType) {
                         <InventoryCard
                             myProduct={product}
                             productName={
-                                props.productSource[product.productId - 1]
+                                props.productSource[product.productId]
                                     .productName
                             }
                             productTodayCost={
-                                productInfoList[product.productId - 1]
-                                    .productCost
+                                productInfoList[product.productId].productCost
                             }
                             productFluctuation={
-                                productInfoList[product.productId - 1]
+                                productInfoList[product.productId]
                                     .productFluctuation
                             }
                         />
