@@ -69,7 +69,7 @@ services:
     container_name: TteoksangMongoDBDev
     restart: unless-stopped
     volumes:
-      - mongodb-data-dev:/data
+      - mongodb-dev-data:/data
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_DB_ROOT_USER_NAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_DB_ROOT_USER_PASSWORD}
