@@ -322,7 +322,7 @@ export default function InfraModal(props: InfraType) {
                                 changeFailityType(0);
                             }}
                         >
-                            <p className="text-[1.6vw]">취소</p>
+                            <p className="text-[1.6vw]">뒤로</p>
                         </div>
                     </section>
                 );

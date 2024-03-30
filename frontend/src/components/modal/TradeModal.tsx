@@ -396,16 +396,23 @@ export default function TradeModal(props: tradeType) {
                             <p className="text-[3vw] color-text-textcolor">
                                 물품 구매
                             </p>
-                            <div className="w-[40%] flex justify-between text-[1.6vw] color-text-textcolor me-[1vw]">
-                                <p>예상 창고 용량</p>
-                                <p>
-                                    {totalNumber}/
-                                    {
-                                        props.infraInfo.warehouseInfoList[
-                                            myProductInfo.warehouseLevel - 1
-                                        ].warehouseCapacity
-                                    }
-                                </p>
+                            <div className="w-[45%]">
+                                <div className="w-full flex justify-between text-[1.6vw] color-text-textcolor me-[1vw]">
+                                    <p>현재 소지 금액</p>
+                                    <p>{props.nowMoney.toLocaleString()}</p>
+                                </div>
+
+                                <div className="w-full flex justify-between text-[1.6vw] color-text-textcolor me-[1vw]">
+                                    <p>예상 창고 용량</p>
+                                    <p>
+                                        {totalNumber}/
+                                        {
+                                            props.infraInfo.warehouseInfoList[
+                                                myProductInfo.warehouseLevel - 1
+                                            ].warehouseCapacity
+                                        }
+                                    </p>
+                                </div>
                             </div>
                         </div>
                         <div className="flex h-[75%] m-[0.4vw] flex-wrap overflow-y-auto">
@@ -440,16 +447,23 @@ export default function TradeModal(props: tradeType) {
                             <p className="text-[3vw] color-text-textcolor">
                                 물품 판매
                             </p>
-                            <div className="w-[40%] flex justify-between text-[1.6vw] color-text-textcolor me-[1vw]">
-                                <p>예상 창고 용량</p>
-                                <p>
-                                    {totalNumber}/
-                                    {
-                                        props.infraInfo.warehouseInfoList[
-                                            myProductInfo.warehouseLevel - 1
-                                        ].warehouseCapacity
-                                    }
-                                </p>
+                            <div className="w-[45%]">
+                                <div className="w-full flex justify-between text-[1.6vw] color-text-textcolor me-[1vw]">
+                                    <p>현재 소지 금액</p>
+                                    <p>{props.nowMoney.toLocaleString()}</p>
+                                </div>
+
+                                <div className="w-full flex justify-between text-[1.6vw] color-text-textcolor me-[1vw]">
+                                    <p>예상 창고 용량</p>
+                                    <p>
+                                        {totalNumber}/
+                                        {
+                                            props.infraInfo.warehouseInfoList[
+                                                myProductInfo.warehouseLevel - 1
+                                            ].warehouseCapacity
+                                        }
+                                    </p>
+                                </div>
                             </div>
                         </div>
                         <div className="flex h-[75%] m-[0.4vw] flex-wrap overflow-y-auto">
