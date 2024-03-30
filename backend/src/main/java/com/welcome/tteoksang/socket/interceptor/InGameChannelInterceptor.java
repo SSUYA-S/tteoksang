@@ -118,6 +118,18 @@ public class InGameChannelInterceptor implements ChannelInterceptor {
     // CONNECT 처리 로직
     private void handleConnect(String userId) {
         log.debug("CONNECT MESSAGE START");
+//        log.debug("{\n" +
+//                "    \"type\": \"BUY_PRODUCT\",\n" +
+//                "    \"body\": {\n" +
+//                "        \"products\" : {\n" +
+//                "            \"8\" : {\n" +
+//                "                \"productQuantity\": 1,\n" +
+//                "                \"productTotalCost\": 787\n" +
+//                "            }\n" +
+//                "        },\n" +
+//                "        \"currentTurn\": 1\n" +
+//                "    }\n" +
+//                "}");
 
         //user를 생성하여 값 set
         User user = userRepository.findByUserIdAndDeletedAtIsNull(userId)
