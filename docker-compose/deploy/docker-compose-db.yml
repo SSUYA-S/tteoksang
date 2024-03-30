@@ -158,7 +158,7 @@ services:
       HOST_NAME: ${HOST_NAME}
       DB_NAME: ${DB_NAME}
     volumes:
-      - ./mongodb/filtered_season_event.json:/event.json
+      - ./event.json:/event.json
     command: [ "/bin/sh", "-c", "sleep 10 && mongoimport --username=$MONGO_DB_ROOT_USER_NAME --password=$MONGO_DB_ROOT_USER_PASSWORD --host=$HOST_NAME --port=27017 --drop --db=$DB_NAME --collection=event --file=event.json --jsonArray --authenticationDatabase=admin" ]
     depends_on:
       - mongoDB
