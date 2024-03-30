@@ -168,9 +168,9 @@ services:
     image: ssuyas/tteoksang-initializer
     container_name: TteoksangInitializer
     environment:
-      MONGO_USERNAME: ${MONGO_DB_ROOT_USER_NAME}
-      MONGO_PASSWORD: ${MONGO_DB_ROOT_USER_PASSWORD}
-      HOST_NAME: ${MONGO_DB_HOST_NAME}
+      MONGO_USERNAME: ${MONGO_USER_NAME}
+      MONGO_PASSWORD: ${MONGO_USER_PASSWORD}
+      HOST_NAME: ${MONGO_HOST_NAME}
       DB_NAME: ${DB_NAME}
     volumes:
       - ./mongodb/filtered_season_event.json:/event.json
