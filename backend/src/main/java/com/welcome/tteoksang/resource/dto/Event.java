@@ -24,8 +24,11 @@ public class Event {
     @Field(name = "eventContent")
     String eventContent;
 
+    @Field(name = "productId")
+    Integer productId;
     @Field(name = "eventVariance")
-    List<ProductVariance> eventVariance;
+    Double eventVariance;
+//    List<ProductVariance> eventVariance;
 
     @Field(name = "eventHeadline")
     String eventHeadline;
