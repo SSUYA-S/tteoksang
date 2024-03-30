@@ -307,7 +307,7 @@ export interface QuarterReportType {
     rentFeeInfo: RentFeeInfoType;
     quarterProfit: number;
     rentFee: number;
-    inProductList: number;
+    inProductList: number[];
     titleId: number;
 }
 
