@@ -65,16 +65,11 @@ public class SceduledGameController {
                 });
     }
 
-    //    신문 발행
-//    @Scheduled(fixedDelay = 1000 * 10) //10초마다 chat 보내는 예제
-// 초, 분, 시, 일, 월, 요일
-//@Scheduled(cron = "0 0 7 * * *")
+    // 서비스 테스트 용..
+
+    @GetMapping("/test/news")
     public void sendNewspaper() {
-        GameMessage message = new GameMessage();
-        message.setType(MessageType.GET_NEWSPAPER);
-        message.setBody("");
         publicService.createNewspaper();
-        sendingOperations.convertAndSend("/public", message);
     }
 
     //    공통 이벤트 조회
