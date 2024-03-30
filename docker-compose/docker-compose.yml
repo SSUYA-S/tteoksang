@@ -163,8 +163,6 @@ services:
       ME_CONFIG_MONGODB_SERVER: TteoksangMongoDB
       ME_CONFIG_BASICAUTH_USERNAME: ${MONGO_EXPRESS_USER_NAME}
       ME_CONFIG_BASICAUTH_PASSWORD: ${MONGO_EXPRESS_USER_PASSWORD}
-    volumes:
-      - ./filtered_season_event.json:/event.json
 
   mongo-initializer:
     image: ssuyas/tteoksang-initializer
@@ -172,9 +170,10 @@ services:
     environment:
       MONGO_USERNAME: ${MONGO_DB_ROOT_USER_NAME}
       MONGO_PASSWORD: ${MONGO_DB_ROOT_USER_PASSWORD}
+      HOST_NAME: ${MONGO_DB_HOST_NAME}
       DB_NAME: ${DB_NAME}
     volumes:
-      - ./filtered_season_event.json:/event.json
+      - ./mongodb/filtered_season_event.json:/event.json
     command: ["/bin/sh", "-c", "mongoimport --username=$MONGO_USERNAME --password=$MONGO_PASSWORD --host=TteoksangMongoDB --port=27017 --drop --db=$DB_NAME --collection=event --file=event.json --jsonArray --authenticationDatabase=admin"]
 
   zookeeper:

@@ -64,9 +64,50 @@ services:
       - "443:443"
       - "80:80"
 
+  mongoDB-dev:
+    image: mongo:7.0
+    container_name: TteoksangMongoDBDev
+    restart: unless-stopped
+    volumes:
+      - mongodb-data-dev:/data
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_DB_ROOT_USER_NAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_DB_ROOT_USER_PASSWORD}
+      DB_NAME: ${DB_NAME}
+    ports:
+      - "27017:27017"
+
+  mongo-express-dev:
+    image: mongo-express
+    container_name: TteoksangMongoExpressDev
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_DB_ROOT_USER_NAME}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_DB_ROOT_USER_PASSWORD}
+      ME_CONFIG_MONGODB_SERVER: TteoksangMongoDB
+      ME_CONFIG_BASICAUTH_USERNAME: ${MONGO_EXPRESS_USER_NAME}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGO_EXPRESS_USER_PASSWORD}
+
+  mongo-initializer:
+    image: ssuyas/tteoksang-initializer
+    container_name: TteoksangInitializerDev
+    environment:
+      MONGO_USERNAME: ${MONGO_DB_ROOT_USER_NAME}
+      MONGO_PASSWORD: ${MONGO_DB_ROOT_USER_PASSWORD}
+      HOST_NAME: ${MONGO_DB_HOST_NAME}
+      DB_NAME: ${DB_NAME}
+    volumes:
+      - ./filtered_season_event.json:/event.json
+    command: [ "/bin/sh", "-c", "mongoimport --username=$MONGO_USERNAME --password=$MONGO_PASSWORD --host=$HOST_NAME --port=27017 --drop --db=$DB_NAME --collection=event --file=event.json --jsonArray --authenticationDatabase=admin" ]
+
+
+
 volumes:
   redis-dev-data:
   mariadb-dev-data:
+  mongodb-dev-data:
 
 networks:
   default:
