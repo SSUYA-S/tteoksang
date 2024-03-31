@@ -468,9 +468,9 @@ export default function GameComponent(props: GameType) {
     };
 
     /**뉴스 수신 시 뉴스 정보 설정 함수 */
-    const newsReceived = (turn: number, articleList: Article[]) => {
+    const newsReceived = (articleList: Article[]) => {
         setNewsFlag(true);
-        setNewsPublishTurn(turn);
+        setNewsPublishTurn(ingameTurn);
         setNewsArticleList(articleList);
     };
     /** 현재 이벤트를 보여주기 위한 btn  */
