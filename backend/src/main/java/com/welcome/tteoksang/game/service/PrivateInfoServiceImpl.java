@@ -1,7 +1,12 @@
 package com.welcome.tteoksang.game.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.welcome.tteoksang.game.dto.*;
 import com.welcome.tteoksang.game.dto.event.PrivateEventInfo;
+import com.welcome.tteoksang.game.dto.log.ConnectLogInfo;
+import com.welcome.tteoksang.game.dto.log.LogMessage;
+import com.welcome.tteoksang.game.dto.log.UpgradeLogInfo;
 import com.welcome.tteoksang.game.dto.user.*;
 import com.welcome.tteoksang.game.scheduler.ServerInfo;
 import com.welcome.tteoksang.redis.RedisPrefix;
@@ -13,10 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -27,7 +29,7 @@ public class PrivateInfoServiceImpl implements PrivateInfoService {
     private final ServerInfo serverInfo;
 
     @Override
-    public GameMessageInfo getTotalInfo(LinkedHashMap<String, Object> body, String userId, String webSocketId){
+    public GameMessageInfo getTotalInfo(LinkedHashMap<String, Object> body, String userId, String webSocketId) {
         // FIXME:서버 게임 정보 불러오기
 
         // FIXME:레디스에 있는 개인별 게임 정보 반영
@@ -35,6 +37,8 @@ public class PrivateInfoServiceImpl implements PrivateInfoService {
         UserInfo userInfo = getUserInfo(userId, webSocketId);
         Object responseBody = body;
         boolean isSuccess = false;
+        // 로그 저장
+        List<String> logList = new ArrayList<>();
         if (redisGameInfo != null) {
             responseBody = TotalInfo.builder()
                     .gold(redisGameInfo.getGold())
@@ -56,6 +60,27 @@ public class PrivateInfoServiceImpl implements PrivateInfoService {
         } else {
             log.error("[PrivateInfoServiceImpl] - getTotalInfo: 없는 게임정보 입니다.");
         }
+
+        if (isSuccess) {
+            ConnectLogInfo logInfo = ConnectLogInfo.builder()
+                    .seasonId(serverInfo.getSeasonId())
+                    .userId(userId)
+                    .onlineTimeSlot(LocalDateTime.now().getHour() / 3)
+                    .build();
+
+            LogMessage logMessage = LogMessage.builder()
+                    .type("CONNECT")
+                    .body(logInfo)
+                    .build();
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String logData = objectMapper.writeValueAsString(logMessage);
+                log.debug(logData);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         return GameMessageInfo.builder()
                 .body(responseBody)
                 .isSuccess(isSuccess)
@@ -63,7 +88,7 @@ public class PrivateInfoServiceImpl implements PrivateInfoService {
     }
 
     @Override
-    public GameMessageInfo getWarehouseInfo(LinkedHashMap<String, Object> body, String userId){
+    public GameMessageInfo getWarehouseInfo(LinkedHashMap<String, Object> body, String userId) {
         RedisGameInfo redisGameInfo = getRedisGameInfo(userId);
         Object responseBody = body;
         boolean isSuccess = false;
@@ -193,6 +218,7 @@ public class PrivateInfoServiceImpl implements PrivateInfoService {
         }
         return redisGameInfo;
     }
+
     private UserInfo getUserInfo(String userId, String webSocketId) {
         String userInfoKey = RedisPrefix.USERINFO.prefix() + userId;
         // 레디스에서 유저 정보 가져오기

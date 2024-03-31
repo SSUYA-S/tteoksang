@@ -37,12 +37,12 @@ public class GameInfoServiceImpl implements GameInfoService {
                     .build();
         }
     }
-    
+
     @Override
     public void startNewGame(String userId) {
         GameInfo prevGameInfo = gameInfoRepository.findById(userId).orElse(null);
         int newGameId = 1;
-        if(prevGameInfo != null)
+        if (prevGameInfo != null)
             newGameId = prevGameInfo.getGameId() + 1;
         byte[] newProducts = RedisSerializationUtil.serializeMap(new HashMap<>());
 
@@ -126,7 +126,8 @@ public class GameInfoServiceImpl implements GameInfoService {
                     .brokerLevel(gameInfo.getBrokerLevel())
                     .privateEventId(gameInfo.getPrivateEventId())
                     .lastPlayTurn(gameInfo.getLastPlayTurn())
-                    .lastConnectTime(gameInfo.getLastConnectTime())
+//                    .lastConnectTime(gameInfo.getLastConnectTime())
+                    .lastConnectTime(LocalDateTime.now())
                     .totalProductQuantity(gameInfo.getTotalProductQuantity())
                     .purchaseQuantity(gameInfo.getPurchaseQuantity())
                     .products(products) // 작물 데이터가 있는 경우 들어감
