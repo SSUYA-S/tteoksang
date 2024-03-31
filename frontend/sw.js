@@ -157,6 +157,17 @@ const cacheFirst = async ({ request, preloadResponsePromise, fallbackUrl }) => {
 };
 
 self.addEventListener('fetch', (e) => {
+    if (
+        e.request.url.startsWith('https://accounts.google.com/o/oauth2/v2/auth')
+    ) {
+        e.respondWith(fetch(e.request));
+    } else {
+        e.respondWith(
+            caches.match(e.request).then((response) => {
+                return response || fetch(e.request);
+            })
+        );
+    }
     if (e.request.headers.get('Accept').indexOf('text/html') !== -1) {
         let newRequest = new Request(e.request.url, {
             method: 'GET',
