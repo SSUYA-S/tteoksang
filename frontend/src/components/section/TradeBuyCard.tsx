@@ -4,12 +4,16 @@ interface BuyCardProps {
     buyableInfo: BuyInfo;
     updateBuyingList: (x: number, y: number, z: number) => void;
     calculateMaximumValue: (id: number, nowValue: number) => number;
+    maximumAlert: () => void;
+    minimumAlert: () => void;
 }
 
 export default function TradeBuyCard({
     buyableInfo,
     updateBuyingList,
     calculateMaximumValue,
+    maximumAlert,
+    minimumAlert,
 }: BuyCardProps) {
     const productNumber = buyableInfo.buyingInfo.productQuantity;
     const productTotalCost = buyableInfo.buyingInfo.productTotalCost;
@@ -27,12 +31,17 @@ export default function TradeBuyCard({
             buyableInfo.productInfo.productId,
             productNumber
         );
+        // console.log(maxAddValue);
         if (changingValue > maxAddValue) {
             changingValue = maxAddValue;
+            maximumAlert();
         }
         let changedValue = productNumber + changingValue;
         //0보다 작은 경우 대비
-        if (changedValue < 0) changedValue = 0;
+        if (changedValue < 0) {
+            changedValue = 0;
+            minimumAlert();
+        }
         //혹시나 싶은 큰 경우 대비
         if (changedValue > buyableInfo.productInfo.productMaxQuantity)
             changedValue = buyableInfo.productInfo.productMaxQuantity;

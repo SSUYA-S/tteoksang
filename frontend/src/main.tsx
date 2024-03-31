@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './assets/css/common.css';
 import './assets/css/variables.css';
 import './assets/css/cropSprite.css';
+import './assets/css/animation.css';
 import './index.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import MainPage from './pages/MainPage.tsx';

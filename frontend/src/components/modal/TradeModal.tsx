@@ -43,6 +43,9 @@ export default function TradeModal(props: tradeType) {
         (state: any) => state.reduxFlag.productAndEventSlice
     );
 
+    const maximumAlertRef = useRef<HTMLDivElement>(null);
+    const minimumAlertRef = useRef<HTMLDivElement>(null);
+
     const myProductList = myProductInfo.myProductList;
 
     //최대 구매 가능 값 갱신
@@ -221,7 +224,7 @@ export default function TradeModal(props: tradeType) {
             totalBuyNum > maximumBuyableAmount.current ||
             totalBuyCost > props.nowMoney
         ) {
-            console.log('구매 가능 초과');
+            // console.log('구매 가능 초과');
             return;
         }
         // 현재 창고 내 재고 반영
@@ -232,7 +235,7 @@ export default function TradeModal(props: tradeType) {
             props.infraInfo.warehouseInfoList[myProductInfo.warehouseLevel - 1]
                 .warehouseCapacity
         ) {
-            console.log('창고 용량 초과!'); //모달로 대체
+            // console.log('창고 용량 초과!'); //모달로 대체
             return;
         } else {
             setTotalNumber(totalBuyNum);
@@ -383,6 +386,33 @@ export default function TradeModal(props: tradeType) {
         return number;
     };
 
+    /**최대, 최소 경고 띄워주기 */
+    const maximumAlert = () => {
+        if (maximumAlertRef.current) {
+            //애니메이션 적용
+            maximumAlertRef.current.style.animation = 'alert 1s 0s 1 linear';
+            //끝나면 초기화
+            maximumAlertRef.current.onanimationend = () => {
+                if (maximumAlertRef.current) {
+                    maximumAlertRef.current.style.animation = '';
+                }
+            };
+        }
+    };
+
+    const minimumAlert = () => {
+        if (minimumAlertRef.current) {
+            //애니메이션 적용
+            minimumAlertRef.current.style.animation = 'alert 1s 0s 1 linear';
+            //끝나면 초기화
+            minimumAlertRef.current.onanimationend = () => {
+                if (minimumAlertRef.current) {
+                    minimumAlertRef.current.style.animation = '';
+                }
+            };
+        }
+    };
+
     /**렌더링 모달
      *
      * @returns
@@ -391,7 +421,19 @@ export default function TradeModal(props: tradeType) {
         if (tradeTab === 0) {
             return (
                 <>
-                    <div className="w-[55%] h-full">
+                    <div className="w-[55%] h-full relative">
+                        <div
+                            className="absolute w-[40%] h-[5vh] left-[40%] top-[3vh] bg-black -z-10 rounded text-white opacity-0 flex justify-center items-center"
+                            ref={maximumAlertRef}
+                        >
+                            <p className="text-[1.5vw]">최대수량입니다.</p>
+                        </div>
+                        <div
+                            className="absolute w-[40%] h-[5vh] left-[40%] top-[3vh] bg-black -z-10 rounded text-white opacity-0 flex justify-center items-center"
+                            ref={minimumAlertRef}
+                        >
+                            <p className="text-[1.5vw]">최소수량입니다.</p>
+                        </div>
                         <div className="h-[18%] flex justify-between items-end pb-[0.2vh]">
                             <p className="text-[3vw] color-text-textcolor">
                                 물품 구매
@@ -425,6 +467,8 @@ export default function TradeModal(props: tradeType) {
                                         calculateMaximumValue={
                                             calculateMaximumValue
                                         }
+                                        maximumAlert={maximumAlert}
+                                        minimumAlert={minimumAlert}
                                     />
                                 );
                             })}
@@ -476,6 +520,8 @@ export default function TradeModal(props: tradeType) {
                                             updateSellingList={
                                                 updateSellingList
                                             }
+                                            maximumAlert={maximumAlert}
+                                            minimumAlert={minimumAlert}
                                         />
                                     </>
                                 );
