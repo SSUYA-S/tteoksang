@@ -153,7 +153,7 @@ export default function MainPage() {
                 deleteResourceAPICacheKey('event');
                 console.log('event 재요청을 보내겠습니다');
                 resourceEvent().then((res) => {
-                    pushInitialData('eventtList', res);
+                    pushInitialData('eventList', res);
                 });
             }
             if (

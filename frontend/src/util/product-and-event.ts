@@ -4,7 +4,7 @@ import { ProductInfo } from '../type/types';
 export interface productInfoAndEventState {
     productInfoList: ProductInfo[];
     buyableProductIdList: number[];
-    specialEventId: number[];
+    specialEventId: string[];
     privateEventId: number;
 }
 
