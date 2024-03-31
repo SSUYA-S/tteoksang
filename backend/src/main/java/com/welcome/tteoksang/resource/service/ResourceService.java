@@ -1,7 +1,6 @@
 package com.welcome.tteoksang.resource.service;
 
 import com.welcome.tteoksang.resource.dto.*;
-import com.welcome.tteoksang.resource.dto.res.*;
 
 import java.util.List;
 
@@ -24,7 +23,7 @@ public interface ResourceService {
     List<AchievementResource> searchAchievementList();
 
     //EVENT resource
-    List<EventResource> searchEventList();
+    List<Event> searchEventList();
 
     //MESSAGE-TYPE resource
     List<MessageTypeResource> searchMessageTypeList();

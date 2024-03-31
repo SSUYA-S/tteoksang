@@ -8,12 +8,7 @@ import com.welcome.tteoksang.resource.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.buf.HexUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.stereotype.Service;
-import reactor.core.publisher.Flux;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -95,17 +90,8 @@ public class ResourceServiceImpl implements ResourceService {
     //TODO - eventLIST 완성
     // - mongoDB에서 eventLIST 가져오기
     @Override
-    public List<EventResource> searchEventList() {
-        List<EventResource> eventResourceList = eventRepository.findAll().stream().map(
-                (event) -> {
-                    return EventResource.builder()
-                            .eventId(event.getEventId())
-                            .eventDescription(event.getEventContent())
-                            .eventName(event.getEventName())
-                            .eventType(event.getEventType())
-                            .build();
-                }
-        ).toList();
+    public List<Event> searchEventList() {
+        List<Event> eventResourceList = eventRepository.findAll();
         System.out.println(eventResourceList);
         return eventResourceList;
     }

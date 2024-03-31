@@ -16,6 +16,6 @@ public class PublicEventInfo {
     Integer turn;
     List<ProductInfo> productInfoList;
     List<Integer> buyableProductList;
-    String specialEventId;
+    List<String> specialEventId;
 
 }
