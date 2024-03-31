@@ -119,15 +119,16 @@ public class InGameChannelInterceptor implements ChannelInterceptor {
     private void handleConnect(String userId) {
         log.debug("[InGameChannelInterceptor] - CONNECT MESSAGE START");
 //        log.debug("{\n" +
-//                "    \"type\": \"BUY_PRODUCT\",\n" +
+//                "    \"type\": \"BUY\",\n" +
 //                "    \"body\": {\n" +
-//                "        \"products\" : {\n" +
-//                "            \"8\" : {\n" +
-//                "                \"productQuantity\": 1,\n" +
-//                "                \"productTotalCost\": 787\n" +
-//                "            }\n" +
-//                "        },\n" +
-//                "        \"currentTurn\": 1\n" +
+//                "        \"userId\" : \"asdffw-qwerqw\",\n" +
+//                "        \"gameId\": 1,\n" +
+//                "        \"turn\": 12,\n" +
+//                "        \"productId\": 8,\n" +
+//                "        \"purchasedQuantity\": 12,\n" +
+//                "        \"productOutcome\": 123,\n" +
+//                "        \"productQuantity\": 11,\n" +
+//                "        \"productCost\": 130\n" +
 //                "    }\n" +
 //                "}");
 
