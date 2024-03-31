@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product,Integer> {
 
-    List<Product> findAllByProductTypOrProductType(ProductType season, ProductType all);
+    List<Product> findAllByProductTypeOrProductType(ProductType season, ProductType all);
 
 }

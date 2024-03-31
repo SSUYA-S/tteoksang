@@ -72,17 +72,12 @@ public class SceduledGameController {
         publicService.createNewspaper();
     }
 
-    //    공통 이벤트 조회
-// 초, 분, 시, 일, 월, 요일
-//    @Scheduled(cron = "0/3 * * * * *")
-    public void updatePublicEvent() {
-        GameMessage message = new GameMessage();
-//        publicService.applyEvent();
-//        publicService.searchPublicEvent();
-        message.setType(MessageType.GET_PUBLIC_EVENT);
-//        log.debug(message.toString());
-//        log.debug(Instant.now()+" == "+Instant.ofEpochMilli(System.currentTimeMillis())+" == "+System.currentTimeMillis());
-        sendingOperations.convertAndSend("/public", message);
+    @GetMapping("/test/season-end")
+    public void endGame() {
+        log.debug("=========end SEASON==========");
+        scheduleService.removeAllSchedule();
     }
+
+
 
 }
