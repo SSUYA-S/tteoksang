@@ -99,7 +99,7 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 
         String userId = jwtUtil.getUserId(refreshTokenCookie.getValue());
-        log.debug("토큰 유저:{}", userId);
+        log.debug("[JWTFilter] - 토큰 userId:{}", userId);
 
         // accessToken 검증 및 재발급
         validateAccessToken(userId, tokenCookie, response);
@@ -117,7 +117,7 @@ public class JWTFilter extends OncePerRequestFilter {
                 CookieUtil.deleteCookie(accessTokenCookie, response);
             }
             // 새로운 accessToken 생성
-            String newAccessToken = jwtUtil.createJwt(userId, 1000 * 60 * 60L * 3); // 1시간 유효기간
+            String newAccessToken = jwtUtil.createJwt(userId, 1000 * 60 * 60L * 3); // 3시간 유효기간
             Cookie newCookie = new Cookie("accessToken", newAccessToken);
             newCookie.setPath("/");
             newCookie.setMaxAge(60 * 60 * 3);

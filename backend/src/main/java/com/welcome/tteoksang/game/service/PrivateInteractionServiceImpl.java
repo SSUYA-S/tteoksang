@@ -113,11 +113,11 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
                         totalProductQuantity = pastTotalProductQuantity;    // 과거 가지고 있는 전체 물량
                         isSuccess = false;
                         if (remainGold < messageProductTotalCost)
-                            log.error("구매 실패입니다.");
+                            log.error("[PrivateInteractionServiceImpl] - buyProduct: 구매 실패입니다.");
                         else if (remainPurchaseQuantity < messagePurchaseQuantity)
-                            log.error("구매 제한을 넘습니다.");
+                            log.error("[PrivateInteractionServiceImpl] - buyProduct: 구매 제한을 넘습니다.");
                         else
-                            log.error("창고에 남은 자리가 없습니다.");
+                            log.error("[PrivateInteractionServiceImpl] - buyProduct: 창고에 남은 자리가 없습니다.");
                         break;
                     }
 
@@ -174,7 +174,7 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
         }
         else {
             isSuccess = false;
-            log.error("없는 게임 정보입니다.");
+            log.error("[PrivateInteractionServiceImpl] - buyProduct: 없는 게임 정보입니다.");
         }
         return GameMessageInfo.builder()
                 .body(responseBody)
@@ -237,9 +237,9 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
                         isSuccess = false;
 
                         if (!products.containsKey(messageProductId))
-                            log.error("해당 작물 없음");
+                            log.error("[PrivateInteractionServiceImpl] - sellProduct: 해당 작물 없음");
                         else if (redisProductInfo.getProductQuantity() < messagePurchaseQuantity)
-                            log.error("작물이 부족합니다.");
+                            log.error("[PrivateInteractionServiceImpl] - sellProduct: 작물이 부족합니다.");
                         break;
                     }
                     // 판매 처리
@@ -283,7 +283,7 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
         }
         else {
             isSuccess = false;
-            log.error("없는 게임 정보입니다.");
+            log.error("[PrivateInteractionServiceImpl] - sellProduct: 없는 게임 정보입니다.");
         }
         return GameMessageInfo.builder()
                 .body(responseBody)
@@ -316,14 +316,14 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
                     redisService.setValues(redisGameInfoKey, redisGameInfo);
                     isSuccess = true;
                 } else {
-                    log.debug("금액 부족");
+                    log.debug("[PrivateInteractionServiceImpl] - upgradeWarehouse: 금액 부족");
                 }
             } catch (WarehouseNotExistException e) {
-                log.error("없는 창고 입니다.");
+                log.error("[PrivateInteractionServiceImpl] - upgradeWarehouse: 없는 창고 입니다.");
             }
         }
         else {
-            log.error("없는 게임 정보입니다.");
+            log.error("[PrivateInteractionServiceImpl] - upgradeWarehouse: 없는 게임 정보입니다.");
         }
         return GameMessageInfo.builder()
                 .body(responseBody)
@@ -356,14 +356,14 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
                     redisService.setValues(redisGameInfoKey, redisGameInfo);
                     isSuccess = true;
                 } else {
-                    log.debug("금액 부족");
+                    log.debug("[PrivateInteractionServiceImpl] - upgradeBroker: 금액 부족");
                 }
             } catch (BrokerNotExistException e) {
-                log.error("없는 환전소 입니다.");
+                log.error("[PrivateInteractionServiceImpl] - upgradeBroker: 없는 환전소 입니다.");
             }
         }
         else {
-            log.error("없는 게임 정보입니다.");
+            log.error("[PrivateInteractionServiceImpl] - upgraderBroker: 없는 게임 정보입니다.");
         }
         return GameMessageInfo.builder()
                 .body(responseBody)
@@ -396,14 +396,14 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
                     redisService.setValues(redisGameInfoKey, redisGameInfo);
                     isSuccess = true;
                 } else {
-                    log.debug("금액 부족");
+                    log.debug("[PrivateInteractionServiceImpl] - upgradeVehicle: 금액 부족");
                 }
             } catch (VehicleNotExistException e) {
-                log.error("없는 운송수단 입니다.");
+                log.error("[PrivateInteractionServiceImpl] - upgradeVehicle: 없는 운송수단 입니다.");
             }
         }
         else {
-            log.error("없는 게임 정보입니다.");
+            log.error("[PrivateInteractionServiceImpl] - upgradeVehicle: 없는 게임 정보입니다.");
         }
         return GameMessageInfo.builder()
                 .body(responseBody)
