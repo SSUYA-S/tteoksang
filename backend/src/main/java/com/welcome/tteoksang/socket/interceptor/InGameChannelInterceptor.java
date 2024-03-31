@@ -1,7 +1,14 @@
 package com.welcome.tteoksang.socket.interceptor;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.welcome.tteoksang.auth.exception.TokenInvalidException;
 import com.welcome.tteoksang.auth.jwt.JWTUtil;
+import com.welcome.tteoksang.game.dto.log.ConnectLogInfo;
+import com.welcome.tteoksang.game.dto.log.DisconnectLogInfo;
+import com.welcome.tteoksang.game.dto.log.LogMessage;
+import com.welcome.tteoksang.game.dto.user.RedisGameInfo;
+import com.welcome.tteoksang.game.scheduler.ServerInfo;
 import com.welcome.tteoksang.game.service.RedisGameInfoService;
 import com.welcome.tteoksang.redis.RedisPrefix;
 import com.welcome.tteoksang.redis.RedisService;
@@ -22,6 +29,8 @@ import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -37,6 +46,7 @@ public class InGameChannelInterceptor implements ChannelInterceptor {
     private final RedisService redisService;
     private final RedisGameInfoService redisGameInfoService;
     private final GameInfoService gameInfoService;
+    private final ServerInfo serverInfo;
 
     private final Set<String> subscribedTopics = new HashSet<>();
 
@@ -71,8 +81,7 @@ public class InGameChannelInterceptor implements ChannelInterceptor {
                         handleSubscribe(userId, accessor);
                         break;
                 }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 log.error("[InGameChannelInterceptor] - error : {}", e.getMessage());
                 return null;
             }
@@ -146,8 +155,32 @@ public class InGameChannelInterceptor implements ChannelInterceptor {
     private void handleDisconnect(String userId, StompHeaderAccessor accessor) throws UserNotExistInSessionException {
         log.debug("[InGameChannelInterceptor] - DISCONNECT MESSAGE START");
 
+        String gameInfoKey = RedisPrefix.INGAMEINFO.prefix() + userId;
+        RedisGameInfo redisGameInfo = (RedisGameInfo) redisService.getValues(gameInfoKey);
+        if (redisGameInfo != null) {
+            int time = (int) Duration.between(redisGameInfo.getLastConnectTime(), LocalDateTime.now()).toMinutes();
+            DisconnectLogInfo logInfo = DisconnectLogInfo.builder()
+                    .seasonId(serverInfo.getSeasonId())
+                    .userId(userId)
+                    .playTime(time)
+                    .build();
+
+            LogMessage logMessage = LogMessage.builder()
+                    .type("DISCONNECT")
+                    .body(logInfo)
+                    .build();
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String logData = objectMapper.writeValueAsString(logMessage);
+                log.debug(logData);
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         // 레디스에 있는 게임 데이터 저장
         redisGameInfoService.saveRedisGameInfo(userId);
+
 
         // 레디스에 있는 유저 정보 지우기
         String userInfoKey = RedisPrefix.USERINFO.prefix() + userId;
