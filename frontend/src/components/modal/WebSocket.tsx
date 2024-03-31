@@ -38,7 +38,7 @@ interface Prop {
     setTurnStartTime: React.Dispatch<React.SetStateAction<string>>;
     client: Client;
     webSocketId: string;
-    newsReceived: (turn: number, articleList: Article[]) => void;
+    newsReceived: (articleList: Article[]) => void;
     setStartFlag: React.Dispatch<React.SetStateAction<boolean>>;
     reportReceived: (
         type: string,
@@ -78,7 +78,7 @@ export default function WebSocket(props: Prop) {
                                         );
                                         dispatch(
                                             buyableProductIdState(
-                                                info.buyAbleProductIdList
+                                                info.buyableProductList
                                             )
                                         );
                                         //더미데이터 수정할 것!!!
@@ -109,10 +109,9 @@ export default function WebSocket(props: Prop) {
                                     if (msg.isSuccess) {
                                         const newspaper = msg.body;
                                         //뉴스 수신시 로직 수정
-                                        props.newsReceived(
-                                            newspaper.publishTurn,
-                                            newspaper.articleList
-                                        );
+                                        if (newspaper) {
+                                            props.newsReceived(newspaper);
+                                        }
                                     } else {
                                         console.log(`ERROR ON ${msg.type}`);
                                     }
@@ -351,10 +350,9 @@ export default function WebSocket(props: Prop) {
                                     if (msg.isSuccess) {
                                         const newspaper = msg.body;
                                         //뉴스 수신시 로직 수정
-                                        props.newsReceived(
-                                            newspaper.publishTurn,
-                                            newspaper.articleList
-                                        );
+                                        if (newspaper) {
+                                            props.newsReceived(newspaper);
+                                        }
                                     } else {
                                         console.log(`ERROR ON ${msg.type}`);
                                     }
