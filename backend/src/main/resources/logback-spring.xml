@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!--Spring 기본 logback 템플릿 사용-->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
+    <include resource="org/springframework/boot/logging/logback/file-appender.xml" />
+
+    <!--logback-kafka-appender 사용-->
+    <appender name="kafkaAppender" class="com.github.danielwegener.logback.kafka.KafkaAppender">
+        <encoder class="com.github.danielwegener.logback.kafka.encoding.LayoutKafkaMessageEncoder">
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>%msg</pattern>
+            </layout>
+        </encoder>
+        <topic>tteoksang_log</topic>
+        <!--bookstrap.servers가 배포시 바뀌어야 됨-->
+        <producerConfig>bootstrap.servers=localhost:9093</producerConfig>
+    </appender>
+
+    <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="kafkaAppender"/>
+        <filter class="com.welcome.tteoksang.kafka.JsonTypeAndBodyFilter"/>
+<!--        <filter class="ch.qos.logback.classic.filter.LevelFilter">-->
+<!--            <level>DEBUG</level>-->
+<!--            <onMatch>ACCEPT</onMatch>-->
+<!--            <onMismatch>DENY</onMismatch>-->
+<!--        </filter>-->
+    </appender>
+
+    <logger name="org.apache.kafka" level="ERROR">
+        <appender-ref ref="ASYNC"/>
+    </logger>
+
+    <logger name="com.welcome.tteoksang" level="DEBUG">
+        <appender-ref ref="ASYNC"/>
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+    </root>
+</configuration>
