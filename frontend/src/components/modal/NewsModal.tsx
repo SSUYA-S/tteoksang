@@ -66,17 +66,37 @@ export default function NewsModal(props: NewsType) {
 
                 <div className="relative w-[90%] h-[65%] flex ">
                     <div className="w-[60%] h-full">
-                        <div className="w-full h-[50%]  text-start text-[3.6vw]">
-                            <p>{articleList[0].articleHeadline}</p>
+                        {articleList.length > 0 ? (
+                            <div className="w-full h-[50%]  text-start text-[3.6vw]">
+                                <p>{articleList[0].articleHeadline}</p>
+                            </div>
+                        ) : (
+                            <div className="w-full h-[50%]  text-start text-[3.6vw]">
+                                <p>
+                                    계속되는 지각 변동. 조만간 무슨 일이
+                                    생길지도???
+                                </p>
+                            </div>
+                        )}
+                        {articleList.length > 1 ? (
+                            <div className="w-full h-[40%]  text-start text-[2vw]">
+                                <div>{articleList[1].articleHeadline}</div>
+                            </div>
+                        ) : (
+                            <div className="w-full h-[40%]  text-start text-[2vw]">
+                                <div>떡상 주가 계속 상승중.</div>
+                            </div>
+                        )}
+                    </div>
+                    {articleList.length > 2 ? (
+                        <div className="w-[40%] h-[90%] b text-start text-[2.4vw]">
+                            {articleList[2].articleHeadline}
                         </div>
+                    ) : (
                         <div className="w-full h-[40%]  text-start text-[2vw]">
-                            <div>{articleList[1].articleHeadline}</div>
+                            <div>배추의 움직임이 심상치가 않은걸로 밝혀져</div>
                         </div>
-                    </div>
-
-                    <div className="w-[40%] h-[90%] b text-start text-[2.4vw]">
-                        {articleList[2].articleHeadline}
-                    </div>
+                    )}
                 </div>
             </div>
         </div>

@@ -135,91 +135,97 @@ export default function MainPage() {
     };
 
     const compareChecksum = () => {
-        if (
-            checksumData.checksumList[0].checksumValue !==
-            newChecksumData.achievement
-        ) {
-            deleteResourceAPICacheKey('achievement');
-            console.log('achievement 재요청을 보내겠습니다');
-            resourceAchievement().then((res) => {
-                pushInitialData('achievementList', res);
-            });
-        }
-        if (
-            checksumData.checksumList[1].checksumValue !== newChecksumData.event
-        ) {
-            deleteResourceAPICacheKey('event');
-            console.log('event 재요청을 보내겠습니다');
-            resourceEvent().then((res) => {
-                pushInitialData('eventtList', res);
-            });
-        }
-        if (
-            checksumData.checksumList[2].checksumValue !== newChecksumData.infra
-        ) {
-            deleteResourceAPICacheKey('infra');
-            console.log('infra 재요청을 보내겠습니다');
-            resourceInfra().then((res) => {
-                pushInitialData('infraList', res);
-            });
-        }
-        if (
-            checksumData.checksumList[3].checksumValue !==
-            newChecksumData.messageType
-        ) {
-            deleteResourceAPICacheKey('message-type');
-            console.log('messageType 재요청을 보내겠습니다');
-            resourceMessageType().then((res) => {
-                pushInitialData('messageTypeList', res);
-            });
-        }
-        if (
-            checksumData.checksumList[4].checksumValue !==
-            newChecksumData.product
-        ) {
-            deleteResourceAPICacheKey('product');
-            console.log('product 재요청을 보내겠습니다');
-            resourceProduct().then((res) => {
-                pushInitialData('productList', res);
-            });
-        }
-        if (
-            checksumData.checksumList[5].checksumValue !==
-            newChecksumData.profileFrame
-        ) {
-            deleteResourceAPICacheKey('profile-frame');
-            console.log('profileFrame 재요청을 보내겠습니다');
-            resourceProfileFrame().then((res) => {
-                pushInitialData('profileFrameList', res);
-            });
-        }
-        if (
-            checksumData.checksumList[6].checksumValue !==
-            newChecksumData.profileIcon
-        ) {
-            deleteResourceAPICacheKey('profile-icon');
-            console.log('profileIcon 재요청을 보내겠습니다');
-            resourceProfileIcon().then((res) => {
-                pushInitialData('profileIconList', res);
-            });
-        }
-        if (
-            checksumData.checksumList[7].checksumValue !== newChecksumData.theme
-        ) {
-            deleteResourceAPICacheKey('theme');
-            console.log('theme 재요청을 보내겠습니다');
-            resourceTheme().then((res) => {
-                pushInitialData('themeList', res);
-            });
-        }
-        if (
-            checksumData.checksumList[8].checksumValue !== newChecksumData.title
-        ) {
-            deleteResourceAPICacheKey('title');
-            console.log('title 재요청을 보내겠습니다');
-            resourceTitle().then((res) => {
-                pushInitialData('titleList', res);
-            });
+        if (checksumData.checksumList.length > 8) {
+            if (
+                checksumData.checksumList[0].checksumValue !==
+                newChecksumData.achievement
+            ) {
+                deleteResourceAPICacheKey('achievement');
+                console.log('achievement 재요청을 보내겠습니다');
+                resourceAchievement().then((res) => {
+                    pushInitialData('achievementList', res);
+                });
+            }
+            if (
+                checksumData.checksumList[1].checksumValue !==
+                newChecksumData.event
+            ) {
+                deleteResourceAPICacheKey('event');
+                console.log('event 재요청을 보내겠습니다');
+                resourceEvent().then((res) => {
+                    pushInitialData('eventtList', res);
+                });
+            }
+            if (
+                checksumData.checksumList[2].checksumValue !==
+                newChecksumData.infra
+            ) {
+                deleteResourceAPICacheKey('infra');
+                console.log('infra 재요청을 보내겠습니다');
+                resourceInfra().then((res) => {
+                    pushInitialData('infraList', res);
+                });
+            }
+            if (
+                checksumData.checksumList[3].checksumValue !==
+                newChecksumData.messageType
+            ) {
+                deleteResourceAPICacheKey('message-type');
+                console.log('messageType 재요청을 보내겠습니다');
+                resourceMessageType().then((res) => {
+                    pushInitialData('messageTypeList', res);
+                });
+            }
+            if (
+                checksumData.checksumList[4].checksumValue !==
+                newChecksumData.product
+            ) {
+                deleteResourceAPICacheKey('product');
+                console.log('product 재요청을 보내겠습니다');
+                resourceProduct().then((res) => {
+                    pushInitialData('productList', res);
+                });
+            }
+            if (
+                checksumData.checksumList[5].checksumValue !==
+                newChecksumData.profileFrame
+            ) {
+                deleteResourceAPICacheKey('profile-frame');
+                console.log('profileFrame 재요청을 보내겠습니다');
+                resourceProfileFrame().then((res) => {
+                    pushInitialData('profileFrameList', res);
+                });
+            }
+            if (
+                checksumData.checksumList[6].checksumValue !==
+                newChecksumData.profileIcon
+            ) {
+                deleteResourceAPICacheKey('profile-icon');
+                console.log('profileIcon 재요청을 보내겠습니다');
+                resourceProfileIcon().then((res) => {
+                    pushInitialData('profileIconList', res);
+                });
+            }
+            if (
+                checksumData.checksumList[7].checksumValue !==
+                newChecksumData.theme
+            ) {
+                deleteResourceAPICacheKey('theme');
+                console.log('theme 재요청을 보내겠습니다');
+                resourceTheme().then((res) => {
+                    pushInitialData('themeList', res);
+                });
+            }
+            if (
+                checksumData.checksumList[8].checksumValue !==
+                newChecksumData.title
+            ) {
+                deleteResourceAPICacheKey('title');
+                console.log('title 재요청을 보내겠습니다');
+                resourceTitle().then((res) => {
+                    pushInitialData('titleList', res);
+                });
+            }
         }
     };
     const pushInitialData = (key: string, res: AxiosResponse<any, any>) => {
