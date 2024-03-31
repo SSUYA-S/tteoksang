@@ -22,11 +22,22 @@ export default function TradeBuyCard({
      */
 
     const changeProductNumber = (changingValue: number) => {
+        //최대로 더할 수 있는 수
+        const maxAddValue = calculateMaximumValue(
+            buyableInfo.productInfo.productId,
+            productNumber
+        );
+        if (changingValue > maxAddValue) {
+            changingValue = maxAddValue;
+        }
         let changedValue = productNumber + changingValue;
+        //0보다 작은 경우 대비
         if (changedValue < 0) changedValue = 0;
+        //혹시나 싶은 큰 경우 대비
         if (changedValue > buyableInfo.productInfo.productMaxQuantity)
             changedValue = buyableInfo.productInfo.productMaxQuantity;
         const changedCost = changedValue * productCost;
+        //리스트 변경, id의 개수가 changedValue로 변경
         updateBuyingList(
             buyableInfo.productInfo.productId,
             changedValue,

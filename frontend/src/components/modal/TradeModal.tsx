@@ -175,7 +175,7 @@ export default function TradeModal(props: tradeType) {
         props.setTradeFlag(false);
     };
 
-    /** updateBuyingList(id, changeValue)
+    /** updateBuyingList(id, changeValue, changedCost)
      *  물건의 id와 changeValue를 입력하면 buyingProductList를 업데이트한다.
      * @param id
      * @param changeValue
