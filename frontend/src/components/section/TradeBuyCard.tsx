@@ -88,7 +88,7 @@ export default function TradeBuyCard({
                 <div className="w-[70%] h-full flex flex-col justify-center">
                     <div className="h-[15%]"></div>
                     <div className="w-full h-[65%] flex flex-col items-center justify-start px-[1.0vw]">
-                        <div className="w-full flex justify-between text-[1.3vw] my-[0.8vh]">
+                        <div className="w-full flex justify-between text-[1.1vw] my-[0.8vh]">
                             <p className="color-text-subbold">전일 대비</p>
                             {buyableInfo.productInfo.productFluctuation > 0 ? (
                                 <p className="color-text-blue3">
@@ -110,7 +110,7 @@ export default function TradeBuyCard({
                                 </p>
                             )}
                         </div>
-                        <div className="w-full flex justify-between text-[1.3vw] ">
+                        <div className="w-full flex justify-between text-[1.1vw] ">
                             <p className="color-text-subbold">
                                 나의 평균 구매가
                             </p>
@@ -126,7 +126,7 @@ export default function TradeBuyCard({
                             </p>
                         </div>
                     </div>
-                    <div className="w-full h-[20%] flex justify-center items-center">
+                    <div className="w-full h-[20%] flex justify-center items-center mb-[0.8vh]">
                         <div
                             className="flex py-[0.2vw] px-[0.4vw] text-[1.1vw] mx-[0.2vw] color-text-orange1 rounded-[0.4vw] color-bg-yellow1 cursor-pointer"
                             onClick={() => changeProductNumber(-10)}

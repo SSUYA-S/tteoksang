@@ -99,9 +99,9 @@ export default function ChattingModal(props: Props) {
         );
     } else {
         renderingComponent = (
-            <div className="absolute left-[5%] w-[30%] h-full bg-white bg-opacity-90 z-10 flex flex-col items-center">
+            <div className="absolute left-[0%] bottom-0 w-[30%] h-[90%] border-[0.4vw] color-border-subbold rounded-[1vw] bg-white bg-opacity-90 z-10 flex flex-col items-center">
                 <div
-                    className="w-full h-[90%] flex flex-col justify-start items-center overflow-scroll"
+                    className="w-full h-[90%] flex flex-col justify-start items-center overflow-scroll my-[1vw]"
                     ref={bigChatRef}
                 >
                     {chattingList.map((chat, index) => {
@@ -113,7 +113,7 @@ export default function ChattingModal(props: Props) {
                         type="text"
                         onChange={updateMessage}
                         value={message}
-                        className="w-[90%] rounded m-[0.2vw] text-2xl p-[0.5vw]"
+                        className="w-[85%] rounded m-[0.2vw] text-2xl p-[0.5vw]"
                         onKeyDown={(event) => {
                             if (event.key === 'Enter') {
                                 sendMessage();
@@ -121,7 +121,7 @@ export default function ChattingModal(props: Props) {
                         }}
                     ></input>
                     <button
-                        className="w-[10%] color-bg-black text-white rounded m-[0.2vw] text-xl"
+                        className="w-[15%] color-bg-black text-white rounded m-[0.2vw] text-[1vw]"
                         onClick={sendMessage}
                     >
                         보내기
