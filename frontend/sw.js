@@ -127,7 +127,9 @@ const cacheFirst = async ({ request, preloadResponsePromise, fallbackUrl }) => {
     //리소스가 없으면 네트워크로 요청을 보내고 캐쉬에 저장하기
     try {
         // console.log('캐쉬에 데이터가 없으므로 fetch 요청을 보냅니다');
-        const responseFromNetwork = await fetch(request);
+        const responseFromNetwork = await fetch(request, {
+            redirect: 'follow',
+        });
         // `/src/assets/images/` 경로에 있는 리소스에 대해서만 캐시에 저장
         if (request.url.includes('/src/assets/images/')) {
             await putInLocalImageCache(request, responseFromNetwork.clone());
@@ -160,26 +162,24 @@ self.addEventListener('fetch', (e) => {
     if (
         e.request.url.startsWith('https://accounts.google.com/o/oauth2/v2/auth')
     ) {
-        e.respondWith(fetch(e.request));
-    } else {
-        e.respondWith(
-            caches.match(e.request).then((response) => {
-                return response || fetch(e.request);
+        console.log('요청 account google');
+        console.log(e);
+        e.respondWith(fetch(e.request, { redirect: 'follow' }))
+            .then(function (response) {
+                return response;
             })
-        );
-    }
-    if (e.request.headers.get('Accept').indexOf('text/html') !== -1) {
-        let newRequest = new Request(e.request.url, {
-            method: 'GET',
-            headers: e.request.headers,
-            mode: e.request.mode == 'navigate' ? 'cors' : e.request.mode,
-            credentials: e.request.credentials,
-            redirect: e.request.redirect,
-        });
-        console.log('Accept 진입 ');
-        console.log(newRequest);
+            .catch(function (error) {
+                console.log(
+                    'Fetch failed; returning offline page instead.',
+                    error
+                );
+                return caches.match('/index.html');
+            });
+    } else if (e.request.headers.get('Accept').includes('text/html') !== -1) {
+        console.log('요청 Accep text/html');
+        console.log(e);
         e.respondWith(
-            fetch(newRequest, { redirect: 'follow' })
+            fetch(e.request, { redirect: 'follow' })
                 .then(function (response) {
                     return response;
                 })
@@ -188,35 +188,39 @@ self.addEventListener('fetch', (e) => {
                         'Fetch failed; returning offline page instead.',
                         error
                     );
-                    return caches.match('/offline.html');
+                    return caches.match('/index.html');
                 })
         );
-        return;
     } else if (
-        e.request.url.includes('/auth/') ||
-        e.request.url.includes('/api/oauth2/authorization/google')
+        e.request.url.includes('auth') ||
+        e.request.url.includes('/api/oauth2/authorization/google') ||
+        e.request.url.includes('google')
     ) {
-        console.log('서비스 워커가 요청 가로챔 ' + e.request.url);
-        console.log('구글 요청은 가로채지 않고 돌려보냄');
-        e.respondWith(fetch(e.request));
-        return;
+        console.log('요청 auth');
+        console.log(e);
+        e.respondWith(fetch(e.request, { redirect: 'follow' }))
+            .then(function (response) {
+                return response;
+            })
+            .catch(function (error) {
+                console.log(
+                    'Fetch failed; returning offline page instead.',
+                    error
+                );
+                return caches.match('/index.html');
+            });
     } else if (
         e.request.url.includes('/src/assets/images/') ||
         e.request.url.includes('/src/assets/bgm') ||
         e.request.url.includes('/api/resources') ||
         e.request.url.includes('/api/s3')
     ) {
-        // console.log('서비스 워커가 요청 가로챔 ' + e.request.url);
         e.respondWith(
             cacheFirst({
                 request: e.request,
                 preloadResponsePromise: e.preloadResponse,
-                // 여기서 fallbackUrl은 네트워크 요청이 실패했을 때 사용되는 백업 리소스의 URL을 의미합니다
-                // 위의 경우 네트워크 요청이 실패 할 시 대체 이미지를 보여줌
                 fallbackUrl: '/src/assets/images/frame1.png',
             })
         );
-    } else {
-        return;
     }
 });
