@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         // 레디스에 유저 정보 저장
         String userInfoKey = RedisPrefix.USERINFO.prefix() + user.getUserId();
         redisService.setValues(userInfoKey, userInfo);
-        log.debug("유저 정보 저장 여부 확인 : {}", redisService.hasKey(userInfoKey));
+        log.debug("[UserServiceImpl] - saveUserInfo, 유저 정보 저장 여부 확인 : {}", redisService.hasKey(userInfoKey));
     }
 
     @Override

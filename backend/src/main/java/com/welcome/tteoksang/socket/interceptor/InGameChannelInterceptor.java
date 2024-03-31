@@ -56,7 +56,7 @@ public class InGameChannelInterceptor implements ChannelInterceptor {
             String userId = extractAndValidateUserId(accessor);
             if (userId == null) {
                 // 유저 ID가 없거나 검증에 실패한 경우, 메시지 처리를 중단할 수 있습니다.
-                log.error("error : 유저가 없습니다.");
+                log.error("[InGameChannelInterceptor] - error: 유저가 없습니다.");
                 return null;
             }
             try {
@@ -73,11 +73,11 @@ public class InGameChannelInterceptor implements ChannelInterceptor {
                 }
             }
             catch (Exception e) {
-                log.error("error : {}", e.getMessage());
+                log.error("[InGameChannelInterceptor] - error : {}", e.getMessage());
                 return null;
             }
         }
-        log.debug("{} MESSAGE END", accessor.getCommand());
+        log.debug("[InGameChannelInterceptor] - {} MESSAGE END", accessor.getCommand());
         return message;
     }
 
@@ -101,7 +101,7 @@ public class InGameChannelInterceptor implements ChannelInterceptor {
                     //토큰에서 userId, role 획득
                     userId = jwtUtil.getUserId(jwtToken);
                     sessionAttributes.put("userId", userId);
-                    log.debug("헤더 유저 아이디 : {}", userId);
+                    log.debug("[InGameChannelInterceptor] - 헤더 유저 아이디 : {}", userId);
                 } catch (TokenInvalidException e) {
                     throw new TokenInvalidException();
                 }
@@ -110,14 +110,14 @@ public class InGameChannelInterceptor implements ChannelInterceptor {
         // 핸드 셰이크에 정보가 있는 경우 그대로 사용
         else {
             userId = (String) sessionAttributes.get("userId");
-            log.debug("핸드 셰이크 유저 아이디: {}", userId);
+            log.debug("[InGameChannelInterceptor] - 핸드 셰이크 유저 아이디: {}", userId);
         }
         return userId;
     }
 
     // CONNECT 처리 로직
     private void handleConnect(String userId) {
-        log.debug("CONNECT MESSAGE START");
+        log.debug("[InGameChannelInterceptor] - CONNECT MESSAGE START");
 //        log.debug("{\n" +
 //                "    \"type\": \"BUY_PRODUCT\",\n" +
 //                "    \"body\": {\n" +
@@ -143,7 +143,7 @@ public class InGameChannelInterceptor implements ChannelInterceptor {
 
     // DISCONNECT 처리 로직
     private void handleDisconnect(String userId, StompHeaderAccessor accessor) throws UserNotExistInSessionException {
-        log.debug("DISCONNECT MESSAGE START");
+        log.debug("[InGameChannelInterceptor] - DISCONNECT MESSAGE START");
 
         // 레디스에 있는 게임 데이터 저장
         redisGameInfoService.saveRedisGameInfo(userId);
@@ -152,25 +152,25 @@ public class InGameChannelInterceptor implements ChannelInterceptor {
         String userInfoKey = RedisPrefix.USERINFO.prefix() + userId;
         if (redisService.hasKey(userInfoKey)) {
             redisService.deleteValues(userInfoKey);
-            log.debug("유저 정보 제거");
+            log.debug("[InGameChannelInterceptor] - DISCONNECT: 유저 정보 제거");
         }
 
         // 세션에서 지우기
         accessor.getSessionAttributes().remove("userId");
-        log.debug("세션 내 유저 정보 지우기");
+        log.debug("[InGameChannelInterceptor] - DISCONNECT: 세션 내 유저 정보 지우기");
 
         // 구독 정보 지우기
         subscribedTopics.clear();
 
         String destination = accessor.getDestination();
-        log.debug("현재 구독 중인 개인 토픽 : {}", accessor.getDestination());
+        log.debug("[InGameChannelInterceptor] - DISCONNECT, 현재 구독 중인 개인 토픽 : {}", accessor.getDestination());
         if (destination != null && destination.startsWith("/topic/private/")) {
             // WebSocket ID 추출
             String webSocketId = destination.substring("/topic/private/".length());
 
             // 레디스에서 webSocketId가 있는지 확인
             if (!redisService.hasKey(webSocketId)) {
-                log.debug("webSocketId 없음");
+                log.debug("[InGameChannelInterceptor] - DISCONNECT: webSocketId 없음");
                 // 에러 처리
             }
             // 레디스에 있는 WebSocketId 지우기
@@ -182,7 +182,7 @@ public class InGameChannelInterceptor implements ChannelInterceptor {
     private void handleSubscribe(String userId, StompHeaderAccessor accessor) throws SubscribeDupulicateException {
         // 메시지의 목적지(destination)을 가져와 private시 webSocketId가 유효성 검사 실시
         String destination = accessor.getDestination();
-        log.debug("구독 : {}", accessor.getDestination());
+        log.debug("[InGameChannelInterceptor] - SUBSCRIBE, 구독 : {}", accessor.getDestination());
         if (destination != null && destination.startsWith("/topic/private/")) {
             // WebSocket ID 추출
             String webSocketId = destination.substring("/topic/private/".length());
@@ -192,13 +192,13 @@ public class InGameChannelInterceptor implements ChannelInterceptor {
 
             // 레디스에서 webSocketId가 있는지 확인
             if (!redisService.hasKey(webSocketKey)) {
-                log.error("webSocketId 없음");
+                log.error("[InGameChannelInterceptor] - SUBSCRIBE: webSocketId 없음");
                 // 에러 처리
             }
             // 클라이언트가 이미 해당 토픽을 구독한 경우에는 처리하지 않음
             if (subscribedTopics.contains(webSocketId)) {
                 // 중복 구독 처리 또는 에러 처리
-                log.debug("이미 구독된 토픽입니다.");
+                log.debug("[InGameChannelInterceptor] - SUBSCRIBE: 이미 구독된 토픽입니다.");
 //                throw new SubscribeDupulicateException("이미 구독된 토픽입니다.");
             }
             // 구독 상태 갱신

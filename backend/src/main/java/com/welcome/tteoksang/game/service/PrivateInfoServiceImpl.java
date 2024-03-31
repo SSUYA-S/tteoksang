@@ -55,7 +55,7 @@ public class PrivateInfoServiceImpl implements PrivateInfoService {
                     .build();
             isSuccess = true;
         } else {
-            log.error("없는 게임정보 입니다.");
+            log.error("[PrivateInfoServiceImpl] - getTotalInfo: 없는 게임정보 입니다.");
         }
         return GameMessageInfo.builder()
                 .body(responseBody)
@@ -77,7 +77,7 @@ public class PrivateInfoServiceImpl implements PrivateInfoService {
                     .build();
             isSuccess = true;
         } else {
-            log.error("없는 게임정보 입니다.");
+            log.error("[PrivateInfoServiceImpl] - getWarehouseInfo:없는 게임정보 입니다.");
         }
         return GameMessageInfo.builder()
                 .body(responseBody)
@@ -98,7 +98,7 @@ public class PrivateInfoServiceImpl implements PrivateInfoService {
                     .build();
             isSuccess = true;
         } else {
-            log.error("없는 게임정보 입니다.");
+            log.error("[PrivateInfoServiceImpl] - getInfraInfo:없는 게임정보 입니다.");
         }
         return GameMessageInfo.builder()
                 .body(responseBody)
@@ -116,7 +116,7 @@ public class PrivateInfoServiceImpl implements PrivateInfoService {
             ((Map<String, Long>) responseBody).put("gold", redisGameInfo.getGold());
             isSuccess = true;
         } else {
-            log.error("없는 게임정보 입니다.");
+            log.error("[PrivateInfoServiceImpl] - getMyGold:없는 게임정보 입니다.");
         }
         return GameMessageInfo.builder()
                 .body(responseBody)
@@ -136,7 +136,7 @@ public class PrivateInfoServiceImpl implements PrivateInfoService {
                     .build();
             isSuccess = true;
         } else {
-            log.error("없는 게임정보 입니다.");
+            log.error("[PrivateInfoServiceImpl] - getPrivateEvent:없는 게임정보 입니다.");
         }
         return GameMessageInfo.builder()
                 .body(responseBody)
@@ -158,7 +158,7 @@ public class PrivateInfoServiceImpl implements PrivateInfoService {
                     .build();
             isSuccess = true;
         } else {
-            log.error("없는 게임정보 입니다.");
+            log.error("[PrivateInfoServiceImpl] - getInGameTime: 없는 게임정보 입니다.");
         }
         return GameMessageInfo.builder()
                 .body(responseBody)
@@ -177,7 +177,7 @@ public class PrivateInfoServiceImpl implements PrivateInfoService {
             ((Map<String, Long>) responseBody).put("playTime", duration.toSeconds());
             isSuccess = true;
         } else {
-            log.error("없는 게임정보 입니다.");
+            log.error("[PrivateInfoServiceImpl] - alertPlayTime: 없는 게임정보 입니다.");
         }
         return GameMessageInfo.builder()
                 .body(responseBody)
@@ -198,7 +198,7 @@ public class PrivateInfoServiceImpl implements PrivateInfoService {
         String userInfoKey = RedisPrefix.USERINFO.prefix() + userId;
         // 레디스에서 유저 정보 가져오기
         UserInfo userInfo = (UserInfo) redisService.getValues(userInfoKey);
-        log.debug("UserName : {}, webSocketId : {}", userInfo.getNickname(), webSocketId);
+        log.debug("[PrivateInfoServiceImpl] - UserName: {}, webSocketId: {}", userInfo.getNickname(), webSocketId);
         return userInfo;
     }
 }

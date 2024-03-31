@@ -93,7 +93,7 @@ public class GameInfoServiceImpl implements GameInfoService {
                 products = RedisSerializationUtil.deserializeMap(gameInfo.getProducts());
 
                 // 게임 데이터 불러오기 위한 정보 확인
-                log.debug("[InGameChannelInterceptor] - inGameInfo : {}, {}, {}, {}, {}"
+                log.debug("[GameInfoServiceImpl] - loadGameInfo : {}, {}, {}, {}, {}"
                         , gameInfo.getGameId(), gameInfo.getGold(),
                         gameInfo.getWarehouseLevel(), gameInfo.getVehicleLevel(), products.toString()
                 );
@@ -136,7 +136,7 @@ public class GameInfoServiceImpl implements GameInfoService {
             redisService.setValues(gameInfoKey, redisGameInfo);
 
             RedisGameInfo redisGameInfoData = (RedisGameInfo) redisService.getValues(gameInfoKey);
-            log.debug("[InGameChannelInterceptor] - redisGameInfoData : {}, {}, {}, {}"
+            log.debug("[GameInfoServiceImpl] - loadGameInfo : {}, {}, {}, {}"
                     , redisGameInfoData.getGameId(), redisGameInfoData.getGold(),
                     redisGameInfoData.getWarehouseLevel(), redisGameInfoData.getVehicleLevel()
             );

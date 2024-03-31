@@ -44,7 +44,7 @@ public class PrivateGameController {
 
         // 세션 속성에서 userId 추출
         String userId = (String) headerAccessor.getSessionAttributes().get("userId");
-        log.debug("메세지 내부 핸드 셰이크 유저 아이디: {}", userId);
+        log.debug("[PrivateGameController] - 메세지 내부 핸드 셰이크 유저 아이디: {}", userId);
 
         // 초기화
         LinkedHashMap<String, Object> body = gameMessageReq.getBody();
@@ -166,7 +166,6 @@ public class PrivateGameController {
             // 게임 종료
             case QUIT_GAME: {
                 // 로그아웃 처리와 같음
-
             }
             // 파산 신청
             case GIVEUP_GAME: {
