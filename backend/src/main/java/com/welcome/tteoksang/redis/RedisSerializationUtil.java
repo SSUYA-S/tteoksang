@@ -1,6 +1,6 @@
 package com.welcome.tteoksang.redis;
 
-import com.welcome.tteoksang.game.dto.UserProductInfo;
+import com.welcome.tteoksang.game.dto.user.UserProductInfo;
 
 import java.io.*;
 import java.util.Map;
