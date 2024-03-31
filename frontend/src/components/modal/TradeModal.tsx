@@ -598,19 +598,20 @@ export default function TradeModal(props: tradeType) {
                                                         0 ? (
                                                             <p className="color-text-blue3">
                                                                 {'+' +
-                                                                    product.productFluctuation +
-                                                                    'G'}
+                                                                    product.productFluctuation}
                                                             </p>
                                                         ) : product.productFluctuation ===
                                                           0 ? (
                                                             <p className="color-text-green1">
-                                                                {product.productFluctuation +
-                                                                    'G'}
+                                                                {
+                                                                    product.productFluctuation
+                                                                }
                                                             </p>
                                                         ) : (
                                                             <p className="color-text-red1">
-                                                                {product.productFluctuation +
-                                                                    'G'}
+                                                                {
+                                                                    product.productFluctuation
+                                                                }
                                                             </p>
                                                         )}
                                                     </td>
@@ -627,7 +628,7 @@ export default function TradeModal(props: tradeType) {
         }
     };
     return (
-        <section className="relative w-[80%] h-[86%] flex justify-center items-center color-border-sublight z-50 animation-modal mt-[1vh]">
+        <section className="relative w-[86%] h-[84%] flex justify-center items-center color-border-sublight z-50 animation-modal mt-[1vh]">
             <img
                 src="/src/assets/images/layout/ui-board.webp"
                 className="absolute w-full h-full -z-10"
@@ -691,7 +692,7 @@ export default function TradeModal(props: tradeType) {
             </div>
             {tradeElement()}
             <div
-                className="absolute text-[2vw] flex items-center justify-center text-white -top-[1.6vw] -right-[2vw] w-[4vw] h-[4vw] border-[0.4vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer"
+                className="absolute text-[2vw] flex items-center justify-center text-white top-[1vw] right-[1vw] w-[4vw] h-[4vw] border-[0.4vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer"
                 onClick={closeTradeModal}
             >
                 X
