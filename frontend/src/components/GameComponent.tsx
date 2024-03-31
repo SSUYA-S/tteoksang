@@ -698,13 +698,13 @@ export default function GameComponent(props: GameType) {
                         </div>
 
                         <div className="relative w-[65%] flex flex-col items-center justify-center ps-[5%]">
-                            {titleInfo.length > 0 && titleId === 1 ? (
-                                <></>
-                            ) : (
-                                <p className="w-full text-start mx-2 text-[1.5vw] text-green-500">
-                                    {titleInfo[titleId - 1].titleName}
-                                </p>
-                            )}
+                            {/*{titleInfo.length > 0 && titleId === 1 ? (*/}
+                            {/*    <></>*/}
+                            {/*) : (*/}
+                            {/*    <p className="w-full text-start mx-2 text-[1.5vw] text-green-500">*/}
+                            {/*        {titleInfo[titleId - 1].titleName}*/}
+                            {/*    </p>*/}
+                            {/*)}*/}
                             <p className="w-full text-start mx-2 my-[5%] text-[2vw] text-green-500">
                                 {userNickname}
                             </p>
