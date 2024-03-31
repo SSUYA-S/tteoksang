@@ -4,14 +4,14 @@ import { ProductInfo } from '../type/types';
 export interface productInfoAndEventState {
     productInfoList: ProductInfo[];
     buyableProductIdList: number[];
-    specialEventId: number;
+    specialEventId: number[];
     privateEventId: number;
 }
 
 const initialState: productInfoAndEventState = {
     productInfoList: [],
     buyableProductIdList: [],
-    specialEventId: -1,
+    specialEventId: [],
     privateEventId: -1,
 };
 
