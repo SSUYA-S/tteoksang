@@ -373,3 +373,17 @@ export interface HalfReceipt {
     totalIncome: number;
     totalOutcome: number;
 }
+
+export interface SpecialEvent {
+    evendId: string;
+    eventContent: string;
+    eventHeadline: string;
+    eventName: string;
+    eventVariance: number;
+    eventType: string;
+    productId: number;
+}
+export interface ViewSpecialEvent {
+    eventName: string;
+    eventArray: SpecialEvent[];
+}

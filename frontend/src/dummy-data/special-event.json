@@ -1,0 +1,155 @@
+[
+    {
+        "evendId": "1",
+        "eventContent": "작황 부진으로 가격이 상승",
+        "eventHeadline": "비상! 농산물 가격 강세가 계속될 것인가!",
+        "eventName": "가뭄",
+        "eventVariance": 10.0,
+        "eventType": "SPRING",
+        "productId": 8
+    },
+    {
+        "evendId": "2",
+        "eventContent": "산지가 적은 여름철 고랭지 배추와 다르다. 유통업계에선 '반값' 배추를 내세우며 김장철 물가 잡기가 한창이다.",
+        "eventHeadline": "김장철 가을 배추, ‘반값’으로 물가 잡기가 한창!",
+        "eventName": "흉작",
+        "eventVariance": 5.9,
+        "eventType": "FALL",
+        "productId": 8
+    },
+    {
+        "evendId": "3",
+        "eventContent": "도매가격이 전월 대비 44% 떨어졌다.",
+        "eventHeadline": "도매가격 하락 속, 시금치 가격 동반 하락 예상!",
+        "eventName": "흉작",
+        "eventVariance": -44.0,
+        "eventType": "FALL",
+        "productId": 10
+    },
+    {
+        "evendId": "4",
+        "eventContent": "도매가격이 전월 대비 23% 떨어졌다.",
+        "eventHeadline": "무 가격 급락 예상, 도매가격 23% 하락!",
+        "eventName": "흉작",
+        "eventVariance": -23.0,
+        "eventType": "FALL",
+        "productId": 19
+    },
+    {
+        "evendId": "5",
+        "eventContent": "도매가격이 전월 대비 24% 떨어졌다.",
+        "eventHeadline": "당근 가격도 급락! 도매시장에서 24% 하락!",
+        "eventName": "흉작",
+        "eventVariance": -24.0,
+        "eventType": "FALL",
+        "productId": 20
+    },
+    {
+        "evendId": "6",
+        "eventContent": "태풍으로 배추 정식이 늦어져 수확 물량 예측이 어려워 산지 추가 확보에 심혈을 기울이고 있으며, 새로 계약한 산지를 통해 전체 배추 물량의 30% 가량을 공급받을 예정입니다.",
+        "eventHeadline": "김장철을 앞두고 대형 마트가 ‘금 배추’로 산지 추가 확보에 나서게 되나..!",
+        "eventName": "폭우",
+        "eventVariance": 105.0,
+        "eventType": "FALL",
+        "productId": 8
+    },
+    {
+        "evendId": "17",
+        "eventContent": "올해는 태백시 매봉산 고랭지의 작황이 부진해 공급이 부족한 상황이어서 안반데기 지역 계약면적을 추가한 것입니다.",
+        "eventHeadline": "공급 부족으로 마트가 새로운 배추 산지 계약면적을 추가하다..!",
+        "eventName": "흉작",
+        "eventVariance": 0.0,
+        "eventType": "FALL",
+        "productId": 8
+    },
+    {
+        "evendId": "7",
+        "eventContent": "배추 평균 도매가가 평년 대비 105% 상승한 가운데 소매 가격도 상승했습니다.",
+        "eventHeadline": "배추 가격 상승으로 김장 시즌 가파른 도래..!",
+        "eventName": "풍작",
+        "eventVariance": 105.0,
+        "eventType": "FALL",
+        "productId": 8
+    },
+    {
+        "evendId": "8",
+        "eventContent": "기상 악화로 생육 저하가 예상되어 배추 가격 맞추기가 어려워졌습니다.",
+        "eventHeadline": "기상 악화로 배추 가격 맞추기 어려워져..!",
+        "eventName": "폭우",
+        "eventVariance": 0.0,
+        "eventType": "FALL",
+        "productId": 8
+    },
+    {
+        "evendId": "9",
+        "eventContent": "신선한 김치 만들 준비하세요!",
+        "eventHeadline": "김장철, 배추값 폭등할 것인가!",
+        "eventName": "흉작",
+        "eventVariance": 7.5,
+        "eventType": "FALL",
+        "productId": 8
+    },
+    {
+        "evendId": "10",
+        "eventContent": "김장철을 맞아 안정적인 공급이 예상됩니다.",
+        "eventHeadline": "김장 채소, 무값 급락하게 되나..!",
+        "eventName": "흉작",
+        "eventVariance": -5.2,
+        "eventType": "FALL",
+        "productId": 19
+    },
+    {
+        "evendId": "11",
+        "eventContent": "가을철 배추와 무의 본격 출하로 공급 여건 개선",
+        "eventHeadline": "배추, 공급 안정을 위한 전방위 노력!",
+        "eventName": "풍작",
+        "eventVariance": 0.0,
+        "eventType": "FALL",
+        "productId": 8
+    },
+    {
+        "evendId": "12",
+        "eventContent": "가을철 배추와 무의 본격 출하로 공급 여건 개선",
+        "eventHeadline": "무, 공급 안정을 위한 전방위 노력!",
+        "eventName": "풍작",
+        "eventVariance": 0.0,
+        "eventType": "FALL",
+        "productId": 19
+    },
+    {
+        "evendId": "13",
+        "eventContent": "폭등한 가격, 한 달 전보다 2 배, 1년 전보다는 2.3 배 올랐습니다.",
+        "eventHeadline": "배추 도매가, 폭등하다!",
+        "eventName": "풍작",
+        "eventVariance": 122.5,
+        "eventType": "FALL",
+        "productId": 8
+    },
+    {
+        "evendId": "14",
+        "eventContent": "가격 급등, 1년 전의 2.5 배로 상승했습니다.",
+        "eventHeadline": "무 가격 급등, 증가하나..!",
+        "eventName": "풍작",
+        "eventVariance": 150.0,
+        "eventType": "FALL",
+        "productId": 19
+    },
+    {
+        "evendId": "15",
+        "eventContent": "1년 전의 1.6 배로 상승했습니다.",
+        "eventHeadline": "양파 가격 오름, 증가세 이어가나..!",
+        "eventName": "풍작",
+        "eventVariance": 60.6,
+        "eventType": "FALL",
+        "productId": 26
+    },
+    {
+        "evendId": "16",
+        "eventContent": "폭우와 이른 추석으로 수확이 앞당겨져 부족한 대과로 가격이 상승했습니다.",
+        "eventHeadline": "폭우와 이른 추석, 사과 가격 급등 예고!",
+        "eventName": "폭우",
+        "eventVariance": 30.0,
+        "eventType": "FALL",
+        "productId": 43
+    }
+]
