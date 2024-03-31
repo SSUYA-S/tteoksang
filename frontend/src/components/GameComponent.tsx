@@ -103,10 +103,10 @@ export default function GameComponent(props: GameType) {
     const [webSocketId, setWebSocketId] = useState<string>('');
 
     /**결산 모달 관련 useState */
-    const [isQtrReportAvail, setIsQtrReportAvail] = useState<boolean>(false); //분기
+    const [isQtrReportAvail, setIsQtrReportAvail] = useState<boolean>(true); //분기
     const [isHlfReportAvail, setIsHlfReportAvail] = useState<boolean>(false); //반기
     const [isFinReportAvail, setIsFinReportAvail] = useState<boolean>(false); //전체
-    const [isOffReportAvail, setIsOffReportAvail] = useState<boolean>(true); //미접
+    const [isOffReportAvail, setIsOffReportAvail] = useState<boolean>(false); //미접
 
     const [qtrReport, setQtrReport] = useState<QuarterReportType | null>(null); //분기
     const [hlfReport, setHlfReport] = useState<HalfReportType | null>(null); //반기
