@@ -1,7 +1,7 @@
 package com.welcome.tteoksang.user.service;
 
-import com.welcome.tteoksang.game.dto.RedisGameInfo;
-import com.welcome.tteoksang.game.dto.UserProductInfo;
+import com.welcome.tteoksang.game.dto.user.RedisGameInfo;
+import com.welcome.tteoksang.game.dto.user.UserProductInfo;
 import com.welcome.tteoksang.redis.RedisPrefix;
 import com.welcome.tteoksang.redis.RedisSerializationUtil;
 import com.welcome.tteoksang.redis.RedisService;

@@ -1,5 +1,6 @@
-package com.welcome.tteoksang.game.dto;
+package com.welcome.tteoksang.game.dto.event;
 
+import com.welcome.tteoksang.game.dto.ProductInfo;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -18,4 +19,8 @@ public class PublicEventInfo {
     List<Integer> buyableProductList;
     List<String> specialEventId;
 
+    @Override
+    public String toString() {
+        return turnStartTime+" "+specialEventId.toString();
+    }
 }
