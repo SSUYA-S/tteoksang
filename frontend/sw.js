@@ -156,12 +156,34 @@ const cacheFirst = async ({ request, preloadResponsePromise, fallbackUrl }) => {
     }
 };
 
-// fetch event
 self.addEventListener('fetch', (e) => {
-    console.log(e);
-    if (e.request.url.includes('/api/oauth2/authorization/google')) {
+    if (e.request.headers.get('Accept').indexOf('text/html') !== -1) {
+        let newRequest = new Request(e.request.url, {
+            method: 'GET',
+            headers: e.request.headers,
+            mode: e.request.mode == 'navigate' ? 'cors' : e.request.mode,
+            credentials: e.request.credentials,
+            redirect: e.request.redirect,
+        });
+        console.log('Accept 진입 ');
+        console.log(newRequest);
+        e.respondWith(
+            cacheFirst({
+                request: newRequest,
+                preloadResponsePromise: e.preloadResponse,
+                // 여기서 fallbackUrl은 네트워크 요청이 실패했을 때 사용되는 백업 리소스의 URL을 의미합니다
+                // 위의 경우 네트워크 요청이 실패 할 시 대체 이미지를 보여줌
+                fallbackUrl: '/src/assets/images/frame1.png',
+            })
+        );
+        return;
+    } else if (
+        e.request.url.includes('/auth/') ||
+        e.request.url.includes('/api/oauth2/authorization/google')
+    ) {
         console.log('서비스 워커가 요청 가로챔 ' + e.request.url);
         console.log('구글 요청은 가로채지 않고 돌려보냄');
+        e.respondWith(fetch(e.request));
         return;
     } else if (
         e.request.url.includes('/src/assets/images/') ||

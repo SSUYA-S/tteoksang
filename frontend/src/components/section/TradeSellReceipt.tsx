@@ -19,15 +19,12 @@ export default function TradeSellReceipt({
     const totalProfit = totalCost - totalFee;
 
     return (
-        <div
-            className="w-[90%] h-[85%] flex flex-col justify-between items-center bg-white color-text-textcolor rounded-[1vw]"
-            style={{
-                background: 'url(/src/assets/images/layout/receipt.webp)',
-                backgroundSize: 'contain',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center',
-            }}
-        >
+        <div className="relative w-[90%] h-[85%] flex flex-col justify-between items-center color-text-textcolor rounded-[1vw]">
+            <img
+                src="/src/assets/images/layout/receipt.webp"
+                className="absolute w-full h-full -z-10"
+                alt=""
+            />
             <p className="h-[15%] text-[2.4vw] flex items-center justify-center">
                 판매 영수증
             </p>

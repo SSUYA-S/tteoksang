@@ -21,6 +21,8 @@ import {
     InitialData,
     OfflineReportType,
     QuarterReportType,
+    SpecialEvent,
+    ViewSpecialEvent,
 } from '../type/types';
 import { themeModeState } from '../util/counter-slice';
 import { withdrawal } from '../api/user';
@@ -31,6 +33,13 @@ import QuarterReportModal from './modal/QuarterReportModal';
 import { Cookies } from 'react-cookie';
 import HalfReportModal from './modal/HalfReportModal';
 import OffReportModal from './modal/OffReportModal';
+import {
+    privateEventState,
+    specialEventState,
+} from '../util/product-and-event';
+import specialeventJson from '../dummy-data/special-event.json';
+import { loadEventImg } from '../util/loadEventImg';
+import { loadProduct } from '../util/loadProduct';
 
 type GameType = {
     initialData: InitialData;
@@ -71,6 +80,15 @@ export default function GameComponent(props: GameType) {
         { articleHeadline: `돈 버는 재태크 수단 TOP 10` },
         { articleHeadline: `게임회사 '어서오-십조', KOSPI 상장` },
     ]);
+
+    ///이벤트 관련
+    const [currentSpecialEvent, setCurrentSpecialEvent] = useState<
+        ViewSpecialEvent[]
+    >([]);
+    const [currentViewEvent, setCurrentViewEvent] = useState<SpecialEvent[]>(
+        []
+    );
+    //이벤트 관련
 
     const [isLogoutProceeding, setIsLogoutProceeding] =
         useState<boolean>(false);
@@ -214,6 +232,11 @@ export default function GameComponent(props: GameType) {
         (state: any) => state.reduxFlag.myProfileSlice.title
     );
 
+    //퍼블릭 이벤트 나중에 리덕스에서 인자 주는걸로 바꾸기
+    const publicEvent = useSelector(
+        (state: any) => state.reduxFlag.productAndEventSlice.specialEventState
+    );
+
     /** 테마모드변경 */
     const changeMode = (prop: number) => {
         dispatch(themeModeState(prop));
@@ -300,6 +323,49 @@ export default function GameComponent(props: GameType) {
             audio.removeEventListener('ended', () => setPlaying(false));
         };
     }, [audio]);
+
+    useEffect(() => {
+        // json 넣어야함
+        const randomNum: string[] = [];
+        for (let index = 0; index < 5; index++) {
+            const element = Math.floor(Math.random() * 17) + 1;
+            randomNum.push(element + '');
+        }
+        //여기서 이벤트의 목록들이 생김
+        dispatch(specialEventState(randomNum));
+        //specialEvent에 [1,3,6 이런식으로 생김]
+        //json에서 evendId가 1,3,6인것을 받아양함
+        console.log(randomNum);
+        const newPublicEvent = specialeventJson.filter((event) =>
+            randomNum.includes(event.evendId)
+        );
+
+        const pushData: ViewSpecialEvent[] = [
+            { eventName: '폭우', eventArray: [] },
+            { eventName: '폭염', eventArray: [] },
+            { eventName: '폭설', eventArray: [] },
+            { eventName: '한파', eventArray: [] },
+            { eventName: '가뭄', eventArray: [] },
+            { eventName: '우박', eventArray: [] },
+            { eventName: '풍작', eventArray: [] },
+            { eventName: '흉작', eventArray: [] },
+            { eventName: '사회 이슈', eventArray: [] },
+        ];
+        newPublicEvent.map((item) => {
+            const targetData = pushData.find(
+                (pd) => pd.eventName === item.eventName
+            );
+            if (targetData) {
+                targetData.eventArray.push(item);
+            }
+        });
+
+        //가뭄, 흉작, 풍작, 풍작, 풍작
+        //가뭄, 흉작, 풍작
+
+        console.log(pushData);
+        setCurrentSpecialEvent(pushData);
+    }, [publicEvent]);
 
     const openTradeElement = () => {
         setTradeFlag(true);
@@ -406,6 +472,84 @@ export default function GameComponent(props: GameType) {
         setNewsFlag(true);
         setNewsPublishTurn(turn);
         setNewsArticleList(articleList);
+    };
+    /** 현재 이벤트를 보여주기 위한 btn  */
+    const viewPubEventDetail = (prop: SpecialEvent[]) => {
+        setCurrentViewEvent(prop);
+    };
+    /** 현재 이벤트를 보여주는 Element */
+    const currentViewElement = () => {
+        return (
+            <div className="absolute w-[60%] h-[60%]  flex flex-col items-center overflow-y-auto z-50">
+                <img
+                    src="/src/assets/images/layout/ui-board.webp"
+                    className="absolute w-full h-full -z-10"
+                    alt=""
+                />
+                {currentViewEvent.length > 0 ? (
+                    <div className="w-full text-center color-text-textcolor text-[3vw] mt-[2vw]">
+                        {currentViewEvent[0].eventName}
+                    </div>
+                ) : (
+                    <></>
+                )}
+                <div className="relative w-[90%] h-full flex flex-col items-center overflow-y-auto color-text-textcolor px-[2vw] mb-[2.4vw]">
+                    {currentViewEvent.map((item, index) => {
+                        return (
+                            <div
+                                className="relative w-full flex items-center justify-center my-[0.4vw] bg-white border-[0.4vw] color-border-subbold py-[1vw] rounded-[1vw]"
+                                key={'event key : ' + index}
+                            >
+                                <div className="w-[15%]">
+                                    <div
+                                        className={
+                                            'bg-no-repeat mx-auto sprite-img-crop ' +
+                                            `crop-img-${item.productId}`
+                                        }
+                                        style={{
+                                            aspectRatio: 1 / 1,
+                                        }}
+                                    ></div>
+                                </div>
+                                <div className="w-[85%] ms-[2vw] text-start flex flex-col justify-start overflow-y-auto">
+                                    <p className="text-[1.6vw] pe-[2vw]">
+                                        {item.eventHeadline}
+                                    </p>
+                                    <p className="text-[1vw] my-[1vw] pe-[2vw]">
+                                        {item.eventContent}
+                                    </p>
+                                    <div className="flex items-center text-[1.6vw]">
+                                        <p>
+                                            {loadProduct(
+                                                item.productId,
+                                                initialData.productList
+                                            )}
+                                        </p>
+                                        {item.eventVariance >= 0 ? (
+                                            <p className=" mx-[2vw] text-green-400">
+                                                +{item.eventVariance}%
+                                            </p>
+                                        ) : (
+                                            <p className=" mx-[2vw] text-red-400">
+                                                {item.eventVariance}%
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+                <div
+                    className="absolute text-[2vw] flex items-center justify-center text-white top-[2.2vw] right-[3vw] w-[4vw] h-[4vw] border-[0.4vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer"
+                    onClick={() => {
+                        setCurrentViewEvent([]);
+                    }}
+                >
+                    X
+                </div>
+            </div>
+        );
     };
 
     return (
@@ -570,87 +714,110 @@ export default function GameComponent(props: GameType) {
             </div>
 
             {/* 우측 상단 ui */}
-            <div className="absolute w-[25%] h-[14%] top-[4%] right-[2%] flex items-center justify-center">
-                <div className="relative w-[65%] h-full py-[0.2vw] flex flex-col items-center justify-around color-bg-main border-[0.2vw] color-border-subbold rounded-[1vw] color-text-textcolor left-[2vw] z-0">
-                    <p className="text-[1.4vw]">
-                        {gameYear}년 {gameMonth}월 {gameDay}일
-                    </p>
-                    <div className="flex items-center justify-start">
-                        <img
-                            className="absolute left-0 mx-[1vw] w-[12%]"
-                            src="/src/assets/images/icon/ui-icon-coin.png"
-                            alt=""
-                        />
-                        <p className="text-[1.6vw]">
-                            {nowMoney.toLocaleString()}
+            <div className="absolute w-[25%] h-[14%] top-[4%] right-[2%] flex flex-col items-end">
+                <div className="relative w-full h-full flex items-center justify-center">
+                    <div className="relative w-[65%] h-full py-[0.2vw] flex flex-col items-center justify-around color-bg-main border-[0.2vw] color-border-subbold rounded-[1vw] color-text-textcolor left-[2vw] z-0">
+                        <p className="text-[1.4vw]">
+                            {gameYear}년 {gameMonth}월 {gameDay}일
                         </p>
+                        <div className="flex items-center justify-start">
+                            <img
+                                className="absolute left-0 mx-[1vw] w-[12%]"
+                                src="/src/assets/images/icon/ui-icon-coin.png"
+                                alt=""
+                            />
+                            <p className="text-[1.6vw]">
+                                {nowMoney.toLocaleString()}
+                            </p>
+                        </div>
+                        <div className="flex">
+                            <p
+                                className="px-2 cursor-pointer"
+                                onClick={() => {
+                                    changeMode(0);
+                                }}
+                            >
+                                a
+                            </p>
+                            <p
+                                className="px-2 cursor-pointer"
+                                onClick={() => {
+                                    changeMode(1);
+                                }}
+                            >
+                                b
+                            </p>
+                            <p
+                                className="px-2 cursor-pointer"
+                                onClick={() => {
+                                    changeMode(2);
+                                }}
+                            >
+                                c
+                            </p>
+                            <p
+                                className="px-2 cursor-pointer"
+                                onClick={() => {
+                                    changeMode(3);
+                                }}
+                            >
+                                d
+                            </p>
+                        </div>
                     </div>
-                    <div className="flex">
-                        <p
-                            className="px-2 cursor-pointer"
-                            onClick={() => {
-                                changeMode(0);
-                            }}
-                        >
-                            a
-                        </p>
-                        <p
-                            className="px-2 cursor-pointer"
-                            onClick={() => {
-                                changeMode(1);
-                            }}
-                        >
-                            b
-                        </p>
-                        <p
-                            className="px-2 cursor-pointer"
-                            onClick={() => {
-                                changeMode(2);
-                            }}
-                        >
-                            c
-                        </p>
-                        <p
-                            className="px-2 cursor-pointer"
-                            onClick={() => {
-                                changeMode(3);
-                            }}
-                        >
-                            d
-                        </p>
+                    <div
+                        className="relative w-[35%] flex items-center justify-center rounded-full border-[0.4vw] color-border-subbold z-10"
+                        style={{ aspectRatio: 1 / 1 }}
+                    >
+                        <CircularTimer
+                            duration={duration}
+                            ingameTime={ingameTime}
+                            setTurnTimer={setTurnTimer}
+                            setIngameTurn={setIngameTurn}
+                        />
+                        <div className="absolute w-full h-full rounded-full border-[0.4vw] border-white flex items-center justify-center">
+                            <div
+                                className="absolute w-full h-full"
+                                style={{
+                                    backgroundImage:
+                                        'url(/src/assets/images/icon/ui-icon-timeCircle.png)',
+                                    backgroundSize: 'contain ',
+                                    backgroundPosition: 'center',
+                                    backgroundRepeat: 'no-repeat',
+                                }}
+                            ></div>
+                            <div
+                                className="absolute w-[60%] h-[60%] z-20 bg-no-repeat bg-center"
+                                style={{
+                                    backgroundImage: `url(/src/assets/images/icon/ui-season-${seasonImg}.png)`,
+                                    backgroundSize: 'contain ',
+                                    backgroundPosition: 'center',
+                                    backgroundRepeat: 'no-repeat',
+                                }}
+                            />
+                        </div>
                     </div>
                 </div>
-                <div
-                    className="relative w-[35%] flex items-center justify-center rounded-full border-[0.4vw] color-border-subbold z-10"
-                    style={{ aspectRatio: 1 / 1 }}
-                >
-                    <CircularTimer
-                        duration={duration}
-                        ingameTime={ingameTime}
-                        setTurnTimer={setTurnTimer}
-                        setIngameTurn={setIngameTurn}
-                    />
-                    <div className="absolute w-full h-full rounded-full border-[0.4vw] border-white flex items-center justify-center">
-                        <div
-                            className="absolute w-full h-full"
-                            style={{
-                                backgroundImage:
-                                    'url(/src/assets/images/icon/ui-icon-timeCircle.png)',
-                                backgroundSize: 'contain ',
-                                backgroundPosition: 'center',
-                                backgroundRepeat: 'no-repeat',
-                            }}
-                        ></div>
-                        <div
-                            className="absolute w-[60%] h-[60%] z-20 bg-no-repeat bg-center"
-                            style={{
-                                backgroundImage: `url(/src/assets/images/icon/ui-season-${seasonImg}.png)`,
-                                backgroundSize: 'contain ',
-                                backgroundPosition: 'center',
-                                backgroundRepeat: 'no-repeat',
-                            }}
-                        />
-                    </div>
+                <div className="flex py-[2vw]">
+                    {currentSpecialEvent.map((item, index) => {
+                        if (item.eventArray.length > 0) {
+                            return (
+                                <div
+                                    className="relative px-[0.4vw] cursor-pointer"
+                                    onClick={() => {
+                                        viewPubEventDetail(item.eventArray);
+                                    }}
+                                >
+                                    <img
+                                        className=" w-[5vw] bg-white rounded-full border-[0.4vw] color-border-main"
+                                        style={{ aspectRatio: 1 / 1 }}
+                                        src={loadEventImg(item.eventName)}
+                                        alt=""
+                                    />
+                                </div>
+                            );
+                        }
+                    })}
                 </div>
             </div>
 
@@ -933,6 +1100,8 @@ export default function GameComponent(props: GameType) {
             ) : (
                 <></>
             )}
+            {/* 현재 이벤트 보여주기 */}
+            {currentViewEvent.length > 0 ? currentViewElement() : <></>}
         </section>
     );
 }

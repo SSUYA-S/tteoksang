@@ -484,7 +484,7 @@ export default function TradeModal(props: tradeType) {
         } else if (tradeTab === 2) {
             return (
                 <>
-                    <div className="w-[88%] h-full">
+                    <div className="w-[83%] h-full">
                         <div className="h-[18%] flex justify-between items-end pb-[0.2vh]">
                             <p className="text-[3vw] color-text-textcolor">
                                 오늘의 시세
@@ -567,15 +567,12 @@ export default function TradeModal(props: tradeType) {
         }
     };
     return (
-        <section
-            className="relative w-[80%] h-[86%] flex justify-center items-center color-border-sublight z-50 animation-modal mt-[1vh]"
-            style={{
-                background: 'url(/src/assets/images/layout/ui-board.webp)',
-                backgroundSize: 'cover',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center',
-            }}
-        >
+        <section className="relative w-[80%] h-[86%] flex justify-center items-center color-border-sublight z-50 animation-modal mt-[1vh]">
+            <img
+                src="/src/assets/images/layout/ui-board.webp"
+                className="absolute w-full h-full -z-10"
+                alt=""
+            />
             <div className="w-[12%] h-full ms-[2vw]">
                 <div className="h-[15%]" />
                 <div className="flex flex-col items-center ">
