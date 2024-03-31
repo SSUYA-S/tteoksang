@@ -19,6 +19,9 @@ import OffHalfPage4 from '../section/OffPage/OffHalfPage4';
 import OffManyHalfPage3 from '../section/OffPage/OffManyHalfPage3';
 import OffManyHalfPage4 from '../section/OffPage/OffManyHalfPage4';
 
+import { startNewGame } from '../../api/user';
+import { httpStatusCode } from '../../util/http-status';
+
 interface Prop {
     offReport: OfflineReportType | null;
     setIsOffReportAvail: React.Dispatch<React.SetStateAction<boolean>>;
@@ -29,6 +32,7 @@ interface Prop {
     titleList: Title[];
     eventList: Event[];
     achievementInfo: Achievement[];
+    setStartFlag: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function OffReportModal(props: Prop) {
@@ -115,7 +119,7 @@ export default function OffReportModal(props: Prop) {
         //반기 보고서는 존재하는가?
         if (Off) {
             //반기 보고서 존재 시
-            console.log(Off.halfReport);
+            // console.log(Off.halfReport);
             if (Off.halfReport !== null || Off.halfReport !== undefined) {
                 //반기 수익 계산
                 let income = Off.halfReport.totalProductIncome;
@@ -161,6 +165,29 @@ export default function OffReportModal(props: Prop) {
                 body: {},
             }),
         });
+
+        //웹소켓 통신 비활성화
+        client.publish({
+            destination: `/app/private/${webSocketId}`,
+            body: JSON.stringify({
+                type: 'QUIT_GAME',
+                body: {},
+            }),
+        });
+        client.deactivate();
+
+        //api호출
+        startNewGame()
+            .then((res) => {
+                if (res.status === httpStatusCode.OK) {
+                    props.setStartFlag(false);
+                } else {
+                    console.log('response error');
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     };
 
     return (
@@ -228,7 +255,7 @@ export default function OffReportModal(props: Prop) {
                                     webSocketClient={props.webSocketClient}
                                     webSocketId={props.webSocketId}
                                     halfIncome={Off.quarterReport.quarterProfit}
-                                    halfOutcome={Off.quarterReport.rentFee}
+                                    halfOutcome={Off.rentFeeInfo.rentFee}
                                     setMode={setMode}
                                     inProductList={
                                         Off.quarterReport.inProductList

@@ -108,7 +108,7 @@ export default function RentFeeModal(props: Prop) {
                     onClick={props.endGame}
                     className="w-[90%] p-[1vw] h-[10%] m-[1vw] border-[0.2vw] border-white text-2xl text-white flex justify-center items-center cursor-pointer"
                 >
-                    ㅠㅠ 다시 시작해보자...
+                    다시 시작하기
                 </div>
             </div>
         );
