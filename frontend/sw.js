@@ -168,13 +168,17 @@ self.addEventListener('fetch', (e) => {
         console.log('Accept 진입 ');
         console.log(newRequest);
         e.respondWith(
-            cacheFirst({
-                request: newRequest,
-                preloadResponsePromise: e.preloadResponse,
-                // 여기서 fallbackUrl은 네트워크 요청이 실패했을 때 사용되는 백업 리소스의 URL을 의미합니다
-                // 위의 경우 네트워크 요청이 실패 할 시 대체 이미지를 보여줌
-                fallbackUrl: '/src/assets/images/frame1.png',
-            })
+            fetch(newRequest, { redirect: 'follow' })
+                .then(function (response) {
+                    return response;
+                })
+                .catch(function (error) {
+                    console.log(
+                        'Fetch failed; returning offline page instead.',
+                        error
+                    );
+                    return caches.match('/offline.html');
+                })
         );
         return;
     } else if (
