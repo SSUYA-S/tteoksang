@@ -181,7 +181,7 @@ self.addEventListener('fetch', (e) => {
         e.request.url.includes('/auth/') ||
         e.request.url.includes('/api/oauth2/authorization/google')
     ) {
-        e.respondWith(fetch(e.request));
+        e.respondWith(fetch(e.request, { redirect: 'follow' }));
     } else if (
         e.request.url.includes('/src/assets/images/') ||
         e.request.url.includes('/src/assets/bgm') ||

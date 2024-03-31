@@ -67,7 +67,7 @@ public class Main {
             String logType = message.getType();
             System.out.println(logType);
 
-        } catch (Exception e){
+        } catch (Exception e) {
 
         }
 
