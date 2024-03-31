@@ -162,8 +162,22 @@ self.addEventListener('fetch', (e) => {
     if (
         e.request.url.startsWith('https://accounts.google.com/o/oauth2/v2/auth')
     ) {
-        e.respondWith(fetch(e.request, { redirect: 'follow' }));
-    } else if (e.request.headers.get('Accept').indexOf('text/html') !== -1) {
+        console.log('요청 account google');
+        console.log(e);
+        e.respondWith(fetch(e.request, { redirect: 'follow' }))
+            .then(function (response) {
+                return response;
+            })
+            .catch(function (error) {
+                console.log(
+                    'Fetch failed; returning offline page instead.',
+                    error
+                );
+                return caches.match('/index.html');
+            });
+    } else if (e.request.headers.get('Accept').includes('text/html') !== -1) {
+        console.log('요청 Accep text/html');
+        console.log(e);
         e.respondWith(
             fetch(e.request, { redirect: 'follow' })
                 .then(function (response) {
@@ -174,14 +188,27 @@ self.addEventListener('fetch', (e) => {
                         'Fetch failed; returning offline page instead.',
                         error
                     );
-                    return caches.match('/offline.html');
+                    return caches.match('/index.html');
                 })
         );
     } else if (
-        e.request.url.includes('/auth/') ||
-        e.request.url.includes('/api/oauth2/authorization/google')
+        e.request.url.includes('auth') ||
+        e.request.url.includes('/api/oauth2/authorization/google') ||
+        e.request.url.includes('google')
     ) {
-        e.respondWith(fetch(e.request, { redirect: 'follow' }));
+        console.log('요청 auth');
+        console.log(e);
+        e.respondWith(fetch(e.request, { redirect: 'follow' }))
+            .then(function (response) {
+                return response;
+            })
+            .catch(function (error) {
+                console.log(
+                    'Fetch failed; returning offline page instead.',
+                    error
+                );
+                return caches.match('/index.html');
+            });
     } else if (
         e.request.url.includes('/src/assets/images/') ||
         e.request.url.includes('/src/assets/bgm') ||
