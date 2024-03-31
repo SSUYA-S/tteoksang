@@ -1,12 +1,11 @@
 import { useSelector } from 'react-redux';
 import InventoryCard from '../section/InventoryCard';
-import { ProductBucket, Product, ProductInfo } from '../../type/types';
+import { ProductBucket, Product } from '../../type/types';
 import { useEffect } from 'react';
 
 type inventoryType = {
     setInventoryFlag: React.Dispatch<React.SetStateAction<boolean>>;
     productSource: Product[];
-    productInfo: ProductInfo[];
 };
 
 export default function InventoryModal(props: inventoryType) {

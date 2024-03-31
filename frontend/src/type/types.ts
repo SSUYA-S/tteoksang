@@ -90,12 +90,13 @@ export interface ProductList {
     productList: Product[];
 }
 export interface Event {
-    eventId: number;
+    eventId: string;
     eventName: string;
     eventType: string;
-    eventDescription: string;
-    eventEffectValue: number;
-    eventUnit: string;
+    eventContent: string;
+    eventHeadline: string;
+    eventVariance: number;
+    productId: number;
 }
 export interface EventList {
     eventList: Event[];

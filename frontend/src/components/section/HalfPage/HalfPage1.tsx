@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Title, Event, Product } from '../../../type/types';
 import { useSelector } from 'react-redux';
 import { Client } from '@stomp/stompjs';
+import { loadEventImg } from '../../../util/loadEventImg';
 
 interface Prop {
     turn: number;
@@ -26,12 +27,14 @@ export default function HalfPage1(props: Prop) {
     const [cropName, setCropName] = useState<string>('');
     const [cropSeason, setCropSeason] = useState<string>('');
 
+    const [seasonEventList, setSeasonEventList] = useState<Event[]>([]);
+
     const eventDescRef = useRef<HTMLDivElement>(null);
     const cropDescRef = useRef<HTMLDivElement>(null);
 
     /**이벤트 이미지 호버링하면 출력 */
-    const hoverEventImg = (eventId: number) => {
-        setEventDescription(eventId + '이벤트 발동');
+    const hoverEventImg = (event: Event) => {
+        setEventDescription(event.eventContent);
         if (eventDescRef.current) {
             eventDescRef.current.style.opacity = '100';
             eventDescRef.current.style.transition = 'linear 0.5s';
@@ -98,13 +101,21 @@ export default function HalfPage1(props: Prop) {
         if (month === 3) {
             setTimeDuration1(`${year}년차 봄 ~ ${year}년차 여름`);
             setTimeDuration2(`(0${year}.03.01 ~ 0${year}.08.30)`);
+            //가을이다
             setNowSeason(`현재 계절 : ${year}년차 가을`);
+            setSeasonEventList(
+                props.eventList.filter((event) => event.eventType === 'FALL')
+            );
         } else if (month === 9) {
             setTimeDuration1(`${year}년차 가을 ~ ${year}년차 겨울`);
             setTimeDuration2(`(0${year}.09.01 ~ 0${year + 1}.02.30)`);
+            //봄이다
             setNowSeason(`현재 계절 : ${year + 1}년차 봄`);
+            setSeasonEventList(
+                props.eventList.filter((event) => event.eventType === 'SPRING')
+            );
         }
-    }, [props.turn]);
+    }, []);
 
     return (
         <>
@@ -189,36 +200,18 @@ export default function HalfPage1(props: Prop) {
                             style={{ scrollbarWidth: 'thin' }}
                         >
                             <div className="flex flex-shrink-0">
-                                <img
-                                    className="w-[6vw] h-[6vw] m-[1vw] aspect-square object-cover flex-shrink-0"
-                                    src={`/src/assets/images/title/title(${titleId}).png`}
-                                    onMouseOver={() => hoverEventImg(1)}
-                                    onMouseLeave={endHoverEvent}
-                                ></img>
-                                <img
-                                    className="w-[6vw] h-[6vw] m-[1vw] aspect-square object-cover flex-shrink-0"
-                                    src={`/src/assets/images/title/title(${titleId}).png`}
-                                    onMouseOver={() => hoverEventImg(2)}
-                                    onMouseLeave={endHoverEvent}
-                                ></img>
-                                <img
-                                    className="w-[6vw] h-[6vw] m-[1vw] aspect-square object-cover flex-shrink-0"
-                                    src={`/src/assets/images/title/title(${titleId}).png`}
-                                    onMouseOver={() => hoverEventImg(3)}
-                                    onMouseLeave={endHoverEvent}
-                                ></img>
-                                <img
-                                    className="w-[6vw] h-[6vw] m-[1vw] aspect-square object-cover flex-shrink-0"
-                                    src={`/src/assets/images/title/title(${titleId}).png`}
-                                    onMouseOver={() => hoverEventImg(4)}
-                                    onMouseLeave={endHoverEvent}
-                                ></img>
-                                <img
-                                    className="w-[6vw] h-[6vw] m-[1vw] aspect-square object-cover flex-shrink-0"
-                                    src={`/src/assets/images/title/title(${titleId}).png`}
-                                    onMouseOver={() => hoverEventImg(5)}
-                                    onMouseLeave={endHoverEvent}
-                                ></img>
+                                {seasonEventList.map((event) => {
+                                    return (
+                                        <img
+                                            className="w-[5vw] h-[6vw] m-[1vw] rounded aspect-square object-cover flex-shrink-0"
+                                            src={loadEventImg(event.eventName)}
+                                            onMouseOver={() =>
+                                                hoverEventImg(event)
+                                            }
+                                            onMouseLeave={endHoverEvent}
+                                        ></img>
+                                    );
+                                })}
                                 <div
                                     className="absolute w-full h-[10vw] top-[10vw] bg-black opacity-0 text-white -z-20"
                                     ref={eventDescRef}
