@@ -29,6 +29,7 @@ public class PrivateGameController {
     private final PrivateInfoService privateInfoService;
 
     private final SimpMessagingTemplate simpMessagingTemplate;
+    private final ServerInfo serverInfo;
 
     @MessageMapping("/private/{webSocketId}") // 클라이언트에서 보낸 메시지를 받을 메서드 지정
     @SendTo("/topic/private/{webSocketId}") // 메서드가 처리한 결과를 보낼 목적지 지정
@@ -65,14 +66,14 @@ public class PrivateGameController {
             // 상품 구매
             case BUY_PRODUCT: {
                 Integer messageTurn = (Integer) body.get("currentTurn");
-                if (messageTurn == ServerInfo.currentTurn) {
+                if (messageTurn == serverInfo.getCurrentTurn()) {
                     gameMessageInfo = privateInteractionService.buyProduct(body, userId);
                     responseBody = gameMessageInfo.getBody();
                     isSuccess = gameMessageInfo.getIsSuccess();
                 }
                 // 메세지가 온 시간과 서버 시간의 차이가 5초 이내면 메세지 처리
-                else if (messageTurn == ServerInfo.currentTurn - 1) {
-                    Duration duration = Duration.between(ServerInfo.turnStartTime, LocalDateTime.now());
+                else if (messageTurn == serverInfo.getCurrentTurn() - 1) {
+                    Duration duration = Duration.between(serverInfo.getTurnStartTime(), LocalDateTime.now());
                     if (duration.toSeconds() > 5)
                         break;
                     gameMessageInfo = privateInteractionService.buyProduct(body, userId);
@@ -84,14 +85,14 @@ public class PrivateGameController {
             // 상품 판매
             case SELL_PRODUCT: {
                 Integer messageTurn = (Integer) body.get("currentTurn");
-                if (messageTurn == ServerInfo.currentTurn) {
+                if (messageTurn == serverInfo.getCurrentTurn()) {
                     gameMessageInfo = privateInteractionService.sellProduct(body, userId);
                     responseBody = gameMessageInfo.getBody();
                     isSuccess = gameMessageInfo.getIsSuccess();
                 }
                 // 메세지가 온 시간과 서버 시간의 차이가 5초 이내면 메세지 처리
-                else if (messageTurn == ServerInfo.currentTurn - 1) {
-                    Duration duration = Duration.between(ServerInfo.turnStartTime, LocalDateTime.now());
+                else if (messageTurn == serverInfo.getCurrentTurn() - 1) {
+                    Duration duration = Duration.between(serverInfo.getTurnStartTime(), LocalDateTime.now());
                     if (duration.toSeconds() > 5)
                         break;
                     gameMessageInfo = privateInteractionService.sellProduct(body, userId);
