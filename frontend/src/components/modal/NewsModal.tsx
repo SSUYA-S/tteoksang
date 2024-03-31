@@ -6,7 +6,7 @@ type NewsType = {
     setNewsFlag: React.Dispatch<SetStateAction<boolean>>;
     newsPublishTurn: number;
     articleList: Article[];
-    newsReceived: (articleList: Article[]) => void;
+    newsReceived: (publishTurn: number, articleList: Article[]) => void;
 };
 export default function NewsModal(props: NewsType) {
     const closeNewsModal = () => {
@@ -67,11 +67,11 @@ export default function NewsModal(props: NewsType) {
                 <div className="relative w-[90%] h-[65%] flex ">
                     <div className="w-[60%] h-full">
                         {articleList.length > 0 ? (
-                            <div className="w-full h-[50%]  text-start text-[3.6vw]">
+                            <div className="w-full h-[50%]  text-start text-[3vw]">
                                 <p>{articleList[0].articleHeadline}</p>
                             </div>
                         ) : (
-                            <div className="w-full h-[50%]  text-start text-[3.6vw]">
+                            <div className="w-full h-[50%]  text-start text-[3vw]">
                                 <p>
                                     계속되는 지각 변동. 조만간 무슨 일이
                                     생길지도???
