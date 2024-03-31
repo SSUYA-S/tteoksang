@@ -85,7 +85,7 @@ public class PublicServiceImpl implements PublicService {
         serverInfo.setSeasonId(gameSeason);
 
         ServerInfo.currentTurn = 0;
-        ServerInfo.specialEventId = "6608eb8e64742aaefa827e92"; //이벤트 발생 안 함
+        ServerInfo.specialEventId = "6609200592d4dafc01f5684c"; //이벤트 발생 안 함
 
         ServerInfo.turnStartTime = LocalDateTime.now();
         serverSeasonInfoRepository.save(ServerSeasonInfo.builder().seasonId(gameSeason).startedAt(ServerInfo.turnStartTime).build());
