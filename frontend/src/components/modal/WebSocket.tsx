@@ -81,6 +81,10 @@ export default function WebSocket(props: Prop) {
                                                 info.buyAbleProductIdList
                                             )
                                         );
+                                        //더미데이터 수정할 것!!!
+                                        // dispatch(
+                                        //     buyableProductIdState([1, 2, 5, 6])
+                                        // );
                                         dispatch(
                                             specialEventState(
                                                 info.specialEventId

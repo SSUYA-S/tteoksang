@@ -3,11 +3,15 @@ import { SellInfo } from '../../type/types';
 interface SellCardProps {
     sellInfo: SellInfo;
     updateSellingList: (x: number, y: number, z: number) => void;
+    maximumAlert: () => void;
+    minimumAlert: () => void;
 }
 
 export default function TradeSellCard({
     sellInfo,
     updateSellingList,
+    maximumAlert,
+    minimumAlert,
 }: SellCardProps) {
     let myAvg = 0;
     if (sellInfo.myProduct.productQuantity !== 0) {
@@ -28,8 +32,12 @@ export default function TradeSellCard({
      */
     const changeProductNumber = (changingValue: number) => {
         let changedValue = productNumber + changingValue;
-        if (changedValue < 0) changedValue = 0;
+        if (changedValue < 0) {
+            minimumAlert();
+            changedValue = 0;
+        }
         if (changedValue > sellInfo.myProduct.productQuantity) {
+            maximumAlert();
             changedValue = sellInfo.myProduct.productQuantity;
         }
         const changedCost = changedValue * sellInfo.productInfo.productCost;
