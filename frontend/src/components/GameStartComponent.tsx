@@ -144,7 +144,7 @@ export default function GameStartComponent(props: startType) {
             console.log('ㅈㅈㄷㅈㄷ');
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker
-                    .register('/sw.js')
+                    .register('https://tteoksang.me/sw.js')
                     .then((registration) => {
                         console.log(
                             'Service worker registered successfully',
