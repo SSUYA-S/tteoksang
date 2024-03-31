@@ -24,16 +24,21 @@ public class Event {
     @Field(name = "eventContent")
     String eventContent;
 
+    @Field(name = "productId")
+    Integer productId;
     @Field(name = "eventVariance")
-    List<ProductVariance> eventVariance;
+    Double eventVariance;
+//    List<ProductVariance> eventVariance;
 
     @Field(name = "eventHeadline")
     String eventHeadline;
 
-    @Field(name = "privateEventType")
-    String privateEventType;//bonus(보유자금 관련), discount(업그레이드 관련), product(보유항목 관련)
-    @Field(name = "privateEventTarget")
-    String privateEventTarget;
-    @Field(name = "privateEventBonus")
-    Integer privateEventBonus;
+//    String productName;
+
+//    @Field(name = "privateEventType")
+//    String privateEventType;//bonus(보유자금 관련), discount(업그레이드 관련), product(보유항목 관련)
+//    @Field(name = "privateEventTarget")
+//    String privateEventTarget;
+//    @Field(name = "privateEventBonus")
+//    Integer privateEventBonus;
 }

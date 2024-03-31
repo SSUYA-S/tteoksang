@@ -14,6 +14,6 @@ public interface PublicService {
     void createEvent();
     void updateTurn();
     public void fluctuateProduct();
-    void updateFluctuationInfo();
+    void updateFluctuationInfoPer10Days();
     void sendPublicMessage(MessageType type, Object body);
 }

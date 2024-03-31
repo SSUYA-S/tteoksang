@@ -5,7 +5,8 @@ public enum RedisPrefix {
     REGIST("regist:"),
     CHANGE_EMAIL("changeEmail:"),
     RESET_PASSOWRD("resetPassword:"),
-    PRODUCT_INFO("productInfo"),
+    SERVER_INFO("serverInfo"),
+    SERVER_NEWS("serverNews"),
     USERINFO("userInfo:"),
     WEBSOCKET("webSocket:"),
     INGAMEINFO("inGameInfo:");
