@@ -41,7 +41,7 @@ import java.util.*;
 @Slf4j
 @Validated
 @RequiredArgsConstructor
-public class PublicServiceImpl implements PublicService {
+public class PublicServiceImpl implements PublicService, PrivateGetPublicService {
 
     private final ScheduleService scheduleService;
     private final RedisService redisService;
@@ -205,7 +205,7 @@ public class PublicServiceImpl implements PublicService {
             log.debug("news!!");
             createNewspaper();
         });
-        scheduleService.register("TEST","0 * * * * *",()->{
+        scheduleService.register("TEST", "0 * * * * *", () -> {
             checkLongPlayTime();
         });
     }
@@ -344,8 +344,8 @@ public class PublicServiceImpl implements PublicService {
             FluctationInfo fluctationInfo = fluctationInfoMap.get(productId);
             //random값 생성
             double value = random.nextDouble(fluctationInfo.getMinFluctuationRate(), fluctationInfo.getMaxFluctuationRate() + 0.001);
-            //fluctuation k배하여 반영 + 이벤트 변동폭 반영
-            int newCost = (int) (fluctationInfo.getProductAvgCost() * value * K * (1 + fluctationInfo.getEventEffect() / 100));
+            //fluctuation k배하여 반영 + 이벤트 변동폭 반영 : *이전가격*으로부터 변동
+            int newCost = (int) (productInfo.getProductCost() * value * K * (1 + fluctationInfo.getEventEffect() / 100));
 
 //            productInfo.setProductFluctuation(newCost - productInfo.getProductCost());
 //            productInfo.setProductCost(newCost);
@@ -389,19 +389,19 @@ public class PublicServiceImpl implements PublicService {
         );
     }
 
-//    @Scheduled(cron = "0 0  * * * *")
-    @Scheduled(cron = "0 *  * * * *")
+    //    @Scheduled(cron = "0 0  * * * *")
+    @Scheduled(cron = "0 * * * * *")
     public void checkLongPlayTime() {
         LocalDateTime currentTime = LocalDateTime.now();
         privateScheduleService.getUserAlertPlayTimeMap().entrySet().stream().forEach(
                 entry -> {
 //                    log.debug(PLAY_LONG_TIME+"..checking user..."+entry.getKey()+" and... "+Duration.between(entry.getValue().getChecked(),currentTime).toMinutes());
-                    if (Duration.between(entry.getValue().getChecked(),currentTime).toMinutes() >= PLAY_LONG_TIME) {
+                    if (Duration.between(entry.getValue().getChecked(), currentTime).toMinutes() >= PLAY_LONG_TIME) {
 //                    if (Duration.between(entry.getValue().getChecked(),currentTime).toHours() >= PLAY_LONG_TIME) {
 //                        log.debug("let's goooooo");
-                        String userId=entry.getKey();
-                        sendPrivateMessage(userId,MessageType.ALERT_PLAYTIME, PlayTimeInfo.builder()
-                                .playTime(PLAY_LONG_TIME*entry.getValue().getAlertCount())
+                        String userId = entry.getKey();
+                        sendPrivateMessage(userId, MessageType.ALERT_PLAYTIME, PlayTimeInfo.builder()
+                                .playTime(PLAY_LONG_TIME * entry.getValue().getAlertCount())
                                 .build());
                         privateScheduleService.updateUserAlertPlayTimeMap(userId);
 
@@ -411,8 +411,9 @@ public class PublicServiceImpl implements PublicService {
     }
 
     public void sendPrivateMessage(String userId, MessageType type, Object body) {
-        log.debug("sendPrivateMessage.."+userId+" "+type);
-        if(!redisService.hasKey(RedisPrefix.WEBSOCKET.prefix()+userId)) throw new AccessToInvalidWebSocketIdException();
+        log.debug("sendPrivateMessage.." + userId + " " + type);
+        if (!redisService.hasKey(RedisPrefix.WEBSOCKET.prefix() + userId))
+            throw new AccessToInvalidWebSocketIdException();
         String webSocketId = (String) redisService.getValues(RedisPrefix.WEBSOCKET.prefix() + userId);
         sendingOperations.convertAndSend("topic/private/" + webSocketId, GameMessageRes.builder()
                 .type(type)
@@ -436,6 +437,17 @@ public class PublicServiceImpl implements PublicService {
 
 
     public NewsInfo searchNewspaper() {
+        if (!redisService.hasKey(RedisPrefix.SERVER_NEWS.prefix())) {
+            List<Article> articles = new ArrayList<>();
+            articles.add(Article.builder().articleHeadline("[단독] 신문을 통해 곧 발생할 이벤트에 대한 정보를 얻을 수 있다 전해..").build());
+            articles.add(Article.builder().articleHeadline("합숙하며 플젝하는 팀이 있다? '충격 실화' 또는 '만우절 거짓말' 대중 의견 분분..").build());
+            articles.add(Article.builder().articleHeadline("오늘의 노래 추천: 첫만남은 계획대로 되지 않아").build());
+            articles.add(Article.builder().articleHeadline("떡상 화이화이팅ㅠ").build());
+            return NewsInfo.builder()
+                    .publishTurn(0)
+                    .articleList(articles)
+                    .build();
+        }
         return (NewsInfo) redisService.getValues(RedisPrefix.SERVER_NEWS.prefix());
     }
 
