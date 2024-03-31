@@ -1,14 +1,12 @@
 package com.welcome.tteoksang.game.service;
 
 import com.welcome.tteoksang.game.dto.*;
+import com.welcome.tteoksang.game.dto.event.PrivateEventInfo;
+import com.welcome.tteoksang.game.dto.user.*;
 import com.welcome.tteoksang.game.scheduler.ServerInfo;
 import com.welcome.tteoksang.redis.RedisPrefix;
 import com.welcome.tteoksang.redis.RedisService;
-import com.welcome.tteoksang.resource.repository.BrokerRepository;
-import com.welcome.tteoksang.resource.repository.VehicleRepository;
-import com.welcome.tteoksang.resource.repository.WarehouseRepository;
 import com.welcome.tteoksang.user.dto.UserInfo;
-import com.welcome.tteoksang.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,6 +24,7 @@ import java.util.Map;
 public class PrivateInfoServiceImpl implements PrivateInfoService {
 
     private final RedisService redisService;
+    private final ServerInfo serverInfo;
 
     @Override
     public GameMessageInfo getTotalInfo(LinkedHashMap<String, Object> body, String userId, String webSocketId){
@@ -42,8 +41,8 @@ public class PrivateInfoServiceImpl implements PrivateInfoService {
                     .privateEventId(redisGameInfo.getPrivateEventId())
                     .specialEventId("없음")   // 서버의 특수 이벤트
                     .inGameTime(LocalDateTime.now().toString())
-                    .turnStartTime(ServerInfo.turnStartTime.toString())    // 턴 시작 시간 => 서버에서 가져옴
-                    .turn(ServerInfo.currentTurn)    // 서버의 턴 정보
+                    .turnStartTime(serverInfo.getTurnStartTime().toString())    // 턴 시작 시간 => 서버에서 가져옴
+                    .turn(serverInfo.getCurrentTurn())    // 서버의 턴 정보
                     .themeId(userInfo.getThemeId())
                     .products(redisGameInfo.getProducts())
                     .productInfoList(new ArrayList<>())
@@ -153,8 +152,8 @@ public class PrivateInfoServiceImpl implements PrivateInfoService {
         if (redisGameInfo != null) {
             responseBody = UserInGameTimeInfo.builder()
                     .inGameTime(LocalDateTime.now().toString())
-                    .turnStartTime(ServerInfo.turnStartTime.toString())
-                    .turn(ServerInfo.currentTurn)
+                    .turnStartTime(serverInfo.getTurnStartTime().toString())
+                    .turn(serverInfo.getCurrentTurn())
                     .build();
             isSuccess = true;
         } else {
