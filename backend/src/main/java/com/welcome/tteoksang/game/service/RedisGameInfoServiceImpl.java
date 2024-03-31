@@ -24,7 +24,7 @@ public class RedisGameInfoServiceImpl implements RedisGameInfoService {
         // 레디스에서 게임 정보 가져오기
         String gameInfoKey = RedisPrefix.INGAMEINFO.prefix() + userId;
         if (redisService.hasKey(gameInfoKey)) {
-            log.debug("이어하기를 위한 게임 데이터 저장");
+            log.debug("[RedisGameInfoServiceImpl] - saveRedisGameInfo: 이어하기를 위한 게임 데이터 저장");
             RedisGameInfo redisGameInfo = (RedisGameInfo) redisService.getValues(gameInfoKey);
 
             if (redisGameInfo != null) {
@@ -49,7 +49,7 @@ public class RedisGameInfoServiceImpl implements RedisGameInfoService {
 
                 // 레디스에 있는 게임 정보를 데이터베이스에 저장
                 gameInfoService.updateGameInfo(gameInfo);
-                log.debug("DB에 게임 정보 저장");
+                log.debug("[RedisGameInfoServiceImpl] - saveRedisGameInfo: DB에 게임 정보 저장");
 
                 // 레디스에서 게임 정보 삭제
                 redisService.deleteValues(gameInfoKey);
