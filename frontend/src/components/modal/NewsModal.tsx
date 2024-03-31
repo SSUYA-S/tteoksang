@@ -6,7 +6,7 @@ type NewsType = {
     setNewsFlag: React.Dispatch<SetStateAction<boolean>>;
     newsPublishTurn: number;
     articleList: Article[];
-    newsReceived: (turn: number, articleList: Article[]) => void;
+    newsReceived: (articleList: Article[]) => void;
 };
 export default function NewsModal(props: NewsType) {
     const closeNewsModal = () => {
