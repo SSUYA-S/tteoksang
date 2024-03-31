@@ -53,17 +53,14 @@ export default function TradeModal(props: tradeType) {
     useEffect(() => {
         maximumBuyableAmount.current = Math.min(
             props.infraInfo.warehouseInfoList[myProductInfo.warehouseLevel - 1]
-                .warehouseCapacity,
+                .warehouseCapacity - nowStock,
             props.infraInfo.vehicleInfoList[myProductInfo.vehicleLevel - 1]
-                .vehicleCapacity
+                .vehicleCapacity - myProductInfo.purchasedQuantity
         );
-        maximumBuyableAmount.current -= myProductInfo.purchasedQuantity;
     }, [
         myProductInfo.purchasedQuantity,
         myProductInfo.warehouseLevel,
         myProductInfo.vehicleLevel,
-        props.infraInfo.warehouseInfoList,
-        props.infraInfo.vehicleInfoList,
     ]);
     //구매 가능 검증용 변수, 창고에 있는 재고 불러와 계산하는 로직 추가
 
@@ -220,6 +217,7 @@ export default function TradeModal(props: tradeType) {
         });
         //구매 가능 수량 초과
         // console.log(maximumBuyableAmount.current);
+        console.log(newList);
         if (
             totalBuyNum > maximumBuyableAmount.current ||
             totalBuyCost > props.nowMoney
@@ -249,7 +247,8 @@ export default function TradeModal(props: tradeType) {
         const productInfo = productInfoAndEvent.productInfoList[id];
 
         //일단 남은 최대 구매 가능량 기준으로 계산
-        let maxAddValue = maximumBuyableAmount.current - totalNumber - nowValue;
+        let maxAddValue =
+            maximumBuyableAmount.current - (totalNumber - nowStock);
         //품목당 구매 가능 최대량을 초과하는가?
         if (maxAddValue + nowValue > productInfo.productMaxQuantity) {
             maxAddValue = productInfo.productMaxQuantity - nowValue;
@@ -552,73 +551,80 @@ export default function TradeModal(props: tradeType) {
                         </div>
                         <div className="flex flex-col w-[94%] h-[70%] m-[0.2vw] flex-wrap overflow-auto bg-white rounded-[1vw] border-[0.3vw] color-border-subbold p-[0.4vw]">
                             <table className="relative w-[100%] h-[100%] text-[1.4vw] table-auto">
-                                <tr className="relative border-b-[0.2vw] color-border-subbold">
-                                    <th>작물</th>
-                                    <th>품목</th>
-                                    <th>개당가격</th>
-                                    <th>보유개수</th>
-                                    <th>등락폭</th>
-                                </tr>
-                                {productInfoAndEvent.productInfoList.map(
-                                    (product) => {
-                                        if (product.productId !== 0) {
-                                            return (
-                                                <tr
-                                                    className="relative border-y-[0.2vw] border-black"
-                                                    key={product.productId}
-                                                >
-                                                    <div
-                                                        className={
-                                                            'w-fit h-[60%] bg-no-repeat mx-auto sprite-img-crop ' +
-                                                            `crop-img-${product.productId}`
-                                                        }
-                                                        style={{
-                                                            aspectRatio: 1 / 1,
-                                                        }}
-                                                    ></div>
-                                                    <td className="py-[1vw]">
-                                                        {
-                                                            props
-                                                                .productResource[
-                                                                product
-                                                                    .productId
-                                                            ].productName
-                                                        }
-                                                    </td>
-                                                    <td>
-                                                        {product.productCost}
-                                                    </td>
-                                                    <td>
-                                                        {getNumber(
-                                                            product.productId
-                                                        )}
-                                                    </td>
-                                                    <td>
-                                                        {product.productFluctuation >
-                                                        0 ? (
-                                                            <p className="color-text-blue3">
-                                                                {'+' +
-                                                                    product.productFluctuation +
-                                                                    'G'}
-                                                            </p>
-                                                        ) : product.productFluctuation ===
-                                                          0 ? (
-                                                            <p className="color-text-green1">
-                                                                {product.productFluctuation +
-                                                                    'G'}
-                                                            </p>
-                                                        ) : (
-                                                            <p className="color-text-red1">
-                                                                {product.productFluctuation +
-                                                                    'G'}
-                                                            </p>
-                                                        )}
-                                                    </td>
-                                                </tr>
-                                            );
+                                <thead>
+                                    <tr className="relative border-b-[0.2vw] color-border-subbold">
+                                        <th>작물</th>
+                                        <th>품목</th>
+                                        <th>개당가격</th>
+                                        <th>보유개수</th>
+                                        <th>등락폭</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {productInfoAndEvent.productInfoList.map(
+                                        (product) => {
+                                            if (product.productId !== 0) {
+                                                return (
+                                                    <tr
+                                                        className="relative border-y-[0.2vw] border-black"
+                                                        key={product.productId}
+                                                    >
+                                                        <div
+                                                            className={
+                                                                'w-fit h-[60%] bg-no-repeat mx-auto sprite-img-crop ' +
+                                                                `crop-img-${product.productId}`
+                                                            }
+                                                            style={{
+                                                                aspectRatio:
+                                                                    1 / 1,
+                                                            }}
+                                                        ></div>
+                                                        <td className="py-[1vw]">
+                                                            {
+                                                                props
+                                                                    .productResource[
+                                                                    product
+                                                                        .productId
+                                                                ].productName
+                                                            }
+                                                        </td>
+                                                        <td>
+                                                            {
+                                                                product.productCost
+                                                            }
+                                                        </td>
+                                                        <td>
+                                                            {getNumber(
+                                                                product.productId
+                                                            )}
+                                                        </td>
+                                                        <td>
+                                                            {product.productFluctuation >
+                                                            0 ? (
+                                                                <p className="color-text-blue3">
+                                                                    {'+' +
+                                                                        product.productFluctuation +
+                                                                        'G'}
+                                                                </p>
+                                                            ) : product.productFluctuation ===
+                                                              0 ? (
+                                                                <p className="color-text-green1">
+                                                                    {product.productFluctuation +
+                                                                        'G'}
+                                                                </p>
+                                                            ) : (
+                                                                <p className="color-text-red1">
+                                                                    {product.productFluctuation +
+                                                                        'G'}
+                                                                </p>
+                                                            )}
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            }
                                         }
-                                    }
-                                )}
+                                    )}
+                                </tbody>
                             </table>
                         </div>
                     </div>

@@ -35,6 +35,7 @@ import HalfReportModal from './modal/HalfReportModal';
 import OffReportModal from './modal/OffReportModal';
 import {
     privateEventState,
+    productInfoState,
     specialEventState,
 } from '../util/product-and-event';
 import specialeventJson from '../dummy-data/special-event.json';
@@ -468,9 +469,11 @@ export default function GameComponent(props: GameType) {
     };
 
     /**뉴스 수신 시 뉴스 정보 설정 함수 */
-    const newsReceived = (articleList: Article[]) => {
+    const newsReceived = (publishTurn: number, articleList: Article[]) => {
         setNewsFlag(true);
-        setNewsPublishTurn(ingameTurn);
+        console.log(publishTurn);
+        console.log(articleList);
+        setNewsPublishTurn(publishTurn);
         setNewsArticleList(articleList);
     };
     /** 현재 이벤트를 보여주기 위한 btn  */

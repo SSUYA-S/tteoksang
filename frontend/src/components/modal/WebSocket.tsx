@@ -38,7 +38,7 @@ interface Prop {
     setTurnStartTime: React.Dispatch<React.SetStateAction<string>>;
     client: Client;
     webSocketId: string;
-    newsReceived: (articleList: Article[]) => void;
+    newsReceived: (publishTurn: number, articleList: Article[]) => void;
     setStartFlag: React.Dispatch<React.SetStateAction<boolean>>;
     reportReceived: (
         type: string,
@@ -110,7 +110,10 @@ export default function WebSocket(props: Prop) {
                                         const newspaper = msg.body;
                                         //뉴스 수신시 로직 수정
                                         if (newspaper) {
-                                            props.newsReceived(newspaper);
+                                            props.newsReceived(
+                                                newspaper.publishTurn,
+                                                newspaper.articleList
+                                            );
                                         }
                                     } else {
                                         console.log(`ERROR ON ${msg.type}`);
@@ -289,6 +292,8 @@ export default function WebSocket(props: Prop) {
                                     //게임 초기 현재 상태 조회
                                     if (msg.isSuccess) {
                                         const res = msg.body;
+                                        // console.log('getTotal : ');
+                                        // console.log(res);
                                         dispatch(goldState(res.gold));
                                         dispatch(
                                             privateEventState(
@@ -316,7 +321,7 @@ export default function WebSocket(props: Prop) {
                                         );
                                         dispatch(
                                             buyableProductIdState(
-                                                res.buyAbleProductIdList
+                                                res.buyableProductList
                                             )
                                         );
                                         dispatch(
@@ -351,7 +356,10 @@ export default function WebSocket(props: Prop) {
                                         const newspaper = msg.body;
                                         //뉴스 수신시 로직 수정
                                         if (newspaper) {
-                                            props.newsReceived(newspaper);
+                                            props.newsReceived(
+                                                newspaper.publishTurn,
+                                                newspaper.articleList
+                                            );
                                         }
                                     } else {
                                         console.log(`ERROR ON ${msg.type}`);
