@@ -1,8 +1,7 @@
-package com.welcome.tteoksang.game.dto;
+package com.welcome.tteoksang.game.dto.user;
 
 import lombok.*;
 
-import java.util.List;
 import java.util.Map;
 
 @Getter
