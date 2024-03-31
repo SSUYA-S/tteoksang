@@ -8,6 +8,8 @@ import com.welcome.tteoksang.game.dto.event.PublicEventInfo;
 import com.welcome.tteoksang.game.dto.server.FluctationInfo;
 import com.welcome.tteoksang.game.dto.server.ServerProductInfo;
 import com.welcome.tteoksang.game.dto.server.ServerSeasonInfo;
+import com.welcome.tteoksang.game.dto.user.PlayTimeInfo;
+import com.welcome.tteoksang.game.exception.AccessToInvalidWebSocketIdException;
 import com.welcome.tteoksang.game.exception.CurrentTurnNotInNormalRangeException;
 import com.welcome.tteoksang.game.exception.EventNotFoundException;
 import com.welcome.tteoksang.game.exception.ProductFluctuationNotFoundException;
@@ -26,10 +28,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.*;
 
 @Service
@@ -40,7 +45,7 @@ public class PublicServiceImpl implements PublicService {
 
     private final ScheduleService scheduleService;
     private final RedisService redisService;
-//    private final PrivateScheduleService privateScheduleService;
+    private final PrivateScheduleService privateScheduleService;
 
     private final ProductRepository productRepository;
     private final ProductFluctuationRepository productFluctuationRepository;
@@ -79,6 +84,8 @@ public class PublicServiceImpl implements PublicService {
     //게임 내 필요 상수 정의
     private int NEWS_NUM = 4;
     private int BUYABLE_PRODUCT_NUM = 6;
+
+    private final int PLAY_LONG_TIME = 2; //3시간
 
     private boolean loadServerInfo() {
 //        if(redisService.hasKey(RedisPrefix.SERVER_INFO.prefix())){
@@ -197,6 +204,9 @@ public class PublicServiceImpl implements PublicService {
         scheduleService.register(NEWSPAPER, newsTime, eventPeriod, () -> {
             log.debug("news!!");
             createNewspaper();
+        });
+        scheduleService.register("TEST","0 * * * * *",()->{
+            checkLongPlayTime();
         });
     }
 
@@ -317,7 +327,7 @@ public class PublicServiceImpl implements PublicService {
             updateQuarterYearList();
             log.debug("==================event 변경==================");
         }
-//        privateScheduleService.initPurchaseQuantityForAllUsers();
+        privateScheduleService.initGameInfoForAllUsersPerTurn();
         redisService.setValues(RedisPrefix.SERVER_INFO.prefix(), serverInfo);
     }
 
@@ -377,6 +387,38 @@ public class PublicServiceImpl implements PublicService {
                     }
                 }
         );
+    }
+
+//    @Scheduled(cron = "0 0  * * * *")
+    @Scheduled(cron = "0 *  * * * *")
+    public void checkLongPlayTime() {
+        LocalDateTime currentTime = LocalDateTime.now();
+        privateScheduleService.getUserAlertPlayTimeMap().entrySet().stream().forEach(
+                entry -> {
+//                    log.debug(PLAY_LONG_TIME+"..checking user..."+entry.getKey()+" and... "+Duration.between(entry.getValue().getChecked(),currentTime).toMinutes());
+                    if (Duration.between(entry.getValue().getChecked(),currentTime).toMinutes() >= PLAY_LONG_TIME) {
+//                    if (Duration.between(entry.getValue().getChecked(),currentTime).toHours() >= PLAY_LONG_TIME) {
+//                        log.debug("let's goooooo");
+                        String userId=entry.getKey();
+                        sendPrivateMessage(userId,MessageType.ALERT_PLAYTIME, PlayTimeInfo.builder()
+                                .playTime(PLAY_LONG_TIME*entry.getValue().getAlertCount())
+                                .build());
+                        privateScheduleService.updateUserAlertPlayTimeMap(userId);
+
+                    }
+                }
+        );
+    }
+
+    public void sendPrivateMessage(String userId, MessageType type, Object body) {
+        log.debug("sendPrivateMessage.."+userId+" "+type);
+        if(!redisService.hasKey(RedisPrefix.WEBSOCKET.prefix()+userId)) throw new AccessToInvalidWebSocketIdException();
+        String webSocketId = (String) redisService.getValues(RedisPrefix.WEBSOCKET.prefix() + userId);
+        sendingOperations.convertAndSend("topic/private/" + webSocketId, GameMessageRes.builder()
+                .type(type)
+                .isSuccess(true)
+                .body(body)
+                .build());
     }
 
     // /public에 메세지 발행

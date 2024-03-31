@@ -2,6 +2,7 @@ package com.welcome.tteoksang.socket.interceptor;
 
 import com.welcome.tteoksang.auth.exception.TokenInvalidException;
 import com.welcome.tteoksang.auth.jwt.JWTUtil;
+import com.welcome.tteoksang.game.service.PrivateScheduleService;
 import com.welcome.tteoksang.game.service.RedisGameInfoService;
 import com.welcome.tteoksang.redis.RedisPrefix;
 import com.welcome.tteoksang.redis.RedisService;
@@ -37,7 +38,7 @@ public class InGameChannelInterceptor implements ChannelInterceptor {
     private final RedisService redisService;
     private final RedisGameInfoService redisGameInfoService;
     private final GameInfoService gameInfoService;
-
+    private final PrivateScheduleService privateScheduleService;
     private final Set<String> subscribedTopics = new HashSet<>();
 
     /**
@@ -162,6 +163,7 @@ public class InGameChannelInterceptor implements ChannelInterceptor {
 
         // 구독 정보 지우기
         subscribedTopics.clear();
+        privateScheduleService.removeConnectedUser(userId);
 
         String destination = accessor.getDestination();
         log.debug("[InGameChannelInterceptor] - DISCONNECT, 현재 구독 중인 개인 토픽 : {}", accessor.getDestination());
@@ -204,6 +206,7 @@ public class InGameChannelInterceptor implements ChannelInterceptor {
             }
             // 구독 상태 갱신
             subscribedTopics.add(webSocketId);
+            privateScheduleService.registerConnectedUser(userId);
         }
     }
 }
