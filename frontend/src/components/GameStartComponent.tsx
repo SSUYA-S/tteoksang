@@ -78,7 +78,12 @@ export default function GameStartComponent(props: startType) {
         };
     }, [audio]);
 
-    const toggle = () => setPlaying(bgmSetting);
+    const toggle = () => {
+        if (playing) setPlaying(false);
+        else {
+            setPlaying(true);
+        }
+    };
 
     const onClickLogin = () => {
         //로그인 표시
@@ -245,7 +250,7 @@ export default function GameStartComponent(props: startType) {
                 backgroundRepeat: 'no-repeat',
             }}
         >
-            <div className="absolute w-[10%] h-[40%] flex flex-col justify-center items-center top-[4%] right-[0%]">
+            <div className="absolute w-[10%] h-[40%] flex flex-col justify-center items-center top-[4%] right-[0%] z-20">
                 <div
                     className="w-[50%] h-[30%] cursor-pointer z-10"
                     style={{
@@ -268,21 +273,35 @@ export default function GameStartComponent(props: startType) {
                     }}
                 />
                 <div className="h-[5%]" />
-                <div
-                    className="w-[50%] h-[30%] cursor-pointer z-10"
-                    style={{
-                        backgroundImage:
-                            'url(/src/assets/images/icon/ui-icon-mypage.png)',
-                        backgroundSize: 'contain ',
-                        backgroundPosition: 'center',
-                        backgroundRepeat: 'no-repeat',
-                    }}
-                    onClick={() => {
-                        toggle();
-                    }}
-                >
-                    {playing ? 'Pause' : 'Play'}
-                </div>
+                {playing ? (
+                    <div
+                        className="w-[50%] h-[30%] cursor-pointer"
+                        style={{
+                            backgroundImage:
+                                'url(/src/assets/images/icon/ui-icon-volumeon.png)',
+                            backgroundSize: 'contain ',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat',
+                        }}
+                        onClick={() => {
+                            toggle();
+                        }}
+                    ></div>
+                ) : (
+                    <div
+                        className="w-[50%] h-[30%] cursor-pointer"
+                        style={{
+                            backgroundImage:
+                                'url(/src/assets/images/icon/ui-icon-volumeoff.png)',
+                            backgroundSize: 'contain ',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat',
+                        }}
+                        onClick={() => {
+                            toggle();
+                        }}
+                    ></div>
+                )}
             </div>
             <div className="relative w-full h-[80%] flex flex-col justify-center items-center z-10">
                 <div
