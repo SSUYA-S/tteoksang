@@ -45,14 +45,15 @@ public class Main {
 
                 Long productId;
                 ProductInfo productInfo;
+                Long productCost;
 
                 switch (logType) {
-                    case "BUY": // 구매의 경우
+                    case "BUY": // 구매
                         productId = Long.parseLong(bodyMap.get("productId").toString());
                         Long purchasedQuantity = Long.parseLong(bodyMap.get("purchasedQuantity").toString());
                         Long productOutcome = Long.parseLong(bodyMap.get("productOutcome").toString());
                         Long productQuantity = Long.parseLong(bodyMap.get("productQuantity").toString());
-                        Long productCost = Long.parseLong(bodyMap.get("productCost").toString());
+                        productCost = Long.parseLong(bodyMap.get("productCost").toString());
                         // ProductInfo가 있을 경우 먼저 추가 후 statistics 추가
                         productInfo = new ProductInfo();
                         productInfo.setAccPrivateProductPurchaseQuantity(purchasedQuantity);
@@ -64,16 +65,34 @@ public class Main {
                         // Statistics에 productInfo 추가
                         statistics.getProductInfoMap().put(productId, productInfo);
                         break;
-                    case "SELL":
+                    case "SELL":    // 판매
                         productId = Long.parseLong(bodyMap.get("productId").toString());
                         Long productIncome = Long.parseLong(bodyMap.get("productIncome").toString());
                         Long soldQuantity = Long.parseLong(bodyMap.get("soldQuantity").toString());
-                        Long borkerFee = Long.parseLong(bodyMap.get("brokerFee").toString());
+                        Long brokerFee = Long.parseLong(bodyMap.get("brokerFee").toString());
                         Long productProfit = Long.parseLong(bodyMap.get("productProfit").toString());
-                        Long productcost = Long.parseLong(bodyMap.get("productCost").toString());
+                        productCost = Long.parseLong(bodyMap.get("productCost").toString());
                         // ProductInfo가 있을 경우 먼저 추가 후 statistics 추가
                         productInfo = new ProductInfo();
+                        productInfo.setAccPrivateProductSalesQuantity(soldQuantity);
+                        productInfo.setMaxPrivateProductSalesQuantity(soldQuantity);
                         productInfo.setAccPrivateProductIncome(productIncome);
+                        productInfo.setAccPrivateProductProfit(productProfit);
+                        productInfo.setMaxPrivateProductProfit(productProfit);
+                        productInfo.setMaxPrivateProductSalesCost(productCost);
+                        productInfo.setMinPrivateProductSalesCost(productCost);
+                        productInfo.setAccPrivateBrokerFee(brokerFee);
+                        // Statistics에 productInfo 추가
+                        statistics.setMaxPrivateProductIncome(productIncome);
+                        statistics.getProductInfoMap().put(productId, productInfo);
+                        break;
+                    case "RENT_FEE":    // 임대료
+                        Long rentFee = Long.parseLong(bodyMap.get("rentFee").toString());
+                        statistics.setAccPrivateRentFee(rentFee);
+                        break;
+                    case "UPGRADE": // 업그레이드
+                        Long upgradeFee = Long.parseLong(bodyMap.get("upgradeFee").toString());
+                        statistics.set
 
                 }
 
@@ -97,7 +116,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Map<Long, Statistics> statisticsMap = new HashMap<>();
+//        Map<Long, Statistics> statisticsMap = new HashMap<>();
         System.out.println("Hello world!");
         String val = "{\n" +
                 "    \"type\": \"BUY\",\n" +
@@ -109,7 +128,7 @@ public class Main {
                 "        \"purchasedQuantity\": 12,\n" +
                 "        \"productOutcome\": 123,\n" +
                 "        \"productQuantity\": 11,\n" +
-                "        \"productCost\": 130\n" +
+                "        \"rentFee\": 130\n" +
                 "    }\n" +
                 "}";
         //System.out.println(val);
@@ -128,19 +147,19 @@ public class Main {
             Statistics statistics = new Statistics();
             Long productId = Long.parseLong(bodyMap.get("productId").toString());
             ProductInfo productInfo = new ProductInfo();
-            statistics.getProductInfoMap().put(productId, productInfo);
+//            statistics.getProductInfoMap().put(productId, productInfo);
             int gameId = Integer.parseInt(bodyMap.get("gameId").toString());
             System.out.println("밑에가 json형식으로 나와야 하는데 말이지요?");
-
+            Long rentFee = Long.parseLong(bodyMap.get("rentFee").toString());
+            statistics.setAccPrivateRentFee(rentFee);
 //            Statistics statistics = new Statistics();
-            statistics.setAccPrivateRentFee(100000L);
 //            String outputValue = mapper.writeValueAsString(statistics);
 //            System.out.println(outputValue);
 
 //            ProductInfo productInfo = new ProductInfo();
-            productInfo.setAccPrivateBrokerFee(19204L);
+            //productInfo.setAccPrivateBrokerFee(19204L);
             // Statistics 객체에 ProductInfo를 추가
-            statistics.getProductInfoMap().put(productId, productInfo);
+            //statistics.getProductInfoMap().put(productId, productInfo);
             String outputValue = mapper.writeValueAsString(statistics);
             System.out.println(outputValue);
             switch (logType){

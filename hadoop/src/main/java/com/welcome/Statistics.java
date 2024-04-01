@@ -10,12 +10,14 @@ import java.util.Map;
 
 @Getter
 @Setter
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_DEFAULT)
 @JsonIgnoreProperties(ignoreUnknown = true)
 //@JsonInclude(JsonInclude.Include.ALWAYS)
 public class Statistics {
     // 개인통계량 및 이벤트
     private Long accPrivateRentFee; // 누적 임대료
+    // 개인별 전체 누적 업그레이드 비용
+    private Long accPrivateEventBonus;  // 개인별 누적 이벤트 보너스
     private Long maxPrivateProductIncome;  // 하나의 판매 단위에서 최대 판매 비용
     private int accPrivatePlayTime; // 누적 플레이 시간
     private int accPrivateOnlineTimeSlotCount;  // 시간대별 접속 횟수
