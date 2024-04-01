@@ -47,7 +47,7 @@ spring:
       port: 27017
       user: ${MONGO_DB_ROOT_USER_NAME}
       password: ${MONGO_DB_ROOT_USER_PASSWORD}
-      uri: mongodb://${MONGO_DB_ROOT_USER_NAME}:${MONGO_DB_ROOT_USER_PASSWORD}@${HOST_NAME}:27017/${DB_NAME}?authSource=admin
+      uri: mongodb://${MONGO_DB_ROOT_USER_NAME}:${MONGO_DB_ROOT_USER_PASSWORD}@${MONGO_HOST}:27017/${DB_NAME}?authSource=admin
   servlet:
     multipart:
       max-file-size: 100MB
