@@ -9,6 +9,7 @@ import com.welcome.tteoksang.user.service.GameInfoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -20,6 +21,7 @@ public class RedisGameInfoServiceImpl implements RedisGameInfoService {
     private final RedisService redisService;
     private final GameInfoService gameInfoService;
 
+    @Transactional
     public void saveRedisGameInfo(String userId) {
         // 레디스에서 게임 정보 가져오기
         String gameInfoKey = RedisPrefix.INGAMEINFO.prefix() + userId;
