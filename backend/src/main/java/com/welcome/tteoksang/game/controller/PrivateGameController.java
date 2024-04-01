@@ -4,6 +4,7 @@ import com.welcome.tteoksang.game.dto.*;
 import com.welcome.tteoksang.game.dto.req.GameMessageReq;
 import com.welcome.tteoksang.game.dto.res.GameMessageRes;
 import com.welcome.tteoksang.game.scheduler.ServerInfo;
+import com.welcome.tteoksang.game.service.PrivateGetPublicService;
 import com.welcome.tteoksang.game.service.PrivateInfoService;
 import com.welcome.tteoksang.game.service.PrivateInteractionService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class PrivateGameController {
 
     private final PrivateInteractionService privateInteractionService;
     private final PrivateInfoService privateInfoService;
+    private final PrivateGetPublicService privateGetPublicService;
 
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final ServerInfo serverInfo;
@@ -198,7 +200,10 @@ public class PrivateGameController {
                 );
                 return null;
             }
-
+            case GET_NEWSPAPER:{
+                isSuccess=true;
+                responseBody=privateGetPublicService.searchNewspaper();
+            }
             // 정의되지 않은 요청
             default: {
                 break;
