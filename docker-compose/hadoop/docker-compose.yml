@@ -1,0 +1,60 @@
+version: '3.7'
+
+services:
+  spark:
+    image: bitnami/spark:3.4.2
+    container_name: master
+    environment:
+      - SPARK_MODE=master
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+      - SPARK_USER=spark
+    ports:
+      - '8081:8080'
+    volumes:
+      - /home/ubuntu/tmp:/var/tmp
+
+  spark-worker-1:
+    image: bitnami/spark:3.4.2
+    container_name: worker-1
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark:7077
+      - SPARK_WORKER_MEMORY=1G
+      - SPARK_WORKER_CORES=1
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+      - SPARK_USER=spark
+  spark-worker-2:
+    image: bitnami/spark:3.4.2
+    container_name: worker-2
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark:7077
+      - SPARK_WORKER_MEMORY=1G
+      - SPARK_WORKER_CORES=1
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+      - SPARK_USER=spark
+  hadoop:
+    image: ssuyas/spark-base
+    container_name: hadoop
+    expose:
+      - "9000"
+      - "8032"
+      - "8088"
+      - "8042"
+      - "8020"
+      - "50090"
+      - "50010"
+      - "50020"
+      - "50075"
+      - "19888"
+    ports:
+      - "9870:9870"
