@@ -90,12 +90,13 @@ export interface ProductList {
     productList: Product[];
 }
 export interface Event {
-    eventId: number;
+    eventId: string;
+    eventContent: string;
+    eventHeadline: string;
     eventName: string;
+    eventVariance: number;
     eventType: string;
-    eventDescription: string;
-    eventEffectValue: number;
-    eventUnit: string;
+    productId: number;
 }
 export interface EventList {
     eventList: Event[];
@@ -375,7 +376,7 @@ export interface HalfReceipt {
 }
 
 export interface SpecialEvent {
-    evendId: string;
+    eventId: string;
     eventContent: string;
     eventHeadline: string;
     eventName: string;
@@ -383,7 +384,8 @@ export interface SpecialEvent {
     eventType: string;
     productId: number;
 }
+
 export interface ViewSpecialEvent {
     eventName: string;
-    eventArray: SpecialEvent[];
+    eventArray: Event[];
 }

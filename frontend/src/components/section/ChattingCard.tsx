@@ -22,10 +22,10 @@ export default function ChattingCard(props: Props) {
                 />
             </div>
             <div className="flex flex-col w-[80%] h-full">
-                <div className="text-2xl h-[30%] overflow-y-auto break-all flex justify-start items-center pl-[0.5vw] text-start bg-sky-400 text-white m-[0.2vw] rounded">
+                <div className="text-[1.6vw] h-[30%] break-all flex justify-start items-center pl-[0.5vw] text-start bg-sky-400 text-white m-[0.2vw] rounded">
                     <p>{props.chat.userNickname}</p>
                 </div>
-                <div className="text-3xl h-[70%] overflow-y-auto break-all flex justify-start items-center pl-[0.5vw] text-start bg-white m-[0.2vw] rounded">
+                <div className="text-[2vw] h-[70%] overflow-y-auto break-all flex justify-start items-center pl-[0.5vw] text-start bg-white m-[0.2vw] rounded">
                     <p>{props.chat.message}</p>
                 </div>
             </div>
