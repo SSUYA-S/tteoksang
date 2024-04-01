@@ -1,7 +1,13 @@
 package com.welcome.tteoksang.user.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.welcome.tteoksang.game.dto.log.DisconnectLogInfo;
+import com.welcome.tteoksang.game.dto.log.LogMessage;
+import com.welcome.tteoksang.game.dto.log.NewgameLogInfo;
 import com.welcome.tteoksang.game.dto.user.RedisGameInfo;
 import com.welcome.tteoksang.game.dto.user.UserProductInfo;
+import com.welcome.tteoksang.game.scheduler.ServerInfo;
 import com.welcome.tteoksang.redis.RedisPrefix;
 import com.welcome.tteoksang.redis.RedisSerializationUtil;
 import com.welcome.tteoksang.redis.RedisService;
@@ -23,6 +29,7 @@ public class GameInfoServiceImpl implements GameInfoService {
 
     private final GameInfoRepository gameInfoRepository;
     private final RedisService redisService;
+    private final ServerInfo serverInfo;
 
     @Override
     public PreviousPlayInfo searchPreviousPlayInfo(String userId) {
@@ -42,8 +49,11 @@ public class GameInfoServiceImpl implements GameInfoService {
     public void startNewGame(String userId) {
         GameInfo prevGameInfo = gameInfoRepository.findById(userId).orElse(null);
         int newGameId = 1;
-        if (prevGameInfo != null)
+        String gameInfoKey = RedisPrefix.INGAMEINFO.prefix() + userId;
+        if (prevGameInfo != null) {
             newGameId = prevGameInfo.getGameId() + 1;
+        }
+
         byte[] newProducts = RedisSerializationUtil.serializeMap(new HashMap<>());
 
         GameInfo newGameInfo = GameInfo.builder()
@@ -63,7 +73,27 @@ public class GameInfoServiceImpl implements GameInfoService {
                 .build();
 
         updateGameInfo(newGameInfo);
+
+        Map<Integer, UserProductInfo> products = RedisSerializationUtil.deserializeMap(newGameInfo.getProducts());
+        inItRedisGameInfo(userId, newGameInfo, products, gameInfoKey);
+
+        NewgameLogInfo logInfo = NewgameLogInfo.builder()
+                .seasonId(serverInfo.getSeasonId())
+                .build();
+
+        LogMessage logMessage = LogMessage.builder()
+                .type("NEWGAME")
+                .body(logInfo)
+                .build();
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String logData = objectMapper.writeValueAsString(logMessage);
+            log.debug(logData);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
+
 
     @Override
     public GameInfo searchGameInfo(String userId) {
@@ -118,32 +148,37 @@ public class GameInfoServiceImpl implements GameInfoService {
             }
 
             // 레디스에 이전 게임 데이터 저장
-            RedisGameInfo redisGameInfo = RedisGameInfo.builder()
-                    .gameId(gameInfo.getGameId())
-                    .gold(gameInfo.getGold())
-                    .warehouseLevel(gameInfo.getWarehouseLevel())
-                    .vehicleLevel(gameInfo.getVehicleLevel())
-                    .brokerLevel(gameInfo.getBrokerLevel())
-                    .privateEventId(gameInfo.getPrivateEventId())
-                    .lastPlayTurn(gameInfo.getLastPlayTurn())
-//                    .lastConnectTime(gameInfo.getLastConnectTime())
-                    .lastConnectTime(LocalDateTime.now())
-                    .totalProductQuantity(gameInfo.getTotalProductQuantity())
-                    .purchaseQuantity(gameInfo.getPurchaseQuantity())
-                    .products(products) // 작물 데이터가 있는 경우 들어감
-                    .rentFee(gameInfo.getRentFee())
-                    .build();
-
-            redisService.setValues(gameInfoKey, redisGameInfo);
-
-            RedisGameInfo redisGameInfoData = (RedisGameInfo) redisService.getValues(gameInfoKey);
-            log.debug("[GameInfoServiceImpl] - loadGameInfo : {}, {}, {}, {}"
-                    , redisGameInfoData.getGameId(), redisGameInfoData.getGold(),
-                    redisGameInfoData.getWarehouseLevel(), redisGameInfoData.getVehicleLevel()
-            );
-
-            // DB 게임 데이터 제거
-            deleteGameInfo(userId);
+            inItRedisGameInfo(userId, gameInfo, products, gameInfoKey);
         }
+    }
+
+    private void inItRedisGameInfo(String userId, GameInfo newGameInfo, Map<Integer, UserProductInfo> products, String gameInfoKey) {
+        // 레디스에 이전 게임 데이터 저장
+        RedisGameInfo redisGameInfo = RedisGameInfo.builder()
+                .gameId(newGameInfo.getGameId())
+                .gold(newGameInfo.getGold())
+                .warehouseLevel(newGameInfo.getWarehouseLevel())
+                .vehicleLevel(newGameInfo.getVehicleLevel())
+                .brokerLevel(newGameInfo.getBrokerLevel())
+                .privateEventId(newGameInfo.getPrivateEventId())
+                .lastPlayTurn(newGameInfo.getLastPlayTurn())
+//                    .lastConnectTime(gameInfo.getLastConnectTime())
+                .lastConnectTime(LocalDateTime.now())
+                .totalProductQuantity(newGameInfo.getTotalProductQuantity())
+                .purchaseQuantity(newGameInfo.getPurchaseQuantity())
+                .products(products) // 작물 데이터가 있는 경우 들어감
+                .rentFee(newGameInfo.getRentFee())
+                .build();
+
+        redisService.setValues(gameInfoKey, redisGameInfo);
+
+        RedisGameInfo redisGameInfoData = (RedisGameInfo) redisService.getValues(gameInfoKey);
+        log.debug("[GameInfoServiceImpl] - loadGameInfo : {}, {}, {}, {}"
+                , redisGameInfoData.getGameId(), redisGameInfoData.getGold(),
+                redisGameInfoData.getWarehouseLevel(), redisGameInfoData.getVehicleLevel()
+        );
+
+        // DB 게임 데이터 제거
+        deleteGameInfo(userId);
     }
 }
