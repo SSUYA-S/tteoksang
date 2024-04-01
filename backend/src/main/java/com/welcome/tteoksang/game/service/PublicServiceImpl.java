@@ -1,7 +1,11 @@
 package com.welcome.tteoksang.game.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.welcome.tteoksang.game.dto.*;
 import com.welcome.tteoksang.game.dto.event.Article;
+import com.welcome.tteoksang.game.dto.log.LogMessage;
+import com.welcome.tteoksang.game.dto.log.SpecialEventLogInfo;
 import com.welcome.tteoksang.game.dto.res.GameMessageRes;
 import com.welcome.tteoksang.game.dto.event.NewsInfo;
 import com.welcome.tteoksang.game.dto.event.PublicEventInfo;
@@ -320,8 +324,25 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
     public void updateTurn() {
         serverInfo.setCurrentTurn(serverInfo.getCurrentTurn() + 1);
         serverInfo.setTurnStartTime(LocalDateTime.now());
-        if (serverInfo.getCurrentTurn() % eventAriseTurnCount == 0) {
-            serverInfo.setSpecialEventIdList(nextEventList.stream().map(event -> event.getEventId()).toList());
+        if (serverInfo.getCurrentTurn() % eventPeriod == 0) { //FIXME - eventPeriod를 턴의 "개수"로 변경
+            serverInfo.setSpecialEventIdList(nextEventList.stream().map(event -> {
+                SpecialEventLogInfo logInfo = SpecialEventLogInfo.builder()
+                        .eventId(event.getEventId())
+                        .seasonId(serverInfo.getSeasonId())
+                        .build();
+                LogMessage logMessage = LogMessage.builder()
+                        .type("SPECIAL_EVENT")
+                        .body(logInfo)
+                        .build();
+                ObjectMapper objectMapper = new ObjectMapper();
+                try {
+                    String logData = objectMapper.writeValueAsString(logMessage);
+                    log.debug(logData);
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+                return event.getEventId();
+            }).toList());
             currentEventList = nextEventList;
             nextEventList = null;
             updateQuarterYearList();
