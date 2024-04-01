@@ -80,7 +80,7 @@ public class ScheduleService {
         log.debug(scheduleId + "를 찾습니다...");
         if (scheduledTasks.containsKey(scheduleId)) {
             log.info(scheduleId + "를 종료합니다.");
-            scheduledTasks.get(scheduleId).cancel(true);
+            log.info("종료상태 "+ scheduledTasks.get(scheduleId).cancel(false));
         }
     }
 

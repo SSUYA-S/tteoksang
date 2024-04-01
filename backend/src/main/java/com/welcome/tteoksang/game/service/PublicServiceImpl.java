@@ -270,7 +270,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         }
         occurableEventList = eventRepository.findEventsOccurInSpecificSeason(currentSeason.name());
         occurableProductIdList = productRepository.findAllByProductTypeOrProductType(currentSeason, ProductType.ALL).stream().map((product -> product.getProductId())).toList();
-        log.debug("Change to "+currentSeason+" event: "+occurableEventList.size()+", product: "+occurableProductIdList.size());
+        log.debug("Change to " + currentSeason + " event: " + occurableEventList.size() + ", product: " + occurableProductIdList.size());
     }
 
     //뉴스 발행
@@ -345,7 +345,6 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
             }).toList());
             currentEventList = nextEventList;
             nextEventList = null;
-            updateQuarterYearList();
             log.debug("==================event 변경==================");
         }
         if (serverInfo.getCurrentTurn() % 90 == 0) {
@@ -367,10 +366,10 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
             ServerProductInfo productInfo = entry.getValue();
             FluctationInfo fluctationInfo = fluctationInfoMap.get(productId);
             //random값 생성
-            double value = random.nextDouble(fluctationInfo.getMinFluctuationRate()*(1-K)*(1 + fluctationInfo.getEventEffect() / 100), fluctationInfo.getMaxFluctuationRate()*(1+K)*(1 + fluctationInfo.getEventEffect() / 100) + 0.001);
+            double value = random.nextDouble(fluctationInfo.getMinFluctuationRate() * (1 - K) * (1 + fluctationInfo.getEventEffect() / 100), fluctationInfo.getMaxFluctuationRate() * (1 + K) * (1 + fluctationInfo.getEventEffect() / 100) + 0.001);
             //fluctuation k배하여 반영 + 이벤트 변동폭 반영 : *이전가격*으로부터 변동
 
-            int newCost = (int) (productInfo.getProductCost() * value );
+            int newCost = (int) (productInfo.getProductCost() * value);
 //            if(fluctationInfo.getEventEffect()!=0){
 //                newCost = (int) (productInfo.getProductCost() * value * (1 + fluctationInfo.getEventEffect() / 100));
 //            }
