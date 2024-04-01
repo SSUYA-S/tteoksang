@@ -414,6 +414,14 @@ export default function WebSocket(props: Prop) {
                     body: {},
                 }),
             });
+            //뉴스 정보 받아오기
+            props.client.publish({
+                destination: `/app/private/${props.webSocketId}`,
+                body: JSON.stringify({
+                    type: 'GET_NEWSPAPER',
+                    body: {},
+                }),
+            });
         }
     }, [props.client, props.client.connected, props.webSocketId]);
     return <div className="hidden"></div>;

@@ -107,15 +107,23 @@ export default function GameComponent(props: GameType) {
     const [webSocketId, setWebSocketId] = useState<string>('');
 
     /**결산 모달 관련 useState */
-    const [isQtrReportAvail, setIsQtrReportAvail] = useState<boolean>(true); //분기
+    const [isQtrReportAvail, setIsQtrReportAvail] = useState<boolean>(false); //분기
     const [isHlfReportAvail, setIsHlfReportAvail] = useState<boolean>(false); //반기
-    const [isFinReportAvail, setIsFinReportAvail] = useState<boolean>(true); //전체
-    const [isOffReportAvail, setIsOffReportAvail] = useState<boolean>(false); //미접
+    const [isFinReportAvail, setIsFinReportAvail] = useState<boolean>(false); //전체
+    const [isOffReportAvail, setIsOffReportAvail] = useState<boolean>(true); //미접
 
     const [qtrReport, setQtrReport] = useState<QuarterReportType | null>(null); //분기
     const [hlfReport, setHlfReport] = useState<HalfReportType | null>(null); //반기
     const [finReport, setFinReport] = useState<FinalReportType | null>(null); //전체
     const [offReport, setOffReport] = useState<OfflineReportType | null>(null); //미접
+
+    //에러 시 알림 창
+    const AlertRef = useRef<HTMLDivElement>(null);
+    const [alertMessage, setAlertMessage] = useState<string>('');
+
+    //게임 나가기 관련
+    const [isGetoutProceeding, setIsGetoutProceeding] =
+        useState<boolean>(false);
 
     let navigate = useNavigate();
 
@@ -134,6 +142,27 @@ export default function GameComponent(props: GameType) {
             setIsOffReportAvail(true);
             setOffReport(body);
         }
+    };
+
+    /** handleGetOut()
+     *  게임에서 나간다. 웹 소켓 닫고 메인 화면으로 이동
+     */
+    const handleGetOut = async () => {
+        //websocket보내기
+        const quitMsg = JSON.stringify({
+            type: 'QUIT_GAME',
+            body: {},
+        });
+        if (webSocketClient.connected) {
+            webSocketClient.publish({
+                destination: `/app/private/${webSocketId}`,
+                body: quitMsg,
+            });
+
+            webSocketClient.deactivate();
+        }
+        //나가기
+        props.setStartFlag(false);
     };
 
     /** handleLogOut()
@@ -560,8 +589,41 @@ export default function GameComponent(props: GameType) {
         );
     };
 
+    /**경고가 뜨면 경고를 보여주는 함수 */
+    const alertError = (message: string) => {
+        setAlertMessage(message);
+        if (AlertRef.current) {
+            //애니메이션 적용
+            AlertRef.current.style.animation =
+                'alert-error 3s 0s 1 ease-in-out';
+            //끝나면 초기화
+            AlertRef.current.onanimationend = () => {
+                if (AlertRef.current) {
+                    AlertRef.current.style.animation = '';
+                }
+            };
+        }
+    };
+
     return (
         <section className="mainBackground relative w-full h-full flex flex-col justify-center items-center">
+            <div
+                className="absolute w-[40%] h-[10%] left-[30%] top-[40%] bg-black -z-10 rounded text-white opacity-0 flex justify-center items-center"
+                ref={AlertRef}
+            >
+                <p className="text-[1.5vw]">{alertMessage}</p>
+            </div>
+            {isGetoutProceeding ? (
+                <WarningModal
+                    handleOK={handleGetOut}
+                    handleCancel={handleCloseErrorModal}
+                    message="메인화면으로 돌아가시겠습니까?"
+                    cancelMessage="취소"
+                    okMessage="나가기"
+                />
+            ) : (
+                <></>
+            )}
             {isLogoutProceeding ? (
                 <WarningModal
                     handleOK={handleLogOut}
@@ -729,7 +791,7 @@ export default function GameComponent(props: GameType) {
             {/* 우측 상단 ui */}
             <div className="absolute w-[25%] h-[14%] top-[4%] right-[2%] flex flex-col items-end">
                 <div className="relative w-full h-full flex items-center justify-center">
-                    <div className="relative w-[65%] h-full flex flex-col items-center justify-around rounded-[1vw] color-text-textcolor left-[2vw] z-0">
+                    <div className="relative w-[65%] h-full flex flex-col items-center justify-around rounded-[1vw] color-text-textcolor left-[2vw] z-20">
                         <img
                             src="/src/assets/images/layout/ui-board.webp"
                             className="absolute w-full h-full -z-10"
@@ -784,7 +846,7 @@ export default function GameComponent(props: GameType) {
                         </div>
                     </div>
                     <div
-                        className="relative w-[35%] flex items-center justify-center rounded-full border-[0.4vw] color-border-subbold z-10"
+                        className="relative w-[35%] flex items-center justify-center rounded-full border-[0.4vw] color-border-subbold z-20"
                         style={{ aspectRatio: 1 / 1 }}
                     >
                         <CircularTimer
@@ -937,7 +999,7 @@ export default function GameComponent(props: GameType) {
                     <div
                         className="w-[19%] h-[100%] cursor-pointer"
                         onClick={() => {
-                            proceedLogout();
+                            setIsGetoutProceeding(true);
                         }}
                     >
                         <img
@@ -995,6 +1057,7 @@ export default function GameComponent(props: GameType) {
                     profileFrameInfo={initialData.profileFrameList}
                     themeInfo={initialData.themeList}
                     iconInfo={initialData.profileIconList}
+                    achievementList={initialData.achievementList}
                 />
             ) : (
                 <></>
@@ -1016,7 +1079,11 @@ export default function GameComponent(props: GameType) {
             ) : (
                 <></>
             )}
-            <ChattingModal client={webSocketClient} />
+            <ChattingModal
+                client={webSocketClient}
+                alertError={alertError}
+                defaultMode={0}
+            />
             <WebSocket
                 setWebSocketClient={setWebSocketClient}
                 setWebSocketId={setWebSocketId}

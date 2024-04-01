@@ -138,8 +138,12 @@ export default function OffHalfPage4(props: Prop) {
                             return (
                                 <div className="w-[90%] h-[10vh] border-[0.3vw] color-border-subbold flex justify-start my-[1vh] p-[1vh] items-center">
                                     <img
-                                        className="w-[8vh] h-[8vh] object-contain"
-                                        src="/그거"
+                                        className="w-[4vw] h-[4vw] m-[0.8vw]"
+                                        src={`/src/assets/images/profile/achivement (${achievement.achievementId}).png`}
+                                        alt=""
+                                        style={{
+                                            aspectRatio: 1 / 1,
+                                        }}
                                     />
                                     <div className="w-full h-[8vh] flex flex-col items-start justify-center ml-[0.5vw]">
                                         <p className="text-[3vh]">

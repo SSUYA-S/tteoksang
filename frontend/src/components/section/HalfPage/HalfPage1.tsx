@@ -23,18 +23,20 @@ export default function HalfPage1(props: Prop) {
     const [timeDuration2, setTimeDuration2] = useState<string>('');
     const [nowSeason, setNowSeason] = useState<string>('');
 
+    const [eventHashMap, setEventHashMap] = useState<Map<string, Event[]>>(
+        new Map()
+    );
     const [eventDescription, setEventDescription] = useState<string>('');
     const [cropName, setCropName] = useState<string>('');
     const [cropSeason, setCropSeason] = useState<string>('');
-
-    const [seasonEventList, setSeasonEventList] = useState<Event[]>([]);
 
     const eventDescRef = useRef<HTMLDivElement>(null);
     const cropDescRef = useRef<HTMLDivElement>(null);
 
     /**이벤트 이미지 호버링하면 출력 */
-    const hoverEventImg = (event: Event) => {
-        setEventDescription(event.eventContent);
+    const hoverEventImg = (eventName: string) => {
+        setEventDescription(eventName);
+
         if (eventDescRef.current) {
             eventDescRef.current.style.opacity = '100';
             eventDescRef.current.style.transition = 'linear 0.5s';
@@ -103,19 +105,37 @@ export default function HalfPage1(props: Prop) {
             setTimeDuration2(`(0${year}.03.01 ~ 0${year}.08.30)`);
             //가을이다
             setNowSeason(`현재 계절 : ${year}년차 가을`);
-            setSeasonEventList(
-                props.eventList.filter((event) => event.eventType === 'FALL')
+            //이벤트 해시맵으로 저장
+            const filterRes = props.eventList.filter(
+                (event) => event.eventType === 'FALL'
             );
+            makeHashMap(filterRes);
         } else if (month === 9) {
             setTimeDuration1(`${year}년차 가을 ~ ${year}년차 겨울`);
             setTimeDuration2(`(0${year}.09.01 ~ 0${year + 1}.02.30)`);
             //봄이다
             setNowSeason(`현재 계절 : ${year + 1}년차 봄`);
-            setSeasonEventList(
-                props.eventList.filter((event) => event.eventType === 'SPRING')
+            //이벤트 해시맵으로 저장
+            const filterRes = props.eventList.filter(
+                (event) => event.eventType === 'SPRING'
             );
+            makeHashMap(filterRes);
         }
     }, []);
+
+    const makeHashMap = (filterRes: Event[]) => {
+        const map = new Map();
+        filterRes.map((event) => {
+            if (map.get(event.eventName)) {
+                const temp = map.get(event.eventName);
+                temp.push(event);
+                map.set(event.eventName, temp);
+            } else {
+                map.set(event.eventName, [event]);
+            }
+        });
+        setEventHashMap(map);
+    };
 
     return (
         <>
@@ -165,10 +185,16 @@ export default function HalfPage1(props: Prop) {
                         </p>
                         <div className="w-[90%] h-[80%] pb-[1vh] flex justify-between items-center">
                             <div className="w-[80%] h-full flex justify-start items-center">
-                                <img
-                                    className="w-[6vw] h-[6vw] m-[1vw] aspect-square object-cover"
-                                    src={`/src/assets/images/title/title(1).png`}
-                                ></img>
+                                {titleId !== 1 ? (
+                                    <img
+                                        className="w-[6vw] h-[6vw] m-[1vw] aspect-square object-cover rounded-full"
+                                        src={`/src/assets/images/title/title (${titleId}).png`}
+                                    ></img>
+                                ) : (
+                                    <div className="w-[6vw] h-[6vw] m-[1vw] aspect-square object-cover flex justify-center items-center">
+                                        <p>칭호 없음</p>
+                                    </div>
+                                )}
                                 <div className="text-[1.5vw]">
                                     {props.titleList[titleId - 1].titleName}
                                 </div>
@@ -200,20 +226,20 @@ export default function HalfPage1(props: Prop) {
                             style={{ scrollbarWidth: 'thin' }}
                         >
                             <div className="flex flex-shrink-0">
-                                {seasonEventList.map((event) => {
+                                {Array.from(eventHashMap).map((value) => {
                                     return (
                                         <img
                                             className="w-[5vw] h-[6vw] m-[1vw] rounded aspect-square object-cover flex-shrink-0"
-                                            src={loadEventImg(event.eventName)}
-                                            onMouseOver={() =>
-                                                hoverEventImg(event)
-                                            }
+                                            src={loadEventImg(value[0])}
+                                            onMouseOver={() => {
+                                                hoverEventImg(value[0]);
+                                            }}
                                             onMouseLeave={endHoverEvent}
                                         ></img>
                                     );
                                 })}
                                 <div
-                                    className="absolute w-full h-[10vw] top-[10vw] bg-black opacity-0 text-white -z-20"
+                                    className="absolute w-full top-[10vw] bg-black opacity-0 text-white -z-20 text-[1.5vw] break-normal p-[0.5vw]"
                                     ref={eventDescRef}
                                 >
                                     {eventDescription}
@@ -233,14 +259,19 @@ export default function HalfPage1(props: Prop) {
                             <div className="flex flex-shrink-0">
                                 {props.inProductList.map((cropId) => {
                                     return (
-                                        <img
-                                            className="w-[6vw] h-[6vw] m-[1vw] aspect-square object-cover flex-shrink-0"
-                                            src={`/src/assets/images/product/crop (${cropId}).png`}
+                                        <div
+                                            className={
+                                                'w-[6vw] h-[6vw] bg-no-repeat mx-auto sprite-img-crop ' +
+                                                `crop-img-${cropId}`
+                                            }
+                                            style={{
+                                                aspectRatio: 1 / 1,
+                                            }}
                                             onMouseOver={() =>
                                                 hoverCropImg(cropId)
                                             }
                                             onMouseLeave={endHoverCrop}
-                                        ></img>
+                                        ></div>
                                     );
                                 })}
                                 <div

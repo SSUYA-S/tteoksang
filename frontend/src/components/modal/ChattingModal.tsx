@@ -5,12 +5,14 @@ import ChattingCard from '../section/ChattingCard';
 
 interface Props {
     client: Client;
+    alertError: (message: string) => void;
+    defaultMode: number;
 }
 
 export default function ChattingModal(props: Props) {
     const [message, setMessage] = useState<string>('');
     //mode0: 일반보기 mode1: 자세히 보기 + 메시지 보기
-    const [mode, setMode] = useState<number>(0);
+    const [mode, setMode] = useState<number>(props.defaultMode);
     const smallChatDivRef = useRef<HTMLDivElement>(null);
     const bigChatRef = useRef<HTMLDivElement>(null);
     const [chattingList, setChattingList] = useState<Chat[]>([]);
@@ -33,7 +35,11 @@ export default function ChattingModal(props: Props) {
      * input 메시지 양방향 바인딩
      */
     const updateMessage = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setMessage(event.target.value);
+        if (event.target.value.length <= 400) {
+            setMessage(event.target.value);
+        } else {
+            props.alertError('글자수는 최대 400자로 제한되어 있습니다.');
+        }
     };
 
     /** sendMessage()
@@ -41,11 +47,11 @@ export default function ChattingModal(props: Props) {
      */
     const sendMessage = () => {
         if (message === '') {
-            console.log('아무거나 입력하세요');
+            props.alertError('메시지가 없습니다. 보낼 메시지를 적어 주세요.');
             return;
         }
         if (message.length > 400) {
-            alert('400자 이내로 작성해주세요');
+            props.alertError('글자수는 최대 400자로 제한되어 있습니다.');
             return;
         }
 
