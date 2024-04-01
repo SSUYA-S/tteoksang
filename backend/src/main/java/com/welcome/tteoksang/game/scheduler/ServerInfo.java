@@ -26,7 +26,7 @@ public class ServerInfo {
     private LocalDateTime turnStartTime = LocalDateTime.now();
     private List<String> specialEventIdList;
 
-    private int seasonId;
+    private int seasonId = 1;
     private Map<Integer, ServerProductInfo> productInfoMap;
     private List<Integer> buyableProducts;
 }
