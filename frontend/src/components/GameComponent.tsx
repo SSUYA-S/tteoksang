@@ -40,6 +40,8 @@ import {
 import specialeventJson from '../dummy-data/special-event.json';
 import { loadEventImg } from '../util/loadEventImg';
 import { loadProduct } from '../util/loadProduct';
+import { useNavigate } from 'react-router-dom';
+import logoutServiceWorker from '../util/logoutServiceWorker';
 
 type GameType = {
     initialData: InitialData;
@@ -113,6 +115,8 @@ export default function GameComponent(props: GameType) {
     const [finReport, setFinReport] = useState<FinalReportType | null>(null); //전체
     const [offReport, setOffReport] = useState<OfflineReportType | null>(null); //미접
 
+    let navigate = useNavigate();
+
     /**결산이 들어오면? */
     const reportReceived = (type: string, body: any) => {
         if (type === 'QUARTER_REPORT') {
@@ -150,8 +154,11 @@ export default function GameComponent(props: GameType) {
 
         const res = await logout();
         if (res.status === httpStatusCode.OK) {
-            props.setStartFlag(false);
             setIsLogoutProceeding(false);
+            logoutServiceWorker();
+
+            // navigate('/');
+            props.setStartFlag(false);
         } else {
             console.log('Logout error');
         }
@@ -175,6 +182,7 @@ export default function GameComponent(props: GameType) {
     const handleWithdrawal = async () => {
         const res = await withdrawal();
         if (res.status === httpStatusCode.OK) {
+            logoutServiceWorker();
             props.setStartFlag(false);
             setIsWithdrawalProceeding(false);
         } else {
@@ -234,7 +242,7 @@ export default function GameComponent(props: GameType) {
 
     //퍼블릭 이벤트 나중에 리덕스에서 인자 주는걸로 바꾸기
     const publicEvent = useSelector(
-        (state: any) => state.reduxFlag.productAndEventSlice.specialEventState
+        (state: any) => state.reduxFlag.productAndEventSlice.specialEventId
     );
 
     /** 테마모드변경 */
@@ -332,39 +340,43 @@ export default function GameComponent(props: GameType) {
             randomNum.push(element + '');
         }
         //여기서 이벤트의 목록들이 생김
-        dispatch(specialEventState(randomNum));
+        // dispatch(specialEventState(randomNum));
         //specialEvent에 [1,3,6 이런식으로 생김]
         //json에서 evendId가 1,3,6인것을 받아양함
-        console.log(randomNum);
-        const newPublicEvent = specialeventJson.filter((event) =>
-            randomNum.includes(event.evendId)
-        );
-
-        const pushData: ViewSpecialEvent[] = [
-            { eventName: '폭우', eventArray: [] },
-            { eventName: '폭염', eventArray: [] },
-            { eventName: '폭설', eventArray: [] },
-            { eventName: '한파', eventArray: [] },
-            { eventName: '가뭄', eventArray: [] },
-            { eventName: '우박', eventArray: [] },
-            { eventName: '풍작', eventArray: [] },
-            { eventName: '흉작', eventArray: [] },
-            { eventName: '사회 이슈', eventArray: [] },
-        ];
-        newPublicEvent.map((item) => {
-            const targetData = pushData.find(
-                (pd) => pd.eventName === item.eventName
+        console.log(publicEvent);
+        if (publicEvent) {
+            console.log('보여줍니다 콘솔');
+            console.log(publicEvent);
+            const newPublicEvent = initialData.eventList.filter((event) =>
+                publicEvent.includes(event.eventId)
             );
-            if (targetData) {
-                targetData.eventArray.push(item);
-            }
-        });
 
-        //가뭄, 흉작, 풍작, 풍작, 풍작
-        //가뭄, 흉작, 풍작
+            const pushData: ViewSpecialEvent[] = [
+                { eventName: '폭우', eventArray: [] },
+                { eventName: '폭염', eventArray: [] },
+                { eventName: '폭설', eventArray: [] },
+                { eventName: '한파', eventArray: [] },
+                { eventName: '가뭄', eventArray: [] },
+                { eventName: '우박', eventArray: [] },
+                { eventName: '풍작', eventArray: [] },
+                { eventName: '흉작', eventArray: [] },
+                { eventName: '사회 이슈', eventArray: [] },
+            ];
+            newPublicEvent.map((item) => {
+                const targetData = pushData.find(
+                    (pd) => pd.eventName === item.eventName
+                );
+                if (targetData) {
+                    targetData.eventArray.push(item);
+                }
+            });
 
-        console.log(pushData);
-        setCurrentSpecialEvent(pushData);
+            //가뭄, 흉작, 풍작, 풍작, 풍작
+            //가뭄, 흉작, 풍작
+
+            console.log(pushData);
+            setCurrentSpecialEvent(pushData);
+        }
     }, [publicEvent]);
 
     const openTradeElement = () => {
@@ -467,12 +479,6 @@ export default function GameComponent(props: GameType) {
         // 돈 변화 애니메이션
     };
 
-    /**뉴스 수신 시 뉴스 정보 설정 함수 */
-    const newsReceived = (articleList: Article[]) => {
-        setNewsFlag(true);
-        setNewsPublishTurn(ingameTurn);
-        setNewsArticleList(articleList);
-    };
     /** 현재 이벤트를 보여주기 위한 btn  */
     const viewPubEventDetail = (prop: SpecialEvent[]) => {
         setCurrentViewEvent(prop);
@@ -936,50 +942,6 @@ export default function GameComponent(props: GameType) {
                 </div>
             </div>
 
-            {/* 포켓몬 */}
-            {/* <div
-                className="w-80 h-40 absolute bottom-[20%]"
-                style={{
-                    backgroundImage: 'url(/src/assets/images/etc/yadon.png)',
-                }}
-            ></div>
-            {theme === 'morning' ? (
-                <div
-                    className="w-[50%] h-[70%] absolute bottom-[5%] left-[40%]"
-                    style={{
-                        transform: 'scale(0.6)',
-                        backgroundImage: 'url(/src/assets/images/etc/egg.png)',
-                    }}
-                ></div>
-            ) : (
-                <></>
-            )}
-
-            {theme === 'night' ? (
-                <div
-                    className="w-[50%] h-[70%] absolute bottom-[25%] left-[58%]"
-                    style={{
-                        transform: 'scale(0.6)',
-                        backgroundImage: 'url(/src/assets/images/etc/bird.png)',
-                    }}
-                ></div>
-            ) : (
-                <></>
-            )}
-            {theme === 'evening' ? (
-                <div
-                    className="w-[50%] h-[70%] absolute bottom-[13%] -left-[11%]"
-                    style={{
-                        transform: 'scale(0.6)',
-                        backgroundImage:
-                            'url(/src/assets/images/etc/mouse.png)',
-                    }}
-                ></div>
-            ) : (
-                <></>
-            )} */}
-            {/* 포켓몬 */}
-
             {tradeFlag ? (
                 <TradeModal
                     setTradeFlag={setTradeFlag}
@@ -1029,8 +991,7 @@ export default function GameComponent(props: GameType) {
                 <NewsModal
                     setNewsFlag={setNewsFlag}
                     newsPublishTurn={newsPublishTurn}
-                    articleList={newsArticleList}
-                    newsReceived={newsReceived}
+                    newsArticleList={newsArticleList}
                 />
             ) : (
                 <></>
@@ -1049,12 +1010,14 @@ export default function GameComponent(props: GameType) {
                 setWebSocketId={setWebSocketId}
                 client={webSocketClient}
                 webSocketId={webSocketId}
-                newsReceived={newsReceived}
                 setStartFlag={props.setStartFlag}
                 reportReceived={reportReceived}
                 setIngameTurn={setIngameTurn}
                 setIngameTime={setIngameTime}
                 setTurnStartTime={setTurnStartTime}
+                setNewsPublishTurn={setNewsPublishTurn}
+                setNewsArticleList={setNewsArticleList}
+                setNewsFlag={setNewsFlag}
             />
             {isQtrReportAvail ? (
                 <QuarterReportModal
@@ -1085,6 +1048,7 @@ export default function GameComponent(props: GameType) {
             ) : (
                 <></>
             )}
+
             {isOffReportAvail ? (
                 <OffReportModal
                     offReport={offReport}

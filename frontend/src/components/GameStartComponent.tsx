@@ -78,7 +78,12 @@ export default function GameStartComponent(props: startType) {
         };
     }, [audio]);
 
-    const toggle = () => setPlaying(bgmSetting);
+    const toggle = () => {
+        if (playing) setPlaying(false);
+        else {
+            setPlaying(true);
+        }
+    };
 
     const onClickLogin = () => {
         //로그인 표시
@@ -218,18 +223,17 @@ export default function GameStartComponent(props: startType) {
             return (
                 <>
                     <div
-                        className="bg-white border border-gray-300 rounded-full flex items-center justify-center my-24 px-4 py-2 text-2xl font-bold cursor-pointer hover:bg-slate-100"
+                        className=" rounded-full flex items-center justify-center my-[4vw] px-[1vw] py-[0.4vw] text-[2vw] font-bold cursor-pointer"
                         onClick={() => {
                             toggle();
                             onClickLogin();
                         }}
                     >
                         <img
-                            className="w-16 h-16"
-                            src="/src/assets/images/etc/crop-apple.png"
+                            className="w-[20vw]"
+                            src="/src/assets/images/icon/login-google-icon.png"
                             alt=""
                         />
-                        <p className="px-2">Sign in with Google</p>
                     </div>
                 </>
             );
@@ -246,7 +250,7 @@ export default function GameStartComponent(props: startType) {
                 backgroundRepeat: 'no-repeat',
             }}
         >
-            <div className="absolute w-[10%] h-[40%] flex flex-col justify-center items-center top-[4%] right-[0%]">
+            <div className="absolute w-[10%] h-[40%] flex flex-col justify-center items-center top-[4%] right-[0%] z-20">
                 <div
                     className="w-[50%] h-[30%] cursor-pointer z-10"
                     style={{
@@ -269,23 +273,37 @@ export default function GameStartComponent(props: startType) {
                     }}
                 />
                 <div className="h-[5%]" />
-                <div
-                    className="w-[50%] h-[30%] cursor-pointer z-10"
-                    style={{
-                        backgroundImage:
-                            'url(/src/assets/images/icon/ui-icon-mypage.png)',
-                        backgroundSize: 'contain ',
-                        backgroundPosition: 'center',
-                        backgroundRepeat: 'no-repeat',
-                    }}
-                    onClick={() => {
-                        toggle();
-                    }}
-                >
-                    {playing ? 'Pause' : 'Play'}
-                </div>
+                {playing ? (
+                    <div
+                        className="w-[50%] h-[30%] cursor-pointer"
+                        style={{
+                            backgroundImage:
+                                'url(/src/assets/images/icon/ui-icon-volumeon.png)',
+                            backgroundSize: 'contain ',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat',
+                        }}
+                        onClick={() => {
+                            toggle();
+                        }}
+                    ></div>
+                ) : (
+                    <div
+                        className="w-[50%] h-[30%] cursor-pointer"
+                        style={{
+                            backgroundImage:
+                                'url(/src/assets/images/icon/ui-icon-volumeoff.png)',
+                            backgroundSize: 'contain ',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat',
+                        }}
+                        onClick={() => {
+                            toggle();
+                        }}
+                    ></div>
+                )}
             </div>
-            <div className="relative w-full h-[80%] flex flex-col justify-center items-center">
+            <div className="relative w-full h-[80%] flex flex-col justify-center items-center z-10">
                 <div
                     className="w-[100%] h-[50%] animation-clockRotate"
                     style={{

@@ -36,9 +36,11 @@ interface Prop {
     setIngameTurn: React.Dispatch<React.SetStateAction<number>>;
     setIngameTime: React.Dispatch<React.SetStateAction<string>>;
     setTurnStartTime: React.Dispatch<React.SetStateAction<string>>;
+    setNewsPublishTurn: React.Dispatch<React.SetStateAction<number>>;
+    setNewsArticleList: React.Dispatch<React.SetStateAction<Article[]>>;
+    setNewsFlag: React.Dispatch<React.SetStateAction<boolean>>;
     client: Client;
     webSocketId: string;
-    newsReceived: (articleList: Article[]) => void;
     setStartFlag: React.Dispatch<React.SetStateAction<boolean>>;
     reportReceived: (
         type: string,
@@ -108,9 +110,17 @@ export default function WebSocket(props: Prop) {
                                     //신문 발행
                                     if (msg.isSuccess) {
                                         const newspaper = msg.body;
+                                        console.log('뉴스발행');
+                                        console.log(newspaper);
                                         //뉴스 수신시 로직 수정
                                         if (newspaper) {
-                                            props.newsReceived(newspaper);
+                                            props.setNewsArticleList(
+                                                newspaper.articleList
+                                            );
+                                            props.setNewsPublishTurn(
+                                                newspaper.publishTurn
+                                            );
+                                            props.setNewsFlag(true);
                                         }
                                     } else {
                                         console.log(`ERROR ON ${msg.type}`);
@@ -351,7 +361,13 @@ export default function WebSocket(props: Prop) {
                                         const newspaper = msg.body;
                                         //뉴스 수신시 로직 수정
                                         if (newspaper) {
-                                            props.newsReceived(newspaper);
+                                            props.setNewsArticleList(
+                                                newspaper.articleList
+                                            );
+                                            props.setNewsPublishTurn(
+                                                newspaper.publishTurn
+                                            );
+                                            props.setNewsFlag(true);
                                         }
                                     } else {
                                         console.log(`ERROR ON ${msg.type}`);

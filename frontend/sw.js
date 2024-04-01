@@ -176,8 +176,8 @@ self.addEventListener('fetch', (e) => {
                 return caches.match('/index.html');
             });
     } else if (e.request.headers.get('Accept').includes('text/html') !== -1) {
-        console.log('요청 Accep text/html');
-        console.log(e);
+        // console.log('요청 Accep text/html');
+        // console.log(e);
         e.respondWith(
             fetch(e.request, { redirect: 'follow' })
                 .then(function (response) {
