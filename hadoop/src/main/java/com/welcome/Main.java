@@ -21,7 +21,7 @@ public class Main {
         private final static IntWritable one = new IntWritable(1);
         private Map<Long, Statistics> statisticsMap = new HashMap<>();
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-            // 각 라인을 읽어들여서 토큰화
+            // 각 라인을 읽어 토큰화
             StringTokenizer itr = new StringTokenizer(value.toString());
             ObjectMapper mapper = new ObjectMapper();
 
@@ -86,29 +86,41 @@ public class Main {
                         statistics.setMaxPrivateProductIncome(productIncome);
                         statistics.getProductInfoMap().put(productId, productInfo);
                         break;
-                    case "RENT_FEE":    // 임대료
+                    case "RENT_FEE":    // 임대료 -> 아직 안되어있습니다아아
                         Long rentFee = Long.parseLong(bodyMap.get("rentFee").toString());
                         statistics.setAccPrivateRentFee(rentFee);
                         break;
                     case "UPGRADE": // 업그레이드
                         Long upgradeFee = Long.parseLong(bodyMap.get("upgradeFee").toString());
-                        statistics.set
+                        statistics.setAccPrivateUpgradeFee(upgradeFee);
+                        break;
+                    case "PRIVATE_EVENT":   // 개인 이벤트
+                        String eventId = bodyMap.get("eventId").toString();
+                        statistics.setAccPrivateEventOccurId(eventId);
+                        break;
+                    case "DISCONNECT":  // 종료
+                        int playtime = Integer.parseInt(bodyMap.get("playtime").toString());
+                        statistics.setAccPrivatePlayTime(playtime);
+                        break;
+                    case "CONNECT": // 접속
+                        int onlineTimeSlot = Integer.parseInt(bodyMap.get("onlineTimeSlot").toString());
+                        statistics.setAccPrivateOnlineTimeSlotCount(onlineTimeSlot);
+                        break;
+                    case "NEWGAME": // 새 게임 생수
+                        statistics.setAccPrivateGamePlayCount(1);
+                        break;
 
                 }
 
-                // 리듀스로 보낼 데이터
-                Map<String, Object> reducerData = new HashMap<>();
-
                 // 리듀스로 보낼 데이터를 JSON 형식으로 변환해 출력값으로 설정
-                Text outputValue = new Text(mapper.writeValueAsString(reducerData));
+                String outputValue = mapper.writeValueAsString(statistics);
 
                 // 출력
-                context.write(new Text(outputKey), outputValue);
+                context.write(new Text(outputKey), new Text(outputValue));
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
 
         }
     }
