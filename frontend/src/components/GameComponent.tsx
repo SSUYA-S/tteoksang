@@ -685,7 +685,12 @@ export default function GameComponent(props: GameType) {
 
             {/* 좌측 상단 ui */}
             <div className="absolute w-[25%] h-[20%] top-[4%] left-[2%]">
-                <div className="relative w-full h-full flex items-center justify-center color-bg-main  border-[0.2vw] color-border-subbold rounded-[0.4vw] p-[1%] cursor-pointer">
+                <img
+                    src="/src/assets/images/layout/ui-board.webp"
+                    className="absolute w-full h-full -z-10"
+                    alt=""
+                />
+                <div className="relative w-full h-full flex items-center justify-center rounded-[0.4vw] cursor-pointer">
                     <div
                         className="relative w-full h-full flex "
                         onClick={() => openMypageElement()}
@@ -695,11 +700,11 @@ export default function GameComponent(props: GameType) {
                             style={{ aspectRatio: 1 / 1 }}
                         >
                             <img
-                                className="absolute w-full h-full cursor-pointer"
+                                className="absolute w-full h-full cursor-pointer p-[0.6vw]"
                                 src={`/src/assets/images/profile/icon (${profileIcon}).png`}
                             />
                             <img
-                                className="absolute w-full h-full cursor-pointer"
+                                className="absolute w-full h-full cursor-pointer p-[0.6vw]"
                                 src={`/src/assets/images/profile/frame (${profileFrame}).png`}
                             />
                         </div>
@@ -723,7 +728,12 @@ export default function GameComponent(props: GameType) {
             {/* 우측 상단 ui */}
             <div className="absolute w-[25%] h-[14%] top-[4%] right-[2%] flex flex-col items-end">
                 <div className="relative w-full h-full flex items-center justify-center">
-                    <div className="relative w-[65%] h-full py-[0.2vw] flex flex-col items-center justify-around color-bg-main border-[0.2vw] color-border-subbold rounded-[1vw] color-text-textcolor left-[2vw] z-0">
+                    <div className="relative w-[65%] h-full flex flex-col items-center justify-around rounded-[1vw] color-text-textcolor left-[2vw] z-0">
+                        <img
+                            src="/src/assets/images/layout/ui-board.webp"
+                            className="absolute w-full h-full -z-10"
+                            alt=""
+                        />
                         <p className="text-[1.4vw]">
                             {gameYear}년 {gameMonth}월 {gameDay}일
                         </p>

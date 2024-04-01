@@ -44,6 +44,10 @@ export default function ChattingModal(props: Props) {
             console.log('아무거나 입력하세요');
             return;
         }
+        if (message.length > 400) {
+            alert('400자 이내로 작성해주세요');
+            return;
+        }
 
         const stompClient = props.client;
 
@@ -83,25 +87,29 @@ export default function ChattingModal(props: Props) {
     if (mode === 0) {
         renderingComponent = (
             <div
-                className="absolute left-[40%] bottom-[5%] w-[30%] h-[15%] bg-white bg-opacity-90 z-10 text-3xl overflow-y-hidden break-all rounded cursor-pointer"
+                className="absolute left-[34%] bottom-[2%] w-[36%] h-[15%] border-[0.2vw] rounded-[1vw] color-border-subbold bg-white bg-opacity-80 z-10 text-[1.6vw] overflow-y-hidden break-all cursor-pointer"
                 onClick={() => setMode(1)}
                 ref={smallChatDivRef}
                 onLoad={scrollDown}
             >
                 {chattingList.map((chat, index) => {
-                    return (
-                        <p key={index}>
-                            {chat.userNickname} : {chat.message}
-                        </p>
-                    );
+                    if (index > chattingList.length - 4)
+                        return (
+                            <p
+                                className="text-start overflow-hidden text-ellipsis whitespace-nowrap my-[0.2vw] px-[1vw]"
+                                key={index}
+                            >
+                                {chat.userNickname} : {chat.message}
+                            </p>
+                        );
                 })}
             </div>
         );
     } else {
         renderingComponent = (
-            <div className="absolute left-[0%] bottom-0 w-[30%] h-[90%] border-[0.4vw] color-border-subbold rounded-[1vw] bg-white bg-opacity-90 z-10 flex flex-col items-center">
+            <div className="absolute left-[0%] bottom-0 w-[40%] h-[90%] border-[0.4vw] color-border-subbold rounded-[1vw] bg-white bg-opacity-90 z-10 flex flex-col items-center">
                 <div
-                    className="w-full h-[90%] flex flex-col justify-start items-center overflow-scroll my-[1vw]"
+                    className="w-full h-[90%] overflow-y-auto flex flex-col justify-start items-center overflow-scroll my-[1vw]"
                     ref={bigChatRef}
                 >
                     {chattingList.map((chat, index) => {
@@ -113,7 +121,7 @@ export default function ChattingModal(props: Props) {
                         type="text"
                         onChange={updateMessage}
                         value={message}
-                        className="w-[85%] rounded m-[0.2vw] text-2xl p-[0.5vw]"
+                        className="w-[85%] overflow-y-auto rounded m-[0.2vw] text-[1vw] p-[0.5vw]"
                         onKeyDown={(event) => {
                             if (event.key === 'Enter') {
                                 sendMessage();
@@ -121,7 +129,7 @@ export default function ChattingModal(props: Props) {
                         }}
                     ></input>
                     <button
-                        className="w-[15%] color-bg-black text-white rounded m-[0.2vw] text-[1vw]"
+                        className="w-[15%] color-bg-subbold text-white rounded m-[0.2vw] text-[1vw]"
                         onClick={sendMessage}
                     >
                         보내기
