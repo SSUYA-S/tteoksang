@@ -4,9 +4,13 @@ import com.welcome.tteoksang.game.exception.CronOffsetExceedOneWeekException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.support.CronExpression;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,6 +31,7 @@ public class ScheduleService {
      * @param scheduleId
      * @param initialDelaySec 등록한 시간으로부터 {initialDelay}ms 후에 실행
      * @param periodSec       ms단위의 반복 주기
+     * @param task
      */
     public void register(String scheduleId, long initialDelaySec, long periodSec, Runnable task) {
         log.debug(scheduleId + "가 등록되었습니다. 주기는 " + periodSec + ", " + initialDelaySec + " 이후부터 시작됩니다");
@@ -39,6 +44,7 @@ public class ScheduleService {
      *
      * @param scheduleId
      * @param periodSec  ms단위의 반복 주기
+     * @param task
      */
     public void register(String scheduleId, long periodSec, Runnable task) {
         log.debug(scheduleId + "가 등록되었습니다. 주기는 " + periodSec);
@@ -52,6 +58,7 @@ public class ScheduleService {
      *
      * @param scheduleId
      * @param cron
+     * @param task
      */
     public void register(String scheduleId, String cron, Runnable task) {
         log.debug(scheduleId + "가 등록되었습니다. 주에 한 번 실행됩니다 -> " + cron);
@@ -61,6 +68,7 @@ public class ScheduleService {
         );
         scheduledTasks.put(scheduleId, schedule);
     }
+
 
     /**
      * cron 시간으로부터 {offset}초만큼 이동한 시간에 한 번 실행되는 스케쥴 등록
@@ -74,13 +82,25 @@ public class ScheduleService {
         register(scheduleId, createGeneralCronPerWeek(initialCron, offsetSec), task);
     }
 
+    /**
+     *
+     * @param scheduleId
+     * @param dateTime
+     * @param task
+     */
+    public void register(String scheduleId, LocalDateTime dateTime, Runnable task) {
+        register(scheduleId,changelocalDateTimeToCron(dateTime),task);
+    }
+    public void register(String scheduleId,  LocalDateTime initialDateTime, long offsetSec, Runnable task) {
+        register(scheduleId, initialDateTime.plusSeconds(offsetSec), task);
+    }
 
     //스케쥴 삭제============================
     public void remove(String scheduleId) {
         log.debug(scheduleId + "를 찾습니다...");
         if (scheduledTasks.containsKey(scheduleId)) {
             log.info(scheduleId + "를 종료합니다.");
-            log.info("종료상태 "+ scheduledTasks.get(scheduleId).cancel(false));
+            log.info("종료상태 " + scheduledTasks.get(scheduleId).cancel(false));
         }
     }
 
@@ -93,6 +113,20 @@ public class ScheduleService {
 
 
     //utils==================
+
+    /**
+     * cron 형식으로 변환
+     * @param dateTime
+     * @return
+     */
+    public String changelocalDateTimeToCron(LocalDateTime dateTime){
+        return new StringBuffer().append(dateTime.getSecond()).append(" ")
+                .append(dateTime.getMinute()).append(" ")
+                .append(dateTime.getHour()).append(" ")
+                .append(dateTime.getDayOfMonth()).append(" ")
+                .append(dateTime.getMonth().getValue()).append(" ")
+                .append(dateTime.getDayOfWeek().getValue() % 7).toString();
+    }
 
     /**
      * 기준 cron으로부터 특정 초 이후의 cron 생성
