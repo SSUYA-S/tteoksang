@@ -102,7 +102,7 @@ export default function ChattingModal(props: Props) {
                     if (index > chattingList.length - 4)
                         return (
                             <p
-                                className="text-start overflow-hidden text-ellipsis whitespace-nowrap my-[0.2vw] px-[1vw]"
+                                className="text-start text-[1.3vw] overflow-hidden text-ellipsis whitespace-nowrap my-[0.2vw] px-[1vw]"
                                 key={index}
                             >
                                 {chat.userNickname} : {chat.message}
