@@ -9,6 +9,7 @@ import lombok.*;
 @Builder
 public class ConnectLogInfo {
     private Integer seasonId;
+    private Integer gameId;
     private String userId;
     private Integer onlineTimeSlot;
 }

@@ -64,6 +64,7 @@ public class PrivateInfoServiceImpl implements PrivateInfoService {
         if (isSuccess) {
             ConnectLogInfo logInfo = ConnectLogInfo.builder()
                     .seasonId(serverInfo.getSeasonId())
+                    .gameId(redisGameInfo.getGameId())
                     .userId(userId)
                     .onlineTimeSlot(LocalDateTime.now().getHour() / 3)
                     .build();
