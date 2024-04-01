@@ -76,7 +76,7 @@ export default function NewsModal(props: NewsType) {
                 <div className="relative w-[90%] h-[65%] flex ">
                     <div className="w-[60%] h-full pe-[0.8vw]">
                         {currentNews.length > 0 ? (
-                            <div className="w-full h-[55%]  text-start text-[3.0vw]">
+                            <div className="w-full h-[55%]  text-start text-[3.0vw] overflow-y-hidden">
                                 <p className="h-full text-ellipsis overflow-hidden">
                                     {currentNews[0].articleHeadline}
                                 </p>
@@ -90,7 +90,7 @@ export default function NewsModal(props: NewsType) {
                             </div>
                         )}
                         {currentNews.length > 1 ? (
-                            <div className="w-full h-[45%]  text-start text-[2vw]">
+                            <div className="w-full h-[45%]  text-start text-[2vw] overflow-y-hidden">
                                 <div>{currentNews[1].articleHeadline}</div>
                             </div>
                         ) : (
@@ -101,7 +101,7 @@ export default function NewsModal(props: NewsType) {
                     </div>
                     <div className="w-[40%] h-full">
                         {currentNews.length > 2 ? (
-                            <div className="w-full h-[50%] b text-start text-[2.4vw]">
+                            <div className="w-full h-[50%] b text-start text-[2.4vw] overflow-y-hidden">
                                 {currentNews[2].articleHeadline}
                             </div>
                         ) : (
@@ -112,7 +112,7 @@ export default function NewsModal(props: NewsType) {
                             </div>
                         )}
                         {currentNews.length > 3 ? (
-                            <div className="w-full h-[50%] b text-start text-[2.4vw]">
+                            <div className="w-full h-[50%] b text-start text-[2.4vw] overflow-y-hidden">
                                 {currentNews[3].articleHeadline}
                             </div>
                         ) : (

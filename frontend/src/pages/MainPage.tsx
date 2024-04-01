@@ -22,6 +22,7 @@ import {
 import { AxiosResponse } from 'axios';
 import { createMD5 } from '../util/createMD5';
 import { deleteResourceAPICacheKey } from '../util/controllServiceWorker';
+import logoutServiceWorker from '../util/logoutServiceWorker';
 
 export default function MainPage() {
     const [startFlag, setStartFlag] = useState<boolean>(false);
@@ -56,6 +57,7 @@ export default function MainPage() {
         profileFrameList: [],
     });
     useEffect(() => {
+        logoutServiceWorker();
         const loadChecksumAPI = async () => {
             await resourceChecksum().then((res) => {
                 setChecksumData(res.data);
