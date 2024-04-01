@@ -6,12 +6,13 @@ import ChattingCard from '../section/ChattingCard';
 interface Props {
     client: Client;
     alertError: (message: string) => void;
+    defaultMode: number;
 }
 
 export default function ChattingModal(props: Props) {
     const [message, setMessage] = useState<string>('');
     //mode0: 일반보기 mode1: 자세히 보기 + 메시지 보기
-    const [mode, setMode] = useState<number>(0);
+    const [mode, setMode] = useState<number>(props.defaultMode);
     const smallChatDivRef = useRef<HTMLDivElement>(null);
     const bigChatRef = useRef<HTMLDivElement>(null);
     const [chattingList, setChattingList] = useState<Chat[]>([]);
