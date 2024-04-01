@@ -7,6 +7,7 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Reducer;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -16,13 +17,11 @@ import java.util.StringTokenizer;
 public class Main {
 
     // map function
-    public static class LogFilter extends Mapper<Object, Text, Text, Text> {
+    public static class LogMapper extends Mapper<Object, Text, Text, Text> {
 
         private final static IntWritable one = new IntWritable(1);
-        private Map<Long, Statistics> statisticsMap = new HashMap<>();
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-            // 각 라인을 읽어 토큰화
-            StringTokenizer itr = new StringTokenizer(value.toString());
+
             ObjectMapper mapper = new ObjectMapper();
 
             try{
@@ -45,14 +44,14 @@ public class Main {
 
                 Long productId;
                 ProductInfo productInfo;
-                Long productCost;
+                long productCost;
 
                 switch (logType) {
                     case "BUY": // 구매
                         productId = Long.parseLong(bodyMap.get("productId").toString());
-                        Long purchasedQuantity = Long.parseLong(bodyMap.get("purchasedQuantity").toString());
-                        Long productOutcome = Long.parseLong(bodyMap.get("productOutcome").toString());
-                        Long productQuantity = Long.parseLong(bodyMap.get("productQuantity").toString());
+                        long purchasedQuantity = Long.parseLong(bodyMap.get("purchasedQuantity").toString());
+                        long productOutcome = Long.parseLong(bodyMap.get("productOutcome").toString());
+                        long productQuantity = Long.parseLong(bodyMap.get("productQuantity").toString());
                         productCost = Long.parseLong(bodyMap.get("productCost").toString());
                         // ProductInfo가 있을 경우 먼저 추가 후 statistics 추가
                         productInfo = new ProductInfo();
@@ -67,10 +66,10 @@ public class Main {
                         break;
                     case "SELL":    // 판매
                         productId = Long.parseLong(bodyMap.get("productId").toString());
-                        Long productIncome = Long.parseLong(bodyMap.get("productIncome").toString());
-                        Long soldQuantity = Long.parseLong(bodyMap.get("soldQuantity").toString());
-                        Long brokerFee = Long.parseLong(bodyMap.get("brokerFee").toString());
-                        Long productProfit = Long.parseLong(bodyMap.get("productProfit").toString());
+                        long productIncome = Long.parseLong(bodyMap.get("productIncome").toString());
+                        long soldQuantity = Long.parseLong(bodyMap.get("soldQuantity").toString());
+                        long brokerFee = Long.parseLong(bodyMap.get("brokerFee").toString());
+                        long productProfit = Long.parseLong(bodyMap.get("productProfit").toString());
                         productCost = Long.parseLong(bodyMap.get("productCost").toString());
                         // ProductInfo가 있을 경우 먼저 추가 후 statistics 추가
                         productInfo = new ProductInfo();
@@ -87,11 +86,11 @@ public class Main {
                         statistics.getProductInfoMap().put(productId, productInfo);
                         break;
                     case "RENT_FEE":    // 임대료 -> 아직 안되어있습니다아아
-                        Long rentFee = Long.parseLong(bodyMap.get("rentFee").toString());
+                        long rentFee = Long.parseLong(bodyMap.get("rentFee").toString());
                         statistics.setAccPrivateRentFee(rentFee);
                         break;
                     case "UPGRADE": // 업그레이드
-                        Long upgradeFee = Long.parseLong(bodyMap.get("upgradeFee").toString());
+                        long upgradeFee = Long.parseLong(bodyMap.get("upgradeFee").toString());
                         statistics.setAccPrivateUpgradeFee(upgradeFee);
                         break;
                     case "PRIVATE_EVENT":   // 개인 이벤트
@@ -125,6 +124,19 @@ public class Main {
         }
     }
 
+
+    // reduce function
+    public static class LogReducer extends Reducer<Text, Text, Text, Text> {
+
+        public void reduce(Text key, Text value, Context context) throws IOException, InterruptedException {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+
+            } catch (Exception e) {
+
+            }
+        }
+    }
 
     public static void main(String[] args) {
 
@@ -162,7 +174,7 @@ public class Main {
 //            statistics.getProductInfoMap().put(productId, productInfo);
             int gameId = Integer.parseInt(bodyMap.get("gameId").toString());
             System.out.println("밑에가 json형식으로 나와야 하는데 말이지요?");
-            Long rentFee = Long.parseLong(bodyMap.get("rentFee").toString());
+            long rentFee = Long.parseLong(bodyMap.get("rentFee").toString());
             statistics.setAccPrivateRentFee(rentFee);
 //            Statistics statistics = new Statistics();
 //            String outputValue = mapper.writeValueAsString(statistics);
