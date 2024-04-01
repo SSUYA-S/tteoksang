@@ -1078,7 +1078,11 @@ export default function GameComponent(props: GameType) {
             ) : (
                 <></>
             )}
-            <ChattingModal client={webSocketClient} alertError={alertError} />
+            <ChattingModal
+                client={webSocketClient}
+                alertError={alertError}
+                defaultMode={0}
+            />
             <WebSocket
                 setWebSocketClient={setWebSocketClient}
                 setWebSocketId={setWebSocketId}
