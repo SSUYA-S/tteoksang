@@ -335,7 +335,7 @@ export default function InfraModal(props: InfraType) {
                 //레벨 최대
                 return (
                     <section className="w-full h-full flex flex-col items-center justify-center ">
-                        <div className="w-full h-[20%] text-[1.6vw] flex items-center justify-center">
+                        <div className="w-[50%] mt-[1vw] h-[20%] text-[1.6vw] flex items-center justify-center bg-white rounded-[1vw] border-[0.4vw] color-border-subbold color-text-textcolor">
                             {facilityType === 1
                                 ? '운송수단 레벨이 최대치입니다.'
                                 : facilityType === 2
@@ -344,7 +344,7 @@ export default function InfraModal(props: InfraType) {
                         </div>
                         <div className="relative w-[80%] h-[80%] flex items-end justify-around">
                             <div className="w-[33%] h-[90%]">
-                                <p className="text-[1.4vw]">
+                                <p className="text-[1.4vw] bg-white color-text-textcolor">
                                     {facilityType === 1
                                         ? props.infraInfo.vehicleInfoList[
                                               vehicleLevel - 1
@@ -357,7 +357,7 @@ export default function InfraModal(props: InfraType) {
                                               brokerLevel - 1
                                           ].brokerName}
                                 </p>
-                                <p className="text-[1.4vw]">
+                                <p className="text-[1.4vw] bg-white color-text-textcolor">
                                     {facilityType === 1
                                         ? '탈 것 용량 : ' +
                                           props.infraInfo.vehicleInfoList[
@@ -387,7 +387,7 @@ export default function InfraModal(props: InfraType) {
                             </div>
                         </div>
                         <div
-                            className="absolute top-[1vw] left-[1vw] flex flex-col items-center justify-center py-[1vw] px-[8vw] bg-white rounded-[1.4vw] border-[0.4vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white cursor-pointer"
+                            className="absolute top-[1vw] left-[1vw] flex flex-col items-center justify-center py-[0.4vw] px-[4vw] bg-white rounded-[1.4vw] border-[0.4vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white cursor-pointer"
                             onClick={() => {
                                 //업그레이드 명령 내리고 창 닫기
                                 changeFailityType(0);
@@ -396,7 +396,7 @@ export default function InfraModal(props: InfraType) {
                             <p className="text-[1.6vw]">뒤로</p>
                         </div>
                         <div
-                            className="absolute bottom-[1vw] right-[1vw] flex flex-col items-center justify-center py-[1vw] px-[8vw] color-bg-yellow2 color-border-yellow1 border-[0.4vw] rounded-full cursor-pointer"
+                            className="absolute bottom-[1vw] right-[1vw] flex flex-col items-center justify-center py-[0.4vw] px-[4vw]  bg-white rounded-[1.4vw] border-[0.4vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white cursor-pointer"
                             onClick={() => {
                                 changeFailityType(0);
                             }}

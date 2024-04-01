@@ -43,6 +43,7 @@ import { loadEventImg } from '../util/loadEventImg';
 import { loadProduct } from '../util/loadProduct';
 import { useNavigate } from 'react-router-dom';
 import logoutServiceWorker from '../util/logoutServiceWorker';
+import FinReportModal from './modal/FinReportModal';
 
 type GameType = {
     initialData: InitialData;
@@ -108,7 +109,7 @@ export default function GameComponent(props: GameType) {
     /**결산 모달 관련 useState */
     const [isQtrReportAvail, setIsQtrReportAvail] = useState<boolean>(true); //분기
     const [isHlfReportAvail, setIsHlfReportAvail] = useState<boolean>(false); //반기
-    const [isFinReportAvail, setIsFinReportAvail] = useState<boolean>(false); //전체
+    const [isFinReportAvail, setIsFinReportAvail] = useState<boolean>(true); //전체
     const [isOffReportAvail, setIsOffReportAvail] = useState<boolean>(false); //미접
 
     const [qtrReport, setQtrReport] = useState<QuarterReportType | null>(null); //분기
@@ -684,10 +685,10 @@ export default function GameComponent(props: GameType) {
             </div>
 
             {/* 좌측 상단 ui */}
-            <div className="absolute w-[25%] h-[20%] top-[4%] left-[2%]">
+            <div className="absolute w-[25%] h-[16%] top-[4%] left-[2%]">
                 <img
                     src="/src/assets/images/layout/ui-board.webp"
-                    className="absolute w-full h-full z-10"
+                    className="absolute w-full h-full z-20"
                     alt=""
                 />
                 <div className="relative w-full h-full flex items-center justify-center rounded-[0.4vw] cursor-pointer z-20">
@@ -696,15 +697,15 @@ export default function GameComponent(props: GameType) {
                         onClick={() => openMypageElement()}
                     >
                         <div
-                            className="relative w-[35%] m-0"
+                            className="relative  m-0"
                             style={{ aspectRatio: 1 / 1 }}
                         >
                             <img
-                                className="absolute w-full h-full cursor-pointer p-[0.6vw]"
+                                className="absolute h-full cursor-pointer p-[0.6vw] object-cover"
                                 src={`/src/assets/images/profile/icon (${profileIcon}).png`}
                             />
                             <img
-                                className="absolute w-full h-full cursor-pointer p-[0.6vw]"
+                                className="absolute h-full cursor-pointer p-[0.6vw] object-cover"
                                 src={`/src/assets/images/profile/frame (${profileFrame}).png`}
                             />
                         </div>
@@ -1056,6 +1057,11 @@ export default function GameComponent(props: GameType) {
                     setStartFlag={props.setStartFlag}
                     achievementInfo={initialData.achievementList}
                 />
+            ) : (
+                <></>
+            )}
+            {isFinReportAvail ? (
+                <FinReportModal setIsFinReportAvail={setIsFinReportAvail} />
             ) : (
                 <></>
             )}

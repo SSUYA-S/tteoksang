@@ -6,11 +6,12 @@ import { HorizenBarChart } from '../element/HorizenBarChart';
 
 //dummuy data
 import finalreport from '../../dummy-data/report/final.json';
+import RankingCard from '../section/RankingCard';
 
 type infoResultType = {
-    setInfoResultFlag: React.Dispatch<React.SetStateAction<boolean>>;
+    setIsFinReportAvail: React.Dispatch<React.SetStateAction<boolean>>;
 };
-export default function InfoResultModal(props: infoResultType) {
+export default function FinReportModal(props: infoResultType) {
     const [changeTitle, setChangeTitle] = useState<boolean>(false);
 
     //1페이지 수익 수출 관련
@@ -268,7 +269,7 @@ export default function InfoResultModal(props: infoResultType) {
     };
 
     const closeResultModal = () => {
-        props.setInfoResultFlag(false);
+        props.setIsFinReportAvail(false);
     };
 
     const resultElement = () => {
@@ -628,6 +629,100 @@ export default function InfoResultModal(props: infoResultType) {
                         <div className="w-[30%] hull flex flex-col items-center justify-center">
                             <LineChart data={priTotalData} />
                             <HorizenBarChart data={priInfraData} />
+                        </div>
+                    </div>
+                </>
+            );
+        } else if (page === 3) {
+            return (
+                <>
+                    <div className="w-full h-[25%] flex items-center justify-center">
+                        <div className="w-[35%] h-full px-[2vw] flex flex-col justify-center items-center">
+                            <p className="w-full text-start text-[2.4vw]">
+                                전체 결산
+                            </p>
+                            <div className="w-full text-start text-[1.8vw] flex justify-start items-center">
+                                <p>게임 통계 (2 / 2)</p>
+                                <p
+                                    className="border-[0.2vw] color-border-subbold mx-[1vw] px-[1vw] py-[0.2vw] cursor-pointer"
+                                    onClick={() => {
+                                        changePage(1);
+                                    }}
+                                >
+                                    이전
+                                </p>
+                                <p
+                                    className="border-[0.2vw] color-border-subbold mx-[1vw] px-[1vw] py-[0.2vw] cursor-pointer"
+                                    onClick={() => {
+                                        changePage(3);
+                                    }}
+                                >
+                                    다음
+                                </p>
+                            </div>
+                        </div>
+                        <div className="w-[65%] h-full flex items-center px-[2vw]"></div>
+                    </div>
+                    <div className="w-full h-[75%] flex items-center justify-center">
+                        <ul className="w-[60%] h-full flex items-center justify-center">
+                            <li className="w-[25%] h-full">
+                                <RankingCard />
+                            </li>
+                            <li className="w-[25%] h-full mx-[0.2vw]">
+                                <RankingCard />
+                            </li>
+                            <li className="w-[25%] h-full mx-[0.2vw]">
+                                <RankingCard />
+                            </li>
+                            <li className="w-[25%] h-full mx-[0.2vw]">
+                                <RankingCard />
+                            </li>
+                        </ul>
+
+                        <div className="w-[35%] h-full flex flex-col items-center justify-center color-text-textcolor">
+                            <div className="w-full h-[65%] border-[0.2vw] color-border-subbold rounded-[1vw] p-[1vw]">
+                                <p className="w-full h-[14%] text-[2vw] text-start">
+                                    게임 획득 골드
+                                </p>
+                                <div className="h-[86%] flex flex-col justify-between">
+                                    <div>
+                                        <div className="flex justify-between my-[0.4vw]">
+                                            <p className="text-[1.6vw]">
+                                                현재 보유 금액
+                                            </p>
+                                            <p className="text-[1.6vw]">
+                                                10,000,000
+                                            </p>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <p className="text-[1.6vw]">
+                                                전체 보유 금액
+                                            </p>
+                                            <p className="text-[1.6vw]">
+                                                110,000,000
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="">
+                                        <p className="w-full h-[0.2vw] color-bg-subbold my-[0.4vw]"></p>
+                                        <p className="w-full text-start text-[1.6vw]">
+                                            다음 게임 획득 골드
+                                        </p>
+                                        <p className="w-full text-end text-[1.6vw]">
+                                            10,000,000
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="w-full h-[35%] flex justify-center items-center">
+                                <div className="color-text-sublight mx-[1vw] px-[2vw] py-[0.8vw] rounded-[0.6vw] border-[0.2vw] color-border-sublight bg-white text-[1.4vw] cursor-pointer hover:color-bg-sublight hover:text-white">
+                                    저장 하기
+                                </div>
+                                <div className="text-white mx-[1vw] px-[2vw] py-[0.8vw] rounded-[0.6vw] border-[0.2vw] color-border-sublight color-bg-sublight text-[1.4vw] cursor-pointer hover:bg-white hover:color-text-sublight">
+                                    보상 받기
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </>
