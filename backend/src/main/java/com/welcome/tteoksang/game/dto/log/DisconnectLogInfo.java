@@ -8,7 +8,8 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class DisconnectLogInfo {
-     private Integer seasonId;
-     private String userId;
-     private Integer playTime;
+    private Integer seasonId;
+    private Integer gameId;
+    private String userId;
+    private Integer playTime;
 }
