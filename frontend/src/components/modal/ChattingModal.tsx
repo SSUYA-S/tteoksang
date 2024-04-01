@@ -107,7 +107,7 @@ export default function ChattingModal(props: Props) {
         );
     } else {
         renderingComponent = (
-            <div className="absolute left-[0%] bottom-0 w-[40%] h-[90%] border-[0.4vw] color-border-subbold rounded-[1vw] bg-white bg-opacity-90 z-10 flex flex-col items-center">
+            <div className="absolute left-[0%] bottom-0 w-[32%] h-[90%] border-[0.4vw] color-border-subbold rounded-[1vw] bg-white bg-opacity-90 z-30 flex flex-col items-center">
                 <div
                     className="w-full h-[90%] overflow-y-auto flex flex-col justify-start items-center overflow-scroll my-[1vw]"
                     ref={bigChatRef}

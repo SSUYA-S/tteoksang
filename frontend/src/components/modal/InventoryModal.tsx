@@ -37,8 +37,13 @@ export default function InventoryModal(props: inventoryType) {
     );
 
     return (
-        <section className="absolute w-[80%] h-[80%] flex justify-center items-center border-[0.4vw] color-border-sublight color-bg-main rounded-[0.6vw] z-50 animation-modal mt-[1vw]">
-            <div className="absolute left-[1vw] w-[95%] h-[90%] bg-white flex flex-wrap overflow-y-auto">
+        <section className="absolute w-[80%] h-[80%] flex justify-center items-center z-50 animation-modal mt-[1vw]">
+            <img
+                src="/src/assets/images/layout/ui-board.webp"
+                className="absolute w-full h-full -z-10"
+                alt=""
+            />
+            <div className="absolute left-[1vw] w-[95%] h-[90%] items-center justify-center flex flex-wrap overflow-y-auto px-[3vw] py-[2vw]">
                 {myProduct.map((product: ProductBucket) => {
                     return (
                         <InventoryCard

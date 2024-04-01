@@ -59,6 +59,10 @@
 .color-text-sublight {
     color: var(--color-sublight);
 }
+.hover\:color-text-sublight:hover {
+    --tw-text-opacity: 1;
+    color: var(--color-sublight);
+}
 .hover\:color-text-subbold:hover {
     --tw-text-opacity: 1;
     color: var(--color-subbold);

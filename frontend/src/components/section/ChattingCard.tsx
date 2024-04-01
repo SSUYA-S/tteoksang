@@ -21,7 +21,7 @@ export default function ChattingCard(props: Props) {
                     style={{ aspectRatio: 1 / 1 }}
                 />
             </div>
-            <div className="relative flex flex-col w-[80%] h-fit">
+            <div className="relative flex flex-col w-[80%] h-fit ms-[0.4vw]">
                 <div className="text-[1.6vw] h-[30%] break-all flex justify-start items-center pl-[0.5vw] text-start color-bg-sublight text-white rounded-tr-[0.8vw]">
                     <p>{props.chat.userNickname}</p>
                 </div>
