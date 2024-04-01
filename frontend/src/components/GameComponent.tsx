@@ -750,7 +750,7 @@ export default function GameComponent(props: GameType) {
                         </div>
                         <div className="flex">
                             <p
-                                className="px-2 cursor-pointer"
+                                className="px-[0.4vw] cursor-pointer"
                                 onClick={() => {
                                     changeMode(0);
                                 }}
@@ -758,7 +758,7 @@ export default function GameComponent(props: GameType) {
                                 a
                             </p>
                             <p
-                                className="px-2 cursor-pointer"
+                                className="px-[0.4vw] cursor-pointer"
                                 onClick={() => {
                                     changeMode(1);
                                 }}
@@ -766,7 +766,7 @@ export default function GameComponent(props: GameType) {
                                 b
                             </p>
                             <p
-                                className="px-2 cursor-pointer"
+                                className="px-[0.4vw] cursor-pointer"
                                 onClick={() => {
                                     changeMode(2);
                                 }}
@@ -774,7 +774,7 @@ export default function GameComponent(props: GameType) {
                                 c
                             </p>
                             <p
-                                className="px-2 cursor-pointer"
+                                className="px-[0.4vw] cursor-pointer"
                                 onClick={() => {
                                     changeMode(3);
                                 }}
