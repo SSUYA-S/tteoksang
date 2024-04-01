@@ -127,7 +127,21 @@ export default function GameComponent(props: GameType) {
         useState<boolean>(false);
 
     //지금은 브레이크 타임인가?
-    const [isBreakTime, setIsBreakTime] = useState<boolean>(true);
+    const [isBreakTime, setIsBreakTime] = useState<boolean>(false);
+
+    //timer setting
+    const [breakTime, setBreakTime] = useState<string>('');
+    const [timerStartTime, setTimerStartTime] = useState<string>('');
+
+    const startTimer = (ingameTime: string, breakTime: string) => {
+        setBreakTime(breakTime);
+        setTimerStartTime(ingameTime);
+        setIsBreakTime(true);
+    };
+
+    const endTimer = () => {
+        setIsBreakTime(false);
+    };
 
     let navigate = useNavigate();
 
@@ -616,12 +630,40 @@ export default function GameComponent(props: GameType) {
     return (
         <section className="mainBackground relative w-full h-full flex flex-col justify-center items-center">
             {isBreakTime ? (
-                <BreakTimePage
-                    webSocketClient={webSocketClient}
-                    alertError={alertError}
-                    setStartFlag={props.setStartFlag}
-                    webSocketId={webSocketId}
-                />
+                <>
+                    <BreakTimePage
+                        webSocketClient={webSocketClient}
+                        alertError={alertError}
+                        setStartFlag={props.setStartFlag}
+                        webSocketId={webSocketId}
+                        proceedLogout={proceedLogout}
+                        proceedWithdrawal={proceedWithdrawal}
+                        breakTime={breakTime}
+                        timerStartTime={timerStartTime}
+                    />
+                    {isLogoutProceeding ? (
+                        <WarningModal
+                            handleOK={handleLogOut}
+                            handleCancel={handleCloseErrorModal}
+                            message="로그아웃 하시겠습니까?"
+                            cancelMessage="취소"
+                            okMessage="로그아웃"
+                        />
+                    ) : (
+                        <></>
+                    )}
+                    {isWithdrawalProceeding ? (
+                        <WarningModal
+                            handleOK={handleWithdrawal}
+                            handleCancel={cancelWithdrawal}
+                            message="정말로 회원탈퇴 하시겠습니까?"
+                            cancelMessage="취소"
+                            okMessage="회원탈퇴"
+                        />
+                    ) : (
+                        <></>
+                    )}
+                </>
             ) : (
                 <>
                     <div
@@ -1180,6 +1222,8 @@ export default function GameComponent(props: GameType) {
                 setNewsPublishTurn={setNewsPublishTurn}
                 setNewsArticleList={setNewsArticleList}
                 setNewsFlag={setNewsFlag}
+                startTimer={startTimer}
+                endTimer={endTimer}
             />
         </section>
     );
