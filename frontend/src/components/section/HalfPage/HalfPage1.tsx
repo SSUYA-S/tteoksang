@@ -222,14 +222,14 @@ export default function HalfPage1(props: Prop) {
                             계절 이벤트
                         </p>
                         <div
-                            className="overflow-x-auto"
+                            className="overflow-x-auto h-[80%]"
                             style={{ scrollbarWidth: 'thin' }}
                         >
-                            <div className="flex flex-shrink-0">
+                            <div className="flex h-full">
                                 {Array.from(eventHashMap).map((value) => {
                                     return (
                                         <img
-                                            className="w-[5vw] h-[6vw] m-[1vw] rounded aspect-square object-cover flex-shrink-0"
+                                            className="h-[80%] m-[1vw] rounded aspect-square object-cover flex-shrink-0"
                                             src={loadEventImg(value[0])}
                                             onMouseOver={() => {
                                                 hoverEventImg(value[0]);
@@ -253,15 +253,15 @@ export default function HalfPage1(props: Prop) {
                             구매 가능 작물
                         </p>
                         <div
-                            className="overflow-x-auto"
+                            className="overflow-x-auto h-[60%]"
                             style={{ scrollbarWidth: 'thin' }}
                         >
-                            <div className="flex flex-shrink-0">
+                            <div className="flex h-full">
                                 {props.inProductList.map((cropId) => {
                                     return (
                                         <div
                                             className={
-                                                'w-[6vw] h-[6vw] bg-no-repeat mx-auto sprite-img-crop ' +
+                                                'h-[80%] bg-no-repeat mx-auto sprite-img-crop ' +
                                                 `crop-img-${cropId}`
                                             }
                                             style={{
