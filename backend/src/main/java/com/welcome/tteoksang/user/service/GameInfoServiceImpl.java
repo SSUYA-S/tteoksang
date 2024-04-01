@@ -79,6 +79,8 @@ public class GameInfoServiceImpl implements GameInfoService {
 
         NewgameLogInfo logInfo = NewgameLogInfo.builder()
                 .seasonId(serverInfo.getSeasonId())
+                .gameId(newGameId)
+                .userId(userId)
                 .build();
 
         LogMessage logMessage = LogMessage.builder()

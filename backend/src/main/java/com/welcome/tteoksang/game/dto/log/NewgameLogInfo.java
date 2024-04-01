@@ -9,4 +9,6 @@ import lombok.*;
 @Builder
 public class NewgameLogInfo {
     private Integer seasonId;
+    private Integer gameId;
+    private String userId;
 }

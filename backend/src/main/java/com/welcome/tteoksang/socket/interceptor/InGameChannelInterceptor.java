@@ -163,6 +163,7 @@ public class InGameChannelInterceptor implements ChannelInterceptor {
             int time = (int) Duration.between(redisGameInfo.getLastConnectTime(), LocalDateTime.now()).toMinutes();
             DisconnectLogInfo logInfo = DisconnectLogInfo.builder()
                     .seasonId(serverInfo.getSeasonId())
+                    .gameId(redisGameInfo.getGameId())
                     .userId(userId)
                     .playTime(time)
                     .build();
