@@ -155,7 +155,7 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
                         products.put(messageProductId, UserProductInfo.builder()
                                 .productQuantity(redisProductInfo.getProductQuantity() + messagePurchaseQuantity)
                                 .productPurchaseQuantity(redisProductInfo.getProductPurchaseQuantity() + messagePurchaseQuantity)
-                                .productTotalCost(redisProductInfo.getProductTotalCost() + messageProductInfo.getProductTotalCost())
+                                .productTotalCost(redisProductInfo.getProductTotalCost() + serverProductTotalCost)
                                 .build());
                     }
                     // 새로운 작물 추가
@@ -167,6 +167,8 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
                                 .build()
                         );
                     }
+
+                    log.debug("totalCost: {}", products.get(messageProductId).getProductTotalCost());
 
                     // 로그 저장
                     BuyLogInfo logInfo = BuyLogInfo.builder()
@@ -326,7 +328,7 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
                             .turn(serverInfo.getCurrentTurn())
                             .productId(messageProductId)
                             .productIncome(serverProductTotalCost)
-                            .soldQuantity(products.get(messageProductId).getProductQuantity())
+                            .soldQuantity(messageSellQuantity)
                             .brokerFee((int) (serverProductTotalCost - adjustedCost))
                             .productProfit(adjustedCost)
                             .productCost(serverProductInfoMap.get(messageProductId).getProductCost())
