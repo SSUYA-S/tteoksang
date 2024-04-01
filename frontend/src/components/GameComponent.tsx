@@ -40,6 +40,8 @@ import {
 import specialeventJson from '../dummy-data/special-event.json';
 import { loadEventImg } from '../util/loadEventImg';
 import { loadProduct } from '../util/loadProduct';
+import { useNavigate } from 'react-router-dom';
+import logoutServiceWorker from '../util/logoutServiceWorker';
 
 type GameType = {
     initialData: InitialData;
@@ -113,6 +115,8 @@ export default function GameComponent(props: GameType) {
     const [finReport, setFinReport] = useState<FinalReportType | null>(null); //전체
     const [offReport, setOffReport] = useState<OfflineReportType | null>(null); //미접
 
+    let navigate = useNavigate();
+
     /**결산이 들어오면? */
     const reportReceived = (type: string, body: any) => {
         if (type === 'QUARTER_REPORT') {
@@ -150,8 +154,11 @@ export default function GameComponent(props: GameType) {
 
         const res = await logout();
         if (res.status === httpStatusCode.OK) {
-            props.setStartFlag(false);
             setIsLogoutProceeding(false);
+            logoutServiceWorker();
+
+            // navigate('/');
+            props.setStartFlag(false);
         } else {
             console.log('Logout error');
         }
@@ -175,6 +182,7 @@ export default function GameComponent(props: GameType) {
     const handleWithdrawal = async () => {
         const res = await withdrawal();
         if (res.status === httpStatusCode.OK) {
+            logoutServiceWorker();
             props.setStartFlag(false);
             setIsWithdrawalProceeding(false);
         } else {

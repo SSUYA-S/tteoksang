@@ -218,18 +218,17 @@ export default function GameStartComponent(props: startType) {
             return (
                 <>
                     <div
-                        className="bg-white border border-gray-300 rounded-full flex items-center justify-center my-24 px-4 py-2 text-2xl font-bold cursor-pointer hover:bg-slate-100"
+                        className=" rounded-full flex items-center justify-center my-[4vw] px-[1vw] py-[0.4vw] text-[2vw] font-bold cursor-pointer"
                         onClick={() => {
                             toggle();
                             onClickLogin();
                         }}
                     >
                         <img
-                            className="w-16 h-16"
-                            src="/src/assets/images/etc/crop-apple.png"
+                            className="w-[20vw]"
+                            src="/src/assets/images/icon/login-google-icon.png"
                             alt=""
                         />
-                        <p className="px-2">Sign in with Google</p>
                     </div>
                 </>
             );
@@ -285,7 +284,7 @@ export default function GameStartComponent(props: startType) {
                     {playing ? 'Pause' : 'Play'}
                 </div>
             </div>
-            <div className="relative w-full h-[80%] flex flex-col justify-center items-center">
+            <div className="relative w-full h-[80%] flex flex-col justify-center items-center z-10">
                 <div
                     className="w-[100%] h-[50%] animation-clockRotate"
                     style={{
