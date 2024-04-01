@@ -5,6 +5,15 @@ create table if not exists profile_icon
 );
 
 insert into profile_icon(profile_icon_name)
-VALUES ("없음"),
-       ("기본 프사"),
-       ("좀 멋진 프사");
+VALUES ("여자1"),
+       ("캐주얼1"),
+       ("고양이1"),
+       ("고양이2"),
+       ("고양이3"),
+       ("여우1"),
+       ("여자2"),
+       ("돼지1"),
+       ("돼지2"),
+       ("부유섬1"),
+       ("여자3"),
+       ("남자1");
