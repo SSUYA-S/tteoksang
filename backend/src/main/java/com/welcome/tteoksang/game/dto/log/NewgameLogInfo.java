@@ -9,12 +9,4 @@ import lombok.*;
 @Builder
 public class NewgameLogInfo {
     private Integer seasonId;
-    private String userId;
-    private Integer gameId;
-    private Integer turn;
-    private Integer productId;
-    private Integer purchasedQuantity;
-    private Long productOutcome;
-    private Integer productQuantity;
-    private Integer productCost;
 }
