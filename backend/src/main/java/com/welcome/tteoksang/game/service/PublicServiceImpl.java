@@ -209,9 +209,9 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
             log.debug("news!!");
             createNewspaper();
         });
-        scheduleService.register("TEST", "0 * * * * *", () -> {
-            checkLongPlayTime();
-        });
+//        scheduleService.register("TEST", "0 * * * * *", () -> {
+//            checkLongPlayTime();
+//        });
     }
 
     public void endHalfYearGame() {
@@ -270,11 +270,11 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         }
         occurableEventList = eventRepository.findEventsOccurInSpecificSeason(currentSeason.name());
         occurableProductIdList = productRepository.findAllByProductTypeOrProductType(currentSeason, ProductType.ALL).stream().map((product -> product.getProductId())).toList();
+        log.debug("Change to "+currentSeason+" event: "+occurableEventList.size()+", product: "+occurableProductIdList.size());
     }
 
     //뉴스 발행
     public void createNewspaper() {
-        int n = occurableEventList.size();
         List<Article> articles = new ArrayList<>();
         Set<Integer> occurableProductSet = new HashSet<>(occurableProductIdList);
         Set<Integer> newsIndex = new HashSet<>(NEWS_NUM);
@@ -300,7 +300,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         sendPublicMessage(MessageType.GET_NEWSPAPER, news);
         // 뉴스 저장해두기
         redisService.setValues(RedisPrefix.SERVER_NEWS.prefix(), news);
-        log.info(serverInfo.getSeasonId() + " || eventSize: " + occurableEventList.size());
+        log.info(serverInfo.getSeasonId() + " || eventSize: " + possibleEventNum);
         log.info(news.toString());
 //        System.out.println((ServerInfo)redisService.getValues("SERVER_INFO"));
     }
@@ -324,7 +324,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
     public void updateTurn() {
         serverInfo.setCurrentTurn(serverInfo.getCurrentTurn() + 1);
         serverInfo.setTurnStartTime(LocalDateTime.now());
-        if (serverInfo.getCurrentTurn() % eventPeriod == 0) { //FIXME - eventPeriod를 턴의 "개수"로 변경
+        if (serverInfo.getCurrentTurn() % eventPeriod == 0) {
             serverInfo.setSpecialEventIdList(nextEventList.stream().map(event -> {
                 SpecialEventLogInfo logInfo = SpecialEventLogInfo.builder()
                         .eventId(event.getEventId())
@@ -348,12 +348,15 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
             updateQuarterYearList();
             log.debug("==================event 변경==================");
         }
+        if (serverInfo.getCurrentTurn() % 90 == 0) {
+            updateQuarterYearList();
+        }
         privateScheduleService.initGameInfoForAllUsersPerTurn();
         redisService.setValues(RedisPrefix.SERVER_INFO.prefix(), serverInfo);
     }
 
     //TODO- 상수 K 정의
-    double K = 2.3;
+    double K = 0.3;
 
     //가격 변동
     public void fluctuateProduct() {
@@ -364,10 +367,13 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
             ServerProductInfo productInfo = entry.getValue();
             FluctationInfo fluctationInfo = fluctationInfoMap.get(productId);
             //random값 생성
-            double value = random.nextDouble(fluctationInfo.getMinFluctuationRate(), fluctationInfo.getMaxFluctuationRate() + 0.001);
+            double value = random.nextDouble(fluctationInfo.getMinFluctuationRate()*(1-K)*(1 + fluctationInfo.getEventEffect() / 100), fluctationInfo.getMaxFluctuationRate()*(1+K)*(1 + fluctationInfo.getEventEffect() / 100) + 0.001);
             //fluctuation k배하여 반영 + 이벤트 변동폭 반영 : *이전가격*으로부터 변동
-            int newCost = (int) (productInfo.getProductCost() * value * K * (1 + fluctationInfo.getEventEffect() / 100));
 
+            int newCost = (int) (productInfo.getProductCost() * value );
+//            if(fluctationInfo.getEventEffect()!=0){
+//                newCost = (int) (productInfo.getProductCost() * value * (1 + fluctationInfo.getEventEffect() / 100));
+//            }
 //            productInfo.setProductFluctuation(newCost - productInfo.getProductCost());
 //            productInfo.setProductCost(newCost);
             //임시 배열에 저장, 한 번에 값들 업데이트 하기 위함!
@@ -472,7 +478,4 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         return (NewsInfo) redisService.getValues(RedisPrefix.SERVER_NEWS.prefix());
     }
 
-    public PublicEventInfo searchPublicEvent() {
-        return null;
-    }
 }
