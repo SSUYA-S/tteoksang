@@ -40,7 +40,7 @@ export default function OffReportModal(props: Prop) {
     const Off = offlineData;
     // const Off = props.offReport;
 
-    const nowTurn = 500;
+    const nowTurn = 150;
     // const nowTurn = props.nowTurn;
 
     //0: 임대료, 1: 보고서

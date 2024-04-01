@@ -13,7 +13,13 @@ import {
 } from '../../api/user';
 import { httpStatusCode } from '../../util/http-status';
 import NicknameChangeModal from './NicknameChangeModal';
-import { Title, ProfileFrame, Theme, ProfileIcon } from '../../type/types';
+import {
+    Title,
+    ProfileFrame,
+    Theme,
+    ProfileIcon,
+    Achievement,
+} from '../../type/types';
 
 type MyPageType = {
     setMypageFlag: React.Dispatch<SetStateAction<boolean>>;
@@ -21,6 +27,7 @@ type MyPageType = {
     profileFrameInfo: ProfileFrame[];
     themeInfo: Theme[];
     iconInfo: ProfileIcon[];
+    achievementList: Achievement[];
 };
 export default function MyPageModal(props: MyPageType) {
     const [menu, setMenu] = useState<number>(0);
@@ -223,48 +230,20 @@ export default function MyPageModal(props: MyPageType) {
                             {/* 도전과제 전체보기 */}
                             {littleMenu === 0 ? (
                                 <>
-                                    <img
-                                        className="w-[7vw] h-[7vw] m-[0.8vw]"
-                                        src="/src/assets/images/profile/achivement (1).png"
-                                        alt=""
-                                        style={{ aspectRatio: 1 / 1 }}
-                                    />
-                                    <img
-                                        className="w-[7vw] h-[7vw] m-[0.8vw]"
-                                        src="/src/assets/images/profile/achivement (2).png"
-                                        alt=""
-                                        style={{ aspectRatio: 1 / 1 }}
-                                    />
-                                    <img
-                                        className="w-[7vw] h-[7vw] m-[0.8vw]"
-                                        src="/src/assets/images/profile/achivement (3).png"
-                                        alt=""
-                                        style={{ aspectRatio: 1 / 1 }}
-                                    />
-                                    <img
-                                        className="w-[7vw] h-[7vw] m-[0.8vw]"
-                                        src="/src/assets/images/profile/achivement (4).png"
-                                        alt=""
-                                        style={{ aspectRatio: 1 / 1 }}
-                                    />
-                                    <img
-                                        className="w-[7vw] h-[7vw] m-[0.8vw]"
-                                        src="/src/assets/images/profile/achivement (5).png"
-                                        alt=""
-                                        style={{ aspectRatio: 1 / 1 }}
-                                    />
-                                    <img
-                                        className="w-[7vw] h-[7vw] m-[0.8vw]"
-                                        src="/src/assets/images/profile/achivement (6).png"
-                                        alt=""
-                                        style={{ aspectRatio: 1 / 1 }}
-                                    />
-                                    <img
-                                        className="w-[7vw] h-[7vw] m-[0.8vw]"
-                                        src="/src/assets/images/profile/achivement (7).png"
-                                        alt=""
-                                        style={{ aspectRatio: 1 / 1 }}
-                                    />
+                                    {props.achievementList.map(
+                                        (achievement) => {
+                                            return (
+                                                <img
+                                                    className="w-[7vw] h-[7vw] m-[0.8vw]"
+                                                    src={`/src/assets/images/profile/achivement (${achievement.achievementId}).png`}
+                                                    alt=""
+                                                    style={{
+                                                        aspectRatio: 1 / 1,
+                                                    }}
+                                                />
+                                            );
+                                        }
+                                    )}
                                 </>
                             ) : (
                                 <></>

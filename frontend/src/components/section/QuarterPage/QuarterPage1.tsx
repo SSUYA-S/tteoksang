@@ -23,24 +23,20 @@ export default function QuarterPage1(props: Prop) {
     const [timeDuration2, setTimeDuration2] = useState<string>('');
     const [nowSeason, setNowSeason] = useState<string>('');
 
-    const [eventDescription, setEventDescription] = useState<Event[]>([]);
+    const [eventHashMap, setEventHashMap] = useState<Map<string, Event[]>>(
+        new Map()
+    );
+    const [eventDescription, setEventDescription] = useState<string>('');
     const [cropName, setCropName] = useState<string>('');
     const [cropSeason, setCropSeason] = useState<string>('');
 
     const eventDescRef = useRef<HTMLDivElement>(null);
     const cropDescRef = useRef<HTMLDivElement>(null);
 
-    // const [seasonEventList, setSeasonEventList] = useState<Event[]>([]);
-    const [eventHashMap, setEventHashMap] = useState<Map<string, Event[]>>(
-        new Map()
-    );
-
     /**이벤트 이미지 호버링하면 출력 */
-    const hoverEventImg = (eventList: Event[] | undefined) => {
-        console.log(eventList);
-        if (eventList) {
-            setEventDescription(eventList);
-        }
+    const hoverEventImg = (eventName: string) => {
+        setEventDescription(eventName);
+
         if (eventDescRef.current) {
             eventDescRef.current.style.opacity = '100';
             eventDescRef.current.style.transition = 'linear 0.5s';
@@ -225,10 +221,16 @@ export default function QuarterPage1(props: Prop) {
                         </p>
                         <div className="w-[90%] h-[80%] pb-[1vh] flex justify-between items-center">
                             <div className="w-[80%] h-full flex justify-start items-center">
-                                <img
-                                    className="w-[6vw] h-[6vw] m-[1vw] aspect-square object-cover"
-                                    src={`/src/assets/images/title/title(1).png`}
-                                ></img>
+                                {titleId !== 1 ? (
+                                    <img
+                                        className="w-[6vw] h-[6vw] m-[1vw] aspect-square object-cover rounded-full"
+                                        src={`/src/assets/images/title/title (${titleId}).png`}
+                                    ></img>
+                                ) : (
+                                    <div className="w-[6vw] h-[6vw] m-[1vw] aspect-square object-cover flex justify-center items-center">
+                                        <p>칭호 없음</p>
+                                    </div>
+                                )}
                                 <div className="text-[1.5vw]">
                                     {props.titleList[titleId - 1].titleName}
                                 </div>
@@ -266,24 +268,17 @@ export default function QuarterPage1(props: Prop) {
                                             className="w-[5vw] h-[6vw] m-[1vw] rounded aspect-square object-cover flex-shrink-0"
                                             src={loadEventImg(value[0])}
                                             onMouseOver={() => {
-                                                const eventList = value[1];
-                                                hoverEventImg(eventList);
+                                                hoverEventImg(value[0]);
                                             }}
                                             onMouseLeave={endHoverEvent}
                                         ></img>
                                     );
                                 })}
                                 <div
-                                    className="absolute w-full top-[10vw] bg-black opacity-0 text-white -z-20 text-[1vw] break-normal p-[0.5vw]"
+                                    className="absolute w-full top-[10vw] bg-black opacity-0 text-white -z-20 text-[1.5vw] break-normal p-[0.5vw]"
                                     ref={eventDescRef}
                                 >
-                                    {eventDescription.map((event) => {
-                                        return (
-                                            <p key={event.eventId}>
-                                                {event.eventContent}
-                                            </p>
-                                        );
-                                    })}
+                                    {eventDescription}
                                 </div>
                             </div>
                         </div>
