@@ -687,10 +687,10 @@ export default function GameComponent(props: GameType) {
             <div className="absolute w-[25%] h-[20%] top-[4%] left-[2%]">
                 <img
                     src="/src/assets/images/layout/ui-board.webp"
-                    className="absolute w-full h-full -z-10"
+                    className="absolute w-full h-full z-10"
                     alt=""
                 />
-                <div className="relative w-full h-full flex items-center justify-center rounded-[0.4vw] cursor-pointer">
+                <div className="relative w-full h-full flex items-center justify-center rounded-[0.4vw] cursor-pointer z-20">
                     <div
                         className="relative w-full h-full flex "
                         onClick={() => openMypageElement()}
