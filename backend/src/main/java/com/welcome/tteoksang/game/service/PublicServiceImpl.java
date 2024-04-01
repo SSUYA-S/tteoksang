@@ -155,8 +155,13 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
                     .build());
 
             if (!hasServerData) {
+                int cost=product.getProductDefaultCost();
+                if(cost==0) {
+                    cost = product.getProductAvgCost().intValue();
+                    log.debug("~~~~~"+product.getProductName()+" cost: "+cost);
+                }
                 productInfoMap.put(product.getProductId(), ServerProductInfo.builder()
-                        .productCost(product.getProductDefaultCost())
+                        .productCost(cost)
                         .productFluctuation(0)
                         .productMaxQuantity((int) (C / product.getProductAvgCost()))
                         .build());
@@ -356,6 +361,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
 
     //TODO- 상수 K 정의
     double K = 0.3;
+    double N=50;
 
     //가격 변동
     public void fluctuateProduct() {
@@ -366,15 +372,25 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
             ServerProductInfo productInfo = entry.getValue();
             FluctationInfo fluctationInfo = fluctationInfoMap.get(productId);
             //random값 생성
-            double value = random.nextDouble(fluctationInfo.getMinFluctuationRate() * (1 - K) * (1 + fluctationInfo.getEventEffect() / 100), fluctationInfo.getMaxFluctuationRate() * (1 + K) * (1 + fluctationInfo.getEventEffect() / 100) + 0.001);
-            //fluctuation k배하여 반영 + 이벤트 변동폭 반영 : *이전가격*으로부터 변동
+            double randomRate;
+            double eventEffectRate=1 + fluctationInfo.getEventEffect() / 100;
+            if(productInfo.getProductCost()>=fluctationInfo.getProductAvgCost()*N){
+                //평균값의 N배 이상인 경우, min, maxRate 값 변동! -> 변동폭 만큼 각 rate에서 준다
+                double maxRate= fluctationInfo.getMinFluctuationRate();
+                double minRate=fluctationInfo.getMinFluctuationRate()*2-fluctationInfo.getMaxFluctuationRate();
+                randomRate=random.nextDouble(minRate*eventEffectRate*(1-K),maxRate*eventEffectRate*(1+K));
+            }else{
+                //평균적인 경우
+                randomRate = random.nextDouble(fluctationInfo.getMinFluctuationRate() * eventEffectRate *(1 - K) , (fluctationInfo.getMaxFluctuationRate()+ 0.001) * eventEffectRate* (1 + K) );
 
-            int newCost = (int) (productInfo.getProductCost() * value);
-//            if(fluctationInfo.getEventEffect()!=0){
-//                newCost = (int) (productInfo.getProductCost() * value * (1 + fluctationInfo.getEventEffect() / 100));
-//            }
-//            productInfo.setProductFluctuation(newCost - productInfo.getProductCost());
-//            productInfo.setProductCost(newCost);
+            }
+            int newCost;
+            if(productInfo.getProductCost()<=fluctationInfo.getProductAvgCost()/N*2){
+                //가격이 너무 작은 경우, 평균 가격으로부터 변동
+                newCost= (int) (fluctationInfo.getProductAvgCost() *randomRate);
+            }else{ //너무 작지 않은 경우, 이전 가격으로부터 변동
+                newCost= (int) (productInfo.getProductCost() * randomRate);
+            }
             //임시 배열에 저장, 한 번에 값들 업데이트 하기 위함!
             tempFluctMap.put(productId, ServerProductInfo.builder()
                     .productCost(newCost)
