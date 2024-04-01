@@ -44,6 +44,7 @@ import { loadProduct } from '../util/loadProduct';
 import { useNavigate } from 'react-router-dom';
 import logoutServiceWorker from '../util/logoutServiceWorker';
 import FinReportModal from './modal/FinReportModal';
+import BreakTimePage from './page-component/BreakTimePage';
 
 type GameType = {
     initialData: InitialData;
@@ -125,6 +126,9 @@ export default function GameComponent(props: GameType) {
     const [isGetoutProceeding, setIsGetoutProceeding] =
         useState<boolean>(false);
 
+    //지금은 브레이크 타임인가?
+    const [isBreakTime, setIsBreakTime] = useState<boolean>(true);
+
     let navigate = useNavigate();
 
     /**결산이 들어오면? */
@@ -205,6 +209,10 @@ export default function GameComponent(props: GameType) {
      * 로그아웃 모달 비활성화 */
     const handleCloseErrorModal = () => {
         setIsLogoutProceeding(false);
+    };
+
+    const handleGetOutModal = () => {
+        setIsGetoutProceeding(false);
     };
 
     /** handleWithdrawal()
@@ -607,483 +615,558 @@ export default function GameComponent(props: GameType) {
 
     return (
         <section className="mainBackground relative w-full h-full flex flex-col justify-center items-center">
-            <div
-                className="absolute w-[40%] h-[10%] left-[30%] top-[40%] bg-black -z-10 rounded text-white opacity-0 flex justify-center items-center"
-                ref={AlertRef}
-            >
-                <p className="text-[1.5vw]">{alertMessage}</p>
-            </div>
-            {isGetoutProceeding ? (
-                <WarningModal
-                    handleOK={handleGetOut}
-                    handleCancel={handleCloseErrorModal}
-                    message="메인화면으로 돌아가시겠습니까?"
-                    cancelMessage="취소"
-                    okMessage="나가기"
+            {isBreakTime ? (
+                <BreakTimePage
+                    webSocketClient={webSocketClient}
+                    alertError={alertError}
+                    setStartFlag={props.setStartFlag}
+                    webSocketId={webSocketId}
                 />
             ) : (
-                <></>
-            )}
-            {isLogoutProceeding ? (
-                <WarningModal
-                    handleOK={handleLogOut}
-                    handleCancel={handleCloseErrorModal}
-                    message="로그아웃 하시겠습니까?"
-                    cancelMessage="취소"
-                    okMessage="로그아웃"
-                />
-            ) : (
-                <></>
-            )}
-            {isWithdrawalProceeding ? (
-                <WarningModal
-                    handleOK={handleWithdrawal}
-                    handleCancel={cancelWithdrawal}
-                    message="정말로 회원탈퇴 하시겠습니까?"
-                    cancelMessage="취소"
-                    okMessage="회원탈퇴"
-                />
-            ) : (
-                <></>
-            )}
-            <img
-                src={`/src/assets/images/background/bg-${profileTheme}-morning.webp`}
-                className="bg-image -z-20"
-                style={{
-                    opacity: theme === 'morning' ? '1' : '0',
-                }}
-            />
-            <img
-                src={`/src/assets/images/background/bg-${profileTheme}-evening.webp`}
-                className="bg-image -z-20"
-                style={{
-                    opacity: theme === 'evening' ? '1' : '0',
-                }}
-            />
-            <img
-                src={`/src/assets/images/background/bg-${profileTheme}-night.webp`}
-                className="bg-image -z-20"
-                style={{
-                    opacity: theme === 'night' ? '1' : '0',
-                }}
-            />
-            <img
-                src={`/src/assets/images/background/bg-${profileTheme}-morning.webp`}
-                className="bg-image -z-30"
-            />
-            <img
-                src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-morning.webp`}
-                className="bg-image -z-10"
-                style={{
-                    opacity:
-                        theme === 'morning' && themeModeSetting !== 0
-                            ? '1'
-                            : '0',
-                }}
-            />
-            <img
-                src={`/src/assets/images/backgroundts/bg-${profileTheme}-morning-transparent.webp`}
-                className="bg-image"
-                style={{
-                    opacity:
-                        theme === 'morning' && themeModeSetting !== 0
-                            ? '1'
-                            : '0',
-                }}
-            />
-            <img
-                src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-evening.webp`}
-                className="bg-image -z-10"
-                style={{
-                    opacity:
-                        theme === 'evening' && themeModeSetting !== 0
-                            ? '1'
-                            : '0',
-                }}
-            />
-            <img
-                src={`/src/assets/images/backgroundts/bg-${profileTheme}-evening-transparent.webp`}
-                className="bg-image"
-                style={{
-                    opacity:
-                        theme === 'evening' && themeModeSetting !== 0
-                            ? '1'
-                            : '0',
-                }}
-            />
-            <img
-                src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-night.webp`}
-                className="bg-image -z-10"
-                style={{
-                    opacity:
-                        theme === 'night' && themeModeSetting !== 0 ? '1' : '0',
-                }}
-            />
-            <img
-                src={`/src/assets/images/backgroundts/bg-${profileTheme}-night-transparent.webp`}
-                className="bg-image"
-                style={{
-                    opacity:
-                        theme === 'night' && themeModeSetting !== 0 ? '1' : '0',
-                }}
-            />
-            <img
-                src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-morning.webp`}
-                className="bg-image -z-20"
-                style={{
-                    opacity: themeModeSetting !== 0 ? '1' : '0',
-                }}
-            />
-            <img
-                src={`/src/assets/images/backgroundts/bg-${profileTheme}-morning-transparent.webp`}
-                className="bg-image -z-10"
-                style={{
-                    opacity: themeModeSetting !== 0 ? '1' : '0',
-                }}
-            />
-
-            <div className="absolute top-0 w-[60%] h-[100%]">
-                {/* <LottieRain /> */}
-            </div>
-
-            {/* 좌측 상단 ui */}
-            <div className="absolute w-[25%] h-[16%] top-[4%] left-[2%]">
-                <img
-                    src="/src/assets/images/layout/ui-board.webp"
-                    className="absolute w-full h-full z-20"
-                    alt=""
-                />
-                <div className="relative w-full h-full flex items-center justify-center rounded-[0.4vw] cursor-pointer z-20">
+                <>
                     <div
-                        className="relative w-full h-full flex "
-                        onClick={() => openMypageElement()}
+                        className="absolute w-[40%] h-[10%] left-[30%] top-[40%] bg-black -z-10 rounded text-white opacity-0 flex justify-center items-center"
+                        ref={AlertRef}
                     >
-                        <div
-                            className="relative  m-0"
-                            style={{ aspectRatio: 1 / 1 }}
-                        >
-                            <img
-                                className="absolute h-full cursor-pointer p-[0.6vw] object-cover"
-                                src={`/src/assets/images/profile/icon (${profileIcon}).png`}
-                            />
-                            <img
-                                className="absolute h-full cursor-pointer p-[0.6vw] object-cover"
-                                src={`/src/assets/images/profile/frame (${profileFrame}).png`}
-                            />
-                        </div>
-
-                        <div className="relative w-[65%] flex flex-col items-center justify-center ps-[5%]">
-                            {titleInfo.length > 0 && titleId === 1 ? (
-                                <></>
-                            ) : (
-                                <p className="w-full text-start mx-2 text-[1.5vw] text-green-500">
-                                    {titleInfo[titleId - 1].titleName}
-                                </p>
-                            )}
-                            <p className="w-full text-start mx-2 my-[5%] text-[2vw] text-green-500">
-                                {userNickname}
-                            </p>
-                        </div>
+                        <p className="text-[1.5vw]">{alertMessage}</p>
                     </div>
-                </div>
-            </div>
+                    {isGetoutProceeding ? (
+                        <WarningModal
+                            handleOK={handleGetOut}
+                            handleCancel={handleGetOutModal}
+                            message="메인화면으로 돌아가시겠습니까?"
+                            cancelMessage="취소"
+                            okMessage="나가기"
+                        />
+                    ) : (
+                        <></>
+                    )}
+                    {isLogoutProceeding ? (
+                        <WarningModal
+                            handleOK={handleLogOut}
+                            handleCancel={handleCloseErrorModal}
+                            message="로그아웃 하시겠습니까?"
+                            cancelMessage="취소"
+                            okMessage="로그아웃"
+                        />
+                    ) : (
+                        <></>
+                    )}
+                    {isWithdrawalProceeding ? (
+                        <WarningModal
+                            handleOK={handleWithdrawal}
+                            handleCancel={cancelWithdrawal}
+                            message="정말로 회원탈퇴 하시겠습니까?"
+                            cancelMessage="취소"
+                            okMessage="회원탈퇴"
+                        />
+                    ) : (
+                        <></>
+                    )}
+                    <img
+                        src={`/src/assets/images/background/bg-${profileTheme}-morning.webp`}
+                        className="bg-image -z-20"
+                        style={{
+                            opacity: theme === 'morning' ? '1' : '0',
+                        }}
+                    />
+                    <img
+                        src={`/src/assets/images/background/bg-${profileTheme}-evening.webp`}
+                        className="bg-image -z-20"
+                        style={{
+                            opacity: theme === 'evening' ? '1' : '0',
+                        }}
+                    />
+                    <img
+                        src={`/src/assets/images/background/bg-${profileTheme}-night.webp`}
+                        className="bg-image -z-20"
+                        style={{
+                            opacity: theme === 'night' ? '1' : '0',
+                        }}
+                    />
+                    <img
+                        src={`/src/assets/images/background/bg-${profileTheme}-morning.webp`}
+                        className="bg-image -z-30"
+                    />
+                    <img
+                        src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-morning.webp`}
+                        className="bg-image -z-10"
+                        style={{
+                            opacity:
+                                theme === 'morning' && themeModeSetting !== 0
+                                    ? '1'
+                                    : '0',
+                        }}
+                    />
+                    <img
+                        src={`/src/assets/images/backgroundts/bg-${profileTheme}-morning-transparent.webp`}
+                        className="bg-image"
+                        style={{
+                            opacity:
+                                theme === 'morning' && themeModeSetting !== 0
+                                    ? '1'
+                                    : '0',
+                        }}
+                    />
+                    <img
+                        src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-evening.webp`}
+                        className="bg-image -z-10"
+                        style={{
+                            opacity:
+                                theme === 'evening' && themeModeSetting !== 0
+                                    ? '1'
+                                    : '0',
+                        }}
+                    />
+                    <img
+                        src={`/src/assets/images/backgroundts/bg-${profileTheme}-evening-transparent.webp`}
+                        className="bg-image"
+                        style={{
+                            opacity:
+                                theme === 'evening' && themeModeSetting !== 0
+                                    ? '1'
+                                    : '0',
+                        }}
+                    />
+                    <img
+                        src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-night.webp`}
+                        className="bg-image -z-10"
+                        style={{
+                            opacity:
+                                theme === 'night' && themeModeSetting !== 0
+                                    ? '1'
+                                    : '0',
+                        }}
+                    />
+                    <img
+                        src={`/src/assets/images/backgroundts/bg-${profileTheme}-night-transparent.webp`}
+                        className="bg-image"
+                        style={{
+                            opacity:
+                                theme === 'night' && themeModeSetting !== 0
+                                    ? '1'
+                                    : '0',
+                        }}
+                    />
+                    <img
+                        src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-morning.webp`}
+                        className="bg-image -z-20"
+                        style={{
+                            opacity: themeModeSetting !== 0 ? '1' : '0',
+                        }}
+                    />
+                    <img
+                        src={`/src/assets/images/backgroundts/bg-${profileTheme}-morning-transparent.webp`}
+                        className="bg-image -z-10"
+                        style={{
+                            opacity: themeModeSetting !== 0 ? '1' : '0',
+                        }}
+                    />
 
-            {/* 우측 상단 ui */}
-            <div className="absolute w-[25%] h-[14%] top-[4%] right-[2%] flex flex-col items-end">
-                <div className="relative w-full h-full flex items-center justify-center">
-                    <div className="relative w-[65%] h-full flex flex-col items-center justify-around rounded-[1vw] color-text-textcolor left-[2vw] z-20">
+                    <div className="absolute top-0 w-[60%] h-[100%]">
+                        {/* <LottieRain /> */}
+                    </div>
+
+                    {/* 좌측 상단 ui */}
+                    <div className="absolute w-[25%] h-[16%] top-[4%] left-[2%]">
                         <img
                             src="/src/assets/images/layout/ui-board.webp"
-                            className="absolute w-full h-full -z-10"
+                            className="absolute w-full h-full z-20"
                             alt=""
                         />
-                        <p className="text-[1.4vw]">
-                            {gameYear}년 {gameMonth}월 {gameDay}일
-                        </p>
-                        <div className="flex items-center justify-start">
-                            <img
-                                className="absolute left-0 mx-[1vw] w-[12%]"
-                                src="/src/assets/images/icon/ui-icon-coin.png"
-                                alt=""
-                            />
-                            <p className="text-[1.6vw]">
-                                {nowMoney.toLocaleString()}
-                            </p>
-                        </div>
-                        <div className="flex">
-                            <p
-                                className="px-[0.4vw] cursor-pointer"
-                                onClick={() => {
-                                    changeMode(0);
-                                }}
-                            >
-                                a
-                            </p>
-                            <p
-                                className="px-[0.4vw] cursor-pointer"
-                                onClick={() => {
-                                    changeMode(1);
-                                }}
-                            >
-                                b
-                            </p>
-                            <p
-                                className="px-[0.4vw] cursor-pointer"
-                                onClick={() => {
-                                    changeMode(2);
-                                }}
-                            >
-                                c
-                            </p>
-                            <p
-                                className="px-[0.4vw] cursor-pointer"
-                                onClick={() => {
-                                    changeMode(3);
-                                }}
-                            >
-                                d
-                            </p>
-                        </div>
-                    </div>
-                    <div
-                        className="relative w-[35%] flex items-center justify-center rounded-full border-[0.4vw] color-border-subbold z-20"
-                        style={{ aspectRatio: 1 / 1 }}
-                    >
-                        <CircularTimer
-                            duration={duration}
-                            ingameTime={ingameTime}
-                            setTurnTimer={setTurnTimer}
-                            setIngameTurn={setIngameTurn}
-                        />
-                        <div className="absolute w-full h-full rounded-full border-[0.4vw] border-white flex items-center justify-center">
+                        <div className="relative w-full h-full flex items-center justify-center rounded-[0.4vw] cursor-pointer z-20">
                             <div
-                                className="absolute w-full h-full"
-                                style={{
-                                    backgroundImage:
-                                        'url(/src/assets/images/icon/ui-icon-timeCircle.png)',
-                                    backgroundSize: 'contain ',
-                                    backgroundPosition: 'center',
-                                    backgroundRepeat: 'no-repeat',
-                                }}
-                            ></div>
-                            <div
-                                className="absolute w-[60%] h-[60%] z-20 bg-no-repeat bg-center"
-                                style={{
-                                    backgroundImage: `url(/src/assets/images/icon/ui-season-${seasonImg}.png)`,
-                                    backgroundSize: 'contain ',
-                                    backgroundPosition: 'center',
-                                    backgroundRepeat: 'no-repeat',
-                                }}
-                            />
-                        </div>
-                    </div>
-                </div>
-                <div className="flex py-[2vw]">
-                    {currentSpecialEvent.map((item) => {
-                        if (item.eventArray.length > 0) {
-                            return (
+                                className="relative w-full h-full flex "
+                                onClick={() => openMypageElement()}
+                            >
                                 <div
-                                    className="relative px-[0.4vw] cursor-pointer"
-                                    onClick={() => {
-                                        viewPubEventDetail(item.eventArray);
-                                    }}
+                                    className="relative  m-0"
+                                    style={{ aspectRatio: 1 / 1 }}
                                 >
                                     <img
-                                        className=" w-[5vw] bg-white rounded-full border-[0.4vw] color-border-main"
-                                        style={{ aspectRatio: 1 / 1 }}
-                                        src={loadEventImg(item.eventName)}
-                                        alt=""
+                                        className="absolute h-full cursor-pointer p-[0.6vw] object-cover"
+                                        src={`/src/assets/images/profile/icon (${profileIcon}).png`}
+                                    />
+                                    <img
+                                        className="absolute h-full cursor-pointer p-[0.6vw] object-cover"
+                                        src={`/src/assets/images/profile/frame (${profileFrame}).png`}
                                     />
                                 </div>
-                            );
-                        }
-                    })}
-                </div>
-            </div>
 
-            {/* 좌측 하단 ui */}
-            <div className="absolute w-[40%] h-[20%] bottom-[4%] left-[1%]">
-                <div className="relative w-full h-full flex items-center justify-start">
-                    <div
-                        className="w-[19%] h-[100%] cursor-pointer"
-                        onClick={() => {
-                            openTradeElement();
-                        }}
-                    >
-                        <img
-                            className="w-full"
-                            src="/src/assets/images/icon/ui-icon-trade.webp"
-                            alt=""
-                            style={{ aspectRatio: 1 / 1 }}
-                        />
-                        <img
-                            src="/src/assets/images/icon/ui-icon-trade-text.webp"
-                            alt=""
-                        />
+                                <div className="relative w-[65%] flex flex-col items-center justify-center ps-[5%]">
+                                    {titleInfo.length > 0 && titleId === 1 ? (
+                                        <></>
+                                    ) : (
+                                        <p className="w-full text-start mx-2 text-[1.5vw] text-green-500">
+                                            {titleInfo[titleId - 1].titleName}
+                                        </p>
+                                    )}
+                                    <p className="w-full text-start mx-2 my-[5%] text-[2vw] text-green-500">
+                                        {userNickname}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div
-                        className="w-[19%] h-[100%] cursor-pointer"
-                        onClick={() => {
-                            openFacilityElement();
-                        }}
-                    >
-                        <img
-                            className="w-full"
-                            src="/src/assets/images/icon/ui-icon-facility.webp"
-                            alt=""
-                            style={{ aspectRatio: 1 / 1 }}
-                        />
-                        <img
-                            src="/src/assets/images/icon/ui-icon-facility-text.webp"
-                            alt=""
-                        />
+                    {/* 우측 상단 ui */}
+                    <div className="absolute w-[25%] h-[14%] top-[4%] right-[2%] flex flex-col items-end">
+                        <div className="relative w-full h-full flex items-center justify-center">
+                            <div className="relative w-[65%] h-full flex flex-col items-center justify-around rounded-[1vw] color-text-textcolor left-[2vw] z-20">
+                                <img
+                                    src="/src/assets/images/layout/ui-board.webp"
+                                    className="absolute w-full h-full -z-10"
+                                    alt=""
+                                />
+                                <p className="text-[1.4vw]">
+                                    {gameYear}년 {gameMonth}월 {gameDay}일
+                                </p>
+                                <div className="flex items-center justify-start">
+                                    <img
+                                        className="absolute left-0 mx-[1vw] w-[12%]"
+                                        src="/src/assets/images/icon/ui-icon-coin.png"
+                                        alt=""
+                                    />
+                                    <p className="text-[1.6vw]">
+                                        {nowMoney.toLocaleString()}
+                                    </p>
+                                </div>
+                                <div className="flex">
+                                    <p
+                                        className="px-[0.4vw] cursor-pointer"
+                                        onClick={() => {
+                                            changeMode(0);
+                                        }}
+                                    >
+                                        a
+                                    </p>
+                                    <p
+                                        className="px-[0.4vw] cursor-pointer"
+                                        onClick={() => {
+                                            changeMode(1);
+                                        }}
+                                    >
+                                        b
+                                    </p>
+                                    <p
+                                        className="px-[0.4vw] cursor-pointer"
+                                        onClick={() => {
+                                            changeMode(2);
+                                        }}
+                                    >
+                                        c
+                                    </p>
+                                    <p
+                                        className="px-[0.4vw] cursor-pointer"
+                                        onClick={() => {
+                                            changeMode(3);
+                                        }}
+                                    >
+                                        d
+                                    </p>
+                                </div>
+                            </div>
+                            <div
+                                className="relative w-[35%] flex items-center justify-center rounded-full border-[0.4vw] color-border-subbold z-20"
+                                style={{ aspectRatio: 1 / 1 }}
+                            >
+                                <CircularTimer
+                                    duration={duration}
+                                    ingameTime={ingameTime}
+                                    setTurnTimer={setTurnTimer}
+                                    setIngameTurn={setIngameTurn}
+                                />
+                                <div className="absolute w-full h-full rounded-full border-[0.4vw] border-white flex items-center justify-center">
+                                    <div
+                                        className="absolute w-full h-full"
+                                        style={{
+                                            backgroundImage:
+                                                'url(/src/assets/images/icon/ui-icon-timeCircle.png)',
+                                            backgroundSize: 'contain ',
+                                            backgroundPosition: 'center',
+                                            backgroundRepeat: 'no-repeat',
+                                        }}
+                                    ></div>
+                                    <div
+                                        className="absolute w-[60%] h-[60%] z-20 bg-no-repeat bg-center"
+                                        style={{
+                                            backgroundImage: `url(/src/assets/images/icon/ui-season-${seasonImg}.png)`,
+                                            backgroundSize: 'contain ',
+                                            backgroundPosition: 'center',
+                                            backgroundRepeat: 'no-repeat',
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex py-[2vw]">
+                            {currentSpecialEvent.map((item) => {
+                                if (item.eventArray.length > 0) {
+                                    return (
+                                        <div
+                                            className="relative px-[0.4vw] cursor-pointer"
+                                            onClick={() => {
+                                                viewPubEventDetail(
+                                                    item.eventArray
+                                                );
+                                            }}
+                                        >
+                                            <img
+                                                className=" w-[5vw] bg-white rounded-full border-[0.4vw] color-border-main"
+                                                style={{ aspectRatio: 1 / 1 }}
+                                                src={loadEventImg(
+                                                    item.eventName
+                                                )}
+                                                alt=""
+                                            />
+                                        </div>
+                                    );
+                                }
+                            })}
+                        </div>
                     </div>
-                    <div
-                        className="w-[19%] h-[100%] cursor-pointer"
-                        onClick={() => {
-                            openInventoryElement();
-                        }}
-                    >
-                        <img
-                            className="w-full"
-                            src="/src/assets/images/icon/ui-icon-inventory.webp"
-                            alt=""
-                            style={{ aspectRatio: 1 / 1 }}
-                        />
-                        <img
-                            src="/src/assets/images/icon/ui-icon-inventory-text.webp"
-                            alt=""
-                        />
-                    </div>
-                    <div
-                        className="w-[19%] h-[100%] cursor-pointer"
-                        onClick={() => {
-                            openNewsElement();
-                        }}
-                    >
-                        <img
-                            className="w-full"
-                            src="/src/assets/images/icon/ui-icon-newspaper.webp"
-                            alt=""
-                            style={{ aspectRatio: 1 / 1 }}
-                        />
-                        <img
-                            src="/src/assets/images/icon/ui-icon-newspaper-text.webp"
-                            alt=""
-                        />
-                    </div>
-                </div>
-            </div>
 
-            {/* 우측 하단 ui */}
-            <div className="absolute w-[40%] h-[20%]  bottom-[4%] right-[1%]">
-                <div className="relative w-full h-full flex items-center justify-end">
-                    <div
-                        className="w-[19%] h-[100%] cursor-pointer"
-                        onClick={() => {
-                            openSettingElement();
-                        }}
-                    >
-                        <img
-                            className="w-full"
-                            src="/src/assets/images/icon/ui-icon-setting.webp"
-                            alt=""
-                            style={{ aspectRatio: 1 / 1 }}
-                        />
-                        <img
-                            src="/src/assets/images/icon/ui-icon-setting-text.webp"
-                            alt=""
-                        />
-                    </div>
-                    <div
-                        className="w-[19%] h-[100%] cursor-pointer"
-                        onClick={() => {
-                            setIsGetoutProceeding(true);
-                        }}
-                    >
-                        <img
-                            className="w-full"
-                            src="/src/assets/images/icon/ui-icon-quit.webp"
-                            alt=""
-                            style={{ aspectRatio: 1 / 1 }}
-                        />
-                        <img
-                            src="/src/assets/images/icon/ui-icon-quit-text.webp"
-                            alt=""
-                        />
-                    </div>
-                </div>
-            </div>
+                    {/* 좌측 하단 ui */}
+                    <div className="absolute w-[40%] h-[20%] bottom-[4%] left-[1%]">
+                        <div className="relative w-full h-full flex items-center justify-start">
+                            <div
+                                className="w-[19%] h-[100%] cursor-pointer"
+                                onClick={() => {
+                                    openTradeElement();
+                                }}
+                            >
+                                <img
+                                    className="w-full"
+                                    src="/src/assets/images/icon/ui-icon-trade.webp"
+                                    alt=""
+                                    style={{ aspectRatio: 1 / 1 }}
+                                />
+                                <img
+                                    src="/src/assets/images/icon/ui-icon-trade-text.webp"
+                                    alt=""
+                                />
+                            </div>
 
-            {tradeFlag ? (
-                <TradeModal
-                    setTradeFlag={setTradeFlag}
-                    updateNowMoney={updateNowMoney}
-                    nowMoney={nowMoney}
-                    infraInfo={initialData.infraList}
-                    productResource={initialData.productList}
-                    client={webSocketClient}
-                    turn={ingameTurn}
-                    webSocketId={webSocketId}
-                />
-            ) : (
-                <></>
+                            <div
+                                className="w-[19%] h-[100%] cursor-pointer"
+                                onClick={() => {
+                                    openFacilityElement();
+                                }}
+                            >
+                                <img
+                                    className="w-full"
+                                    src="/src/assets/images/icon/ui-icon-facility.webp"
+                                    alt=""
+                                    style={{ aspectRatio: 1 / 1 }}
+                                />
+                                <img
+                                    src="/src/assets/images/icon/ui-icon-facility-text.webp"
+                                    alt=""
+                                />
+                            </div>
+                            <div
+                                className="w-[19%] h-[100%] cursor-pointer"
+                                onClick={() => {
+                                    openInventoryElement();
+                                }}
+                            >
+                                <img
+                                    className="w-full"
+                                    src="/src/assets/images/icon/ui-icon-inventory.webp"
+                                    alt=""
+                                    style={{ aspectRatio: 1 / 1 }}
+                                />
+                                <img
+                                    src="/src/assets/images/icon/ui-icon-inventory-text.webp"
+                                    alt=""
+                                />
+                            </div>
+                            <div
+                                className="w-[19%] h-[100%] cursor-pointer"
+                                onClick={() => {
+                                    openNewsElement();
+                                }}
+                            >
+                                <img
+                                    className="w-full"
+                                    src="/src/assets/images/icon/ui-icon-newspaper.webp"
+                                    alt=""
+                                    style={{ aspectRatio: 1 / 1 }}
+                                />
+                                <img
+                                    src="/src/assets/images/icon/ui-icon-newspaper-text.webp"
+                                    alt=""
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* 우측 하단 ui */}
+                    <div className="absolute w-[40%] h-[20%]  bottom-[4%] right-[1%]">
+                        <div className="relative w-full h-full flex items-center justify-end">
+                            <div
+                                className="w-[19%] h-[100%] cursor-pointer"
+                                onClick={() => {
+                                    openSettingElement();
+                                }}
+                            >
+                                <img
+                                    className="w-full"
+                                    src="/src/assets/images/icon/ui-icon-setting.webp"
+                                    alt=""
+                                    style={{ aspectRatio: 1 / 1 }}
+                                />
+                                <img
+                                    src="/src/assets/images/icon/ui-icon-setting-text.webp"
+                                    alt=""
+                                />
+                            </div>
+                            <div
+                                className="w-[19%] h-[100%] cursor-pointer"
+                                onClick={() => {
+                                    setIsGetoutProceeding(true);
+                                }}
+                            >
+                                <img
+                                    className="w-full"
+                                    src="/src/assets/images/icon/ui-icon-quit.webp"
+                                    alt=""
+                                    style={{ aspectRatio: 1 / 1 }}
+                                />
+                                <img
+                                    src="/src/assets/images/icon/ui-icon-quit-text.webp"
+                                    alt=""
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    {tradeFlag ? (
+                        <TradeModal
+                            setTradeFlag={setTradeFlag}
+                            updateNowMoney={updateNowMoney}
+                            nowMoney={nowMoney}
+                            infraInfo={initialData.infraList}
+                            productResource={initialData.productList}
+                            client={webSocketClient}
+                            turn={ingameTurn}
+                            webSocketId={webSocketId}
+                        />
+                    ) : (
+                        <></>
+                    )}
+                    {facilityFlag ? (
+                        <InfraModal
+                            setFacilityFlag={setFacilityFlag}
+                            updateNowMoney={updateNowMoney}
+                            infraInfo={initialData.infraList}
+                            client={webSocketClient}
+                            webSocketId={webSocketId}
+                        />
+                    ) : (
+                        <></>
+                    )}
+                    {settingFlag ? (
+                        <SettingModal
+                            setSettingFlag={setSettingFlag}
+                            proceedLogout={proceedLogout}
+                            proceedWithdrawal={proceedWithdrawal}
+                        />
+                    ) : (
+                        <></>
+                    )}
+                    {mypageFlag ? (
+                        <MyPageModal
+                            setMypageFlag={setMyPageFlag}
+                            titleInfo={initialData.titleList}
+                            profileFrameInfo={initialData.profileFrameList}
+                            themeInfo={initialData.themeList}
+                            iconInfo={initialData.profileIconList}
+                            achievementList={initialData.achievementList}
+                        />
+                    ) : (
+                        <></>
+                    )}
+                    {newsFlag ? (
+                        <NewsModal
+                            setNewsFlag={setNewsFlag}
+                            newsPublishTurn={newsPublishTurn}
+                            newsArticleList={newsArticleList}
+                        />
+                    ) : (
+                        <></>
+                    )}
+                    {inventoryFlag ? (
+                        <InventoryModal
+                            setInventoryFlag={setInventoryFlag}
+                            productSource={initialData.productList}
+                        />
+                    ) : (
+                        <></>
+                    )}
+                    <ChattingModal
+                        client={webSocketClient}
+                        alertError={alertError}
+                        defaultMode={0}
+                    />
+
+                    {isQtrReportAvail ? (
+                        <QuarterReportModal
+                            titleList={initialData.titleList}
+                            eventList={initialData.eventList}
+                            productList={initialData.productList}
+                            setIsQtrReportAvail={setIsQtrReportAvail}
+                            webSocketId={webSocketId}
+                            webSocketClient={webSocketClient}
+                            qtrReport={qtrReport}
+                            setStartFlag={props.setStartFlag}
+                        />
+                    ) : (
+                        <></>
+                    )}
+                    {isHlfReportAvail ? (
+                        <HalfReportModal
+                            titleList={initialData.titleList}
+                            eventList={initialData.eventList}
+                            productList={initialData.productList}
+                            setIsHlfReportAvail={setIsHlfReportAvail}
+                            webSocketId={webSocketId}
+                            webSocketClient={webSocketClient}
+                            hlfReport={hlfReport}
+                            setStartFlag={props.setStartFlag}
+                            achievementInfo={initialData.achievementList}
+                        />
+                    ) : (
+                        <></>
+                    )}
+                    {isFinReportAvail ? (
+                        <FinReportModal
+                            setIsFinReportAvail={setIsFinReportAvail}
+                        />
+                    ) : (
+                        <></>
+                    )}
+
+                    {isOffReportAvail ? (
+                        <OffReportModal
+                            offReport={offReport}
+                            setIsOffReportAvail={setIsOffReportAvail}
+                            nowTurn={ingameTurn}
+                            productList={initialData.productList}
+                            webSocketId={webSocketId}
+                            webSocketClient={webSocketClient}
+                            titleList={initialData.titleList}
+                            eventList={initialData.eventList}
+                            achievementInfo={initialData.achievementList}
+                            setStartFlag={props.setStartFlag}
+                        />
+                    ) : (
+                        <></>
+                    )}
+                    {/* 현재 이벤트 보여주기 */}
+                    {currentViewEvent.length > 0 ? currentViewElement() : <></>}
+                </>
             )}
-            {facilityFlag ? (
-                <InfraModal
-                    setFacilityFlag={setFacilityFlag}
-                    updateNowMoney={updateNowMoney}
-                    infraInfo={initialData.infraList}
-                    client={webSocketClient}
-                    webSocketId={webSocketId}
-                />
-            ) : (
-                <></>
-            )}
-            {settingFlag ? (
-                <SettingModal
-                    setSettingFlag={setSettingFlag}
-                    proceedLogout={proceedLogout}
-                    proceedWithdrawal={proceedWithdrawal}
-                />
-            ) : (
-                <></>
-            )}
-            {mypageFlag ? (
-                <MyPageModal
-                    setMypageFlag={setMyPageFlag}
-                    titleInfo={initialData.titleList}
-                    profileFrameInfo={initialData.profileFrameList}
-                    themeInfo={initialData.themeList}
-                    iconInfo={initialData.profileIconList}
-                    achievementList={initialData.achievementList}
-                />
-            ) : (
-                <></>
-            )}
-            {newsFlag ? (
-                <NewsModal
-                    setNewsFlag={setNewsFlag}
-                    newsPublishTurn={newsPublishTurn}
-                    newsArticleList={newsArticleList}
-                />
-            ) : (
-                <></>
-            )}
-            {inventoryFlag ? (
-                <InventoryModal
-                    setInventoryFlag={setInventoryFlag}
-                    productSource={initialData.productList}
-                />
-            ) : (
-                <></>
-            )}
-            <ChattingModal
-                client={webSocketClient}
-                alertError={alertError}
-                defaultMode={0}
-            />
             <WebSocket
                 setWebSocketClient={setWebSocketClient}
                 setWebSocketId={setWebSocketId}
@@ -1098,59 +1181,6 @@ export default function GameComponent(props: GameType) {
                 setNewsArticleList={setNewsArticleList}
                 setNewsFlag={setNewsFlag}
             />
-            {isQtrReportAvail ? (
-                <QuarterReportModal
-                    titleList={initialData.titleList}
-                    eventList={initialData.eventList}
-                    productList={initialData.productList}
-                    setIsQtrReportAvail={setIsQtrReportAvail}
-                    webSocketId={webSocketId}
-                    webSocketClient={webSocketClient}
-                    qtrReport={qtrReport}
-                    setStartFlag={props.setStartFlag}
-                />
-            ) : (
-                <></>
-            )}
-            {isHlfReportAvail ? (
-                <HalfReportModal
-                    titleList={initialData.titleList}
-                    eventList={initialData.eventList}
-                    productList={initialData.productList}
-                    setIsHlfReportAvail={setIsHlfReportAvail}
-                    webSocketId={webSocketId}
-                    webSocketClient={webSocketClient}
-                    hlfReport={hlfReport}
-                    setStartFlag={props.setStartFlag}
-                    achievementInfo={initialData.achievementList}
-                />
-            ) : (
-                <></>
-            )}
-            {isFinReportAvail ? (
-                <FinReportModal setIsFinReportAvail={setIsFinReportAvail} />
-            ) : (
-                <></>
-            )}
-
-            {isOffReportAvail ? (
-                <OffReportModal
-                    offReport={offReport}
-                    setIsOffReportAvail={setIsOffReportAvail}
-                    nowTurn={ingameTurn}
-                    productList={initialData.productList}
-                    webSocketId={webSocketId}
-                    webSocketClient={webSocketClient}
-                    titleList={initialData.titleList}
-                    eventList={initialData.eventList}
-                    achievementInfo={initialData.achievementList}
-                    setStartFlag={props.setStartFlag}
-                />
-            ) : (
-                <></>
-            )}
-            {/* 현재 이벤트 보여주기 */}
-            {currentViewEvent.length > 0 ? currentViewElement() : <></>}
         </section>
     );
 }
