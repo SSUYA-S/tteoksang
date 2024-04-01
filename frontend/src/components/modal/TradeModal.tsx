@@ -55,8 +55,9 @@ export default function TradeModal(props: tradeType) {
             props.infraInfo.warehouseInfoList[myProductInfo.warehouseLevel - 1]
                 .warehouseCapacity - nowStock,
             props.infraInfo.vehicleInfoList[myProductInfo.vehicleLevel - 1]
-                .vehicleCapacity - myProductInfo.purchasedQuantity
+                .vehicleCapacity
         );
+        maximumBuyableAmount.current -= myProductInfo.purchasedQuantity;
     }, [
         myProductInfo.purchasedQuantity,
         myProductInfo.warehouseLevel,
