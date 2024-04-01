@@ -9,17 +9,17 @@ export default function TitleCard(props: Prop) {
     const titleInfo = props.titleInfo;
     return (
         <div
-            className="w-[90%] h-[8vw] flex justify-start items-center"
+            className="w-[90%] h-[6vw] flex justify-start items-center border-[0.3vw] rounded-[0.6vw] color-border-sublight my-[0.6vw]"
             onClick={() => props.clickAction(titleInfo.titleId)}
         >
             {titleInfo.titleId !== 1 ? (
                 <img
-                    className="w-[6vw] h-[6vw] m-[1vw] aspect-square object-cover rounded-full"
+                    className="w-[5vw] h-[5vw] m-[1vw] aspect-square object-cover rounded-full"
                     src={`/src/assets/images/title/title (${titleInfo.titleId}).png`}
                 ></img>
             ) : (
-                <div className="w-[6vw] h-[6vw] m-[1vw] aspect-square object-cover flex justify-center items-center">
-                    <p>칭호 없음</p>
+                <div className="w-[5vw] h-[5vw] m-[1vw] aspect-square object-cover flex justify-center items-center">
+                    <p className="text-[1vw]">칭호 없음</p>
                 </div>
             )}
 

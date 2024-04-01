@@ -772,18 +772,68 @@ export default function GameComponent(props: GameType) {
                             />
                         </div>
 
-                        <div className="relative w-[65%] flex flex-col items-center justify-center ps-[5%]">
+                        <div className="relative w-[65%] flex flex-col items-center justify-center ps-[1%]">
                             {titleInfo.length > 0 && titleId === 1 ? (
                                 <></>
                             ) : (
-                                <p className="w-full text-start mx-2 text-[1.5vw] text-green-500">
+                                <p className="w-full text-start text-[1.2vw] color-text-sublight whitespace-nowrap overflow-hidden text-ellipsis">
                                     {titleInfo[titleId - 1].titleName}
                                 </p>
                             )}
-                            <p className="w-full text-start mx-2 my-[5%] text-[2vw] text-green-500">
+                            <p className="w-full text-start my-[2%] text-[1.1vw] color-text-textcolor whitespace-nowrap overflow-hidden text-ellipsis">
                                 {userNickname}
                             </p>
                         </div>
+                    </div>
+                </div>
+                <div className="flex">
+                    <div
+                        className="relative m-[0.4vw] w-[18%] h-full bg-red-50 aspect-square cursor-pointer rounded-full border-[0.2vw]"
+                        onClick={() => {
+                            changeMode(0);
+                        }}
+                    >
+                        <img
+                            className="rounded-full"
+                            src="/src/assets/images/etc/ui-ts-door-1.webp"
+                            alt=""
+                        />
+                    </div>
+                    <div
+                        className="relative m-[0.4vw] w-[18%] h-full bg-red-50 aspect-square cursor-pointer rounded-full border-[0.2vw]"
+                        onClick={() => {
+                            changeMode(1);
+                        }}
+                    >
+                        <img
+                            className="rounded-full"
+                            src="/src/assets/images/etc/ui-ts-door-2.webp"
+                            alt=""
+                        />
+                    </div>
+                    <div
+                        className="relative m-[0.4vw] w-[18%] h-full bg-red-50 aspect-square cursor-pointer rounded-full border-[0.2vw]"
+                        onClick={() => {
+                            changeMode(2);
+                        }}
+                    >
+                        <img
+                            className="rounded-full"
+                            src="/src/assets/images/etc/ui-ts-door-3.webp"
+                            alt=""
+                        />
+                    </div>
+                    <div
+                        className="relative m-[0.4vw] w-[18%] h-full bg-red-50 aspect-square cursor-pointer rounded-full border-[0.2vw]"
+                        onClick={() => {
+                            changeMode(3);
+                        }}
+                    >
+                        <img
+                            className="rounded-full"
+                            src="/src/assets/images/etc/ui-ts-door-4.webp"
+                            alt=""
+                        />
                     </div>
                 </div>
             </div>
@@ -806,42 +856,8 @@ export default function GameComponent(props: GameType) {
                                 src="/src/assets/images/icon/ui-icon-coin.png"
                                 alt=""
                             />
-                            <p className="text-[1.6vw]">
+                            <p className="text-[1.4vw]">
                                 {nowMoney.toLocaleString()}
-                            </p>
-                        </div>
-                        <div className="flex">
-                            <p
-                                className="px-[0.4vw] cursor-pointer"
-                                onClick={() => {
-                                    changeMode(0);
-                                }}
-                            >
-                                a
-                            </p>
-                            <p
-                                className="px-[0.4vw] cursor-pointer"
-                                onClick={() => {
-                                    changeMode(1);
-                                }}
-                            >
-                                b
-                            </p>
-                            <p
-                                className="px-[0.4vw] cursor-pointer"
-                                onClick={() => {
-                                    changeMode(2);
-                                }}
-                            >
-                                c
-                            </p>
-                            <p
-                                className="px-[0.4vw] cursor-pointer"
-                                onClick={() => {
-                                    changeMode(3);
-                                }}
-                            >
-                                d
                             </p>
                         </div>
                     </div>
@@ -889,7 +905,7 @@ export default function GameComponent(props: GameType) {
                                     }}
                                 >
                                     <img
-                                        className=" w-[5vw] bg-white rounded-full border-[0.4vw] color-border-main"
+                                        className=" w-[4.8vw] bg-white rounded-full border-[0.2vw] border-white"
                                         style={{ aspectRatio: 1 / 1 }}
                                         src={loadEventImg(item.eventName)}
                                         alt=""

@@ -36,17 +36,17 @@ export default function RentFeeModal(props: Prop) {
     if (rentFeeInfo.billType === 'basic') {
         rentReceipt = (
             <div className="w-[40%] h-[40%] bg-[#FDFFA3] flex flex-col absolute left-[30%] top-[35%] items-center z-10">
-                <div className="w-full h-[20%] p-[1vw] text-4xl text-red-500 flex justify-center items-end">
+                <div className="w-full h-[20%] p-[1vw] text-[2vw] text-red-500 flex justify-center items-end">
                     임대료 고지서
                 </div>
-                <hr className="color-bg-subbold w-[90%] h-[2px]"></hr>
-                <div className="text-3xl w-full h-[30%] color-text-subbold">
+                <hr className="color-bg-subbold w-[90%] h-[0.4vw]"></hr>
+                <div className="text-[1.8vw] w-full h-[30%] color-text-subbold">
                     {duration}
                 </div>
-                <div className="text-3xl text-right w-full h-[30%] p-[1vw] color-text-subbold">{`${rentFeeInfo.rentFee.toLocaleString()}원`}</div>
+                <div className="text-[1.8vw] text-right w-full h-[30%] p-[1vw] color-text-subbold">{`${rentFeeInfo.rentFee.toLocaleString()}원`}</div>
                 <div
                     onClick={props.showReport}
-                    className="w-[90%] p-[1vw] m-[1vw] border-[0.2vw] color-border-subbold text-2xl color-text-subbold cursor-pointer"
+                    className="w-[90%] p-[1vw] m-[1vw] border-[0.2vw] bg-white color-border-subbold text-[1.5vw] color-text-subbold cursor-pointer"
                 >
                     확인
                 </div>
@@ -55,15 +55,15 @@ export default function RentFeeModal(props: Prop) {
     } else if (rentFeeInfo.billType === 'overdue') {
         rentReceipt = (
             <div className="w-[40%] h-[60%] bg-[#FFCEC3] flex flex-col absolute left-[30%] top-[20%] items-center z-10">
-                <div className="w-full h-[20%] p-[1vw] text-4xl text-red-500 flex justify-center items-end">
+                <div className="w-full h-[20%] p-[1vw] text-[3vw] text-red-500 flex justify-center items-end">
                     가압류 고지서
                 </div>
-                <hr className="color-bg-subbold w-[90%] h-[2px]"></hr>
-                <div className="text-3xl w-full h-[10%] color-text-subbold">
+                <hr className="color-bg-subbold w-[90%] h-[0.4vw]"></hr>
+                <div className="text-[1.8vw] w-full h-[10%] color-text-subbold">
                     {duration}
                 </div>
-                <div className="text-3xl text-right w-full h-[10%] p-[1vw] color-text-subbold">{`${rentFeeInfo.rentFee.toLocaleString()}원`}</div>
-                <div className="text-3xl text-center w-full h-[50%] p-[1vw] text-red-500 overflow-y-auto break-words">
+                <div className="text-[1.8vw] text-right w-full h-[10%] p-[1vw] color-text-subbold">{`${rentFeeInfo.rentFee.toLocaleString()}원`}</div>
+                <div className="text-[1.8vw] text-center w-full h-[50%] p-[1vw] text-red-500 overflow-y-auto break-words">
                     <span>[</span>
                     {rentFeeInfo.productList.map((product, index) => {
                         const prodName =
@@ -83,7 +83,7 @@ export default function RentFeeModal(props: Prop) {
                 </div>
                 <div
                     onClick={props.showReport}
-                    className="w-[90%] p-[1vw] h-[10%] m-[1vw] border-[0.2vw] color-border-subbold text-2xl color-text-subbold flex justify-center items-center cursor-pointer "
+                    className="w-[90%] p-[1vw] h-[10%] m-[1vw] bg-white border-[0.2vw] color-border-subbold text-[1.5vw] color-text-subbold flex justify-center items-center cursor-pointer "
                 >
                     확인
                 </div>
@@ -92,21 +92,21 @@ export default function RentFeeModal(props: Prop) {
     } else if (rentFeeInfo.billType === 'bankrupt') {
         rentReceipt = (
             <div className="w-[40%] h-[60%] bg-[#8e8e8e] flex flex-col absolute left-[30%] top-[20%] items-center z-10">
-                <div className="w-full h-[20%] p-[1vw] text-4xl text-white flex justify-center items-end">
+                <div className="w-full h-[20%] p-[1vw] text-[2vw] text-white flex justify-center items-end">
                     파산 고지서
                 </div>
-                <hr className="bg-white w-[90%] h-[2px]"></hr>
-                <div className="text-3xl w-full h-[10%] text-white">
+                <hr className=" w-[90%] h-[0.4vw]"></hr>
+                <div className="text-[1.8vw] w-full h-[10%] text-white">
                     {duration}
                 </div>
-                <div className="text-3xl text-right w-full h-[10%] p-[1vw] text-white">{`${rentFeeInfo.rentFee.toLocaleString()}원`}</div>
-                <div className="text-3xl text-center w-[90%] h-[50%] p-[1vw] text-white overflow-y-auto break-keep flex flex-col justify-around items-center">
+                <div className="text-[1.8vw] text-right w-full h-[10%] p-[1vw] text-white">{`${rentFeeInfo.rentFee.toLocaleString()}원`}</div>
+                <div className="text-[1.8vw] text-center w-[90%] h-[50%] p-[1vw] text-white overflow-y-auto break-keep flex flex-col justify-around items-center">
                     <p>모든 품목을 압류하더라도 임대료 납부가 불가능합니다.</p>
                     <p>GAME OVER...</p>
                 </div>
                 <div
                     onClick={props.endGame}
-                    className="w-[90%] p-[1vw] h-[10%] m-[1vw] border-[0.2vw] border-white text-2xl text-white flex justify-center items-center cursor-pointer"
+                    className="w-[90%] p-[1vw] h-[10%] m-[1vw] border-[0.2vw] border-white text-[1.5vw] text-white flex justify-center items-center cursor-pointer"
                 >
                     다시 시작하기
                 </div>
