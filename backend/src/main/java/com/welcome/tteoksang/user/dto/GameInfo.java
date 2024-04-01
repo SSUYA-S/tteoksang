@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "game_info")
 public class GameInfo implements Serializable {
-
     @Id
     @Column(name = "user_id")
     private String userId;

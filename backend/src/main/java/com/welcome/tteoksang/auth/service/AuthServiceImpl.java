@@ -17,6 +17,7 @@ public class AuthServiceImpl implements AuthService {
     private final RedisService redisService;
     private final RedisGameInfoService redisGameInfoService;
 
+    @Transactional
     public void logoutUser(String userId) {
         //관련 토큰 모두 레디스에서 제거
         String tokenKey = RedisPrefix.REFRESH_TOKEN.prefix() + userId;
