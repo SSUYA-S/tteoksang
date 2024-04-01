@@ -91,11 +91,11 @@ export interface ProductList {
 }
 export interface Event {
     eventId: string;
+    eventName: string;
+    eventType: string;
     eventContent: string;
     eventHeadline: string;
-    eventName: string;
     eventVariance: number;
-    eventType: string;
     productId: number;
 }
 export interface EventList {

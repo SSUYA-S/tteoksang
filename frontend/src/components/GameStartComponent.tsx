@@ -25,7 +25,7 @@ import {
     buyableProductIdState,
 } from '../util/product-and-event';
 import { Achievement, ProfileFrame, ProfileIcon, Title } from '../type/types';
-import { checkMyPrevious, checkMyProfile } from '../api/user';
+import { checkMyPrevious, checkMyProfile, startNewGame } from '../api/user';
 import { httpStatusCode } from '../util/http-status';
 import { profileData } from '../type/types';
 import {
@@ -212,7 +212,11 @@ export default function GameStartComponent(props: startType) {
                         className="relative w-[40%] h-[40%] cursor-pointer bg-[#FFF6D6] border-black border-[0.5vw] flex justify-center items-center p-[0.5vw]"
                         onClick={() => {
                             //게임 포기 로직 추가
-                            onReady();
+                            startNewGame().then((res) => {
+                                if (res.status === httpStatusCode.OK) {
+                                    onReady();
+                                }
+                            });
                         }}
                     >
                         <p className="text-[3vw]">시작하기</p>

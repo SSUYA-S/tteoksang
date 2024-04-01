@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Title, Event, Product } from '../../../type/types';
 import { useSelector } from 'react-redux';
 import { Client } from '@stomp/stompjs';
+import { loadEventImg } from '../../../util/loadEventImg';
 
 interface Prop {
     turn: number;
@@ -29,9 +30,11 @@ export default function QuarterPage1(props: Prop) {
     const eventDescRef = useRef<HTMLDivElement>(null);
     const cropDescRef = useRef<HTMLDivElement>(null);
 
+    const [seasonEventList, setSeasonEventList] = useState<Event[]>([]);
+
     /**이벤트 이미지 호버링하면 출력 */
-    const hoverEventImg = (eventId: number) => {
-        setEventDescription(eventId + '이벤트 발동');
+    const hoverEventImg = (event: Event) => {
+        setEventDescription(event.eventContent);
         if (eventDescRef.current) {
             eventDescRef.current.style.opacity = '100';
             eventDescRef.current.style.transition = 'linear 0.5s';
@@ -116,15 +119,30 @@ export default function QuarterPage1(props: Prop) {
         const year: number = Math.floor((today + 60) / 360);
         const month: number = ((Math.floor(today - 1 / 30) + 2) % 12) + 1;
         if (month < 3) {
-            setNowSeason(`${year - 1}년차 봄`);
+            setNowSeason(`${year - 1}년차 겨울`);
+            setSeasonEventList(
+                props.eventList.filter((event) => event.eventType === 'WINTER')
+            );
         } else if (month < 6) {
             setNowSeason(`${year}년차 봄`);
+            setSeasonEventList(
+                props.eventList.filter((event) => event.eventType === 'SPRING')
+            );
         } else if (month < 9) {
             setNowSeason(`${year}년차 여름`);
+            setSeasonEventList(
+                props.eventList.filter((event) => event.eventType === 'SUMMER')
+            );
         } else if (month < 12) {
             setNowSeason(`${year}년차 가을`);
+            setSeasonEventList(
+                props.eventList.filter((event) => event.eventType === 'FALL')
+            );
         } else {
             setNowSeason(`${year}년차 겨울`);
+            setSeasonEventList(
+                props.eventList.filter((event) => event.eventType === 'WINTER')
+            );
         }
     }, []);
 
@@ -211,38 +229,20 @@ export default function QuarterPage1(props: Prop) {
                             style={{ scrollbarWidth: 'thin' }}
                         >
                             <div className="flex flex-shrink-0">
-                                <img
-                                    className="w-[6vw] h-[6vw] m-[1vw] aspect-square object-cover flex-shrink-0"
-                                    src={`/src/assets/images/title/title(${titleId}).png`}
-                                    onMouseOver={() => hoverEventImg(1)}
-                                    onMouseLeave={endHoverEvent}
-                                ></img>
-                                <img
-                                    className="w-[6vw] h-[6vw] m-[1vw] aspect-square object-cover flex-shrink-0"
-                                    src={`/src/assets/images/title/title(${titleId}).png`}
-                                    onMouseOver={() => hoverEventImg(2)}
-                                    onMouseLeave={endHoverEvent}
-                                ></img>
-                                <img
-                                    className="w-[6vw] h-[6vw] m-[1vw] aspect-square object-cover flex-shrink-0"
-                                    src={`/src/assets/images/title/title(${titleId}).png`}
-                                    onMouseOver={() => hoverEventImg(3)}
-                                    onMouseLeave={endHoverEvent}
-                                ></img>
-                                <img
-                                    className="w-[6vw] h-[6vw] m-[1vw] aspect-square object-cover flex-shrink-0"
-                                    src={`/src/assets/images/title/title(${titleId}).png`}
-                                    onMouseOver={() => hoverEventImg(4)}
-                                    onMouseLeave={endHoverEvent}
-                                ></img>
-                                <img
-                                    className="w-[6vw] h-[6vw] m-[1vw] aspect-square object-cover flex-shrink-0"
-                                    src={`/src/assets/images/title/title(${titleId}).png`}
-                                    onMouseOver={() => hoverEventImg(5)}
-                                    onMouseLeave={endHoverEvent}
-                                ></img>
+                                {seasonEventList.map((event) => {
+                                    return (
+                                        <img
+                                            className="w-[5vw] h-[6vw] m-[1vw] rounded aspect-square object-cover flex-shrink-0"
+                                            src={loadEventImg(event.eventName)}
+                                            onMouseOver={() =>
+                                                hoverEventImg(event)
+                                            }
+                                            onMouseLeave={endHoverEvent}
+                                        ></img>
+                                    );
+                                })}
                                 <div
-                                    className="absolute w-full h-[10vw] top-[10vw] bg-black opacity-0 text-white -z-20"
+                                    className="absolute w-full h-[7vw] top-[10vw] bg-black opacity-0 text-white -z-20 text-[1.5vw] break-normal"
                                     ref={eventDescRef}
                                 >
                                     {eventDescription}

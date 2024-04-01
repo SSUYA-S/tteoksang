@@ -388,7 +388,7 @@ export default function InfraModal(props: InfraType) {
                                 changeFailityType(0);
                             }}
                         >
-                            <p className="text-[1.6vw]">취소</p>
+                            <p className="text-[1.6vw]">뒤로</p>
                         </div>
                         <div
                             className="absolute bottom-[1vw] right-[1vw] flex flex-col items-center justify-center py-[1vw] px-[8vw] color-bg-yellow2 color-border-yellow1 border-[0.4vw] rounded-full cursor-pointer"
