@@ -47,7 +47,7 @@ export default function NewsModal(props: NewsType) {
         <div className="absolute w-[70%] h-[95%] animation-modal z-20">
             <div className="h-[15%]"></div>
             <div
-                className="relative w-full h-[85%] flex flex-col items-center justify-start text-black rounded-[0.8vw]"
+                className="relative w-full h-[85%] flex flex-col items-center justify-start text-black rounded-[0.8vw] pb-[2vw]"
                 style={{ backgroundColor: '#ececec' }}
             >
                 <div className="relative w-[90%] h-[35%] flex flex-col items-center">
@@ -76,7 +76,7 @@ export default function NewsModal(props: NewsType) {
                 <div className="relative w-[90%] h-[65%] flex ">
                     <div className="w-[60%] h-full pe-[0.8vw]">
                         {currentNews.length > 0 ? (
-                            <div className="w-full h-[55%]  text-start text-[3.0vw] overflow-y-hidden">
+                            <div className="w-full h-[55%]  text-start text-[3.0vw] overflow-y-scroll">
                                 <p className="h-full text-ellipsis overflow-hidden">
                                     {currentNews[0].articleHeadline}
                                 </p>
@@ -90,7 +90,7 @@ export default function NewsModal(props: NewsType) {
                             </div>
                         )}
                         {currentNews.length > 1 ? (
-                            <div className="w-full h-[45%]  text-start text-[2vw] overflow-y-hidden">
+                            <div className="w-full h-[45%]  text-start text-[2vw] overflow-y-scroll">
                                 <div>{currentNews[1].articleHeadline}</div>
                             </div>
                         ) : (
@@ -101,7 +101,7 @@ export default function NewsModal(props: NewsType) {
                     </div>
                     <div className="w-[40%] h-full">
                         {currentNews.length > 2 ? (
-                            <div className="w-full h-[50%] b text-start text-[2.4vw] overflow-y-hidden">
+                            <div className="w-full h-[50%] b text-start text-[2.4vw] overflow-y-scroll">
                                 {currentNews[2].articleHeadline}
                             </div>
                         ) : (
@@ -112,7 +112,7 @@ export default function NewsModal(props: NewsType) {
                             </div>
                         )}
                         {currentNews.length > 3 ? (
-                            <div className="w-full h-[50%] b text-start text-[2.4vw] overflow-y-hidden">
+                            <div className="w-full h-[50%] b text-start text-[2.4vw] overflow-y-scroll">
                                 {currentNews[3].articleHeadline}
                             </div>
                         ) : (
