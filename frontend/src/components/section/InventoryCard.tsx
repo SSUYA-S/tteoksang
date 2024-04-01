@@ -24,12 +24,12 @@ export default function InventoryCard({
     const productNumber = myProduct.productQuantity;
 
     return (
-        <div className="w-[40%] h-[50%] bg-white color-border-subbold border-[0.2vw] rounded-[0.8vw]">
+        <div className="w-[40%] h-[50%] bg-white color-border-subbold border-[0.2vw] rounded-[0.8vw] m-[0.4vw]">
             <p className="w-full h-[15%] flex justify-center items-center text-center text-[1.4vw] color-bg-brown1 color-text-main rounded-ss-[0.4vw] rounded-se-[0.4vw]">
                 {productName}
             </p>
-            <div className="w-full h-[60%] flex">
-                <div className="w-[30%] h-full flex flex-col justify-between ">
+            <div className="w-full h-[85%] flex">
+                <div className="w-[30%] h-[90%] flex flex-col justify-between ">
                     <p className="h-[20%] text-[1.4vw] color-text-subbold pt-[0.5vw]">
                         {'x' + productNumber}
                     </p>
@@ -47,7 +47,7 @@ export default function InventoryCard({
                     </p>
                 </div>
                 <div className="w-[70%] h-full flex flex-col justify-center">
-                    <div className="h-[20%]"></div>
+                    <div className="h-[0%]"></div>
                     <div className="w-full h-[60%] flex flex-col items-center justify-center px-[1.0vw]">
                         <div className="w-full flex justify-between text-[1.3vw] my-[0.8vh]">
                             <p className="color-text-subbold">전일 대비</p>

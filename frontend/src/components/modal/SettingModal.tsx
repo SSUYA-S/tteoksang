@@ -57,7 +57,7 @@ export default function SettingModal(props: settingType) {
     };
 
     return (
-        <div className="absolute w-[40%] h-[50%] flex items-center justify-start color-text-textcolor border-[0.4vw] color-border-brown1 color-bg-main z-40 rounded-[0.8vw] animation-modal ">
+        <div className="absolute w-[40%] h-[60%] flex items-center justify-start color-text-textcolor border-[0.4vw] color-border-brown1 color-bg-main z-40 rounded-[0.8vw] animation-modal ">
             <div className="w-[100%] h-full flex flex-col items-center">
                 <div className="w-[90%] h-[15%] flex flex-col justify-end items-start">
                     <p className="text-[1.6vw]">설정</p>
