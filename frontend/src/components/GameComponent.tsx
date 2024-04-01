@@ -35,6 +35,7 @@ import HalfReportModal from './modal/HalfReportModal';
 import OffReportModal from './modal/OffReportModal';
 import {
     privateEventState,
+    productInfoState,
     specialEventState,
 } from '../util/product-and-event';
 import specialeventJson from '../dummy-data/special-event.json';
@@ -805,7 +806,7 @@ export default function GameComponent(props: GameType) {
                     </div>
                 </div>
                 <div className="flex py-[2vw]">
-                    {currentSpecialEvent.map((item, index) => {
+                    {currentSpecialEvent.map((item) => {
                         if (item.eventArray.length > 0) {
                             return (
                                 <div
@@ -1060,6 +1061,7 @@ export default function GameComponent(props: GameType) {
                     titleList={initialData.titleList}
                     eventList={initialData.eventList}
                     achievementInfo={initialData.achievementList}
+                    setStartFlag={props.setStartFlag}
                 />
             ) : (
                 <></>

@@ -1,13 +1,14 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import RentFeeModal from './RentFeeModal';
 import { Title, Event, Product, QuarterReportType } from '../../type/types';
-import { useSelector } from 'react-redux';
 import TitleChangeModal from './TitleChangeModal';
 import { Client } from '@stomp/stompjs';
 
 //dummy data(test 후 비활성화 필요)
 import Quarter from '../../dummy-data/report/quarter.json';
 import QuarterPage1 from '../section/QuarterPage/QuarterPage1';
+import { startNewGame } from '../../api/user';
+import { httpStatusCode } from '../../util/http-status';
 
 interface Prop {
     titleList: Title[];
@@ -73,8 +74,18 @@ export default function QuarterReportModal(props: Prop) {
         });
         client.deactivate();
 
-        //메인 화면으로 나가기
-        props.setStartFlag(false);
+        //api호출
+        startNewGame()
+            .then((res) => {
+                if (res.status === httpStatusCode.OK) {
+                    props.setStartFlag(false);
+                } else {
+                    console.log('response error');
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     };
 
     return (
@@ -98,7 +109,7 @@ export default function QuarterReportModal(props: Prop) {
                     ></div>
                     <div className="w-[60%] h-[70%] absolute left-[20%] top-[15%] color-border-subbold border-[0.5vw] bg-white z-20 flex flex-col items-center color-text-subbold">
                         <div className="w-full h-[15%] px-[1vw] py-[1vh] flex justify-center items-center">
-                            <p className="text-[2vw]">{`계절 결산`}</p>
+                            <p className="text-[2vw]">{`${year}년차 ${season} 결산`}</p>
                         </div>
                         <div className="w-full px-[1vw] h-[0.3vh]">
                             <div className="w-full h-full color-bg-subbold"></div>
@@ -117,7 +128,9 @@ export default function QuarterReportModal(props: Prop) {
                                     Quarter ? Quarter.inProductList : []
                                 }
                                 qtrIncome={Quarter ? Quarter.quarterProfit : 0}
-                                qtrOutcome={Quarter ? Quarter.rentFee : 0}
+                                qtrOutcome={
+                                    Quarter ? Quarter.rentFeeInfo.rentFee : 0
+                                }
                             />
                         </div>
                         <div

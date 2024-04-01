@@ -63,3 +63,8 @@ export async function changeNickname(userNickname: string) {
     };
     return await local.put(`/api/user/nickname`, body, {});
 }
+
+/**새게임 시작하기 */
+export async function startNewGame() {
+    return await local.delete(`/api/user/new-game`);
+}

@@ -326,7 +326,7 @@ export default function WebSocket(props: Prop) {
                                         );
                                         dispatch(
                                             buyableProductIdState(
-                                                res.buyAbleProductIdList
+                                                res.buyableProductList
                                             )
                                         );
                                         dispatch(

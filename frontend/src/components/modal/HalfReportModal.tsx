@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import RentFeeModal from './RentFeeModal';
 import {
     Title,
@@ -8,9 +8,10 @@ import {
     HalfReceipt,
     Achievement,
 } from '../../type/types';
-import { useSelector } from 'react-redux';
 import TitleChangeModal from './TitleChangeModal';
 import { Client } from '@stomp/stompjs';
+import { startNewGame } from '../../api/user';
+import { httpStatusCode } from '../../util/http-status';
 
 //dummy data(test 후 비활성화 필요)
 import Half from '../../dummy-data/report/half.json';
@@ -127,8 +128,18 @@ export default function HalfReportModal(props: Prop) {
         });
         client.deactivate();
 
-        //메인 화면으로 나가기
-        props.setStartFlag(false);
+        //api호출
+        startNewGame()
+            .then((res) => {
+                if (res.status === httpStatusCode.OK) {
+                    props.setStartFlag(false);
+                } else {
+                    console.log('response error');
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
     };
 
     return (
