@@ -23,18 +23,24 @@ export default function QuarterPage1(props: Prop) {
     const [timeDuration2, setTimeDuration2] = useState<string>('');
     const [nowSeason, setNowSeason] = useState<string>('');
 
-    const [eventDescription, setEventDescription] = useState<string>('');
+    const [eventDescription, setEventDescription] = useState<Event[]>([]);
     const [cropName, setCropName] = useState<string>('');
     const [cropSeason, setCropSeason] = useState<string>('');
 
     const eventDescRef = useRef<HTMLDivElement>(null);
     const cropDescRef = useRef<HTMLDivElement>(null);
 
-    const [seasonEventList, setSeasonEventList] = useState<Event[]>([]);
+    // const [seasonEventList, setSeasonEventList] = useState<Event[]>([]);
+    const [eventHashMap, setEventHashMap] = useState<Map<string, Event[]>>(
+        new Map()
+    );
 
     /**이벤트 이미지 호버링하면 출력 */
-    const hoverEventImg = (event: Event) => {
-        setEventDescription(event.eventContent);
+    const hoverEventImg = (eventList: Event[] | undefined) => {
+        console.log(eventList);
+        if (eventList) {
+            setEventDescription(eventList);
+        }
         if (eventDescRef.current) {
             eventDescRef.current.style.opacity = '100';
             eventDescRef.current.style.transition = 'linear 0.5s';
@@ -120,31 +126,56 @@ export default function QuarterPage1(props: Prop) {
         const month: number = ((Math.floor(today - 1 / 30) + 2) % 12) + 1;
         if (month < 3) {
             setNowSeason(`${year - 1}년차 겨울`);
-            setSeasonEventList(
-                props.eventList.filter((event) => event.eventType === 'WINTER')
+            //이벤트 해시맵으로 저장
+            const filterRes = props.eventList.filter(
+                (event) => event.eventType === 'WINTER'
             );
+            makeHashMap(filterRes);
         } else if (month < 6) {
             setNowSeason(`${year}년차 봄`);
-            setSeasonEventList(
-                props.eventList.filter((event) => event.eventType === 'SPRING')
+
+            //이벤트 해시맵으로 저장
+            const filterRes = props.eventList.filter(
+                (event) => event.eventType === 'SPRING'
             );
+            makeHashMap(filterRes);
         } else if (month < 9) {
             setNowSeason(`${year}년차 여름`);
-            setSeasonEventList(
-                props.eventList.filter((event) => event.eventType === 'SUMMER')
+            //이벤트 해시맵으로 저장
+            const filterRes = props.eventList.filter(
+                (event) => event.eventType === 'SUMMER'
             );
+            makeHashMap(filterRes);
         } else if (month < 12) {
             setNowSeason(`${year}년차 가을`);
-            setSeasonEventList(
-                props.eventList.filter((event) => event.eventType === 'FALL')
+            //이벤트 해시맵으로 저장
+            const filterRes = props.eventList.filter(
+                (event) => event.eventType === 'FALL'
             );
+            makeHashMap(filterRes);
         } else {
             setNowSeason(`${year}년차 겨울`);
-            setSeasonEventList(
-                props.eventList.filter((event) => event.eventType === 'WINTER')
+            //이벤트 해시맵으로 저장
+            const filterRes = props.eventList.filter(
+                (event) => event.eventType === 'WINTER'
             );
+            makeHashMap(filterRes);
         }
     }, []);
+
+    const makeHashMap = (filterRes: Event[]) => {
+        const map = new Map();
+        filterRes.map((event) => {
+            if (map.get(event.eventName)) {
+                const temp = map.get(event.eventName);
+                temp.push(event);
+                map.set(event.eventName, temp);
+            } else {
+                map.set(event.eventName, [event]);
+            }
+        });
+        setEventHashMap(map);
+    };
 
     return (
         <>
@@ -229,23 +260,30 @@ export default function QuarterPage1(props: Prop) {
                             style={{ scrollbarWidth: 'thin' }}
                         >
                             <div className="flex flex-shrink-0">
-                                {seasonEventList.map((event) => {
+                                {Array.from(eventHashMap).map((value) => {
                                     return (
                                         <img
                                             className="w-[5vw] h-[6vw] m-[1vw] rounded aspect-square object-cover flex-shrink-0"
-                                            src={loadEventImg(event.eventName)}
-                                            onMouseOver={() =>
-                                                hoverEventImg(event)
-                                            }
+                                            src={loadEventImg(value[0])}
+                                            onMouseOver={() => {
+                                                const eventList = value[1];
+                                                hoverEventImg(eventList);
+                                            }}
                                             onMouseLeave={endHoverEvent}
                                         ></img>
                                     );
                                 })}
                                 <div
-                                    className="absolute w-full h-[7vw] top-[10vw] bg-black opacity-0 text-white -z-20 text-[1.5vw] break-normal"
+                                    className="absolute w-full top-[10vw] bg-black opacity-0 text-white -z-20 text-[1vw] break-normal p-[0.5vw]"
                                     ref={eventDescRef}
                                 >
-                                    {eventDescription}
+                                    {eventDescription.map((event) => {
+                                        return (
+                                            <p key={event.eventId}>
+                                                {event.eventContent}
+                                            </p>
+                                        );
+                                    })}
                                 </div>
                             </div>
                         </div>
