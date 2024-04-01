@@ -1,16 +1,12 @@
 package com.welcome.tteoksang.game.scheduler;
 
-import com.welcome.tteoksang.game.dto.GameMessage;
 import com.welcome.tteoksang.game.service.PublicService;
-import com.welcome.tteoksang.resource.type.MessageType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import static java.time.LocalTime.now;
 
@@ -19,7 +15,6 @@ import static java.time.LocalTime.now;
 @Slf4j
 public class SceduledGameController {
 
-    private final SimpMessageSendingOperations sendingOperations;
     private final PublicService publicService;
     private final ScheduleService scheduleService;
 
@@ -32,20 +27,16 @@ public class SceduledGameController {
     @Value("${SEASON_START_DATE}")
     private String seasonStartCron;
 
-    @GetMapping("/test/s/{scheduledId}")
-    void startJob(@PathVariable String scheduledId) {
-        String cronExpression = "0 0 10 ? * 1 *";
-        long offset = (halfPeriod + halfReportPeriod) * 2 * seasonPeriod - halfReportPeriod;
-        String nextCronExpression = scheduleService.createGeneralCronPerWeek(cronExpression, offset);
-        // 결과 출력
-        System.out.println("현재 시간 이후 " + offset + "초 이후의 cron 표현식: " + nextCronExpression);
-
-    }
-
+    private boolean isSeasonStarted = false;
 
     @GetMapping("/test/season")
     @Scheduled(cron = "${SEASON_START_DATE}") //시즌 시작 시 마다 실행됨!
     public void startGame() {
+        if (isSeasonStarted) {
+            log.info("====already season is started====");
+            return;
+        }
+        isSeasonStarted = true;
         publicService.initSeason();
         log.debug("=========start SEASON==========");
         long period = halfPeriod + halfReportPeriod;
@@ -76,8 +67,8 @@ public class SceduledGameController {
     public void endGame() {
         log.debug("=========end SEASON==========");
         scheduleService.removeAllSchedule();
+        isSeasonStarted = false;
     }
-
 
 
 }
