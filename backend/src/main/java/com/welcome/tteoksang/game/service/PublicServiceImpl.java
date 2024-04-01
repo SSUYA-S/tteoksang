@@ -59,16 +59,17 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
     private final ServerInfo serverInfo;
     private final Random random = new Random();
 
-    @Value("${TURN_PERIOD}")
-    private long turnPeriod;
-    @Value("${EVENT_ARISE_PERIOD}")
-    private long eventPeriod;
-    @Value("${EVENT_ARISE_TIME}")
-    private long eventTime;
-    @Value("${NEWS_PUBLISH_TIME}")
-    private long newsTime;
+    @Value("${TURN_PERIOD_SEC}")
+    private long turnPeriodSec;
+
     @Value("${EVENT_ARISE_TURN_COUNT}")
-    private int eventAriseTurnCount;
+    private int eventTurnPeriod;
+    @Value("${EVENT_ARISE_INITIAL_TURN}")
+    private int eventInitialTurn;
+    @Value("${NEWS_PUBLISH_INITIAL_TURN}")
+    private int newsInitialTurn;
+    @Value("${QUARTER_YEAR_TURN_PERIOD}")
+    private int quarterYearTurnPeriod;
     private final String TURN = "fluctuate";
     private final String PUBLIC_EVENT = "event";
     private final String NEWSPAPER = "news";
@@ -210,26 +211,22 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
 
     //반기 스케쥴 등록/삭제
     public void startHalfYearGame() {
-        scheduleService.register(PUBLIC_EVENT, eventTime, eventPeriod, () -> {
-            log.debug("EVENT!!");
+        long eventPeriodSec=eventTurnPeriod*turnPeriodSec;
+        scheduleService.register(PUBLIC_EVENT, eventInitialTurn*turnPeriodSec, eventPeriodSec, () -> {
             createEvent();
         });
-        scheduleService.register(TURN, turnPeriod, () -> {
-            log.debug(serverInfo.getCurrentTurn() + "번째 턴 실행");
+        scheduleService.register(TURN, turnPeriodSec, () -> {
             executePerTurn();
         });
-        scheduleService.register(NEWSPAPER, newsTime, eventPeriod, () -> {
+        scheduleService.register(NEWSPAPER, newsInitialTurn*turnPeriodSec, eventPeriodSec, () -> {
             createNewspaper();
         });
-//        scheduleService.register("TEST", "0 * * * * *", () -> {
-//            checkLongPlayTime();
-//        });
     }
 
     public void endHalfYearGame() {
         scheduleService.remove(TURN);
-        scheduleService.remove(NEWSPAPER);
         scheduleService.remove(PUBLIC_EVENT);
+        scheduleService.remove(NEWSPAPER);
     }
 
     //실행======================
@@ -239,6 +236,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         updateBuyableProduct();
         fluctuateProduct();
         updateTurn();
+        log.debug(serverInfo.getCurrentTurn() + "번째 턴 실행 :"+serverInfo.getTurnStartTime());
         sendPublicMessage(MessageType.GET_PUBLIC_EVENT,
                 PublicEventInfo.builder()
                         .inGameTime(LocalDateTime.now())
@@ -327,15 +325,17 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         ).toList();
         nextEventList.stream().forEach(
                 event -> {
-                    fluctationInfoMap.get(event.getProductId()).setEventEffect(event.getEventVariance());
+                    fluctationInfoMap.get(event.getProductId())
+                            .setEventEffect(fluctationInfoMap.get(event.getProductId()).getEventEffect()+event.getEventVariance());
                 }
         );
+        log.debug("이벤트 결정 완료: "+nextEventList);
     }
 
     public void updateTurn() {
         serverInfo.setCurrentTurn(serverInfo.getCurrentTurn() + 1);
         serverInfo.setTurnStartTime(LocalDateTime.now());
-        if (serverInfo.getCurrentTurn() % eventPeriod == 0) {
+        if (serverInfo.getCurrentTurn() % eventTurnPeriod == 0) {
             serverInfo.setSpecialEventIdList(nextEventList.stream().map(event -> {
                 SpecialEventLogInfo logInfo = SpecialEventLogInfo.builder()
                         .eventId(event.getEventId())
@@ -358,7 +358,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
             nextEventList = null;
             log.debug("==================event 변경==================");
         }
-        if (serverInfo.getCurrentTurn() % 90 == 0) {
+        if (serverInfo.getCurrentTurn() % quarterYearTurnPeriod == 0) {
             updateQuarterYearList();
         }
         privateScheduleService.initGameInfoForAllUsersPerTurn();
@@ -383,10 +383,10 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
             if (productInfo.getProductCost() >= fluctationInfo.getProductAvgCost() * eventEffectRate * MAX_AVG_MULTIPLE_LIMIT) {
                 //평균값의 N배 이상인 경우, min, maxRate 값 변동! -> 변동폭 만큼 각 rate에서 준다
                 double maxRate = fluctationInfo.getMinFluctuationRate();
-                double minRate = fluctationInfo.getMinFluctuationRate() * 2 - fluctationInfo.getMaxFluctuationRate();
-                randomRate = random.nextDouble(minRate * (1 - CORRECTION_VALUE), maxRate);
+                double minRate = (fluctationInfo.getMinFluctuationRate() * 2 - fluctationInfo.getMaxFluctuationRate())* (1 - CORRECTION_VALUE);
+                randomRate = random.nextDouble(minRate , maxRate);
                 log.debug(productId + "@@@@@너무 비싸요@@@@@" + minRate + ">" + randomRate + "<" + maxRate);
-                //TODO- 그럼에도 계속 올라가는 경우 조정해줘야 할지 논의 필요
+                //TODO- 그럼에도 계속 올라가는 경우 조정해줘야 할지 논의 필요-> 해줘야 한다...
             } else if (fluctationInfo.getMinFluctuationRate() > 1) {
                 //증가만 하는 경우
                 randomRate = random.nextDouble(fluctationInfo.getMinFluctuationRate() * eventEffectRate * (1 - CORRECTION_VALUE), (fluctationInfo.getMaxFluctuationRate() + 0.001) * eventEffectRate);
@@ -424,7 +424,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
 
     //가격 범위 변동 -> fluctMap 업데이트: 10일마다 실행
     public void updateFluctuationInfoPer10Days() {
-        int countPerTenDays = serverInfo.getCurrentTurn() / 10;
+        int countPerTenDays = (serverInfo.getCurrentTurn()%(quarterYearTurnPeriod*4)) /10;
         fluctationInfoMap.entrySet().stream().forEach(
                 (entry) -> {
                     ProductFluctuation fluctuation = productFluctuationRepository.findById(ProductFluctuationId.builder()
