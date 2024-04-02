@@ -16,6 +16,7 @@ import org.apache.hadoop.util.GenericOptionsParser;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import com.welcome.Message;
 import java.util.StringTokenizer;
 
 public class Main {
