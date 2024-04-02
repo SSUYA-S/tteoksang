@@ -1,4 +1,4 @@
-package com.welcome.tteoksang.game.dto.result;
+package com.welcome.tteoksang.game.dto.result.quarter;
 
 import lombok.*;
 

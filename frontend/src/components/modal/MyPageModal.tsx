@@ -583,44 +583,42 @@ export default function MyPageModal(props: MyPageType) {
                         style={{ aspectRatio: 1 / 1 }}
                     />
                 </div>
-                <div className="flex w-full">
-                    <div className="flex flex-col w-[40%] pl-[20%] items-start">
-                        <p className="text-[1.5vw] mt-[1.8vw] text-green-500">
-                            칭호
-                        </p>
+                <div className="flex flex-col w-[80%]">
+                    <div className="flex w-full justify-between items-center mt-[1vw]">
+                        <p className="text-[1.5vw] text-green-500">칭호</p>
+                        {titleId === 1 ? (
+                            <p className="text-[1.2vw]  text-gray-400">
+                                칭호 없음
+                            </p>
+                        ) : (
+                            <p className="text-[1.2vw] text-green-500">
+                                {props.titleInfo[titleId - 1].titleName}
+                            </p>
+                        )}
+                    </div>
+                    <div className="flex w-full justify-between items-center my-[1vw]">
                         <div
-                            className="flex my-[0.8vw] text-[1.8vw] items-center justify-center cursor-pointer"
+                            className="w-[30%] text-[1.5vw] cursor-pointer"
                             onClick={() => setIsNicknameChanging(true)}
                         >
                             닉네임
                         </div>
-                        <p className="text-[1.3vw]">경력</p>
-                    </div>
-                    <div className="flex flex-col w-[40%] items-end">
-                        {titleId === 1 ? (
-                            <p className="text-[1.5vw] mt-[1.8vw] text-gray-400">
-                                칭호 없음
-                            </p>
-                        ) : (
-                            <p className="text-[1.5vw] mt-[1.8vw] text-green-500">
-                                {props.titleInfo[titleId - 1].titleName}
-                            </p>
-                        )}
                         <div
-                            className="flex my-[0.8vw] text-[1.8vw] items-center justify-center cursor-pointer"
+                            className="text-[1.2vw] text-start cursor-pointer  overflow-hidden text-ellipsis whitespace-nowrap "
                             onClick={() => setIsNicknameChanging(true)}
                         >
                             {userNickname}
                         </div>
-                        <p className="text-[1.3vw]">{`${career}년차`}</p>
-                    </div>
-                    <div className="flex flex-col w-[20%]">
                         <div
-                            className="flex mt-[4.7vw] text-[1.8vw] items-center justify-center cursor-pointer border-[0.2vw] color-border-subbold m-[0.4vw]"
+                            className="w-[24%] flex justify-center text-[1.2vw] text-center cursor-pointer border-[0.2vw] rounded-[0.8vw] color-border-subbold hover:color-bg-subbold hover:text-white"
                             onClick={() => setIsNicknameChanging(true)}
                         >
                             수정
                         </div>
+                    </div>
+                    <div className="flex w-full justify-between items-center">
+                        <p className="text-[1.3vw]">경력</p>
+                        <p className="text-[1.3vw]">{`${career}년차`}</p>
                     </div>
                 </div>
                 <div className="w-[80%] flex flex-col color-border-subbold border-[0.2vw] mt-[2vw] px-[0.5vw]">
@@ -690,7 +688,7 @@ export default function MyPageModal(props: MyPageType) {
                     >
                         도전과제
                     </div>
-                    <div
+                    {/* <div
                         className={
                             'w-[9vw]  text-white bg-blue-500 pt-[0.2vw] text-[1.4vw] mx-[2vw] cursor-pointer rounded-t-[1vw] ' +
                             (menu === 1 ? 'h-[4.2vw]' : 'h-[2.1vw]')
@@ -698,10 +696,10 @@ export default function MyPageModal(props: MyPageType) {
                         onClick={() => changeMenu(1)}
                     >
                         히스토리
-                    </div>
+                    </div> */}
                     <div
                         className={
-                            'w-[9vw]  text-white bg-purple-500 pt-[0.2vw] text-[1.4vw] cursor-pointer rounded-t-[1vw] ' +
+                            'w-[9vw]  text-white bg-purple-500 pt-[0.2vw] ms-[2vw] text-[1.4vw] cursor-pointer rounded-t-[1vw] ' +
                             (menu === 2 ? 'h-[4.2vw]' : 'h-[2.1vw]')
                         }
                         onClick={() => changeMenu(2)}
@@ -711,7 +709,7 @@ export default function MyPageModal(props: MyPageType) {
                 </div>
                 <div
                     className={
-                        'absolute right-[5%] bottom-[5%] w-[9vw]  text-white bg-black p-[0.2vw] text-[1.4vw] cursor-pointer rounded-[0.8vw] '
+                        'absolute right-[5%] bottom-[5%] w-[9vw]  text-white color-bg-subbold p-[0.2vw] text-[1.4vw] cursor-pointer rounded-[0.8vw] '
                     }
                     onClick={() => saveSettings()}
                 >

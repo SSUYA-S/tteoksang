@@ -1,11 +1,19 @@
 package com.welcome.tteoksang.game.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.welcome.tteoksang.game.dto.Chat;
 import com.welcome.tteoksang.game.dto.GameMessage;
+import com.welcome.tteoksang.game.dto.res.GameMessageRes;
 import com.welcome.tteoksang.game.dto.res.WebSocketIdRes;
+import com.welcome.tteoksang.game.dto.result.TestExample;
+import com.welcome.tteoksang.game.dto.result.end.FinalResult;
+import com.welcome.tteoksang.game.dto.result.half.Half;
+import com.welcome.tteoksang.game.dto.result.offline.OfflineReport;
+import com.welcome.tteoksang.game.dto.result.quarter.Quarter;
 import com.welcome.tteoksang.game.service.ChatService;
 import com.welcome.tteoksang.redis.RedisPrefix;
 import com.welcome.tteoksang.redis.RedisService;
+import com.welcome.tteoksang.resource.type.MessageType;
 import com.welcome.tteoksang.user.dto.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +28,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.security.Principal;
 import java.util.Map;
@@ -51,24 +60,94 @@ public class GameController {
                 );
     }
 
-//    @MessageMapping("/private/{webSocketId}") // 클라이언트에서 보낸 메시지를 받을 메서드 지정
-//    @SendTo("/topic/private/{webSocketId}") // 메서드가 처리한 결과를 보낼 목적지 지정
-//    public GameMessage handlePrivateMessage(@DestinationVariable String webSocketId, @Payload GameMessage gameMessage, Principal principal) {
-//          /* @DestinationVariable: 메시지의 목적지에서 변수를 추출
-//             @Payload: 메시지 본문(body)의 내용을 메서드의 인자로 전달할 때 사용
-//                      (클라이언트가 JSON 형태의 메시지를 보냈다면, 이를 GameMessage 객체로 변환하여 메서드에 전달)
-//          */
-//        // 유저 정보
-//        User user = (User) ((Authentication) principal).getPrincipal();
-//        log.debug("UserName : {}", user.getUserNickname());
-//        switch (gameMessage.getType()) {
-//            case CHANGE_TITLE:
-//                // 처리
-//            default:
-//                // 정의되지 않은 요청
-//        }
-//        return gameMessage;
-//    }
+    @GetMapping("/quarter/{webSocketId}")
+    public void sendQuater(@PathVariable("webSocketId") String webSocketId) {
+        String logData = TestExample.quarter;
+        ObjectMapper mapper = new ObjectMapper();
+        boolean isSuccess = false;
+        Quarter message = null;
+        try {
+            message = mapper.readValue(logData, Quarter.class);
+            isSuccess = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        GameMessageRes quarterResult = GameMessageRes.builder()
+                .type(MessageType.QUARTER_REPORT)
+                .isSuccess(isSuccess)
+                .body(message)
+                .build();
+
+        simpMessagingTemplate.convertAndSend("/topic/private/" + webSocketId, quarterResult);
+    }
+
+    @GetMapping("/half/{webSocketId}")
+    public void sendHalf(@PathVariable("webSocketId") String webSocketId) {
+        String responseData = TestExample.half;
+        ObjectMapper mapper = new ObjectMapper();
+        boolean isSuccess = false;
+        Half message = null;
+        try {
+            message = mapper.readValue(responseData, Half.class);
+            isSuccess = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        GameMessageRes halfResult = GameMessageRes.builder()
+                .type(MessageType.HALF_REPORT)
+                .isSuccess(isSuccess)
+                .body(message)
+                .build();
+
+        simpMessagingTemplate.convertAndSend("/topic/private/" + webSocketId, halfResult);
+    }
+
+    @GetMapping("/final/{webSocketId}")
+    public void sendFinal(@PathVariable("webSocketId") String webSocketId) {
+        String responseData = TestExample.finalReport;
+        ObjectMapper mapper = new ObjectMapper();
+        boolean isSuccess = false;
+        FinalResult message = null;
+        try {
+            message = mapper.readValue(responseData, FinalResult.class);
+            isSuccess = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        GameMessageRes finalResult = GameMessageRes.builder()
+                .type(MessageType.FINAL_REPORT)
+                .isSuccess(isSuccess)
+                .body(message)
+                .build();
+
+        simpMessagingTemplate.convertAndSend("/topic/private/" + webSocketId, finalResult);
+    }
+
+    @GetMapping("/offline/{webSocketId}")
+    public void sendOffline(@PathVariable("webSocketId") String webSocketId) {
+        String ResponseData = TestExample.offlineData;
+        ObjectMapper mapper = new ObjectMapper();
+        boolean isSuccess = false;
+        OfflineReport message = null;
+        try {
+            message = mapper.readValue(ResponseData, OfflineReport.class);
+            isSuccess = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        GameMessageRes offlineResult = GameMessageRes.builder()
+                .type(MessageType.OFFLINE_REPORT)
+                .isSuccess(isSuccess)
+                .body(message)
+                .build();
+
+        simpMessagingTemplate.convertAndSend("/topic/private/" + webSocketId, offlineResult);
+    }
+
 
 
     @MessageMapping("/chat") // 클라이언트에서 보낸 메시지를 받을 메서드 지정
