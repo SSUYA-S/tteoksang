@@ -26,8 +26,8 @@ public class SceduledGameController {
 
     @Value("${QUARTER_YEAR_TURN_PERIOD}")
     private long quarterYearTurnPeriod;
-    @Value("${HALF_YEAR_BREAK_PERIOD_SEC}")
-    private long halfReportPeriodSec;
+    @Value("${HALF_YEAR_BREAK_SEC}")
+    private long halfYearBreakSec;
     @Value("${SEASON_YEAR_PERIOD}")
     private long seasonYearPeriod;
 
@@ -44,8 +44,8 @@ public class SceduledGameController {
         publicService.initSeason();
         log.debug("=========start SEASON==========");
         long halfYearPeriodSec = turnPeriodSec * quarterYearTurnPeriod * 2;
-        long period = halfYearPeriodSec + halfReportPeriodSec;
-        long offset = (halfYearPeriodSec + halfReportPeriodSec) * 2 * seasonYearPeriod - halfReportPeriodSec;
+        long period = halfYearPeriodSec + halfYearBreakSec;
+        long offset = (halfYearPeriodSec + halfYearBreakSec) * 2 * seasonYearPeriod - halfYearBreakSec;
         //반기 이벤트 등록 -> 주기는 9시간 9분
         scheduleService.register("half-register", period, () -> {
             publicService.startHalfYearGame();
@@ -59,7 +59,9 @@ public class SceduledGameController {
         scheduleService.register("finishSeason", LocalDateTime.now(), offset,
                 () -> {
                     scheduleService.removeAllSchedule();
-                    log.debug("======시즌을 종료합니다======");
+                    publicService.endSeason();
+                    isSeasonStarted = false;
+                    log.debug("=========end SEASON==========");
                 });
     }
 
@@ -72,8 +74,9 @@ public class SceduledGameController {
 
     @GetMapping("/test/season-end")
     public void endGame() {
-        log.debug("=========end SEASON==========");
         scheduleService.removeAllSchedule();
+        publicService.endSeason();
+        log.debug("=========end SEASON==========");
         isSeasonStarted = false;
     }
 
