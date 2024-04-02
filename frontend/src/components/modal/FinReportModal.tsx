@@ -104,10 +104,31 @@ export default function FinReportModal({
                 let profit = 0;
                 // 제품 map
                 //여기서 item은 1년 2년 3년을 나타냄. item.year로 확인 가능.
-                let yearProductList: privateProdRep[] = [];
+                let yearProductList: privateYearProdRep = {
+                    year: 0,
+                    totalAccPrivateProductPurchaseQuantity: 0,
+                    totalAccPrivateProductOutcome: 0,
+                    totalAccPrivateProductSalesQuantity: 0,
+                    totalAccPrivateProductIncome: 0,
+                    totalAccPrivateProductProfit: 0,
+                    totalAccPrivateBrokerFee: 0,
+                };
                 item.productList.map((data) => {
                     incomeValue += data.totalAccPrivateProductIncome;
                     outcomeValue += data.totalAccPrivateProductOutcome;
+                    yearProductList.year = item.year;
+                    yearProductList.totalAccPrivateProductPurchaseQuantity +=
+                        data.totalAccPrivateProductPurchaseQuantity;
+                    yearProductList.totalAccPrivateProductOutcome +=
+                        data.totalAccPrivateProductOutcome;
+                    yearProductList.totalAccPrivateProductSalesQuantity +=
+                        data.totalAccPrivateProductSalesQuantity;
+                    yearProductList.totalAccPrivateProductIncome +=
+                        data.totalAccPrivateProductIncome;
+                    yearProductList.totalAccPrivateProductProfit +=
+                        data.totalAccPrivateProductProfit;
+                    yearProductList.totalAccPrivateBrokerFee +=
+                        data.totalAccPrivateBrokerFee;
                     // console.log(data);
 
                     setPriTotalProductInfo((prevItems) => {
@@ -146,6 +167,19 @@ export default function FinReportModal({
                             return [...prevItems, data];
                         }
                     });
+                });
+
+                setPriYearProductInfo((prev) => {
+                    // newItem의 year가 이미 존재하는지 확인
+                    const isYearExist = prev.some(
+                        (data) => data.year === item.year
+                    );
+                    if (!isYearExist) {
+                        // 존재하지 않는 경우, 새 배열로 업데이트
+                        return [...prev, yearProductList];
+                    }
+                    // 이미 존재하는 경우, 변화 없이 이전 상태 반환
+                    return prev;
                 });
 
                 totalIncome += incomeValue;
