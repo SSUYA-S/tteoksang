@@ -25,14 +25,28 @@ export const options = {
         duration: 500,
     },
     responsive: true,
+    maintainAspectRatio: false,
+    categoryPercentage: 0.5,
+    // scales: { x: { display: false } },
     plugins: {
         legend: {
+            display: false,
             position: 'bottom' as const,
         },
         title: {
             display: false,
         },
         // tooltip 해야함
+    },
+    options: {
+        scales: {
+            x: {
+                // x축 설정
+                categoryPercentage: 0.8, // 카테고리 전체 폭 대비 바의 폭 비율
+                barPercentage: 0.9, // 카테고리 내에서 바의 폭 비율
+            },
+            // y축 설정...
+        },
     },
 };
 

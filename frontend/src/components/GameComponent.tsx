@@ -1201,6 +1201,7 @@ export default function GameComponent(props: GameType) {
                     )}
                     {isFinReportAvail ? (
                         <FinReportModal
+                            achievementInfo={initialData.achievementList}
                             productList={initialData.productList}
                             finReport={finReport}
                             setIsFinReportAvail={setIsFinReportAvail}
