@@ -137,6 +137,8 @@ public class ReportServiceImpl implements ReportService{
                 // products는 redis 안의 작물 정보
                 // 순이익이 최대인 농산물부터 판매
                 for (Map.Entry<Integer, UserProductInfo> rentFeeProduct : products.entrySet()) {
+                    if(rentFeeProduct.getValue().getProductQuantity() == 0)
+                        continue;
                     // 현재 작물
                     Integer productId = rentFeeProduct.getKey();
                     // 현재 각각의 나의 작물 정보
