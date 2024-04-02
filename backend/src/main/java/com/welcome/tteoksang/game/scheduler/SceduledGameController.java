@@ -59,8 +59,9 @@ public class SceduledGameController {
         scheduleService.register("finishSeason", LocalDateTime.now(), offset,
                 () -> {
                     scheduleService.removeAllSchedule();
-                    publicService.startSeasonBreakTime();
-                    log.debug("======시즌을 종료합니다======");
+                    publicService.endSeason();
+                    isSeasonStarted = false;
+                    log.debug("=========end SEASON==========");
                 });
     }
 
@@ -73,8 +74,9 @@ public class SceduledGameController {
 
     @GetMapping("/test/season-end")
     public void endGame() {
-        log.debug("=========end SEASON==========");
         scheduleService.removeAllSchedule();
+        publicService.endSeason();
+        log.debug("=========end SEASON==========");
         isSeasonStarted = false;
     }
 
