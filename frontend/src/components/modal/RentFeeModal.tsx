@@ -39,14 +39,14 @@ export default function RentFeeModal(props: Prop) {
                 <div className="w-full h-[20%] p-[1vw] text-[2vw] text-red-500 flex justify-center items-end">
                     임대료 고지서
                 </div>
-                <hr className="color-bg-subbold w-[90%] h-[0.4vw]"></hr>
-                <div className="text-[1.8vw] w-full h-[30%] color-text-subbold">
+                <hr className="color-bg-subbold w-[90%] h-[0.3vw]"></hr>
+                <div className="text-[2vw] w-full h-[30%] color-text-subbold">
                     {duration}
                 </div>
-                <div className="text-[1.8vw] text-right w-full h-[30%] p-[1vw] color-text-subbold">{`${rentFeeInfo.rentFee.toLocaleString()}원`}</div>
+                <div className="text-[2vw] text-right w-full h-[30%] p-[1vw] color-text-subbold">{`${rentFeeInfo.rentFee.toLocaleString()}원`}</div>
                 <div
                     onClick={props.showReport}
-                    className="w-[90%] p-[1vw] m-[1vw] border-[0.2vw] bg-white color-border-subbold text-[1.5vw] color-text-subbold cursor-pointer"
+                    className="w-[90%] p-[1vw] m-[1vw] border-[0.2vw] color-border-subbold text-[2vw] color-text-subbold cursor-pointer hover:color-bg-subbold hover:text-[#FDFFA3]"
                 >
                     확인
                 </div>
@@ -95,18 +95,18 @@ export default function RentFeeModal(props: Prop) {
                 <div className="w-full h-[20%] p-[1vw] text-[2vw] text-white flex justify-center items-end">
                     파산 고지서
                 </div>
-                <hr className=" w-[90%] h-[0.4vw]"></hr>
-                <div className="text-[1.8vw] w-full h-[10%] text-white">
+                <hr className="bg-white w-[90%] h-[0.3vw]"></hr>
+                <div className="text-[2vw] w-full h-[10%] text-white">
                     {duration}
                 </div>
-                <div className="text-[1.8vw] text-right w-full h-[10%] p-[1vw] text-white">{`${rentFeeInfo.rentFee.toLocaleString()}원`}</div>
-                <div className="text-[1.8vw] text-center w-[90%] h-[50%] p-[1vw] text-white overflow-y-auto break-keep flex flex-col justify-around items-center">
+                <div className="text-[2vw] text-right w-full h-[10%] p-[1vw] text-white">{`${rentFeeInfo.rentFee.toLocaleString()}원`}</div>
+                <div className="text-[2vw] text-center w-[90%] h-[50%] p-[1vw] text-white overflow-y-auto break-keep flex flex-col justify-around items-center">
                     <p>모든 품목을 압류하더라도 임대료 납부가 불가능합니다.</p>
                     <p>GAME OVER...</p>
                 </div>
                 <div
                     onClick={props.endGame}
-                    className="w-[90%] p-[1vw] h-[10%] m-[1vw] border-[0.2vw] border-white text-[1.5vw] text-white flex justify-center items-center cursor-pointer"
+                    className="w-[90%] p-[1vw] h-[10%] m-[1vw] border-[0.2vw] border-white text-[2vw] text-white flex justify-center items-center cursor-pointer hover:bg-white hover:text-[#8e8e8e]"
                 >
                     다시 시작하기
                 </div>

@@ -50,6 +50,8 @@ interface Prop {
             | OfflineReportType
             | FinalReportType
     ) => void;
+    startTimer: (ingameTime: string, breakTime: string) => void;
+    endTimer: () => void;
 }
 
 /** 웹소켓 핸드쉐이크 및 수신 정보 처리 담당(채팅 제외)*/
@@ -124,6 +126,22 @@ export default function WebSocket(props: Prop) {
                                         }
                                     } else {
                                         console.log(`ERROR ON ${msg.type}`);
+                                    }
+                                    break;
+                                case 'GET_BREAK_TIME':
+                                    //휴식시간!
+                                    if (msg.isSuccess) {
+                                        const body = msg.body;
+                                        if (body.isBreakTime) {
+                                            //휴식시간 시작
+                                            props.startTimer(
+                                                body.ingameTime,
+                                                body.breakTime
+                                            );
+                                        } else {
+                                            //휴식 종료
+                                            props.endTimer();
+                                        }
                                     }
                                     break;
                             }
@@ -385,6 +403,22 @@ export default function WebSocket(props: Prop) {
                                         );
                                     }
                                     break;
+                                case 'GET_BREAK_TIME':
+                                    //휴식시간!
+                                    if (msg.isSuccess) {
+                                        const body = msg.body;
+                                        if (body.isBreakTime) {
+                                            //휴식시간 시작
+                                            props.startTimer(
+                                                body.ingameTime,
+                                                body.breakTime
+                                            );
+                                        } else {
+                                            //휴식 종료
+                                            props.endTimer();
+                                        }
+                                    }
+                                    break;
                             }
                         });
                     };
@@ -419,6 +453,14 @@ export default function WebSocket(props: Prop) {
                 destination: `/app/private/${props.webSocketId}`,
                 body: JSON.stringify({
                     type: 'GET_NEWSPAPER',
+                    body: {},
+                }),
+            });
+            //지금 쉬는 시간인가?
+            props.client.publish({
+                destination: `/app/private/${props.webSocketId}`,
+                body: JSON.stringify({
+                    type: 'GET_BREAK_TIME',
                     body: {},
                 }),
             });
