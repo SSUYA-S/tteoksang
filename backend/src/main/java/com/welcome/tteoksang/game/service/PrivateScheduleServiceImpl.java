@@ -74,10 +74,11 @@ public class PrivateScheduleServiceImpl implements PrivateScheduleService {
     }
 
     @Override
-    public void updateUserAlertPlayTimeMap(String userId) {
+    public void updateUserAlertPlayTimeMap(String userId, long offsetPlayTime) {
         CheckPlayTimeInfo checkPlayTimeInfo = userAlertPlayTimeMap.get(userId);
         checkPlayTimeInfo.setAlertCount(checkPlayTimeInfo.getAlertCount() + 1);
-        checkPlayTimeInfo.setChecked(LocalDateTime.now());
+        checkPlayTimeInfo.setChecked(checkPlayTimeInfo.getChecked().plusMinutes(offsetPlayTime));
+//        log.debug("PLAYTIME=> "+checkPlayTimeInfo.toString());
     }
 
 }

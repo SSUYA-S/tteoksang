@@ -33,18 +33,14 @@ import QuarterReportModal from './modal/QuarterReportModal';
 import { Cookies } from 'react-cookie';
 import HalfReportModal from './modal/HalfReportModal';
 import OffReportModal from './modal/OffReportModal';
-import {
-    privateEventState,
-    productInfoState,
-    specialEventState,
-} from '../util/product-and-event';
-import specialeventJson from '../dummy-data/special-event.json';
+
 import { loadEventImg } from '../util/loadEventImg';
 import { loadProduct } from '../util/loadProduct';
 import { useNavigate } from 'react-router-dom';
 import logoutServiceWorker from '../util/logoutServiceWorker';
 import FinReportModal from './modal/FinReportModal';
 import BreakTimePage from './page-component/BreakTimePage';
+import { myProductState, overdueMethod } from '../util/myproduct-slice';
 
 type GameType = {
     initialData: InitialData;
@@ -79,6 +75,7 @@ export default function GameComponent(props: GameType) {
     const [nowMoney, setNowMoney] = useState<number>(0);
 
     //뉴스 관련
+    const [showNews, setShowNews] = useState<boolean>(false);
     const [newsPublishTurn, setNewsPublishTurn] = useState<number>(0);
     const [newsArticleList, setNewsArticleList] = useState<Article[]>([
         {
@@ -152,15 +149,39 @@ export default function GameComponent(props: GameType) {
         if (type === 'QUARTER_REPORT') {
             setIsQtrReportAvail(true);
             setQtrReport(body);
+            //압수품 관련
+            if (body.rentFeeInfo.billType === 'overdue') {
+                //압수품 dispatch
+                dispatch(overdueMethod(body.rentFeeInfo.productList));
+            } else if (body.rentFeeInfo.billType === 'bankrupt') {
+                //내 소유물 초기화
+                myProductState([]);
+            }
         } else if (type === 'HALF_REPORT') {
             setIsHlfReportAvail(true);
             setHlfReport(body);
+            //압수품 관련
+            if (body.rentFeeInfo.billType === 'overdue') {
+                //압수품 dispatch
+                dispatch(overdueMethod(body.rentFeeInfo.productList));
+            } else if (body.rentFeeInfo.billType === 'bankrupt') {
+                //내 소유물 초기화
+                myProductState([]);
+            }
         } else if (type === 'FINAL_REPORT') {
             setIsFinReportAvail(true);
             setFinReport(body);
         } else if (type === 'OFFLINE_REPORT') {
             setIsOffReportAvail(true);
             setOffReport(body);
+            //압수품 관련
+            if (body.rentFeeInfo.billType === 'overdue') {
+                //압수품 dispatch
+                dispatch(overdueMethod(body.rentFeeInfo.productList));
+            } else if (body.rentFeeInfo.billType === 'bankrupt') {
+                //내 소유물 초기화
+                myProductState([]);
+            }
         }
     };
 
@@ -452,8 +473,9 @@ export default function GameComponent(props: GameType) {
         setFacilityFlag(false);
         setTradeFlag(false);
         setMyPageFlag(false);
-        setNewsFlag(true);
         setInventoryFlag(false);
+        setShowNews(true);
+        setNewsFlag(false);
     };
     const openSettingElement = () => {
         setTradeFlag(false);
@@ -669,7 +691,7 @@ export default function GameComponent(props: GameType) {
             ) : (
                 <>
                     <div
-                        className="absolute w-[40%] h-[10%] left-[30%] top-[40%] bg-black -z-10 rounded text-white opacity-0 flex justify-center items-center"
+                        className="absolute w-[40%] h-[10%] left-[30%] top-[40%] bg-black -z-10 rounded text-white opacity-0 flex justify-center items-center whitespace-pre-wrap"
                         ref={AlertRef}
                     >
                         <p className="text-[1.5vw]">{alertMessage}</p>
@@ -1042,7 +1064,11 @@ export default function GameComponent(props: GameType) {
                                 />
                             </div>
                             <div
-                                className="w-[19%] h-[100%] cursor-pointer"
+                                className={`relative w-[19%] h-[100%] cursor-pointer ${
+                                    newsFlag
+                                        ? 'border-red-500 border-[0.2vw] rounded-[0.6vw] bg-white'
+                                        : ''
+                                }`}
                                 onClick={() => {
                                     openNewsElement();
                                 }}
@@ -1057,6 +1083,13 @@ export default function GameComponent(props: GameType) {
                                     src="/src/assets/images/icon/ui-icon-newspaper-text.webp"
                                     alt=""
                                 />
+                                {newsFlag ? (
+                                    <div className="absolute w-[100%] h-[12%] left-[0%] top-[-6%]  bg-red-500 text-white text-[1vw] rounded-[0.6vw]">
+                                        새 신문 도착
+                                    </div>
+                                ) : (
+                                    <></>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -1147,11 +1180,12 @@ export default function GameComponent(props: GameType) {
                     ) : (
                         <></>
                     )}
-                    {newsFlag ? (
+                    {showNews ? (
                         <NewsModal
-                            setNewsFlag={setNewsFlag}
                             newsPublishTurn={newsPublishTurn}
                             newsArticleList={newsArticleList}
+                            newsFlag={newsFlag}
+                            setShowNews={setShowNews}
                         />
                     ) : (
                         <></>
@@ -1160,6 +1194,7 @@ export default function GameComponent(props: GameType) {
                         <InventoryModal
                             setInventoryFlag={setInventoryFlag}
                             productSource={initialData.productList}
+                            openTradeElement={openTradeElement}
                         />
                     ) : (
                         <></>
@@ -1201,6 +1236,7 @@ export default function GameComponent(props: GameType) {
                     )}
                     {isFinReportAvail ? (
                         <FinReportModal
+                            achievementInfo={initialData.achievementList}
                             productList={initialData.productList}
                             finReport={finReport}
                             setIsFinReportAvail={setIsFinReportAvail}
@@ -1244,6 +1280,7 @@ export default function GameComponent(props: GameType) {
                 setNewsFlag={setNewsFlag}
                 startTimer={startTimer}
                 endTimer={endTimer}
+                alertError={alertError}
             />
         </section>
     );

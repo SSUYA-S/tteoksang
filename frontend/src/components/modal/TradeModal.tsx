@@ -6,10 +6,12 @@ import TradeSellReceipt from '../section/TradeSellReceipt';
 import { InfraList, Product, ProductInfo } from '../../type/types';
 
 import { myProductState } from '../../util/myproduct-slice';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { BuyInfo, SellInfo, ProductBucket } from '../../type/types';
 import { productInfoAndEventState } from '../../util/product-and-event';
 import { Client } from '@stomp/stompjs';
+
+import { buyAndShow } from '../../util/product-and-event';
 
 type tradeType = {
     setTradeFlag: React.Dispatch<React.SetStateAction<boolean>>;
@@ -24,6 +26,9 @@ type tradeType = {
 
 export default function TradeModal(props: tradeType) {
     const [tradeTab, setTradeTab] = useState<number>(0);
+
+    //첫 시작 때는 작동 안하도록
+    const [loaded, setLoaded] = useState<boolean>(false);
 
     //구매, 판매 물품 리스트
     const [sellingProductList, setSellingProductList] = useState<SellInfo[]>(
@@ -106,36 +111,59 @@ export default function TradeModal(props: tradeType) {
         setProductSortedList(newList);
     }, [sortMode, productInfoAndEvent.productInfoList, isFilter]);
 
-    const maximumAlertRef = useRef<HTMLDivElement>(null);
-    const minimumAlertRef = useRef<HTMLDivElement>(null);
-    const turnchangeAlertRef = useRef<HTMLDivElement>(null);
+    const AlertRef = useRef<HTMLDivElement>(null);
+    const [alertMessage, setAlertMessage] = useState<string>('');
 
     const myProductList = myProductInfo.myProductList;
 
     //최대 구매 가능 값 갱신
     const maximumBuyableAmount = useRef<number>(0);
+
+    //현재 창고 내 재고
+    const [nowStock, setNowStock] = useState<number>(0);
+
     useEffect(() => {
         maximumBuyableAmount.current = Math.min(
             props.infraInfo.warehouseInfoList[myProductInfo.warehouseLevel - 1]
                 .warehouseCapacity - nowStock,
             props.infraInfo.vehicleInfoList[myProductInfo.vehicleLevel - 1]
+                .vehicleCapacity - myProductInfo.purchasedQuantity
+        );
+
+        console.log(
+            props.infraInfo.warehouseInfoList[myProductInfo.warehouseLevel - 1]
+                .warehouseCapacity - nowStock
+        );
+        console.log(
+            props.infraInfo.vehicleInfoList[myProductInfo.vehicleLevel - 1]
                 .vehicleCapacity
         );
-        maximumBuyableAmount.current -= myProductInfo.purchasedQuantity;
+        console.log(myProductInfo.purchasedQuantity);
     }, [
         myProductInfo.purchasedQuantity,
         myProductInfo.warehouseLevel,
         myProductInfo.vehicleLevel,
+        nowStock,
     ]);
     //구매 가능 검증용 변수, 창고에 있는 재고 불러와 계산하는 로직 추가
 
+    //내 구매 수량 변동 시 nowStock 갱신
+    useEffect(() => {
+        let newStock = 0;
+        myProductInfo.myProductList.map((product) => {
+            newStock += product.productQuantity;
+        });
+        setNowStock(newStock);
+    }, [myProductInfo.myProductList]);
+
     //턴 바뀌면 경고 띄워주기
     useEffect(() => {
-        turnchangeAlert();
+        if (!loaded) {
+            setLoaded(true);
+        } else {
+            turnchangeAlert();
+        }
     }, [props.turn]);
-
-    //현재 창고 내 재고
-    const [nowStock, setNowStock] = useState<number>(0);
 
     useEffect(() => {
         // ESC 키를 눌렀을 때 실행할 함수
@@ -150,6 +178,7 @@ export default function TradeModal(props: tradeType) {
         // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
         return () => {
             document.removeEventListener('keydown', handleKeyDown);
+            setLoaded(false);
         };
     }, []);
     /**초기 로딩 */
@@ -408,8 +437,11 @@ export default function TradeModal(props: tradeType) {
         }
     };
 
+    const dispatch = useDispatch();
+
     const buyProduct = () => {
         //webSocket으로 대체 예정
+        dispatch(buyAndShow(buyableProduct));
         //아래가 그 코드
         const newBuyList: any = {};
         buyableProduct.map((product) => {
@@ -457,39 +489,28 @@ export default function TradeModal(props: tradeType) {
 
     /**최대, 최소 경고 띄워주기 */
     const maximumAlert = () => {
-        if (maximumAlertRef.current) {
-            //애니메이션 적용
-            maximumAlertRef.current.style.animation = 'alert 1s 0s 1 linear';
-            //끝나면 초기화
-            maximumAlertRef.current.onanimationend = () => {
-                if (maximumAlertRef.current) {
-                    maximumAlertRef.current.style.animation = '';
-                }
-            };
-        }
+        setAlertMessage('최대 수량입니다.');
+        alertActivate();
     };
 
     const minimumAlert = () => {
-        if (minimumAlertRef.current) {
-            //애니메이션 적용
-            minimumAlertRef.current.style.animation = 'alert 1s 0s 1 linear';
-            //끝나면 초기화
-            minimumAlertRef.current.onanimationend = () => {
-                if (minimumAlertRef.current) {
-                    minimumAlertRef.current.style.animation = '';
-                }
-            };
-        }
+        setAlertMessage('최소 수량입니다.');
+        alertActivate();
     };
 
     const turnchangeAlert = () => {
-        if (turnchangeAlertRef.current) {
+        setAlertMessage('턴이 바뀌었습니다.');
+        alertActivate();
+    };
+
+    const alertActivate = () => {
+        if (AlertRef.current) {
             //애니메이션 적용
-            turnchangeAlertRef.current.style.animation = 'alert 1s 0s 1 linear';
+            AlertRef.current.style.animation = 'alert 1s 0s 1 linear';
             //끝나면 초기화
-            turnchangeAlertRef.current.onanimationend = () => {
-                if (turnchangeAlertRef.current) {
-                    turnchangeAlertRef.current.style.animation = '';
+            AlertRef.current.onanimationend = () => {
+                if (AlertRef.current) {
+                    AlertRef.current.style.animation = '';
                 }
             };
         }
@@ -506,33 +527,21 @@ export default function TradeModal(props: tradeType) {
                     <div className="w-[55%] h-full relative">
                         <div
                             className="absolute w-[40%] h-[5vh] left-[40%] top-[3vh] bg-black -z-10 rounded text-white opacity-0 flex justify-center items-center"
-                            ref={maximumAlertRef}
+                            ref={AlertRef}
                         >
-                            <p className="text-[1.5vw]">최대수량입니다.</p>
-                        </div>
-                        <div
-                            className="absolute w-[40%] h-[5vh] left-[40%] top-[3vh] bg-black -z-10 rounded text-white opacity-0 flex justify-center items-center"
-                            ref={minimumAlertRef}
-                        >
-                            <p className="text-[1.5vw]">최소수량입니다.</p>
-                        </div>
-                        <div
-                            className="absolute w-[40%] h-[5vh] left-[40%] top-[3vh] bg-black -z-10 rounded text-white opacity-0 flex justify-center items-center"
-                            ref={turnchangeAlertRef}
-                        >
-                            <p className="text-[1.5vw]">턴이 바뀌었습니다.</p>
+                            <p className="text-[1.5vw]">{alertMessage}</p>
                         </div>
                         <div className="h-[18%] flex justify-between items-end pb-[0.2vh]">
                             <p className="text-[3vw] color-text-textcolor">
                                 물품 구매
                             </p>
                             <div className="w-[45%]">
-                                <div className="w-full flex justify-between text-[1.6vw] color-text-textcolor me-[1vw]">
+                                <div className="w-full flex justify-between text-[1.3vw] color-text-textcolor me-[1vw]">
                                     <p>현재 소지 금액</p>
                                     <p>{props.nowMoney.toLocaleString()}</p>
                                 </div>
 
-                                <div className="w-full flex justify-between text-[1.6vw] color-text-textcolor me-[1vw]">
+                                <div className="w-full flex justify-between text-[1.3vw] color-text-textcolor me-[1vw]">
                                     <p>예상 창고 용량</p>
                                     <p>
                                         {totalNumber}/
@@ -540,6 +549,19 @@ export default function TradeModal(props: tradeType) {
                                             props.infraInfo.warehouseInfoList[
                                                 myProductInfo.warehouseLevel - 1
                                             ].warehouseCapacity
+                                        }
+                                    </p>
+                                </div>
+                                <div className="w-full flex justify-between text-[1.3vw] color-text-textcolor me-[1vw]">
+                                    <p>예상 탈 것 용량</p>
+                                    <p>
+                                        {myProductInfo.purchasedQuantity +
+                                            (totalNumber - nowStock)}
+                                        /
+                                        {
+                                            props.infraInfo.vehicleInfoList[
+                                                myProductInfo.vehicleLevel - 1
+                                            ].vehicleCapacity
                                         }
                                     </p>
                                 </div>
@@ -567,7 +589,7 @@ export default function TradeModal(props: tradeType) {
                             })}
                         </div>
                     </div>
-                    <div className="w-[28%] h-full p-[0.4vw] flex items-center">
+                    <div className="w-[28%] h-full p-[0.4vw] flex items-center me-[2vw]">
                         <TradeBuyReceipt
                             buyableInfoList={buyableProduct}
                             maximumBuyable={maximumBuyableAmount.current}
@@ -585,12 +607,12 @@ export default function TradeModal(props: tradeType) {
                                 물품 판매
                             </p>
                             <div className="w-[45%]">
-                                <div className="w-full flex justify-between text-[1.6vw] color-text-textcolor me-[1vw]">
+                                <div className="w-full flex justify-between text-[1.3vw] color-text-textcolor me-[1vw]">
                                     <p>현재 소지 금액</p>
                                     <p>{props.nowMoney.toLocaleString()}</p>
                                 </div>
 
-                                <div className="w-full flex justify-between text-[1.6vw] color-text-textcolor me-[1vw]">
+                                <div className="w-full flex justify-between text-[1.3vw] color-text-textcolor me-[1vw]">
                                     <p>예상 창고 용량</p>
                                     <p>
                                         {totalNumber}/
@@ -598,6 +620,17 @@ export default function TradeModal(props: tradeType) {
                                             props.infraInfo.warehouseInfoList[
                                                 myProductInfo.warehouseLevel - 1
                                             ].warehouseCapacity
+                                        }
+                                    </p>
+                                </div>
+                                <div className="w-full flex justify-between text-[1.3vw] color-text-textcolor me-[1vw]">
+                                    <p>예상 탈 것 용량</p>
+                                    <p>
+                                        {myProductInfo.purchasedQuantity}/
+                                        {
+                                            props.infraInfo.vehicleInfoList[
+                                                myProductInfo.vehicleLevel - 1
+                                            ].vehicleCapacity
                                         }
                                     </p>
                                 </div>
@@ -627,7 +660,7 @@ export default function TradeModal(props: tradeType) {
                             })}
                         </div>
                     </div>
-                    <div className="w-[28%] h-full p-[0.4vw] flex items-center">
+                    <div className="w-[28%] h-full p-[0.4vw] flex items-center me-[2vw]">
                         <TradeSellReceipt
                             sellableInfoList={sellingProductList}
                             fee={
@@ -643,7 +676,7 @@ export default function TradeModal(props: tradeType) {
         } else if (tradeTab === 2) {
             return (
                 <>
-                    <div className="w-[83%] h-full">
+                    <div className="w-[83%] h-full me-[2vw]">
                         <div className="w-[94%] h-[18%] flex justify-between items-end pb-[0.2vh]">
                             <p className="text-[3vw] color-text-textcolor">
                                 오늘의 시세

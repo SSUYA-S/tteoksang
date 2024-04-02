@@ -13,5 +13,5 @@ public interface PrivateScheduleService {
 
     Map<String, CheckPlayTimeInfo> getUserAlertPlayTimeMap();
 
-    void updateUserAlertPlayTimeMap(String userId);
+    void updateUserAlertPlayTimeMap(String userId,long offsetPlayTime);
 }

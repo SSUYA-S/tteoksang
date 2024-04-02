@@ -245,19 +245,27 @@ export default function GameStartComponent(props: startType) {
                                 <p className="text-[2vw]">{`마지막 플레이 시간 : ${lastPlayTime}`}</p>
                             </div>
                             <div className="h-[5%]"></div>
+                            <div
+                                className="relative w-[40%] h-[40%] cursor-pointer bg-[#FFF6D6] border-black border-[0.5vw] flex justify-center items-center p-[0.5vw]"
+                                onClick={() => {
+                                    setIsTryToReset(true);
+                                }}
+                            >
+                                <p className="text-[3vw]">새로 시작하기</p>
+                            </div>
                         </>
                     ) : (
-                        <></>
+                        <>
+                            <div
+                                className="relative w-[40%] h-[40%] cursor-pointer bg-[#FFF6D6] border-black border-[0.5vw] flex justify-center items-center p-[0.5vw]"
+                                onClick={() => {
+                                    onReady();
+                                }}
+                            >
+                                <p className="text-[3vw]">시작하기</p>
+                            </div>
+                        </>
                     )}
-
-                    <div
-                        className="relative w-[40%] h-[40%] cursor-pointer bg-[#FFF6D6] border-black border-[0.5vw] flex justify-center items-center p-[0.5vw]"
-                        onClick={() => {
-                            setIsTryToReset(true);
-                        }}
-                    >
-                        <p className="text-[3vw]">새로 시작하기</p>
-                    </div>
                 </div>
             );
         } else {

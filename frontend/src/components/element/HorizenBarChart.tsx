@@ -26,8 +26,11 @@ export const options = {
     },
     indexAxis: 'y' as const,
     responsive: true,
+    maintainAspectRatio: false,
+    categoryPercentage: 0.5,
     plugins: {
         legend: {
+            display: false,
             position: 'bottom' as const,
         },
         title: {
