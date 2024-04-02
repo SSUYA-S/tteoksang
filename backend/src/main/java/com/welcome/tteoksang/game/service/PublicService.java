@@ -8,6 +8,8 @@ public interface PublicService {
     void startHalfYearGame();
     void endHalfYearGame();
 
+    void endSeason();
+
     //실행
 //  신문 발행
     void createNewspaper();
@@ -15,12 +17,6 @@ public interface PublicService {
     void updateTurn();
     public void fluctuateProduct();
     void updateFluctuationInfoPer10Days();
-
-    void startHalfBreakTime();
-    //이거는.. 시즌종료 호출될 때 호출!!
-    void startSeasonBreakTime();
-
-    void endBreak();
 
     void sendPublicMessage(MessageType type, Object body);
 }

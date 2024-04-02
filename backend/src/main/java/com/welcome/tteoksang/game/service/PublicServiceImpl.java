@@ -193,30 +193,6 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         if (!hasServerData) serverInfo.setProductInfoMap(productInfoMap);
     }
 
-    private void initFluctMap() {
-        fluctationInfoMap = new HashMap<>();
-
-        productRepository.findAll().stream().forEach((product) -> {
-            ProductFluctuation fluctuation = productFluctuationRepository.findById(ProductFluctuationId.builder()
-                            .countPerTenDays(serverInfo.getCurrentTurn()).productId(product.getProductId())
-                            .build())
-                    .orElseThrow(ProductFluctuationNotFoundException::new);
-
-            double eventEffect = 0.0;
-            fluctationInfoMap.put(product.getProductId(), FluctationInfo.builder()
-                    .productAvgCost(product.getProductAvgCost())
-                    .minFluctuationRate(fluctuation.getMinFluctuationRate())
-                    .maxFluctuationRate(fluctuation.getMaxFluctuationRate())
-                    .EventEffect(eventEffect)
-                    .build());
-        });
-        currentEventList.stream().forEach(
-                event -> {
-                    fluctationInfoMap.get(event.getProductId()).setEventEffect(event.getEventVariance());
-                }
-        );
-    }
-
     //반기 스케쥴 등록/삭제
     public void startHalfYearGame() {
         long eventPeriodSec = eventTurnPeriod * turnPeriodSec;
@@ -233,10 +209,19 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
     }
 
     public void endHalfYearGame() {
-        startBreakTime("반기");
+        startHalfBreakTime();
         scheduleService.remove(TURN);
         scheduleService.remove(PUBLIC_EVENT);
         scheduleService.remove(NEWSPAPER);
+    }
+
+    @Override
+    public void endSeason() {
+        startSeasonBreakTime();
+        //TODO- 시즌 종료했을 때 필요한 정보들 어디로 다 보내기....
+        redisService.deleteValues(RedisPrefix.SERVER_NEWS.prefix());
+        redisService.deleteValues(RedisPrefix.SERVER_INFO.prefix());
+
     }
 
     //실행======================
@@ -481,20 +466,20 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
                 .build());
     }
 
-    @Override
-    public void startHalfBreakTime() {
+    private void startHalfBreakTime() {
         //마지막 턴이 아닌 경우만 반기 결산
         if (serverInfo.getCurrentTurn() >= quarterYearTurnPeriod * 4 * seasonYearPeriod) return;
-        startBreakTime("반기");
+        startBreakTime("반기",halfYearBreakPeriodSec);
     }
 
-    @Override
     //이거는.. 시즌종료 호출될 때 호출!!
-    public void startSeasonBreakTime() {
-        startBreakTime("시즌");
+    private void startSeasonBreakTime() {
+        LocalDateTime seasonStartDateTime=serverSeasonInfoRepository.findFirstByOrderBySeasonIdDesc().getStartedAt();
+        long seasonBreakTimeSec=Duration.between(LocalDateTime.now(),seasonStartDateTime.plusDays(7)).toSeconds();
+        startBreakTime("시즌",seasonBreakTimeSec);
     }
 
-    private void startBreakTime(String breakName) {
+    private void startBreakTime(String breakName, Long breakTimeSec) {
         if (redisService.hasKey(RedisPrefix.SERVER_BREAK.prefix())) {
             log.warn("Server is breaking now...");
             return;
@@ -502,18 +487,17 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         BreakTimeInfo breakTimeInfo = BreakTimeInfo.builder()
                 .isBreakTime(true)
                 .breakName(breakName)
-                .breakTime(LocalDateTime.now().plusSeconds(halfYearBreakPeriodSec))
+                .breakTime(LocalDateTime.now().plusSeconds(breakTimeSec))
                 .ingameTime(LocalDateTime.now())
                 .build();
         sendPublicMessage(MessageType.GET_BREAK_TIME, breakTimeInfo);
         redisService.setValues(RedisPrefix.SERVER_BREAK.prefix(), breakTimeInfo);
-        log.debug(breakName+" 휴식시간입니다..."+breakTimeInfo.toString());
+        log.debug(breakName + " 휴식시간입니다..." + breakTimeInfo.toString());
     }
 
-    @Override
-    public void endBreak() {
-        if(!redisService.hasKey(RedisPrefix.SERVER_BREAK.prefix())){
-            sendPublicMessage(MessageType.GET_BREAK_TIME,BreakTimeInfo.builder()
+    private void endBreak() {
+        if (!redisService.hasKey(RedisPrefix.SERVER_BREAK.prefix())) {
+            sendPublicMessage(MessageType.GET_BREAK_TIME, BreakTimeInfo.builder()
                     .breakName("시즌")
                     .isBreakTime(false)
                     .breakTime(LocalDateTime.now())
@@ -523,8 +507,12 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         }
         BreakTimeInfo breakTimeInfo = (BreakTimeInfo) redisService.getValues(RedisPrefix.SERVER_BREAK.prefix());
         breakTimeInfo.setIsBreakTime(false);
+        LocalDateTime testNow=LocalDateTime.now();
+//        log.debug("휴식시간은.."+breakTimeInfo.getBreakTime());
+//        log.debug("휴식시간 체크1.."+breakTimeInfo.getBreakTime().isBefore(testNow));
+//        log.debug("휴식시간 체크2.."+breakTimeInfo.getBreakTime().isAfter(testNow));
 //        if ("반기".equals(breakTimeInfo.getBreakName()) && breakTimeInfo.getBreakTime().isBefore(LocalDateTime.now())) {
-//            log.warn("아직 휴식시간이에용...." + breakTimeInfo.getBreakName());
+//            log.warn("아직 휴식시간이에용...." + breakTimeInfo.getBreakName()+" : "+breakTimeInfo.getBreakTime());
 //            return;
 //        }
         breakTimeInfo.setIngameTime(LocalDateTime.now());
@@ -571,7 +559,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
                     .ingameTime(LocalDateTime.now())
                     .build();
         }
-        BreakTimeInfo breakTimeInfo=(BreakTimeInfo) redisService.getValues(RedisPrefix.SERVER_BREAK.prefix());
+        BreakTimeInfo breakTimeInfo = (BreakTimeInfo) redisService.getValues(RedisPrefix.SERVER_BREAK.prefix());
         breakTimeInfo.setIngameTime(LocalDateTime.now());
         return breakTimeInfo;
     }
