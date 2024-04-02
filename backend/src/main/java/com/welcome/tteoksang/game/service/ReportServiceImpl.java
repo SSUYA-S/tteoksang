@@ -1,6 +1,10 @@
 package com.welcome.tteoksang.game.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.welcome.tteoksang.game.dto.log.LogMessage;
+import com.welcome.tteoksang.game.dto.log.RentFeeLogInfo;
+import com.welcome.tteoksang.game.dto.log.SellLogInfo;
 import com.welcome.tteoksang.game.dto.res.GameMessageRes;
 import com.welcome.tteoksang.game.dto.result.quarter.OverdueProduct;
 import com.welcome.tteoksang.game.dto.result.quarter.Quarter;
@@ -10,7 +14,6 @@ import com.welcome.tteoksang.game.dto.user.RedisGameInfo;
 import com.welcome.tteoksang.game.dto.user.UserProductInfo;
 import com.welcome.tteoksang.game.exception.BrokerNotExistException;
 import com.welcome.tteoksang.game.scheduler.ServerInfo;
-import com.welcome.tteoksang.kafka.Message;
 import com.welcome.tteoksang.redis.RedisPrefix;
 import com.welcome.tteoksang.redis.RedisService;
 import com.welcome.tteoksang.resource.dto.Broker;
@@ -28,7 +31,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class ReportServiceImpl implements ReportService{
+public class ReportServiceImpl implements ReportService {
 
     private final RedisService redisService;
     private final BrokerRepository brokerRepository;
@@ -37,7 +40,6 @@ public class ReportServiceImpl implements ReportService{
 
     final double DISCOUNT_RATE = 100.0; // 할인율을 %로 표현
 
-
     // 계절 결산 불러오기
     public void sendQuarterResult(String userId, String webSocketId) {
         boolean isSuccess = true;
@@ -45,20 +47,20 @@ public class ReportServiceImpl implements ReportService{
         // 레디스에서 결산 데이터 불러오기
         String redisGameInfoKey = RedisPrefix.INGAMEINFO.prefix() + userId;
         String userInfoKey = RedisPrefix.USERINFO.prefix() + userId;
-        RedisGameInfo redisGameInfo = null;
+        RedisGameInfo redisGameInfo;
         UserInfo userInfo = (UserInfo) redisService.getValues(userInfoKey);
         if (redisService.hasKey(redisGameInfoKey)) {
             redisGameInfo = (RedisGameInfo) redisService.getValues(redisGameInfoKey);
             RentFeeInfo rentFeeInfo = calculateRentFee(userId, redisGameInfo);
             responseBody = Quarter.builder()
                     .turn(serverInfo.getCurrentTurn())
+                    .gold(redisGameInfo.getGold())
                     .rentFeeInfo(rentFeeInfo)
                     .quarterProfit(0L)
                     .inProductList(new ArrayList<>())
                     .titleId(userInfo.getTitleId())
                     .build();
-        }
-        else {
+        } else {
             isSuccess = false;
         }
 
@@ -73,31 +75,30 @@ public class ReportServiceImpl implements ReportService{
 
     private RentFeeInfo calculateRentFee(String userId, RedisGameInfo redisGameInfo) {
         RentFeeInfo rentFeeInfo;
+
         String redisGameInfoKey = RedisPrefix.INGAMEINFO.prefix() + userId;
         Long redisGold = redisGameInfo.getGold();
         Long redisRentFee = redisGameInfo.getRentFee();
 //        Long redisRentFee = 1000L;
         Long rentFee = redisGameInfo.getRentFee();
-        // 레디스 안 나의 작물 정보
-        Map<Integer, UserProductInfo> products = redisGameInfo.getProducts();
-        // 순회를 할때 나의 작물 정보가 바뀌게 되면 오류가 발생하기 때문에 깊은 복사
-        Map<Integer, UserProductInfo> copyProducts = redisGameInfo.getProducts();
-        // 서버의 작물 정보
-        Map<Integer, ServerProductInfo> serverProducts = serverInfo.getProductInfoMap();
 
-        // 판매한 작물 목록
-        List<OverdueProduct> overdueProductList = new ArrayList<>();
-
-        // 창고에 들어간 물품 수
-        int totalProductQuantity = redisGameInfo.getTotalProductQuantity();
+        // 초기 정보
+        Map<Integer, UserProductInfo> products = redisGameInfo.getProducts(); // 레디스 안 나의 작물 정보
+        Map<Integer, ServerProductInfo> serverProducts = serverInfo.getProductInfoMap(); // 서버의 작물 정보
+        List<OverdueProduct> overdueProductList = new ArrayList<>(); // 판매한 작물 목록
+        int totalProductQuantity = redisGameInfo.getTotalProductQuantity(); // 창고에 들어간 물품 수
 
         // 임대료 내기, 골드 갱신
-        if(redisGold >= redisRentFee) {
+        if (redisGold >= redisRentFee) {
             // 임대료 갱신
             redisGameInfo.setGold(redisGold - redisRentFee);
             redisGameInfo.setRentFee(0L);
-            redisService.setValues(redisGameInfoKey,redisGameInfo);
-            log.debug("임대료 정상 부과");
+            redisService.setValues(redisGameInfoKey, redisGameInfo);
+            log.debug("임대료 정상 부과 - {}, {}", redisGold, redisGameInfo.getGold());
+
+            sendRentFeeLog(userId, redisGameInfo, rentFee);
+
+            // 메세지 작성
             rentFeeInfo = RentFeeInfo.builder()
                     .billType("basic")
                     .rentFee(redisRentFee)
@@ -118,26 +119,18 @@ public class ReportServiceImpl implements ReportService{
                     .orElseThrow(BrokerNotExistException::new);
             int productCharge = currentBroker.getBrokerFeeRate();
 
-            if(products != null) {
+            if (products != null) {
                 // 순이익 최대로 레디스 정렬
-                products.entrySet().stream()
-                        .map(entry -> {
-                            Integer productId = entry.getKey();
-                            UserProductInfo userProductInfo = entry.getValue();
-                            ServerProductInfo serverProductInfo = serverProducts.get(productId);
+                sortProducts(products, serverProducts);
+                log.debug("가격 정렬하기: {}", products);
 
-                            // 계산 실행
-                            double value = (userProductInfo.getProductTotalCost().doubleValue() / userProductInfo.getProductQuantity()) - serverProductInfo.getProductCost();
-                            return new AbstractMap.SimpleEntry<>(productId, value);
-                        })
-                        // 내림차순으로 정렬
-                        .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
-                        .collect(Collectors.toList());
-                log.debug("가격 정렬하기: {}",products);
-                // products는 redis 안의 작물 정보
-                // 순이익이 최대인 농산물부터 판매
+                // 로그에 사용되는 변수 선언
+                long logProductIncome, logProductProfit;
+                int logSoldQuantity;
+
+                // products는 redis 안의 작물 정보 - 순이익이 최대인 농산물부터 판매
                 for (Map.Entry<Integer, UserProductInfo> rentFeeProduct : products.entrySet()) {
-                    if(rentFeeProduct.getValue().getProductQuantity() == 0)
+                    if (rentFeeProduct.getValue().getProductQuantity() == 0)
                         continue;
                     // 현재 작물
                     Integer productId = rentFeeProduct.getKey();
@@ -146,6 +139,7 @@ public class ReportServiceImpl implements ReportService{
 
                     int sellQuantity = productInfo.getProductQuantity();  // 판매할 개수
                     int serverPrice = serverProducts.get(productId).getProductCost();
+
                     int serverProductCost = (int) Math.floor(serverProducts.get(productId)
                             .getProductCost() * (DISCOUNT_RATE - productCharge) / 100);  // 서버의 농산물 개당 가격
 
@@ -154,19 +148,29 @@ public class ReportServiceImpl implements ReportService{
 
                     // 판매 처리
                     if ((double) remainRentFee / serverProductCost >= sellQuantity) {
+
                         // 판매한 작물
                         overdueProductList.add(OverdueProduct.builder()
                                 .productId(rentFeeProduct.getKey())
                                 .productQuantity(sellQuantity)
                                 .build());
                         log.debug("다 판매한 작물번호: {}, 개수: {}, 개당 금액: {}", productId, sellQuantity, serverPrice);
+
                         // 다 팔기
                         // 평균 구매 단가 구하기
                         long calculateProductTotalCost = (long) (redisProductTotalCost -
                                 Math.floor((double) redisProductTotalCost / productInfo.getProductQuantity())
                                         * sellQuantity);
+                        // 로그 정보
+                        logProductIncome = (long) serverPrice * sellQuantity;
+                        logProductProfit = (long) serverProductCost * sellQuantity;
+                        logSoldQuantity = sellQuantity;
+
+                        sendSellLog(userId, redisGameInfo, productId, logProductIncome, logSoldQuantity, logProductProfit, serverPrice);
+
                         productInfo.setProductTotalCost(calculateProductTotalCost);
                         productInfo.setProductQuantity(0);
+
                         // 남은 임대료
                         remainRentFee -= (long) serverProductCost * sellQuantity;
                         log.debug("남은 임대료: {}", remainRentFee);
@@ -187,6 +191,11 @@ public class ReportServiceImpl implements ReportService{
                         long calculateProductTotalCost = (long) (redisProductTotalCost -
                                 Math.floor((double) redisProductTotalCost / productInfo.getProductQuantity())
                                         * soldQuantity);
+                        // 로그 정보
+                        logProductIncome = (long) serverPrice * soldQuantity;
+                        logProductProfit = (long) serverProductCost * soldQuantity;
+                        logSoldQuantity = soldQuantity;
+
                         productInfo.setProductTotalCost(calculateProductTotalCost);
                         productInfo.setProductQuantity(productInfo.getProductQuantity() - soldQuantity);
 
@@ -198,6 +207,10 @@ public class ReportServiceImpl implements ReportService{
                             remainRentFee = 0L; // 임대료 완전 충당
                         }
                         isBankrupt = false;
+
+                        // 로그 저장
+                        sendSellLog(userId, redisGameInfo, productId, logProductIncome, logSoldQuantity, logProductProfit, serverPrice);
+
                         break; // 임대료를 모두 충당했으므로 반복 중단
                     }
                 }
@@ -211,16 +224,20 @@ public class ReportServiceImpl implements ReportService{
 
             redisService.setValues(redisGameInfoKey, redisGameInfo);
 
-            if(isBankrupt){
+            if (isBankrupt) {
+                sendRentFeeLog(userId, redisGameInfo, rentFee);
+
                 log.debug("파산!!!");
                 rentFeeInfo = RentFeeInfo.builder()
                         .billType("bankrupt")
-                        .rentFee(0L)
+                        .rentFee(rentFee)
                         .productList(new ArrayList<>())
                         .build();
             }
             // 가압류 - 순이익이 최대로
-            else{
+            else {
+                sendRentFeeLog(userId, redisGameInfo, rentFee);
+
                 log.debug("가압류!!");
                 rentFeeInfo = RentFeeInfo.builder()
                         .billType("overdue")
@@ -231,5 +248,78 @@ public class ReportServiceImpl implements ReportService{
             }
         }
         return rentFeeInfo;
+    }
+
+    // 최대 이익순 정렬
+    private void sortProducts(Map<Integer, UserProductInfo> products, Map<Integer, ServerProductInfo> serverProducts) {
+        products.entrySet().stream()
+                .map(entry -> {
+                    Integer productId = entry.getKey();
+                    UserProductInfo userProductInfo = entry.getValue();
+                    ServerProductInfo serverProductInfo = serverProducts.get(productId);
+
+                    // 계산 실행
+                    double value = (userProductInfo.getProductTotalCost().doubleValue() / userProductInfo.getProductQuantity()) - serverProductInfo.getProductCost();
+                    return new AbstractMap.SimpleEntry<>(productId, value);
+                })
+                // 내림차순으로 정렬
+                .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+                .collect(Collectors.toList());
+    }
+
+    private void sendSellLog(String userId, RedisGameInfo redisGameInfo, Integer productId, long logProductIncome, int logSoldQuantity, long logProductProfit, int serverPrice) {
+        // 로그 저장
+        SellLogInfo logInfo = SellLogInfo.builder()
+                .seasonId(serverInfo.getSeasonId())
+                .userId(userId)
+                .gameId(redisGameInfo.getGameId())
+                .turn(serverInfo.getCurrentTurn())
+                .productId(productId)
+                .productIncome(logProductIncome)
+                .soldQuantity(logSoldQuantity)
+                .brokerFee((int) (logProductIncome - logProductProfit))
+                .productProfit(logProductProfit)
+                .productCost(serverPrice)
+                .build();
+
+        LogMessage logMessage = LogMessage.builder()
+                .type("SELL")
+                .body(logInfo)
+                .build();
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String logData = objectMapper.writeValueAsString(logMessage);
+            log.debug(logData);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void sendRentFeeLog(String userId, RedisGameInfo redisGameInfo, Long rentFee) {
+        // 로그 찍기
+        RentFeeLogInfo logInfo = RentFeeLogInfo.builder()
+                .seasonId(serverInfo.getSeasonId())
+                .gameId(redisGameInfo.getGameId())
+                .userId(userId)
+                .turn(serverInfo.getCurrentTurn())
+                .rentFee(rentFee)
+                .build();
+
+        LogMessage logMessage = LogMessage.builder()
+                .type("RENT_FEE")
+                .body(logInfo)
+                .build();
+
+        printLog(logMessage);
+    }
+
+    private void printLog(LogMessage logMessage) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String logData = objectMapper.writeValueAsString(logMessage);
+            log.debug(logData);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

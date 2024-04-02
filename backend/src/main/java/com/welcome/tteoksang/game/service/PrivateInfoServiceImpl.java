@@ -37,9 +37,8 @@ public class PrivateInfoServiceImpl implements PrivateInfoService {
         UserInfo userInfo = getUserInfo(userId, webSocketId);
         Object responseBody = body;
         boolean isSuccess = false;
-        // 로그 저장
-        List<String> logList = new ArrayList<>();
         if (redisGameInfo != null) {
+
             responseBody = TotalInfo.builder()
                     .gold(redisGameInfo.getGold())
                     .privateEventId(redisGameInfo.getPrivateEventId())
@@ -48,9 +47,23 @@ public class PrivateInfoServiceImpl implements PrivateInfoService {
                     .turnStartTime(serverInfo.getTurnStartTime().toString())    // 턴 시작 시간 => 서버에서 가져옴
                     .turn(serverInfo.getCurrentTurn())    // 서버의 턴 정보
                     .themeId(userInfo.getThemeId())
-                    .products(redisGameInfo.getProducts())
-                    .productInfoList(new ArrayList<>())
-                    .buyAbleProductIdList(new ArrayList<>())
+                    .productList(redisGameInfo.getProducts().entrySet().stream().map(entry ->
+                            UserProduct.builder()
+                                    .productId(entry.getKey())
+                                    .productQuantity(entry.getValue().getProductQuantity())
+                                    .productPurchaseQuantity(entry.getValue().getProductPurchaseQuantity())
+                                    .productTotalCost(entry.getValue().getProductTotalCost())
+                                    .build()
+                    ).toList())
+                    .productInfoList(serverInfo.getProductInfoMap().entrySet().stream().map(entry ->
+                            ProductInfo.builder()
+                                    .productId(entry.getKey())
+                                    .productCost(entry.getValue().getProductCost())
+                                    .productMaxQuantity(entry.getValue().getProductMaxQuantity())
+                                    .productFluctuation(entry.getValue().getProductFluctuation())
+                                    .build()
+                    ).toList())
+                    .buyAbleProductIdList(serverInfo.getBuyableProducts())
                     .purchasedQuantity(redisGameInfo.getPurchaseQuantity())
                     .warehouseLevel(redisGameInfo.getWarehouseLevel())
                     .vehicleLevel(redisGameInfo.getVehicleLevel())

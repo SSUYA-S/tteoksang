@@ -137,7 +137,7 @@ public class GameInfoServiceImpl implements GameInfoService {
                 gameInfo = GameInfo.builder()
                         .userId(userId)
                         .gameId(1)// 현재 게임 ID
-                        .gold(10000000L)
+                        .gold(10000L)
                         .warehouseLevel(1)
                         .vehicleLevel(1)
                         .brokerLevel(1)

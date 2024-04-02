@@ -5,7 +5,7 @@ import com.welcome.tteoksang.redis.RedisPrefix;
 import com.welcome.tteoksang.redis.RedisService;
 import com.welcome.tteoksang.redis.RedisSerializationUtil;
 import com.welcome.tteoksang.user.dto.GameInfo;
-import com.welcome.tteoksang.user.service.GameInfoService;
+import com.welcome.tteoksang.user.repository.GameInfoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 public class RedisGameInfoServiceImpl implements RedisGameInfoService {
 
     private final RedisService redisService;
-    private final GameInfoService gameInfoService;
+    private final GameInfoRepository gameInfoRepository;
 
     @Transactional
     public void saveRedisGameInfo(String userId) {
@@ -33,7 +33,11 @@ public class RedisGameInfoServiceImpl implements RedisGameInfoService {
                 // FIXME: 상품 직렬화 과정이 필요함
                 byte[] gameInfoProducts = RedisSerializationUtil.serializeMap(redisGameInfo.getProducts());
                 // 엔티티로 저장
-                GameInfo gameInfo = GameInfo.builder()
+                GameInfo gameInfo = gameInfoRepository.findById(userId).orElse(null);
+                if (gameInfo != null) {
+                    gameInfoRepository.deleteById(userId);
+                }
+                GameInfo presentGameInfo = GameInfo.builder()
                         .userId(userId)
                         .gameId(redisGameInfo.getGameId())
                         .gold(redisGameInfo.getGold())
@@ -50,7 +54,9 @@ public class RedisGameInfoServiceImpl implements RedisGameInfoService {
                         .build();
 
                 // 레디스에 있는 게임 정보를 데이터베이스에 저장
-                gameInfoService.updateGameInfo(gameInfo);
+//                gameInfoService.updateGameInfo(gameInfo);
+
+                gameInfoRepository.save(presentGameInfo);
                 log.debug("[RedisGameInfoServiceImpl] - saveRedisGameInfo: DB에 게임 정보 저장");
 
                 // 레디스에서 게임 정보 삭제

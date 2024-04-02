@@ -93,4 +93,16 @@ public class GameExceptionHandler {
     errorMessage.append("구매 오류 입니다.");
     return ResponseEntity.badRequest().body(errorMessage.toString());
   }
+
+  @ExceptionHandler(GameInfoNotFoundException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  protected ResponseEntity<String> gameInfoNotExistsExceptionHandler(
+          GameInfoNotFoundException e) {
+    StringBuilder errorMessage = new StringBuilder();
+
+    makeErrorMessage(errorMessage, e);
+
+    errorMessage.append("게임 정보가 없습니다.");
+    return ResponseEntity.badRequest().body(errorMessage.toString());
+  }
 }
