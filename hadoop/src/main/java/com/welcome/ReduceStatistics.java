@@ -23,7 +23,7 @@ public class ReduceStatistics {
     private long maxPrivateProductIncome;   // 하나의 판매 단위 최대 판매 비용
     private long maxPrivateProductProfit;   // 하나의 판매 단위 최대 순이익 - 랭킹 -> 벼락부자 / 판매 금액 - 수수료 - (평균 구매 단가 * 판매 수량)
     private int accPrivatePlayTime;   // 누적 플레이 시간
-    private int[] accPrivateOnlineTimeSlotCount;    // 시간대별 접속 횟수
+    private int[] accPrivateOnlineTimeSlotCount = new int[8];    // 시간대별 접속 횟수
     private int accPrivateGamePlayCount;   // 개인별 누적 게임 생성 횟수
     private long accPrivateEventOccurId;    // 개인 이벤트 발생 횟수
 
