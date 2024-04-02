@@ -242,6 +242,7 @@ export default function MainPage() {
             {!startFlag ? (
                 <GameStartComponent
                     setStartFlag={setStartFlag}
+                    startFlag={startFlag}
                     achievementData={initialData.achievementList}
                     titleData={initialData.titleList}
                     profileFrameData={initialData.profileFrameList}
