@@ -2,7 +2,9 @@ import { BaseSyntheticEvent, ChangeEvent, useEffect, useState } from 'react';
 import { LineChart } from '../element/LineChart';
 import { BarChart } from '../element/BarChart';
 import {
+    Achievement,
     AchievementReport,
+    AnnualSpecialEvent,
     FinalReportType,
     Product,
     ProductValue,
@@ -16,16 +18,19 @@ import { HorizenBarChart } from '../element/HorizenBarChart';
 //dummuy data
 import RankingCard from '../section/RankingCard';
 import { loadProduct } from '../../util/loadProduct';
+import AchievementCard from '../section/AchievementCard';
 
 type infoResultType = {
     setIsFinReportAvail: React.Dispatch<React.SetStateAction<boolean>>;
     productList: Product[];
     finReport: FinalReportType | null;
+    achievementInfo: Achievement[];
 };
 export default function FinReportModal({
     setIsFinReportAvail,
     productList,
     finReport,
+    achievementInfo,
 }: infoResultType) {
     const [changeTitle, setChangeTitle] = useState<boolean>(false);
 
@@ -73,6 +78,10 @@ export default function FinReportModal({
     const [priTotalProductOutcome, setPriTotalProductOutcome] = useState<
         number[]
     >([]);
+    //스페셜 이벤트 누적 발생 횟수
+    const [annualSpecialEvent, setAnnualSpecialEvent] = useState<
+        AnnualSpecialEvent[]
+    >([]);
 
     //몇개를 샀다
     const [
@@ -102,7 +111,7 @@ export default function FinReportModal({
 
     //// 개인 정보
     const [priPlayTime, setPriPlayTime] = useState<number>();
-    const [priAcievement, setPriAcievement] = useState<AchievementReport[]>([]);
+    const [priAcievement, setPriAcievement] = useState<number[]>([]);
     //// 개인 정보
     const [priProductLabels, setPriProductLabels] = useState<string[]>([]);
     //// 연도별 개인 작물 라벨
@@ -125,7 +134,13 @@ export default function FinReportModal({
     const [pubProductQuantityLabels, setPubProductQuantityLabels] = useState<
         string[]
     >([]);
-
+    //// 스페셜 이벤트 라벨, 차트값
+    const [anuSpecialEventChartValue, setAnuSpecialEventChartValue] = useState<
+        number[]
+    >([]);
+    const [anuSpecialEventLabels, setAnuSpecialEventLabels] = useState<
+        string[]
+    >([]);
     const [page, setPage] = useState<number>(0);
     let labels = [
         '1년차',
@@ -151,6 +166,7 @@ export default function FinReportModal({
             setPriBrokerLevel(finReport!.brokerLevel);
             setPriPlayTime(finReport!.privateAccPrivatePlayTime);
             setPriAcievement(finReport!.achievementList);
+            setAnnualSpecialEvent(finReport!.specialEventReportList);
             // 연도별 작물 정보
             await finReport!.privateProductReportList.map((item) => {
                 let incomeValue = 0;
@@ -448,6 +464,17 @@ export default function FinReportModal({
         setPriProductQuantityChartValue(quantityValue);
     }, [yearProductSelected, priTotalProductInfo]);
 
+    useEffect(() => {
+        let eventLabel: string[] = [];
+        let eventValue: number[] = [];
+        annualSpecialEvent.map((item) => {
+            eventLabel.push(item.specialEventName);
+            eventValue.push(item.totalAccSpecialEventOccurCount);
+        });
+        setAnuSpecialEventLabels(eventLabel);
+        setAnuSpecialEventChartValue(eventValue);
+    }, [annualSpecialEvent]);
+
     // 연차별 전체 통계 정보
     useEffect(() => {
         let incomeLabel: string[] = [];
@@ -537,7 +564,7 @@ export default function FinReportModal({
                 label: '구매금액',
                 data: priProductIncomeChartValue,
                 borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                backgroundColor: ['#F48080', '#F4B880', '#90F480', '#80AEF4'],
             },
         ],
     };
@@ -549,7 +576,7 @@ export default function FinReportModal({
                 label: '판매금액',
                 data: priProductOutcomeChartValue,
                 borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                backgroundColor: ['#F48080', '#F4B880', '#90F480', '#80AEF4'],
             },
         ],
     };
@@ -561,7 +588,7 @@ export default function FinReportModal({
                 label: '거래량',
                 data: priProductQuantityChartValue,
                 borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                backgroundColor: ['#F48080', '#F4B880', '#90F480', '#80AEF4'],
             },
         ],
     };
@@ -611,7 +638,22 @@ export default function FinReportModal({
                 label: '업그레이드',
                 data: [priVehicleLevel, priWarehouseLevel, priBrokerLevel],
                 borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                backgroundColor: ['#F48080', '#F4E280', '#80A7F4'],
+            },
+        ],
+    };
+    //// 시설 관련 ////
+
+    //// 시설 관련 ////
+    const anuEventData = {
+        labels: anuSpecialEventLabels,
+        // priProductLabels,
+        datasets: [
+            {
+                label: '이벤트 발생 횟수',
+                data: anuSpecialEventChartValue,
+                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: ['#F48080', '#F4E280', '#80A7F4'],
             },
         ],
     };
@@ -640,11 +682,23 @@ export default function FinReportModal({
 
     const pubProductElement = () => {
         if (pubPurchaseMode === 0) {
-            return <BarChart data={pubProductIncomeData} />;
+            return (
+                <div className="w-full h-[100%]">
+                    <BarChart data={pubProductIncomeData} />
+                </div>
+            );
         } else if (pubPurchaseMode === 1) {
-            return <BarChart data={pubProductOutcomeData} />;
+            return (
+                <div className="w-full h-[100%]">
+                    <BarChart data={pubProductOutcomeData} />
+                </div>
+            );
         } else {
-            return <BarChart data={pubProductPurchaseData} />;
+            return (
+                <div className="w-full h-[100%]">
+                    <BarChart data={pubProductPurchaseData} />
+                </div>
+            );
         }
     };
     const resultElement = () => {
@@ -778,6 +832,7 @@ export default function FinReportModal({
                                 </div>
 
                                 <select
+                                    className="text-[1.6vw] py-[0.2vw] px-[0.8vw] text-center border-[0.2vw] rounded-[0.4vw] color-border-subbold"
                                     onChange={handleYearProduct}
                                     value={yearProductSelected}
                                 >
@@ -801,22 +856,26 @@ export default function FinReportModal({
                         </div>
                     </div>
                     <div className="w-full h-[75%] flex items-center justify-center">
-                        <div className="w-[30%] h-full flex items-center justify-center bg-slate-400">
+                        <div className="w-[40%] h-full flex items-center justify-center ">
                             <div className="relative w-[90%] h-[90%] text-[2vw] p-[1vw] bg-white flex flex-col justify-between items-center border-[0.2vw] color-border-subbold rounded-[1vw]">
                                 <p className="w-full text-start">
                                     구매 작물 TOP4
                                 </p>
+                                <div className="w-full h-[100%]">
+                                    {priPurchaseFlag ? (
+                                        <BarChart
+                                            data={priYearProductIncomeData}
+                                        />
+                                    ) : (
+                                        <BarChart
+                                            data={priYearProductOutcomeData}
+                                        />
+                                    )}
+                                </div>
 
-                                {priPurchaseFlag ? (
-                                    <BarChart data={priYearProductIncomeData} />
-                                ) : (
-                                    <BarChart
-                                        data={priYearProductOutcomeData}
-                                    />
-                                )}
                                 <div className="absolute top-[1vw] right-[1vw]">
                                     <p
-                                        className="text-[1.2vw] p-[0.6vw] border-[0.2vw] color-border-subbold rounded-[1vw] cursor-pointer "
+                                        className="text-[1.2vw] p-[0.6vw] border-[0.2vw] color-border-subbold rounded-[1vw] cursor-pointer bg-white "
                                         onClick={() => {
                                             changePriPurchaseBtn(true);
                                         }}
@@ -833,7 +892,7 @@ export default function FinReportModal({
                                         구매금액
                                     </p>
                                     <p
-                                        className="text-[1.2vw] p-[0.6vw] my-[0.4vw] border-[0.2vw] color-border-subbold rounded-[1vw] cursor-pointer "
+                                        className="text-[1.2vw] p-[0.6vw] my-[0.4vw] border-[0.2vw] color-border-subbold rounded-[1vw] cursor-pointer bg-white "
                                         onClick={() => {
                                             changePriPurchaseBtn(false);
                                         }}
@@ -852,15 +911,19 @@ export default function FinReportModal({
                                 </div>
                             </div>
                         </div>
-                        <div className="w-[30%] h-full flex items-center justify-center">
+                        <div className="w-[40%] h-full flex items-center justify-center">
                             <div className="relative w-[90%] h-[90%] text-[2vw] p-[1vw] bg-white flex flex-col justify-between items-center border-[0.2vw] color-border-subbold rounded-[1vw]">
                                 <p className="w-full text-start">
                                     구매 작물 TOP4
                                 </p>
-                                <BarChart data={priYearProductPurchaseData} />
+                                <div className="w-full h-[100%]">
+                                    <BarChart
+                                        data={priYearProductPurchaseData}
+                                    />
+                                </div>
                                 <div className="absolute top-[1vw] right-[1vw]">
                                     <p
-                                        className="text-[1.2vw] p-[0.6vw] border-[0.2vw] color-border-subbold rounded-[1vw] cursor-pointer "
+                                        className="text-[1.2vw] p-[0.6vw] border-[0.2vw] color-border-subbold rounded-[1vw] cursor-pointer bg-white "
                                         onClick={() => {
                                             changePriSalseBtn(true);
                                         }}
@@ -878,10 +941,6 @@ export default function FinReportModal({
                                     </p>
                                 </div>
                             </div>
-                        </div>
-                        <div className="w-[30%] hull flex flex-col items-center justify-center">
-                            <LineChart data={priTotalData} />
-                            <HorizenBarChart data={priInfraData} />
                         </div>
                     </div>
                 </>
@@ -914,37 +973,10 @@ export default function FinReportModal({
                                 </p>
                             </div>
                         </div>
-                        <div className="w-[65%] h-full flex items-center px-[2vw]">
-                            <div className="w-[30%] h-[60%] rounded-[0.8vw] border-[0.4vw] border-orange-300 flex flex-col items-center justify-center">
-                                <p className="w-full h-[30%] text-[1.6vw] bg-orange-300 flex justify-center items-center text-white">
-                                    플레이 시간
-                                </p>
-                                <p className="w-full bg-white h-[70%]  rounded-[0.8vw] text-[1.8vw] text-center flex items-center justify-center">
-                                    {priPlayTime}
-                                </p>
-                            </div>
-                            <div className="w-[5%]"></div>
-                            <div className="w-[30%] h-[60%] rounded-[0.8vw] border-[0.4vw] border-orange-300 flex flex-col items-center justify-center">
-                                <p className="w-full h-[30%] text-[1.6vw] bg-orange-300 flex justify-center items-center text-white">
-                                    획득 도전과제
-                                </p>
-                                <p className="w-full bg-white h-[70%]  rounded-[0.8vw] text-[1.8vw] text-center flex items-center justify-center">
-                                    {priAcievement.length}
-                                </p>
-                            </div>
-                            <div className="w-[5%]"></div>
-                            <div className="w-[30%] h-[60%] rounded-[0.8vw] border-[0.4vw] border-orange-300 flex flex-col items-center justify-center">
-                                <p className="w-full h-[30%] text-[1.6vw] bg-orange-300 flex justify-center items-center text-white">
-                                    거래 작물 수
-                                </p>
-                                <p className="w-full bg-white h-[70%]  rounded-[0.8vw] text-[1.8vw] text-center flex items-center justify-center">
-                                    {priTotalProfit?.toLocaleString()}
-                                </p>
-                            </div>
-                        </div>
+                        <div className="w-[65%] h-full flex items-center px-[2vw]"></div>
                     </div>
                     <div className="w-full h-[75%] flex items-center justify-center">
-                        <div className="w-[60%] h-full flex items-center justify-center bg-slate-400">
+                        <div className="w-[60%] h-full flex items-center justify-center ">
                             <div className="relative w-[90%] h-[90%] text-[2vw] p-[1vw] bg-white flex flex-col justify-between items-center border-[0.2vw] color-border-subbold rounded-[1vw]">
                                 <p className="w-full text-start">
                                     서버 거래 작물 TOP10
@@ -1006,9 +1038,10 @@ export default function FinReportModal({
                             </div>
                         </div>
 
-                        <div className="w-[30%] hull flex flex-col items-center justify-center">
-                            <LineChart data={priTotalData} />
-                            <HorizenBarChart data={priInfraData} />
+                        <div className="w-[30%] h-full flex flex-col items-center justify-center">
+                            <div className="w-full h-[100%]">
+                                <HorizenBarChart data={anuEventData} />
+                            </div>
                         </div>
                     </div>
                 </>
@@ -1026,7 +1059,7 @@ export default function FinReportModal({
                                 <p
                                     className="border-[0.2vw] color-border-subbold mx-[1vw] px-[1vw] py-[0.2vw] cursor-pointer"
                                     onClick={() => {
-                                        changePage(1);
+                                        changePage(2);
                                     }}
                                 >
                                     이전
@@ -1041,24 +1074,84 @@ export default function FinReportModal({
                                 </p>
                             </div>
                         </div>
-                        <div className="w-[65%] h-full flex items-center px-[2vw]"></div>
+                        <div className="w-[65%] h-full flex items-center px-[2vw]">
+                            <div className="w-[30%] h-[60%] rounded-[0.8vw] border-[0.4vw] border-orange-300 flex flex-col items-center justify-center">
+                                <p className="w-full h-[30%] text-[1.6vw] bg-orange-300 flex justify-center items-center text-white">
+                                    플레이 시간
+                                </p>
+                                <p className="w-full bg-white h-[70%]  rounded-[0.8vw] text-[1.8vw] text-center flex items-center justify-center">
+                                    {priPlayTime}
+                                </p>
+                            </div>
+                            <div className="w-[5%]"></div>
+                            <div className="w-[30%] h-[60%] rounded-[0.8vw] border-[0.4vw] border-orange-300 flex flex-col items-center justify-center">
+                                <p className="w-full h-[30%] text-[1.6vw] bg-orange-300 flex justify-center items-center text-white">
+                                    획득 도전과제
+                                </p>
+                                <p className="w-full bg-white h-[70%]  rounded-[0.8vw] text-[1.8vw] text-center flex items-center justify-center">
+                                    {priAcievement.length}
+                                </p>
+                            </div>
+                            <div className="w-[5%]"></div>
+                            <div className="w-[30%] h-[60%] rounded-[0.8vw] border-[0.4vw] border-orange-300 flex flex-col items-center justify-center">
+                                <p className="w-full h-[30%] text-[1.6vw] bg-orange-300 flex justify-center items-center text-white">
+                                    거래 작물 수
+                                </p>
+                                <p className="w-full bg-white h-[70%]  rounded-[0.8vw] text-[1.8vw] text-center flex items-center justify-center">
+                                    {priTotalProfit?.toLocaleString()}
+                                </p>
+                            </div>
+                        </div>
                     </div>
                     <div className="w-full h-[75%] flex items-center justify-center">
-                        <ul className="w-[60%] h-full flex items-center justify-center">
-                            <li className="w-[25%] h-full">
-                                <RankingCard />
-                            </li>
-                            <li className="w-[25%] h-full mx-[0.2vw]">
-                                <RankingCard />
-                            </li>
-                            <li className="w-[25%] h-full mx-[0.2vw]">
-                                <RankingCard />
-                            </li>
-                            <li className="w-[25%] h-full mx-[0.2vw]">
-                                <RankingCard />
-                            </li>
+                        <ul className="w-[35%] h-full flex flex-col items-center justify-center px-[1vw]">
+                            {finReport?.rankInfoList.map((item) => {
+                                return (
+                                    <li className="w-full h-[18%] my-[0.2vw]">
+                                        <RankingCard
+                                            rankName={item.rankName}
+                                            rankDescription={
+                                                item.rankDescription
+                                            }
+                                            myRank={item.myRank}
+                                            myRecord={item.myRecord}
+                                            theFirstRecord={item.theFirstRecord}
+                                            theFirstUserInfo={
+                                                item.theFirstUserInfo
+                                            }
+                                        />
+                                    </li>
+                                );
+                            })}
                         </ul>
-
+                        <div className="w-[35%] h-full flex-col items-center justify-center  me-[0.6vw] ">
+                            <div className="relative h-[55%] border-[0.2vw] rounded-[0.6vw] color-border-subbold p-[1vw] overflow-y-auto">
+                                <p className=" w-full text-start text-[1.4vw]">
+                                    획득 도전과제
+                                </p>
+                                <ul className="h-full flex flex-col">
+                                    {finReport?.achievementList.map((item) => {
+                                        console.log(item);
+                                        return (
+                                            <li className="h-[30%]">
+                                                <AchievementCard
+                                                    achievementId={item}
+                                                    achievementInfo={
+                                                        achievementInfo
+                                                    }
+                                                />
+                                            </li>
+                                        );
+                                    })}
+                                </ul>
+                            </div>
+                            <div className="h-[2%]"></div>
+                            <div className="h-[40%] border-[0.2vw] rounded-[0.6vw] color-border-subbold p-[0.2vw]">
+                                <div className="w-[94%] h-[94%]">
+                                    <HorizenBarChart data={priInfraData} />
+                                </div>
+                            </div>
+                        </div>
                         <div className="w-[35%] h-full flex flex-col items-center justify-center color-text-textcolor">
                             <div className="w-full h-[65%] border-[0.2vw] color-border-subbold rounded-[1vw] p-[1vw]">
                                 <p className="w-full h-[14%] text-[2vw] text-start">
@@ -1095,11 +1188,13 @@ export default function FinReportModal({
                                     </div>
                                 </div>
                             </div>
-                            <div className="w-full h-[35%] flex justify-center items-center">
-                                <div className="color-text-sublight mx-[1vw] px-[2vw] py-[0.8vw] rounded-[0.6vw] border-[0.2vw] color-border-sublight bg-white text-[1.4vw] cursor-pointer hover:color-bg-sublight hover:text-white">
-                                    저장 하기
-                                </div>
-                                <div className="text-white mx-[1vw] px-[2vw] py-[0.8vw] rounded-[0.6vw] border-[0.2vw] color-border-sublight color-bg-sublight text-[1.4vw] cursor-pointer hover:bg-white hover:color-text-sublight">
+                            <div className="w-full h-[35%] flex justify-end items-center">
+                                <div
+                                    className="text-white mx-[1vw] px-[2vw] py-[0.8vw] rounded-[0.6vw] border-[0.2vw] color-border-sublight color-bg-sublight text-[1.4vw] cursor-pointer hover:bg-white hover:color-text-sublight"
+                                    onClick={() => {
+                                        setIsFinReportAvail(false);
+                                    }}
+                                >
                                     보상 받기
                                 </div>
                             </div>
@@ -1112,14 +1207,6 @@ export default function FinReportModal({
     return (
         <div className="absolute w-[98%] h-[95%] flex flex-col items-center justify-center color-text-textcolor border-[0.4vw] rounded-[1vw] color-border-brown1 bg-white z-50 animation-modal ">
             {resultElement()}
-            <div
-                className="absolute text-3xl flex items-center justify-center text-white -top-8 -right-8 w-16 h-16 border-[6px] color-border-sublight color-bg-orange1 rounded-full cursor-pointer"
-                onClick={() => {
-                    closeResultModal();
-                }}
-            >
-                X
-            </div>
         </div>
     );
 }

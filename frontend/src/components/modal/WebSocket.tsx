@@ -354,9 +354,9 @@ export default function WebSocket(props: Prop) {
                                             profileThemeState(res.themeId)
                                         );
                                         //재고가 존재할 때만 업데이트
-                                        if (res.products.length > 0) {
+                                        if (res.productList.length > 0) {
                                             dispatch(
-                                                myProductState(res.products)
+                                                myProductState(res.productList)
                                             );
                                         } else {
                                             dispatch(myProductState([]));
