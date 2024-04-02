@@ -1104,10 +1104,10 @@ export default function FinReportModal({
                         </div>
                     </div>
                     <div className="w-full h-[75%] flex items-center justify-center">
-                        <ul className="w-[35%] h-full flex flex-col items-center justify-center px-[1vw]">
+                        <ul className="w-[35%] h-full flex flex-col items-center ps-[1vw] pe-[0.2vw] mx-[0.4vw] overflow-y-auto">
                             {finReport?.rankInfoList.map((item) => {
                                 return (
-                                    <li className="w-full h-[18%] my-[0.2vw]">
+                                    <li className="w-full my-[0.2vw]">
                                         <RankingCard
                                             rankName={item.rankName}
                                             rankDescription={
