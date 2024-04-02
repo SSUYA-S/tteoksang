@@ -305,9 +305,9 @@ export interface annualPrivateEvent {
 }
 
 /**연단위로 묶은 special event type */
-export interface annualSpecialEvent {
-    year: number;
-    specialEventList: specialEventReport[];
+export interface AnnualSpecialEvent {
+    specialEventName: string;
+    totalAccSpecialEventOccurCount: number;
 }
 
 /**접속 시간 분석을 위한 각 시간단위별 값 */
@@ -357,8 +357,8 @@ export interface FinalReportType {
     vehicleLevel: number;
     privateUpgradeReportList: annualUpgrade[];
     privateEventReportList: annualPrivateEvent[];
-    specialEventReportList: annualSpecialEvent[];
-    achievementList: AchievementReport[];
+    specialEventReportList: AnnualSpecialEvent[];
+    achievementList: number[];
     privateAccPrivatePlayTime: number;
     privateTimeSlotReportList: timeSlotCount[];
     rankInfoList: RankReportType[];

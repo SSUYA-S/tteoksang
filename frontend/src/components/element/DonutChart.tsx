@@ -10,6 +10,7 @@ export const options = {
         duration: 500,
     },
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
         legend: {
             position: 'bottom' as const,
