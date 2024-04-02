@@ -233,6 +233,9 @@ public class ReportServiceImpl implements ReportService {
                         .rentFee(rentFee)
                         .productList(new ArrayList<>())
                         .build();
+
+                // 레디스 지우기
+                redisService.deleteValues(redisGameInfoKey);
             }
             // 가압류 - 순이익이 최대로
             else {
