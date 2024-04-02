@@ -13,6 +13,7 @@ import {
 } from '../../util/product-and-event';
 import {
     Article,
+    BuyInfo,
     FinalReportType,
     HalfReportType,
     OfflineReportType,
@@ -52,6 +53,7 @@ interface Prop {
     ) => void;
     startTimer: (ingameTime: string, breakTime: string) => void;
     endTimer: () => void;
+    alertError: (message: string) => void;
 }
 
 /** 웹소켓 핸드쉐이크 및 수신 정보 처리 담당(채팅 제외)*/
@@ -126,15 +128,16 @@ export default function WebSocket(props: Prop) {
 
                                         //추가할 것)시간설정 로직
                                     } else {
-                                        console.log(`ERROR ON ${msg.type}`);
+                                        props.alertError(
+                                            '공통 이벤트 수신중 오류가 발생했습니다.'
+                                        );
                                     }
                                     break;
                                 case 'GET_NEWSPAPER':
                                     //신문 발행
                                     if (msg.isSuccess) {
                                         const newspaper = msg.body;
-                                        console.log('뉴스발행');
-                                        console.log(newspaper);
+
                                         //뉴스 수신시 로직 수정
                                         if (newspaper) {
                                             props.setNewsArticleList(
@@ -146,7 +149,9 @@ export default function WebSocket(props: Prop) {
                                             props.setNewsFlag(true);
                                         }
                                     } else {
-                                        console.log(`ERROR ON ${msg.type}`);
+                                        props.alertError(
+                                            '뉴스 수신중 오류가 발생했습니다.'
+                                        );
                                     }
                                     break;
                                 case 'GET_BREAK_TIME':
@@ -177,7 +182,9 @@ export default function WebSocket(props: Prop) {
                                     if (msg.isSuccess) {
                                         dispatch(titleState(msg.body.titleId));
                                     } else {
-                                        console.log(`ERROR ON ${msg.type}`);
+                                        props.alertError(
+                                            '칭호 변경중 오류가 발생했습니다.'
+                                        );
                                     }
                                     break;
                                 case 'BUY_PRODUCT':
@@ -200,7 +207,9 @@ export default function WebSocket(props: Prop) {
                                             )
                                         );
                                     } else {
-                                        console.log(`ERROR ON ${msg.type}`);
+                                        props.alertError(
+                                            '구매중 오류가 발생했습니다.'
+                                        );
                                     }
                                     break;
                                 case 'SELL_PRODUCT':
@@ -218,7 +227,9 @@ export default function WebSocket(props: Prop) {
                                             myProductState(newProductList)
                                         );
                                     } else {
-                                        console.log(`ERROR ON ${msg.type}`);
+                                        props.alertError(
+                                            '판매중 오류가 발생했습니다.'
+                                        );
                                     }
                                     break;
                                 case 'UPGRADE_WAREHOUSE':
@@ -232,7 +243,9 @@ export default function WebSocket(props: Prop) {
                                             )
                                         );
                                     } else {
-                                        console.log(`ERROR ON ${msg.type}`);
+                                        props.alertError(
+                                            '업그레이드중 오류가 발생했습니다.'
+                                        );
                                     }
                                     break;
                                 case 'UPGRADE_BROKER':
@@ -244,7 +257,9 @@ export default function WebSocket(props: Prop) {
                                             brokerLevelState(res.brokerLevel)
                                         );
                                     } else {
-                                        console.log(`ERROR ON ${msg.type}`);
+                                        props.alertError(
+                                            '업그레이드중 오류가 발생했습니다.'
+                                        );
                                     }
                                     break;
                                 case 'UPGRADE_VEHICLE':
@@ -256,7 +271,9 @@ export default function WebSocket(props: Prop) {
                                             vehicleLevelState(res.vehicleLevel)
                                         );
                                     } else {
-                                        console.log(`ERROR ON ${msg.type}`);
+                                        props.alertError(
+                                            '업그레이드중 오류가 발생했습니다.'
+                                        );
                                     }
                                     break;
                                 case 'GIVEUP_GAME':
@@ -361,6 +378,7 @@ export default function WebSocket(props: Prop) {
                                         } else {
                                             dispatch(myProductState([]));
                                         }
+
                                         dispatch(
                                             productInfoState(
                                                 res.productInfoList
@@ -368,7 +386,7 @@ export default function WebSocket(props: Prop) {
                                         );
                                         dispatch(
                                             buyableProductIdState(
-                                                res.buyableProductList
+                                                res.buyAbleProductIdList
                                             )
                                         );
                                         dispatch(
@@ -390,12 +408,19 @@ export default function WebSocket(props: Prop) {
                                         //추가할 것)시간 관련 로직
                                         props.setIngameTurn(res.turn);
                                     } else {
-                                        console.log(`ERROR ON ${msg.type}`);
+                                        props.alertError(
+                                            '초기 정보를 불러오는 중 오류가 발생했습니다.'
+                                        );
                                     }
                                     break;
                                 case 'ALERT_PLAYTIME':
                                     //장시간 접속 경고 알림
-                                    //관련 로직 추가 필요
+                                    if (msg.isSuccess) {
+                                        const playTime = msg.body.playTime;
+                                        props.alertError(
+                                            `${playTime}시간 이상 접속하셨습니다.\n장시간의 플레이는 건강에 악영향을 미치실 수 있습니다.`
+                                        );
+                                    }
                                     break;
                                 case 'GET_NEWSPAPER':
                                     //신문 발행
@@ -412,7 +437,9 @@ export default function WebSocket(props: Prop) {
                                             props.setNewsFlag(true);
                                         }
                                     } else {
-                                        console.log(`ERROR ON ${msg.type}`);
+                                        props.alertError(
+                                            '뉴스 수신중 오류가 발생했습니다.'
+                                        );
                                     }
                                     break;
                                 case 'QUARTER_REPORT':
