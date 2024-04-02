@@ -48,7 +48,7 @@ export default function NewsModal(props: NewsType) {
         <div className="absolute w-[70%] h-[95%] animation-modal z-20">
             <div className="h-[15%]"></div>
             <div
-                className="relative w-full h-[85%] flex flex-col items-center justify-start text-black rounded-[0.8vw] pb-[2vw]"
+                className="relative w-full h-[85%] flex flex-col items-center justify-start text-black rounded-[0.8vw] pb-[2vw] border-[0.2vw] border-black"
                 style={{ backgroundColor: '#ececec' }}
             >
                 <div className="relative w-[90%] h-[35%] flex flex-col items-center">
@@ -65,7 +65,7 @@ export default function NewsModal(props: NewsType) {
                         <p className="w-full h-[0.2vw] bg-black"></p>
                     </div>
                     <div
-                        className="absolute text-[2.6vw] cursor-pointer top-[1.6vw] right-[0vw]"
+                        className="absolute text-[2.6vw] cursor-pointer btn-animation top-[1.6vw] right-[0vw]"
                         onClick={() => {
                             closeNewsModal();
                         }}
@@ -78,7 +78,7 @@ export default function NewsModal(props: NewsType) {
                     <div className="w-[60%] h-full pe-[0.8vw]">
                         {currentNews.length > 0 ? (
                             <div className="w-full h-[55%]  text-start text-[2vw] overflow-y-scroll">
-                                <p className="h-full text-ellipsis overflow-hidden">
+                                <p className="h-full text-ellipsis overflow-hidden whitespace-pre-wrap">
                                     {currentNews[0].articleHeadline}
                                 </p>
                             </div>
