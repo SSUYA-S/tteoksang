@@ -1,17 +1,28 @@
 import { useEffect, useState } from 'react';
 import { LineChart } from '../element/LineChart';
 import { BarChart } from '../element/BarChart';
-import { AchievementReport, privateProdRep } from '../../type/types';
+import {
+    AchievementReport,
+    FinalReportType,
+    Product,
+    privateProdRep,
+    privateYearProdRep,
+} from '../../type/types';
 import { HorizenBarChart } from '../element/HorizenBarChart';
 
 //dummuy data
-import finalreport from '../../dummy-data/report/final.json';
 import RankingCard from '../section/RankingCard';
 
 type infoResultType = {
     setIsFinReportAvail: React.Dispatch<React.SetStateAction<boolean>>;
+    productList: Product[];
+    finReport: FinalReportType | null;
 };
-export default function FinReportModal(props: infoResultType) {
+export default function FinReportModal({
+    setIsFinReportAvail,
+    productList,
+    finReport,
+}: infoResultType) {
     const [changeTitle, setChangeTitle] = useState<boolean>(false);
 
     //1페이지 수익 수출 관련
@@ -23,7 +34,12 @@ export default function FinReportModal(props: infoResultType) {
     const [priTotalIncome, setPriTotalIncome] = useState<number>();
     const [priTotalOutcome, setPriTotalOutcome] = useState<number>();
     const [priTotalProfit, setPriTotalProfit] = useState<number>();
-    // 작물별 거래량,금액
+
+    // 작물별 총 거래량 (년마다)
+    const [priYearProductInfo, setPriYearProductInfo] = useState<
+        privateYearProdRep[]
+    >([]);
+    // 작물별 총 거래량,금액
     const [priTotalProductInfo, setPriTotalProductInfo] = useState<
         privateProdRep[]
     >([]);
@@ -53,7 +69,7 @@ export default function FinReportModal(props: infoResultType) {
 
     //// 개인 정보
     const [priPlayTime, setPriPlayTime] = useState<number>();
-    const [priAcievement, setPriAcievement] = useState<number[]>([]);
+    const [priAcievement, setPriAcievement] = useState<AchievementReport[]>([]);
     //// 개인 정보
     const [priProductLabels, setPriProductLabels] = useState<string[]>([]);
     const [page, setPage] = useState<number>(0);
@@ -69,28 +85,52 @@ export default function FinReportModal(props: infoResultType) {
         '9년차',
     ];
     useEffect(() => {
+        console.log(finReport);
         const fetchPriTotalData = async () => {
             let totalIncome = 0;
             let totalOutcome = 0;
             let totalProfit = 0;
 
             ////// 시설관련
-            setPriVehicleLevel(finalreport.vehicleLevel);
-            setPriWarehouseLevel(finalreport.warehouseLevel);
-            setPriBrokerLevel(finalreport.brokerLevel);
-            setPriPlayTime(finalreport.privateAccPrivatePlayTime);
-            setPriAcievement(finalreport.achievementList);
+            setPriVehicleLevel(finReport!.vehicleLevel);
+            setPriWarehouseLevel(finReport!.warehouseLevel);
+            setPriBrokerLevel(finReport!.brokerLevel);
+            setPriPlayTime(finReport!.privateAccPrivatePlayTime);
+            setPriAcievement(finReport!.achievementList);
             // 연도별 작물 정보
-            await finalreport.privateProductReportList.map((item) => {
+            await finReport!.privateProductReportList.map((item) => {
                 let incomeValue = 0;
                 let outcomeValue = 0;
                 let profit = 0;
-
                 // 제품 map
+                //여기서 item은 1년 2년 3년을 나타냄. item.year로 확인 가능.
+                let yearProductList: privateYearProdRep = {
+                    year: 0,
+                    totalAccPrivateProductPurchaseQuantity: 0,
+                    totalAccPrivateProductOutcome: 0,
+                    totalAccPrivateProductSalesQuantity: 0,
+                    totalAccPrivateProductIncome: 0,
+                    totalAccPrivateProductProfit: 0,
+                    totalAccPrivateBrokerFee: 0,
+                };
                 item.productList.map((data) => {
                     incomeValue += data.totalAccPrivateProductIncome;
                     outcomeValue += data.totalAccPrivateProductOutcome;
+                    yearProductList.year = item.year;
+                    yearProductList.totalAccPrivateProductPurchaseQuantity +=
+                        data.totalAccPrivateProductPurchaseQuantity;
+                    yearProductList.totalAccPrivateProductOutcome +=
+                        data.totalAccPrivateProductOutcome;
+                    yearProductList.totalAccPrivateProductSalesQuantity +=
+                        data.totalAccPrivateProductSalesQuantity;
+                    yearProductList.totalAccPrivateProductIncome +=
+                        data.totalAccPrivateProductIncome;
+                    yearProductList.totalAccPrivateProductProfit +=
+                        data.totalAccPrivateProductProfit;
+                    yearProductList.totalAccPrivateBrokerFee +=
+                        data.totalAccPrivateBrokerFee;
                     // console.log(data);
+
                     setPriTotalProductInfo((prevItems) => {
                         const itemIndex = prevItems.findIndex(
                             (item) => item.productId === data.productId
@@ -129,6 +169,19 @@ export default function FinReportModal(props: infoResultType) {
                     });
                 });
 
+                setPriYearProductInfo((prev) => {
+                    // newItem의 year가 이미 존재하는지 확인
+                    const isYearExist = prev.some(
+                        (data) => data.year === item.year
+                    );
+                    if (!isYearExist) {
+                        // 존재하지 않는 경우, 새 배열로 업데이트
+                        return [...prev, yearProductList];
+                    }
+                    // 이미 존재하는 경우, 변화 없이 이전 상태 반환
+                    return prev;
+                });
+
                 totalIncome += incomeValue;
                 totalOutcome += outcomeValue;
                 profit = incomeValue - outcomeValue;
@@ -143,7 +196,7 @@ export default function FinReportModal(props: infoResultType) {
         };
         fetchPriTotalData();
     }, []);
-    labels = finalreport.privateProductReportList.map(
+    labels = finReport!.privateProductReportList.map(
         (item) => item.year + '년차'
     );
     useEffect(() => {
@@ -169,6 +222,11 @@ export default function FinReportModal(props: infoResultType) {
             setPriProductLabels((prev) => [...prev, item.productId + '개']);
         });
     }, [priTotalProductInfo]);
+
+    useEffect(() => {
+        console.log('연간 구매 개수');
+        console.log(priYearProductInfo);
+    }, [priYearProductInfo]);
     const priTotalData = {
         labels: labels,
         datasets: [
@@ -269,7 +327,7 @@ export default function FinReportModal(props: infoResultType) {
     };
 
     const closeResultModal = () => {
-        props.setIsFinReportAvail(false);
+        setIsFinReportAvail(false);
     };
 
     const resultElement = () => {
