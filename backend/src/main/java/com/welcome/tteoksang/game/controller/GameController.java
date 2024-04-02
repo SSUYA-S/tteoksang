@@ -11,6 +11,7 @@ import com.welcome.tteoksang.game.dto.result.half.Half;
 import com.welcome.tteoksang.game.dto.result.offline.OfflineReport;
 import com.welcome.tteoksang.game.dto.result.quarter.Quarter;
 import com.welcome.tteoksang.game.service.ChatService;
+import com.welcome.tteoksang.game.service.ReportService;
 import com.welcome.tteoksang.redis.RedisPrefix;
 import com.welcome.tteoksang.redis.RedisService;
 import com.welcome.tteoksang.resource.type.MessageType;
@@ -41,6 +42,7 @@ public class GameController {
 
     private final RedisService redisService;
     private final ChatService chatService;
+    private final ReportService reportService;
 
     private final SimpMessagingTemplate simpMessagingTemplate;
 
@@ -61,7 +63,7 @@ public class GameController {
     }
 
     @GetMapping("/quarter/{webSocketId}")
-    public void sendQuater(@PathVariable("webSocketId") String webSocketId) {
+    public void sendQuarter(@PathVariable("webSocketId") String webSocketId, @AuthenticationPrincipal User user) {
         String logData = TestExample.quarter;
         ObjectMapper mapper = new ObjectMapper();
         boolean isSuccess = false;
@@ -80,6 +82,8 @@ public class GameController {
                 .build();
 
         simpMessagingTemplate.convertAndSend("/topic/private/" + webSocketId, quarterResult);
+
+//        reportService.sendQuarterResult(user.getUserId(), webSocketId);
     }
 
     @GetMapping("/half/{webSocketId}")
@@ -147,7 +151,6 @@ public class GameController {
 
         simpMessagingTemplate.convertAndSend("/topic/private/" + webSocketId, offlineResult);
     }
-
 
 
     @MessageMapping("/chat") // 클라이언트에서 보낸 메시지를 받을 메서드 지정

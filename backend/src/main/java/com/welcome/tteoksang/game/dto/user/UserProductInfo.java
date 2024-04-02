@@ -9,6 +9,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 // 내가 가지고 있는 농산물 정보
 public class UserProductInfo implements Serializable {
     private static final long serialVersionUID = 1L;
