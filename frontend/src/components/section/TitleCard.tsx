@@ -9,7 +9,7 @@ export default function TitleCard(props: Prop) {
     const titleInfo = props.titleInfo;
     return (
         <div
-            className="w-[90%] h-[6vw] flex justify-start items-center border-[0.3vw] rounded-[0.6vw] color-border-sublight my-[0.6vw]"
+            className="w-[90%] h-[6vw] flex justify-start items-center border-[0.3vw] rounded-[0.6vw] color-border-sublight my-[0.6vw] hover:color-bg-subbold hover:text-white"
             onClick={() => props.clickAction(titleInfo.titleId)}
         >
             {titleInfo.titleId !== 1 ? (
