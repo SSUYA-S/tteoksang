@@ -38,7 +38,6 @@ import org.springframework.validation.annotation.Validated;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.util.*;
 
 @Service
@@ -60,16 +59,17 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
     private final ServerInfo serverInfo;
     private final Random random = new Random();
 
-    @Value("${TURN_PERIOD}")
-    private long turnPeriod;
-    @Value("${EVENT_ARISE_PERIOD}")
-    private long eventPeriod;
-    @Value("${EVENT_ARISE_TIME}")
-    private long eventTime;
-    @Value("${NEWS_PUBLISH_TIME}")
-    private long newsTime;
+    @Value("${TURN_PERIOD_SEC}")
+    private long turnPeriodSec;
+
     @Value("${EVENT_ARISE_TURN_COUNT}")
-    private int eventAriseTurnCount;
+    private int eventTurnPeriod;
+    @Value("${EVENT_ARISE_INITIAL_TURN}")
+    private int eventInitialTurn;
+    @Value("${NEWS_PUBLISH_INITIAL_TURN}")
+    private int newsInitialTurn;
+    @Value("${QUARTER_YEAR_TURN_PERIOD}")
+    private int quarterYearTurnPeriod;
     private final String TURN = "fluctuate";
     private final String PUBLIC_EVENT = "event";
     private final String NEWSPAPER = "news";
@@ -134,7 +134,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
 
 
     //TODO 상수 C 정의 필요
-    int C = 1000000;
+    int C = 1_000_000; //평균 처음 기본금액은 5_000(G) => 평균 200개
 
     private void initProductInfo(boolean hasServerData) {
         fluctationInfoMap = new HashMap<>();
@@ -146,17 +146,31 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
                             .build())
                     .orElseThrow(ProductFluctuationNotFoundException::new);
 
-            double eventEffect = 0.0;
+            double maxFluctuationRate = fluctuation.getMaxFluctuationRate();
+            double minFluctuationRate = fluctuation.getMinFluctuationRate();
+            if (maxFluctuationRate == 0) {
+                //fluctuation 정보 없는 것들은 전체의 평균 fluctuation 이용
+                List<ProductFluctuation> productFluctuationList = productFluctuationRepository.findByProductId(product.getProductId());
+                maxFluctuationRate = productFluctuationList.stream().filter(productFluctuation -> productFluctuation.getMaxFluctuationRate() > 0)
+                        .mapToDouble(ProductFluctuation::getMaxFluctuationRate).average().getAsDouble();
+                minFluctuationRate = productFluctuationList.stream().filter(productFluctuation -> productFluctuation.getMinFluctuationRate() > 0)
+                        .mapToDouble(ProductFluctuation::getMinFluctuationRate).average().getAsDouble();
+            }
             fluctationInfoMap.put(product.getProductId(), FluctationInfo.builder()
                     .productAvgCost(product.getProductAvgCost())
-                    .minFluctuationRate(fluctuation.getMinFluctuationRate())
-                    .maxFluctuationRate(fluctuation.getMaxFluctuationRate())
-                    .EventEffect(eventEffect)
+                    .minFluctuationRate(minFluctuationRate)
+                    .maxFluctuationRate(maxFluctuationRate)
+                    .EventEffect(0.0)
                     .build());
 
             if (!hasServerData) {
+                int cost = product.getProductDefaultCost();
+                if (cost == 0) {
+                    //default 가격 정보 없는 경우 평균 가격 사용
+                    cost = product.getProductAvgCost().intValue();
+                }
                 productInfoMap.put(product.getProductId(), ServerProductInfo.builder()
-                        .productCost(product.getProductDefaultCost())
+                        .productCost(cost)
                         .productFluctuation(0)
                         .productMaxQuantity((int) (C / product.getProductAvgCost()))
                         .build());
@@ -197,27 +211,22 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
 
     //반기 스케쥴 등록/삭제
     public void startHalfYearGame() {
-        scheduleService.register(PUBLIC_EVENT, eventTime, eventPeriod, () -> {
-            log.debug("EVENT!!");
+        long eventPeriodSec=eventTurnPeriod*turnPeriodSec;
+        scheduleService.register(PUBLIC_EVENT, eventInitialTurn*turnPeriodSec, eventPeriodSec, () -> {
             createEvent();
         });
-        scheduleService.register(TURN, turnPeriod, () -> {
-            log.debug("fluctuate..." + serverInfo.getCurrentTurn());
+        scheduleService.register(TURN, turnPeriodSec, () -> {
             executePerTurn();
         });
-        scheduleService.register(NEWSPAPER, newsTime, eventPeriod, () -> {
-            log.debug("news!!");
+        scheduleService.register(NEWSPAPER, newsInitialTurn*turnPeriodSec, eventPeriodSec, () -> {
             createNewspaper();
         });
-//        scheduleService.register("TEST", "0 * * * * *", () -> {
-//            checkLongPlayTime();
-//        });
     }
 
     public void endHalfYearGame() {
         scheduleService.remove(TURN);
-        scheduleService.remove(NEWSPAPER);
         scheduleService.remove(PUBLIC_EVENT);
+        scheduleService.remove(NEWSPAPER);
     }
 
     //실행======================
@@ -227,6 +236,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         updateBuyableProduct();
         fluctuateProduct();
         updateTurn();
+        log.debug(serverInfo.getCurrentTurn() + "번째 턴 실행 :"+serverInfo.getTurnStartTime());
         sendPublicMessage(MessageType.GET_PUBLIC_EVENT,
                 PublicEventInfo.builder()
                         .inGameTime(LocalDateTime.now())
@@ -313,18 +323,19 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         ).map(eventIndex ->
                 occurableEventList.get(eventIndex)
         ).toList();
-        //TODO- 여기서 범위를 조정할지 확인 필요.. 현재 variance만 조정..
         nextEventList.stream().forEach(
                 event -> {
-                    fluctationInfoMap.get(event.getProductId()).setEventEffect(event.getEventVariance());
+                    fluctationInfoMap.get(event.getProductId())
+                            .setEventEffect(fluctationInfoMap.get(event.getProductId()).getEventEffect()+event.getEventVariance());
                 }
         );
+        log.debug("이벤트 결정 완료: "+nextEventList);
     }
 
     public void updateTurn() {
         serverInfo.setCurrentTurn(serverInfo.getCurrentTurn() + 1);
         serverInfo.setTurnStartTime(LocalDateTime.now());
-        if (serverInfo.getCurrentTurn() % eventPeriod == 0) {
+        if (serverInfo.getCurrentTurn() % eventTurnPeriod == 0) {
             serverInfo.setSpecialEventIdList(nextEventList.stream().map(event -> {
                 SpecialEventLogInfo logInfo = SpecialEventLogInfo.builder()
                         .eventId(event.getEventId())
@@ -347,15 +358,16 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
             nextEventList = null;
             log.debug("==================event 변경==================");
         }
-        if (serverInfo.getCurrentTurn() % 90 == 0) {
+        if (serverInfo.getCurrentTurn() % quarterYearTurnPeriod == 0) {
             updateQuarterYearList();
         }
         privateScheduleService.initGameInfoForAllUsersPerTurn();
         redisService.setValues(RedisPrefix.SERVER_INFO.prefix(), serverInfo);
     }
 
-    //TODO- 상수 K 정의
-    double K = 0.3;
+    double CORRECTION_VALUE = 0.2;
+    double MAX_AVG_MULTIPLE_LIMIT = 20;
+    double MIN_AVG_MULTIPLE_LIMIT = 0.2;
 
     //가격 변동
     public void fluctuateProduct() {
@@ -366,15 +378,27 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
             ServerProductInfo productInfo = entry.getValue();
             FluctationInfo fluctationInfo = fluctationInfoMap.get(productId);
             //random값 생성
-            double value = random.nextDouble(fluctationInfo.getMinFluctuationRate() * (1 - K) * (1 + fluctationInfo.getEventEffect() / 100), fluctationInfo.getMaxFluctuationRate() * (1 + K) * (1 + fluctationInfo.getEventEffect() / 100) + 0.001);
-            //fluctuation k배하여 반영 + 이벤트 변동폭 반영 : *이전가격*으로부터 변동
-
-            int newCost = (int) (productInfo.getProductCost() * value);
-//            if(fluctationInfo.getEventEffect()!=0){
-//                newCost = (int) (productInfo.getProductCost() * value * (1 + fluctationInfo.getEventEffect() / 100));
-//            }
-//            productInfo.setProductFluctuation(newCost - productInfo.getProductCost());
-//            productInfo.setProductCost(newCost);
+            double randomRate;
+            double eventEffectRate = 1 + fluctationInfo.getEventEffect() / 100;
+            if (productInfo.getProductCost() >= fluctationInfo.getProductAvgCost() * eventEffectRate * MAX_AVG_MULTIPLE_LIMIT) {
+                //평균값의 N배 이상인 경우, min, maxRate 값 변동! -> 변동폭 만큼 각 rate에서 준다
+                double maxRate = fluctationInfo.getMinFluctuationRate();
+                double minRate = (fluctationInfo.getMinFluctuationRate() * 2 - fluctationInfo.getMaxFluctuationRate())* (1 - CORRECTION_VALUE);
+                randomRate = random.nextDouble(minRate , maxRate);
+                log.debug(productId + "@@@@@너무 비싸요@@@@@" + minRate + ">" + randomRate + "<" + maxRate);
+                //TODO- 그럼에도 계속 올라가는 경우 조정해줘야 할지 논의 필요-> 해줘야 한다...
+            } else if (fluctationInfo.getMinFluctuationRate() > 1) {
+                //증가만 하는 경우
+                randomRate = random.nextDouble(fluctationInfo.getMinFluctuationRate() * eventEffectRate * (1 - CORRECTION_VALUE), (fluctationInfo.getMaxFluctuationRate() + 0.001) * eventEffectRate);
+            } else {
+                //평균적인 경우
+                randomRate = random.nextDouble(fluctationInfo.getMinFluctuationRate() * eventEffectRate * (1 - CORRECTION_VALUE), (fluctationInfo.getMaxFluctuationRate() + 0.001) * eventEffectRate * (1 + CORRECTION_VALUE));
+            }
+            int newCost = (int) (productInfo.getProductCost() * randomRate);
+            if (productInfo.getProductCost() <= fluctationInfo.getProductAvgCost() * MIN_AVG_MULTIPLE_LIMIT) {
+                //가격이 너무 작은 경우, 평균 가격의 일부 얻으므로써 보정
+                newCost += (int) (fluctationInfo.getProductAvgCost() * randomRate * MIN_AVG_MULTIPLE_LIMIT);
+            }
             //임시 배열에 저장, 한 번에 값들 업데이트 하기 위함!
             tempFluctMap.put(productId, ServerProductInfo.builder()
                     .productCost(newCost)
@@ -400,7 +424,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
 
     //가격 범위 변동 -> fluctMap 업데이트: 10일마다 실행
     public void updateFluctuationInfoPer10Days() {
-        int countPerTenDays = serverInfo.getCurrentTurn() / 10;
+        int countPerTenDays = (serverInfo.getCurrentTurn()%(quarterYearTurnPeriod*4)) /10;
         fluctationInfoMap.entrySet().stream().forEach(
                 (entry) -> {
                     ProductFluctuation fluctuation = productFluctuationRepository.findById(ProductFluctuationId.builder()
@@ -421,10 +445,9 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         LocalDateTime currentTime = LocalDateTime.now();
         privateScheduleService.getUserAlertPlayTimeMap().entrySet().stream().forEach(
                 entry -> {
-//                    log.debug(PLAY_LONG_TIME+"..checking user..."+entry.getKey()+" and... "+Duration.between(entry.getValue().getChecked(),currentTime).toMinutes());
                     if (Duration.between(entry.getValue().getChecked(), currentTime).toMinutes() >= PLAY_LONG_TIME) {
 //                    if (Duration.between(entry.getValue().getChecked(),currentTime).toHours() >= PLAY_LONG_TIME) {
-//                        log.debug("let's goooooo");
+
                         String userId = entry.getKey();
                         sendPrivateMessage(userId, MessageType.ALERT_PLAYTIME, PlayTimeInfo.builder()
                                 .playTime(PLAY_LONG_TIME * entry.getValue().getAlertCount())
@@ -437,7 +460,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
     }
 
     public void sendPrivateMessage(String userId, MessageType type, Object body) {
-        log.debug("sendPrivateMessage.." + userId + " " + type);
+        log.debug("<PRIVATE> Message.." + userId + " " + type);
         if (!redisService.hasKey(RedisPrefix.WEBSOCKET.prefix() + userId))
             throw new AccessToInvalidWebSocketIdException();
         String webSocketId = (String) redisService.getValues(RedisPrefix.WEBSOCKET.prefix() + userId);
@@ -450,7 +473,6 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
 
     // /public에 메세지 발행
     public void sendPublicMessage(MessageType type, Object body) {
-        // TODO- check: isSuccess가 false가 될 일이... 있나....? 서버만이 보내는데?
         log.debug(body.toString());
         GameMessageRes messageRes = GameMessageRes.builder()
                 .type(type)
@@ -458,7 +480,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
                 .body(body)
                 .build();
         sendingOperations.convertAndSend("/topic/public", messageRes);
-        log.debug("send message: " + type);
+        log.debug("<PUBLIC> message: " + type);
     }
 
 
