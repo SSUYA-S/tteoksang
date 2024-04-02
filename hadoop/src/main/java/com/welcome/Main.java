@@ -3,11 +3,15 @@ package com.welcome;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.util.GenericOptionsParser;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -217,92 +221,110 @@ public class Main {
     public static void main(String[] args) {
 
 //        Map<Long, Statistics> statisticsMap = new HashMap<>();
-        System.out.println("Hello world!");
-        String val = "{\n" +
-                "    \"type\": \"BUY\",\n" +
-                "    \"body\": {\n" +
-                "        \"userId\" : \"asdffw-qwerqw\",\n" +
-                "        \"gameId\": 1,\n" +
-                "        \"turn\": 12,\n" +
-                "        \"productId\": 8,\n" +
-                "        \"purchasedQuantity\": 12,\n" +
-                "        \"productOutcome\": 123,\n" +
-                "        \"productQuantity\": 11,\n" +
-                "        \"rentFee\": 130\n" +
-                "    }\n" +
-                "}";
-        //System.out.println(val);
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            Message message = mapper.readValue(val.toString(), Message.class);
-            String logType = message.getType();
-            Object logBody = message.getBody();
-            System.out.println("logType");
-            System.out.println(message.getBody());
-            Map<String, Object> bodyMap = (Map<String, Object>) message.getBody();
-            String userId = bodyMap.get("userId").toString();
-            System.out.println(userId);
-
-
-            Statistics statistics = new Statistics();
-            Long productId = Long.parseLong(bodyMap.get("productId").toString());
-            ProductInfo productInfo = new ProductInfo();
-//            statistics.getProductInfoMap().put(productId, productInfo);
-            int gameId = Integer.parseInt(bodyMap.get("gameId").toString());
-            System.out.println("밑에가 json형식으로 나와야 하는데 말이지요?");
-            long rentFee = Long.parseLong(bodyMap.get("rentFee").toString());
-            statistics.setAccPrivateRentFee(rentFee);
-            statistics.setAccPrivateGamePlayCount(500);
+//        System.out.println("Hello world!");
+//        String val = "{\n" +
+//                "    \"type\": \"BUY\",\n" +
+//                "    \"body\": {\n" +
+//                "        \"userId\" : \"asdffw-qwerqw\",\n" +
+//                "        \"gameId\": 1,\n" +
+//                "        \"turn\": 12,\n" +
+//                "        \"productId\": 8,\n" +
+//                "        \"purchasedQuantity\": 12,\n" +
+//                "        \"productOutcome\": 123,\n" +
+//                "        \"productQuantity\": 11,\n" +
+//                "        \"rentFee\": 130\n" +
+//                "    }\n" +
+//                "}";
+//        //System.out.println(val);
+//        ObjectMapper mapper = new ObjectMapper();
+//        try {
+//            Message message = mapper.readValue(val.toString(), Message.class);
+//            String logType = message.getType();
+//            Object logBody = message.getBody();
+//            System.out.println("logType");
+//            System.out.println(message.getBody());
+//            Map<String, Object> bodyMap = (Map<String, Object>) message.getBody();
+//            String userId = bodyMap.get("userId").toString();
+//            System.out.println(userId);
+//
+//
 //            Statistics statistics = new Statistics();
+//            Long productId = Long.parseLong(bodyMap.get("productId").toString());
+//            ProductInfo productInfo = new ProductInfo();
+////            statistics.getProductInfoMap().put(productId, productInfo);
+//            int gameId = Integer.parseInt(bodyMap.get("gameId").toString());
+//            System.out.println("밑에가 json형식으로 나와야 하는데 말이지요?");
+//            long rentFee = Long.parseLong(bodyMap.get("rentFee").toString());
+//            statistics.setAccPrivateRentFee(rentFee);
+//            statistics.setAccPrivateGamePlayCount(500);
+////            Statistics statistics = new Statistics();
+////            String outputValue = mapper.writeValueAsString(statistics);
+////            System.out.println(outputValue);
+//
+////            ProductInfo productInfo = new ProductInfo();
+//            //productInfo.setAccPrivateBrokerFee(19204L);
+//            // Statistics 객체에 ProductInfo를 추가
+//            //statistics.getProductInfoMap().put(productId, productInfo);
+//
 //            String outputValue = mapper.writeValueAsString(statistics);
 //            System.out.println(outputValue);
-
-//            ProductInfo productInfo = new ProductInfo();
-            //productInfo.setAccPrivateBrokerFee(19204L);
-            // Statistics 객체에 ProductInfo를 추가
-            //statistics.getProductInfoMap().put(productId, productInfo);
-
-            String outputValue = mapper.writeValueAsString(statistics);
-            System.out.println(outputValue);
-
-
-            ReduceStatistics reduceStatistics = new ReduceStatistics();
-            Statistics secstatistics = mapper.readValue(outputValue.toString(), Statistics.class);
-            reduceStatistics.setAccPrivateUpgradeFee(secstatistics.getAccPrivateRentFee());
-            reduceStatistics.setAccPrivateGamePlayCount(secstatistics.getAccPrivateGamePlayCount());
-            reduceStatistics.setAccPrivatePlayTime(200);
-            for (int i=0; i<=56; i++) {
-                ReduceProductInfo reduceProductInfo = new ReduceProductInfo();
-                // key값 할당
-                reduceStatistics.getReduceProductInfoMap().put((long) i, reduceProductInfo);
-            }
-            String secoutputValue = mapper.writeValueAsString(reduceStatistics);
-            System.out.println(secoutputValue);
-
-
-            switch (logType){
-                case "BUY":
-                    System.out.println("쌰아 이게 맞나");
-                    break;
-            }
-
-        } catch (Exception e) {
-
-        }
-
-
-        // 진짜 Main 함수 시작
-        Configuration conf = new Configuration();
-        try {
-//            String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
-//            if (otherArgs.length != 2) {
-//                System.out.println("여기는 메인...");
+//
+//
+//            ReduceStatistics reduceStatistics = new ReduceStatistics();
+//            Statistics secstatistics = mapper.readValue(outputValue.toString(), Statistics.class);
+//            reduceStatistics.setAccPrivateUpgradeFee(secstatistics.getAccPrivateRentFee());
+//            reduceStatistics.setAccPrivateGamePlayCount(secstatistics.getAccPrivateGamePlayCount());
+//            reduceStatistics.setAccPrivatePlayTime(200);
+//            for (int i=0; i<=56; i++) {
+//                ReduceProductInfo reduceProductInfo = new ReduceProductInfo();
+//                // key값 할당
+//                reduceStatistics.getReduceProductInfoMap().put((long) i, reduceProductInfo);
 //            }
+//            String secoutputValue = mapper.writeValueAsString(reduceStatistics);
+//            System.out.println(secoutputValue);
+//
+//
+//            switch (logType){
+//                case "BUY":
+//                    System.out.println("쌰아 이게 맞나");
+//                    break;
+//            }
+//
+//        } catch (Exception e) {
+//
+//        }
+
+
+        // Main 함수 시작
+        Configuration conf = new Configuration();
+
+        try {
+            String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
+            if (otherArgs.length != 2) {
+                System.err.println("Usage: <in> <out>");
+                System.exit(2);
+            }
+
             Job job = new Job(conf, "log filtering");
-            System.out.println("log filtering");
+            job.setJarByClass(Main.class);
 
+            // let hadoop know map and reduce classes
+            job.setMapperClass(LogMapper.class);
+            job.setReducerClass(LogReducer.class);
+
+            job.setOutputKeyClass(Text.class);
+            job.setOutputValueClass(Text.class);
+
+            // set number of reduces
+            job.setNumReduceTasks(16);
+
+            // set input and output directories
+            FileInputFormat.addInputPath(job,new Path(otherArgs[0]));
+            FileOutputFormat.setOutputPath(job,new Path(otherArgs[1]));
+
+            System.exit(job.waitForCompletion(true) ? 0 : 1 );
         } catch (Exception e){
-
+            e.printStackTrace();
         }
     }
 }
