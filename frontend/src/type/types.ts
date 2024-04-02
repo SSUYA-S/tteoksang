@@ -235,6 +235,17 @@ export interface privateProdRep {
     totalAccPrivateBrokerFee: number;
 }
 
+/**전체 결산 시 내 개인 작물 관련 통계를 위한 type */
+export interface privateYearProdRep {
+    year: number;
+    totalAccPrivateProductPurchaseQuantity: number;
+    totalAccPrivateProductOutcome: number;
+    totalAccPrivateProductSalesQuantity: number;
+    totalAccPrivateProductIncome: number;
+    totalAccPrivateProductProfit: number;
+    totalAccPrivateBrokerFee: number;
+}
+
 /**전체 결산 시 사용할 전체 농작물 관련 통계 */
 export interface publicProdRep {
     productId: number;
@@ -251,7 +262,7 @@ export interface publicProdRep {
 /**private prod report 연단위로 묶은 type */
 export interface annualPrivate {
     year: number;
-    productList: privateProdRep;
+    productList: privateProdRep[];
 }
 
 /**public prod report 연단위로 묶은 type */
