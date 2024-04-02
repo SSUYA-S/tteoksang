@@ -60,6 +60,7 @@ public class GameInfoServiceImpl implements GameInfoService {
                 .userId(userId)
                 .gameId(newGameId)// 새로운 게임 ID
                 .gold(10000000L)
+//                .gold(10000L)
                 .warehouseLevel(1)
                 .vehicleLevel(1)
                 .brokerLevel(1)
