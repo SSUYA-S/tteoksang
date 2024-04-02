@@ -118,7 +118,7 @@ export default function InfraModal(props: InfraType) {
         if (facilityType === 0) {
             return (
                 <>
-                    <div className="w-[70%] h-[20%] mx-auto mt-[1vw] flex items-center justify-center text-[2vw] bg-white rounded-[1vw] border-[0.4vw] color-border-subbold color-text-textcolor">
+                    <div className="w-[70%] h-[20%] mx-auto mt-[1vw] flex items-center justify-center text-[1.6vw] bg-white rounded-[1vw] border-[0.4vw] color-border-subbold color-text-textcolor">
                         업그레이드 하고 싶은 항목을 클릭하세요.
                     </div>
                     <div className="relative w-full h-[80%] flex items-end justify-around pb-[1vw]">
@@ -128,7 +128,7 @@ export default function InfraModal(props: InfraType) {
                                 changeFailityType(1);
                             }}
                         >
-                            <p className="w-[60%] mx-auto text-[2vw] relative top-[4vw] bg-white rounded-[1.4vw] border-[0.4vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white">
+                            <p className="w-[60%] mx-auto text-[1.6vw] relative top-[4vw] bg-white rounded-[1.4vw] border-[0.4vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white">
                                 운송수단
                             </p>
                             <div
@@ -150,7 +150,7 @@ export default function InfraModal(props: InfraType) {
                                 changeFailityType(2);
                             }}
                         >
-                            <p className="w-[60%] mx-auto text-[2vw] relative top-[4vw] bg-white rounded-[1.4vw] border-[0.4vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white">
+                            <p className="w-[60%] mx-auto text-[1.6vw] relative top-[4vw] bg-white rounded-[1.4vw] border-[0.4vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white">
                                 창고
                             </p>
                             <div
@@ -170,7 +170,7 @@ export default function InfraModal(props: InfraType) {
                                 changeFailityType(3);
                             }}
                         >
-                            <p className="w-[60%] mx-auto text-[2vw] relative top-[4vw] bg-white rounded-[1.4vw] border-[0.4vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white">
+                            <p className="w-[60%] mx-auto text-[1.6vw] relative top-[4vw] bg-white rounded-[1.4vw] border-[0.4vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white">
                                 중개소
                             </p>
                             <div
@@ -196,7 +196,7 @@ export default function InfraModal(props: InfraType) {
             if (checkMaxLevel()) {
                 return (
                     <section className="w-full h-full flex flex-col items-center justify-center ">
-                        <div className="w-[40%] h-[20%] mt-[1vw] flex items-center justify-center  text-[2vw] bg-white rounded-[1vw] border-[0.4vw] color-border-subbold color-text-textcolor">
+                        <div className="w-[40%] h-[20%] mt-[1vw] flex items-center justify-center  text-[1.6vw] bg-white rounded-[1vw] border-[0.4vw] color-border-subbold color-text-textcolor">
                             {facilityType === 1
                                 ? '운송수단 업그레이드'
                                 : facilityType === 2
