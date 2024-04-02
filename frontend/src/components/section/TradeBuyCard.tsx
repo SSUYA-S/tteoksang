@@ -6,6 +6,7 @@ interface BuyCardProps {
     calculateMaximumValue: (id: number, nowValue: number) => number;
     maximumAlert: () => void;
     minimumAlert: () => void;
+    productUnit: string;
 }
 
 export default function TradeBuyCard({
@@ -14,6 +15,7 @@ export default function TradeBuyCard({
     calculateMaximumValue,
     maximumAlert,
     minimumAlert,
+    productUnit,
 }: BuyCardProps) {
     const productNumber = buyableInfo.buyingInfo.productQuantity;
     const productTotalCost = buyableInfo.buyingInfo.productTotalCost;
@@ -70,7 +72,11 @@ export default function TradeBuyCard({
             <div className="w-full h-[60%] flex">
                 <div className="w-[30%] h-full flex flex-col justify-between ">
                     <p className="h-[20%] text-[1.4vw] color-text-subbold pt-[0.5vw] ">
-                        {'x' + buyableInfo.productInfo.productMaxQuantity}
+                        {buyableInfo.productInfo.productMaxQuantity.toLocaleString() +
+                            productUnit}
+                    </p>
+                    <p className="h-[20%] text-[1vw] color-text-subbold pt-[0.5vw] ">
+                        {'구매 가능'}
                     </p>
                     <div
                         className={
@@ -81,8 +87,8 @@ export default function TradeBuyCard({
                             aspectRatio: 1 / 1,
                         }}
                     ></div>
-                    <p className="h-[20%] text-[1.1vw] color-text-darkgray">
-                        {`1개당 ${productCost}G`}
+                    <p className="h-[20%] text-[1vw] color-text-darkgray">
+                        {`${productUnit.trim()}당 ${productCost.toLocaleString()}G`}
                     </p>
                 </div>
                 <div className="w-[70%] h-full flex flex-col justify-center">
@@ -93,20 +99,19 @@ export default function TradeBuyCard({
                             {buyableInfo.productInfo.productFluctuation > 0 ? (
                                 <p className="color-text-blue3">
                                     {'+' +
-                                        buyableInfo.productInfo
-                                            .productFluctuation +
+                                        buyableInfo.productInfo.productFluctuation.toLocaleString() +
                                         'G'}
                                 </p>
                             ) : buyableInfo.productInfo.productFluctuation ===
                               0 ? (
                                 <p className="color-text-green1">
-                                    {buyableInfo.productInfo
-                                        .productFluctuation + 'G'}
+                                    {buyableInfo.productInfo.productFluctuation.toLocaleString() +
+                                        'G'}
                                 </p>
                             ) : (
                                 <p className="color-text-red1">
-                                    {buyableInfo.productInfo
-                                        .productFluctuation + 'G'}
+                                    {buyableInfo.productInfo.productFluctuation.toLocaleString() +
+                                        'G'}
                                 </p>
                             )}
                         </div>
@@ -131,28 +136,28 @@ export default function TradeBuyCard({
                             className="flex py-[0.2vw] px-[0.4vw] text-[1.1vw] mx-[0.2vw] color-text-orange1 rounded-[0.4vw] color-bg-yellow1 cursor-pointer"
                             onClick={() => changeProductNumber(-10)}
                         >
-                            ◀
+                            -10
                         </div>
                         <div
                             className="flex py-[0.2vw] px-[0.4vw] text-[1.1vw] mx-[0.2vw] color-text-orange1 rounded-[0.4vw] color-bg-yellow1 cursor-pointer"
                             onClick={() => changeProductNumber(-1)}
                         >
-                            ◀
+                            -1
                         </div>
                         <div className="py-[0.1vw] px-[1.2vw] mx-[0.4vw] text-[1.6vw] text-white color-bg-orange1 rounded-[0.4vw] cursor-default">
-                            {productNumber}
+                            {productNumber.toLocaleString()}
                         </div>
                         <div
                             className="flex py-[0.2vw] px-[0.4vw] text-[1.1vw] mx-[0.2vw] color-text-orange1 rounded-[0.4vw] color-bg-yellow1 cursor-pointer"
                             onClick={() => changeProductNumber(1)}
                         >
-                            ▶
+                            +1
                         </div>
                         <div
                             className="flex py-[0.2vw] px-[0.4vw] text-[1.1vw] mx-[0.2vw] color-text-orange1 rounded-[0.4vw] color-bg-yellow1 cursor-pointer"
                             onClick={() => changeProductNumber(10)}
                         >
-                            ▶
+                            +10
                         </div>
                     </div>
                 </div>
@@ -173,7 +178,7 @@ export default function TradeBuyCard({
                     최대
                 </div>
                 <div className="w-[60%] h-[70%] py-[0.2vw] px-4 flex items-center justify-center text-[1.8vw] mx-[0.2vw] color-bg-orange1 rounded-[0.4vw] text-white cursor-default">
-                    {productTotalCost.toLocaleString()}
+                    {productTotalCost.toLocaleString() + '(G)'}
                 </div>
             </div>
         </div>

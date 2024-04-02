@@ -106,6 +106,24 @@ export default function WebSocket(props: Prop) {
                                             info.turnStartTime
                                         );
 
+                                        if (info.turn === 1) {
+                                            client.publish({
+                                                destination: `/app/private/${props.webSocketId}`,
+                                                body: JSON.stringify({
+                                                    type: 'GET_TOTAL_INFO',
+                                                    body: {},
+                                                }),
+                                            });
+                                            //뉴스 정보 받아오기
+                                            client.publish({
+                                                destination: `/app/private/${props.webSocketId}`,
+                                                body: JSON.stringify({
+                                                    type: 'GET_NEWSPAPER',
+                                                    body: {},
+                                                }),
+                                            });
+                                        }
+
                                         //추가할 것)시간설정 로직
                                     } else {
                                         console.log(`ERROR ON ${msg.type}`);
@@ -336,10 +354,12 @@ export default function WebSocket(props: Prop) {
                                             profileThemeState(res.themeId)
                                         );
                                         //재고가 존재할 때만 업데이트
-                                        if (res.productList) {
+                                        if (res.products.length > 0) {
                                             dispatch(
-                                                myProductState(res.productList)
+                                                myProductState(res.products)
                                             );
+                                        } else {
+                                            dispatch(myProductState([]));
                                         }
                                         dispatch(
                                             productInfoState(
@@ -401,6 +421,7 @@ export default function WebSocket(props: Prop) {
                                 case 'OFFLINE_REPORT':
                                     //결산 리포트 왔을 때.
                                     if (msg.isSuccess) {
+                                        dispatch(goldState(msg.body.gold));
                                         props.reportReceived(
                                             msg.type,
                                             msg.body

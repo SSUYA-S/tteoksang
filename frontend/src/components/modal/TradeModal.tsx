@@ -3,7 +3,7 @@ import TradeBuyReceipt from '../section/TradeBuyReceipt';
 import TradeBuyCard from '../section/TradeBuyCard';
 import TradeSellCard from '../section/TradeSellCard';
 import TradeSellReceipt from '../section/TradeSellReceipt';
-import { InfraList, Product } from '../../type/types';
+import { InfraList, Product, ProductInfo } from '../../type/types';
 
 import { myProductState } from '../../util/myproduct-slice';
 import { useSelector } from 'react-redux';
@@ -39,12 +39,76 @@ export default function TradeModal(props: tradeType) {
     const myProductInfo: myProductState = useSelector(
         (state: any) => state.reduxFlag.myProductSlice
     );
+    // console.log(myProductInfo.myProductList);
+
     const productInfoAndEvent: productInfoAndEventState = useSelector(
         (state: any) => state.reduxFlag.productAndEventSlice
     );
 
+    //물건 리스트
+    const [productSortedList, setProductSortedList] = useState<ProductInfo[]>(
+        []
+    );
+    //정렬 모드 (0:리셋(id순). 1, 2 : 개당 가격의 오름, 내림차순. 3, 4 : 보유 개수 기준 오름차순, 내림차순. 5,6 : 등락폭 오름차순 내림차순)
+    const [sortMode, setSortMode] = useState<number>(0);
+    const [isFilter, setIsFilter] = useState<boolean>(false);
+    //물건 정렬 상태 초기화
+    useEffect(() => {
+        const newList: ProductInfo[] = [];
+        //깊은 복사
+        for (let i = 0; i < productInfoAndEvent.productInfoList.length; i++) {
+            if (isFilter) {
+                if (
+                    getNumber(
+                        productInfoAndEvent.productInfoList[i].productId
+                    ) > 0
+                ) {
+                    //필터 있고 보유 중
+                    newList[i] = productInfoAndEvent.productInfoList[i];
+                }
+            } else {
+                //필터 없음
+                newList[i] = productInfoAndEvent.productInfoList[i];
+            }
+        }
+
+        switch (sortMode) {
+            case 0:
+                newList.sort((a, b) => a.productId - b.productId);
+                break;
+            case 1:
+                newList.sort((a, b) => a.productCost - b.productCost);
+                break;
+            case 2:
+                newList.sort((a, b) => b.productCost - a.productCost);
+                break;
+            case 3:
+                newList.sort(
+                    (a, b) => getNumber(a.productId) - getNumber(b.productId)
+                );
+                break;
+            case 4:
+                newList.sort(
+                    (a, b) => getNumber(b.productId) - getNumber(a.productId)
+                );
+                break;
+            case 5:
+                newList.sort(
+                    (a, b) => a.productFluctuation - b.productFluctuation
+                );
+                break;
+            case 6:
+                newList.sort(
+                    (a, b) => b.productFluctuation - a.productFluctuation
+                );
+                break;
+        }
+        setProductSortedList(newList);
+    }, [sortMode, productInfoAndEvent.productInfoList, isFilter]);
+
     const maximumAlertRef = useRef<HTMLDivElement>(null);
     const minimumAlertRef = useRef<HTMLDivElement>(null);
+    const turnchangeAlertRef = useRef<HTMLDivElement>(null);
 
     const myProductList = myProductInfo.myProductList;
 
@@ -64,6 +128,11 @@ export default function TradeModal(props: tradeType) {
         myProductInfo.vehicleLevel,
     ]);
     //구매 가능 검증용 변수, 창고에 있는 재고 불러와 계산하는 로직 추가
+
+    //턴 바뀌면 경고 띄워주기
+    useEffect(() => {
+        turnchangeAlert();
+    }, [props.turn]);
 
     //현재 창고 내 재고
     const [nowStock, setNowStock] = useState<number>(0);
@@ -413,6 +482,19 @@ export default function TradeModal(props: tradeType) {
         }
     };
 
+    const turnchangeAlert = () => {
+        if (turnchangeAlertRef.current) {
+            //애니메이션 적용
+            turnchangeAlertRef.current.style.animation = 'alert 1s 0s 1 linear';
+            //끝나면 초기화
+            turnchangeAlertRef.current.onanimationend = () => {
+                if (turnchangeAlertRef.current) {
+                    turnchangeAlertRef.current.style.animation = '';
+                }
+            };
+        }
+    };
+
     /**렌더링 모달
      *
      * @returns
@@ -433,6 +515,12 @@ export default function TradeModal(props: tradeType) {
                             ref={minimumAlertRef}
                         >
                             <p className="text-[1.5vw]">최소수량입니다.</p>
+                        </div>
+                        <div
+                            className="absolute w-[40%] h-[5vh] left-[40%] top-[3vh] bg-black -z-10 rounded text-white opacity-0 flex justify-center items-center"
+                            ref={turnchangeAlertRef}
+                        >
+                            <p className="text-[1.5vw]">턴이 바뀌었습니다.</p>
                         </div>
                         <div className="h-[18%] flex justify-between items-end pb-[0.2vh]">
                             <p className="text-[3vw] color-text-textcolor">
@@ -469,6 +557,11 @@ export default function TradeModal(props: tradeType) {
                                         }
                                         maximumAlert={maximumAlert}
                                         minimumAlert={minimumAlert}
+                                        productUnit={
+                                            props.productResource[
+                                                product.productInfo.productId
+                                            ].productUnit
+                                        }
                                     />
                                 );
                             })}
@@ -522,6 +615,12 @@ export default function TradeModal(props: tradeType) {
                                             }
                                             maximumAlert={maximumAlert}
                                             minimumAlert={minimumAlert}
+                                            productUnit={
+                                                props.productResource[
+                                                    product.productInfo
+                                                        .productId
+                                                ].productUnit
+                                            }
                                         />
                                     </>
                                 );
@@ -545,42 +644,101 @@ export default function TradeModal(props: tradeType) {
             return (
                 <>
                     <div className="w-[83%] h-full">
-                        <div className="h-[18%] flex justify-between items-end pb-[0.2vh]">
+                        <div className="w-[94%] h-[18%] flex justify-between items-end pb-[0.2vh]">
                             <p className="text-[3vw] color-text-textcolor">
                                 오늘의 시세
                             </p>
+                            <div className="w-[40%] justify-between flex pb-[0.2vh]">
+                                <p
+                                    className="text-[1.5vw] w-[40%] border-[0.2vw] color-border-subbold color-text-textcolor cursor-pointer hover:color-bg-subbold hover:color-text-main flex justify-center items-center"
+                                    onClick={() => setIsFilter((prev) => !prev)}
+                                >
+                                    {isFilter ? '전체 보기' : '내 것만 보기'}
+                                </p>
+                                <p
+                                    className="text-[1.5vw] w-[40%] border-[0.2vw] color-border-subbold color-text-textcolor cursor-pointer hover:color-bg-subbold hover:color-text-main flex justify-center items-center"
+                                    onClick={() => {
+                                        setIsFilter(false);
+                                        setSortMode(0);
+                                    }}
+                                >
+                                    초기화
+                                </p>
+                            </div>
                         </div>
                         <div className="flex flex-col w-[94%] h-[70%] m-[0.2vw] flex-wrap overflow-auto bg-white rounded-[1vw] border-[0.3vw] color-border-subbold p-[0.4vw]">
-                            <table className="relative w-[100%] h-[100%] text-[1.4vw] table-auto">
+                            <table className="relative w-[100%] h-[100%] text-[1.4vw] table-fixed">
                                 <thead>
                                     <tr className="relative border-b-[0.2vw] color-border-subbold">
-                                        <th>작물</th>
-                                        <th>품목</th>
-                                        <th>개당가격</th>
-                                        <th>보유개수</th>
-                                        <th>등락폭</th>
+                                        <th className="w-[25%]">작물</th>
+                                        <th
+                                            className="w-[25%] cursor-pointer"
+                                            onClick={() => {
+                                                if (sortMode == 1) {
+                                                    setSortMode(2);
+                                                } else {
+                                                    setSortMode(1);
+                                                }
+                                            }}
+                                        >
+                                            {`개당 가격(G)${
+                                                sortMode === 1
+                                                    ? ' ▲'
+                                                    : sortMode === 2
+                                                    ? ' ▼'
+                                                    : ' -'
+                                            }`}
+                                        </th>
+                                        <th
+                                            className="w-[25%] cursor-pointer"
+                                            onClick={() => {
+                                                if (sortMode == 3) {
+                                                    setSortMode(4);
+                                                } else {
+                                                    setSortMode(3);
+                                                }
+                                            }}
+                                        >{`보유개수${
+                                            sortMode === 3
+                                                ? ' ▲'
+                                                : sortMode === 4
+                                                ? ' ▼'
+                                                : ' -'
+                                        }`}</th>
+                                        <th
+                                            className="w-[25%] cursor-pointer"
+                                            onClick={() => {
+                                                if (sortMode == 5) {
+                                                    setSortMode(6);
+                                                } else {
+                                                    setSortMode(5);
+                                                }
+                                            }}
+                                        >{`등락폭(G)${
+                                            sortMode === 5
+                                                ? ' ▲'
+                                                : sortMode === 6
+                                                ? ' ▼'
+                                                : ' -'
+                                        }`}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {productInfoAndEvent.productInfoList.map(
-                                        (product) => {
-                                            if (product.productId !== 0) {
-                                                return (
-                                                    <tr
-                                                        className="relative border-y-[0.2vw] border-black"
-                                                        key={product.productId}
-                                                    >
-                                                        <div
-                                                            className={
-                                                                'w-fit h-[60%] bg-no-repeat mx-auto sprite-img-crop ' +
-                                                                `crop-img-${product.productId}`
-                                                            }
-                                                            style={{
-                                                                aspectRatio:
-                                                                    1 / 1,
-                                                            }}
-                                                        ></div>
-                                                        <td className="py-[1vw]">
+                                    {productSortedList.map((product) => {
+                                        if (product.productId !== 0) {
+                                            return (
+                                                <tr
+                                                    className="relative border-y-[0.2vw] border-black"
+                                                    key={product.productId}
+                                                >
+                                                    <td className="py-[1vw] flex flex-grow-0 justify-center items-center text-[1.5vw] w-full h-full">
+                                                        <div className="w-full h-full flex justify-center items-center">
+                                                            <div
+                                                                className={
+                                                                    'w-[4vw] h-[4vw] aspect-square bg-no-repeat mx-[1vw] ' +
+                                                                    `crop-img-${product.productId}`
+                                                                }
+                                                            ></div>
                                                             {
                                                                 props
                                                                     .productResource[
@@ -588,43 +746,38 @@ export default function TradeModal(props: tradeType) {
                                                                         .productId
                                                                 ].productName
                                                             }
-                                                        </td>
-                                                        <td>
-                                                            {
-                                                                product.productCost
-                                                            }
-                                                        </td>
-                                                        <td>
-                                                            {getNumber(
-                                                                product.productId
-                                                            )}
-                                                        </td>
-                                                        <td>
-                                                            {product.productFluctuation >
-                                                            0 ? (
-                                                                <p className="color-text-blue3">
-                                                                    {'+' +
-                                                                        product.productFluctuation +
-                                                                        'G'}
-                                                                </p>
-                                                            ) : product.productFluctuation ===
-                                                              0 ? (
-                                                                <p className="color-text-green1">
-                                                                    {product.productFluctuation +
-                                                                        'G'}
-                                                                </p>
-                                                            ) : (
-                                                                <p className="color-text-red1">
-                                                                    {product.productFluctuation +
-                                                                        'G'}
-                                                                </p>
-                                                            )}
-                                                        </td>
-                                                    </tr>
-                                                );
-                                            }
+                                                        </div>
+                                                    </td>
+                                                    <td className="text-[1.5vw] ">
+                                                        {product.productCost.toLocaleString()}
+                                                    </td>
+                                                    <td className="text-[1.5vw] ">
+                                                        {getNumber(
+                                                            product.productId
+                                                        )}
+                                                    </td>
+                                                    <td className="text-[1.5vw] ">
+                                                        {product.productFluctuation >
+                                                        0 ? (
+                                                            <p className="color-text-blue3">
+                                                                {'+' +
+                                                                    product.productFluctuation.toLocaleString()}
+                                                            </p>
+                                                        ) : product.productFluctuation ===
+                                                          0 ? (
+                                                            <p className="color-text-green1">
+                                                                {product.productFluctuation.toLocaleString()}
+                                                            </p>
+                                                        ) : (
+                                                            <p className="color-text-red1">
+                                                                {product.productFluctuation.toLocaleString()}
+                                                            </p>
+                                                        )}
+                                                    </td>
+                                                </tr>
+                                            );
                                         }
-                                    )}
+                                    })}
                                 </tbody>
                             </table>
                         </div>
