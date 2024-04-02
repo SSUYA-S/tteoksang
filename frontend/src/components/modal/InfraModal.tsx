@@ -118,21 +118,25 @@ export default function InfraModal(props: InfraType) {
         if (facilityType === 0) {
             return (
                 <>
-                    <div className="w-[70%] h-[20%] mx-auto mt-[1vw] flex items-center justify-center text-[1.6vw] bg-white rounded-[1vw] border-[0.4vw] color-border-subbold color-text-textcolor">
-                        업그레이드 하고 싶은 항목을 클릭하세요.
+                    <div className="w-[70%] h-[20%] mx-auto mt-[1vw] flex items-center justify-center text-[1.6vw] color-text-textcolor">
+                        <img
+                            className="w-[70%]"
+                            src="/src/assets/images/facility/text-upgrade-select.webp"
+                            alt=""
+                        />
                     </div>
                     <div className="relative w-full h-[80%] flex items-end justify-around pb-[1vw]">
                         <div
-                            className="w-[33%] h-[80%] cursor-pointer flex flex-col justify-end"
+                            className="relative w-[33%] h-[100%] cursor-pointer flex flex-col justify-end items-center"
                             onClick={() => {
                                 changeFailityType(1);
                             }}
                         >
-                            <p className="w-[60%] mx-auto text-[1.6vw] relative top-[4vw] bg-white rounded-[1.4vw] border-[0.4vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white">
+                            <p className="absolute w-[60%] mx-auto text-[1.4vw] bottom-[0.5vw] bg-white rounded-[0.6vw] border-[0.3vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white">
                                 운송수단
                             </p>
                             <div
-                                className="w-full h-[80%]"
+                                className="relative bottom-[4vw] w-full h-[80%]"
                                 style={{
                                     backgroundImage: `url(
                                         "/src/assets/images/facility/transport (${vehicleLevel}).webp"
@@ -145,16 +149,16 @@ export default function InfraModal(props: InfraType) {
                             ></div>
                         </div>
                         <div
-                            className="w-[34%] h-[100%] cursor-pointer flex flex-col justify-end"
+                            className="relative w-[34%] h-[100%] cursor-pointer flex flex-col justify-end items-center"
                             onClick={() => {
                                 changeFailityType(2);
                             }}
                         >
-                            <p className="w-[60%] mx-auto text-[1.6vw] relative top-[4vw] bg-white rounded-[1.4vw] border-[0.4vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white">
+                            <p className="absolute w-[60%] mx-auto text-[1.4vw] bottom-[0.5vw] bg-white rounded-[0.6vw] border-[0.3vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white">
                                 창고
                             </p>
                             <div
-                                className="w-full h-[80%]"
+                                className="relative bottom-[4vw] w-full h-[80%]"
                                 style={{
                                     backgroundImage: `url("/src/assets/images/facility/warehouse (${warehouseLevel}).webp")`,
                                     backgroundSize: 'contain ',
@@ -165,16 +169,16 @@ export default function InfraModal(props: InfraType) {
                             ></div>
                         </div>
                         <div
-                            className="w-[33%] h-[100%] cursor-pointer flex flex-col justify-end"
+                            className="relative w-[33%] h-[100%] cursor-pointer flex flex-col justify-end items-center"
                             onClick={() => {
                                 changeFailityType(3);
                             }}
                         >
-                            <p className="w-[60%] mx-auto text-[1.6vw] relative top-[4vw] bg-white rounded-[1.4vw] border-[0.4vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white">
+                            <p className="absolute w-[60%] mx-auto text-[1.4vw] bottom-[0.5vw] bg-white rounded-[0.6vw] border-[0.3vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white">
                                 중개소
                             </p>
                             <div
-                                className="w-full h-[80%]"
+                                className="relative bottom-[4vw] w-full h-[80%]"
                                 style={{
                                     backgroundImage: `url("/src/assets/images/facility/broker (${brokerLevel}).webp")`,
                                     backgroundSize: 'contain ',
