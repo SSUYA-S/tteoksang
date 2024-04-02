@@ -1,17 +1,21 @@
-import { useEffect, useState } from 'react';
+import { BaseSyntheticEvent, ChangeEvent, useEffect, useState } from 'react';
 import { LineChart } from '../element/LineChart';
 import { BarChart } from '../element/BarChart';
 import {
     AchievementReport,
     FinalReportType,
     Product,
+    ProductValue,
+    Top4ProductValue,
     privateProdRep,
     privateYearProdRep,
+    publicProdRep,
 } from '../../type/types';
 import { HorizenBarChart } from '../element/HorizenBarChart';
 
 //dummuy data
 import RankingCard from '../section/RankingCard';
+import { loadProduct } from '../../util/loadProduct';
 
 type infoResultType = {
     setIsFinReportAvail: React.Dispatch<React.SetStateAction<boolean>>;
@@ -27,6 +31,7 @@ export default function FinReportModal({
 
     //1페이지 수익 수출 관련
     const [priPurchaseFlag, setPriPurchaseFlag] = useState<boolean>(true);
+    const [pubPurchaseMode, setPubPurchaseMode] = useState<number>(0);
     const [priSalseFlag, setPriSalseFlag] = useState<boolean>(true);
     const [priYearIncome, setPriYearIncome] = useState<number[]>([]);
     const [priYearOutcome, setPriYearOutcome] = useState<number[]>([]);
@@ -34,6 +39,9 @@ export default function FinReportModal({
     const [priTotalIncome, setPriTotalIncome] = useState<number>();
     const [priTotalOutcome, setPriTotalOutcome] = useState<number>();
     const [priTotalProfit, setPriTotalProfit] = useState<number>();
+
+    // 년도별 정보
+    const [yearProductSelected, setYearProductSelected] = useState<number>(0);
 
     // 작물별 총 거래량 (년마다)
     const [priYearProductInfo, setPriYearProductInfo] = useState<
@@ -43,23 +51,48 @@ export default function FinReportModal({
     const [priTotalProductInfo, setPriTotalProductInfo] = useState<
         privateProdRep[]
     >([]);
+    const [pubTotalProductInfo, setPubTotalProductInfo] = useState<
+        publicProdRep[]
+    >([]);
+
+    const [top4IncomeProduct, setTop4IncomeProduct] = useState<
+        Top4ProductValue[]
+    >([]);
+    const [top4OutcomeProduct, setTop4OutcomeProduct] = useState<
+        Top4ProductValue[]
+    >([]);
+    const [top4QuantityProduct, setTop4QuantityProduct] = useState<
+        Top4ProductValue[]
+    >([]);
     // 수익
     const [priTotalProductIncome, setPriTotalProductIncome] = useState<
         number[]
     >([]);
-    // 몇개를 팔았다
-    const [priTotalProductSalseQuantity, setPriTotalProductSalseQuantity] =
-        useState<number[]>([]);
+
     //수출
     const [priTotalProductOutcome, setPriTotalProductOutcome] = useState<
         number[]
     >([]);
+
     //몇개를 샀다
     const [
         priTotalProductPurchaseQuantity,
         setPriTotalProductPurchaseQuantity,
     ] = useState<number[]>([]);
-    ////
+    //// 연도별 개인 작물 차트값
+    const [priProductIncomeChartValue, setPriProductIncomeChartValue] =
+        useState<number[]>([]);
+    const [priProductOutcomeChartValue, setPriProductOutcomeChartValue] =
+        useState<number[]>([]);
+    const [priProductQuantityChartValue, setPriProductQuantityChartValue] =
+        useState<number[]>([]);
+    //// 전체 서버 작물 통계
+    const [pubProductIncomeChartValue, setPubProductIncomeChartValue] =
+        useState<number[]>([]);
+    const [pubProductOutcomeChartValue, setPubProductOutcomeChartValue] =
+        useState<number[]>([]);
+    const [pubProductQuantityChartValue, setPubProductQuantityChartValue] =
+        useState<number[]>([]);
 
     //// 시설 관련
     const [priWarehouseLevel, setPriWarehouseLevel] = useState<number>(1);
@@ -72,6 +105,27 @@ export default function FinReportModal({
     const [priAcievement, setPriAcievement] = useState<AchievementReport[]>([]);
     //// 개인 정보
     const [priProductLabels, setPriProductLabels] = useState<string[]>([]);
+    //// 연도별 개인 작물 라벨
+    const [priProductIncomeLabels, setPriProductIncomeLabels] = useState<
+        string[]
+    >([]);
+    const [priProductOutcomeLabels, setPriProductOutcomeLabels] = useState<
+        string[]
+    >([]);
+    const [priProductQuantityLabels, setPriProductQuantityLabels] = useState<
+        string[]
+    >([]);
+    //// 전체 서버 작물 라벨
+    const [pubProductIncomeLabels, setPubProductIncomeLabels] = useState<
+        string[]
+    >([]);
+    const [pubProductOutcomeLabels, setPubProductOutcomeLabels] = useState<
+        string[]
+    >([]);
+    const [pubProductQuantityLabels, setPubProductQuantityLabels] = useState<
+        string[]
+    >([]);
+
     const [page, setPage] = useState<number>(0);
     let labels = [
         '1년차',
@@ -106,31 +160,66 @@ export default function FinReportModal({
                 //여기서 item은 1년 2년 3년을 나타냄. item.year로 확인 가능.
                 let yearProductList: privateYearProdRep = {
                     year: 0,
-                    totalAccPrivateProductPurchaseQuantity: 0,
-                    totalAccPrivateProductOutcome: 0,
-                    totalAccPrivateProductSalesQuantity: 0,
-                    totalAccPrivateProductIncome: 0,
-                    totalAccPrivateProductProfit: 0,
-                    totalAccPrivateBrokerFee: 0,
+                    totalYearProduct: [],
                 };
+
+                //판매이익 Top4 뽑기
+                const sortedByOutcome: ProductValue[] = item.productList
+                    .sort(
+                        (a, b) =>
+                            a.totalAccPrivateProductOutcome -
+                            b.totalAccPrivateProductOutcome
+                    )
+                    .slice(0, 4)
+                    .map((pd) => ({
+                        productId: pd.productId,
+                        productValue: pd.totalAccPrivateProductOutcome,
+                    }));
+                setTop4OutcomeProduct((prev) => [
+                    ...prev,
+                    { year: item.year, totalProduct: sortedByOutcome },
+                ]);
+                //구매이익 Top4 뽑기
+                const sortedByIncome: ProductValue[] = item.productList
+                    .sort(
+                        (a, b) =>
+                            a.totalAccPrivateProductIncome -
+                            b.totalAccPrivateProductIncome
+                    )
+                    .slice(0, 4)
+                    .map((pd) => ({
+                        productId: pd.productId,
+                        productValue: pd.totalAccPrivateProductIncome,
+                    }));
+                setTop4IncomeProduct((prev) => [
+                    ...prev,
+                    { year: item.year, totalProduct: sortedByIncome },
+                ]);
+                //판매량 Top4 뽑기
+                const sortedByQuantity: ProductValue[] = item.productList
+                    .sort(
+                        (a, b) =>
+                            a.totalAccPrivateProductPurchaseQuantity -
+                            b.totalAccPrivateProductPurchaseQuantity
+                    )
+                    .slice(0, 4)
+                    .map((pd) => ({
+                        productId: pd.productId,
+                        productValue: pd.totalAccPrivateProductPurchaseQuantity,
+                    }));
+                setTop4QuantityProduct((prev) => [
+                    ...prev,
+                    { year: item.year, totalProduct: sortedByQuantity },
+                ]);
+
                 item.productList.map((data) => {
                     incomeValue += data.totalAccPrivateProductIncome;
                     outcomeValue += data.totalAccPrivateProductOutcome;
                     yearProductList.year = item.year;
-                    yearProductList.totalAccPrivateProductPurchaseQuantity +=
-                        data.totalAccPrivateProductPurchaseQuantity;
-                    yearProductList.totalAccPrivateProductOutcome +=
-                        data.totalAccPrivateProductOutcome;
-                    yearProductList.totalAccPrivateProductSalesQuantity +=
-                        data.totalAccPrivateProductSalesQuantity;
-                    yearProductList.totalAccPrivateProductIncome +=
-                        data.totalAccPrivateProductIncome;
-                    yearProductList.totalAccPrivateProductProfit +=
-                        data.totalAccPrivateProductProfit;
-                    yearProductList.totalAccPrivateBrokerFee +=
-                        data.totalAccPrivateBrokerFee;
-                    // console.log(data);
 
+                    console.log('결산데이터');
+
+                    //연도별 개인 작물 전체년 통계
                     setPriTotalProductInfo((prevItems) => {
                         const itemIndex = prevItems.findIndex(
                             (item) => item.productId === data.productId
@@ -170,15 +259,12 @@ export default function FinReportModal({
                 });
 
                 setPriYearProductInfo((prev) => {
-                    // newItem의 year가 이미 존재하는지 확인
                     const isYearExist = prev.some(
                         (data) => data.year === item.year
                     );
                     if (!isYearExist) {
-                        // 존재하지 않는 경우, 새 배열로 업데이트
                         return [...prev, yearProductList];
                     }
-                    // 이미 존재하는 경우, 변화 없이 이전 상태 반환
                     return prev;
                 });
 
@@ -189,6 +275,51 @@ export default function FinReportModal({
                 setPriYearIncome((prev) => [...prev, incomeValue]);
                 setPriYearOutcome((prev) => [...prev, outcomeValue]);
                 setPriYearProfit((prev) => [...prev, profit]);
+            });
+
+            // 서버 전체 작물 통계
+            await finReport!.publicProductReportList.map((item) => {
+                item.productList.map((data) => {
+                    console.log('결산데이터');
+
+                    //연도별 개인 작물 전체년 통계
+                    setPubTotalProductInfo((prevItems) => {
+                        const itemIndex = prevItems.findIndex(
+                            (item) => item.productId === data.productId
+                        );
+                        if (itemIndex !== -1) {
+                            // 항목이 존재하면 업데이트
+                            return prevItems.map((item) =>
+                                item.productId === data.productId
+                                    ? {
+                                          ...item,
+                                          totalAccProductPurchaseQuantity:
+                                              item.totalAccProductPurchaseQuantity +
+                                              data.totalAccProductPurchaseQuantity,
+                                          totalAccProductIncome:
+                                              item.totalAccProductIncome +
+                                              data.totalAccProductIncome,
+                                          totalAccProductOutcome:
+                                              item.totalAccProductOutcome +
+                                              data.totalAccProductOutcome,
+                                          totalAccProductProfit:
+                                              item.totalAccProductProfit +
+                                              data.totalAccProductProfit,
+                                          totalAccProductSalesQuantity:
+                                              item.totalAccProductSalesQuantity +
+                                              data.totalAccProductSalesQuantity,
+                                          totalAccBrokerFee:
+                                              item.totalAccBrokerFee +
+                                              data.totalAccBrokerFee,
+                                      }
+                                    : item
+                            );
+                        } else {
+                            // 항목이 존재하지 않으면 추가
+                            return [...prevItems, data];
+                        }
+                    });
+                });
             });
             setPriTotalIncome(totalIncome);
             setPriTotalOutcome(totalOutcome);
@@ -215,10 +346,6 @@ export default function FinReportModal({
                 ...prev,
                 item.totalAccPrivateProductOutcome,
             ]);
-            setPriTotalProductSalseQuantity((prev) => [
-                ...prev,
-                item.totalAccPrivateProductSalesQuantity,
-            ]);
             setPriProductLabels((prev) => [...prev, item.productId + '개']);
         });
     }, [priTotalProductInfo]);
@@ -227,6 +354,157 @@ export default function FinReportModal({
         console.log('연간 구매 개수');
         console.log(priYearProductInfo);
     }, [priYearProductInfo]);
+
+    // 연차별 개인 통계 정보
+    useEffect(() => {
+        let incomeLabel: string[] = [];
+        let incomeValue: number[] = [];
+        let outcomeLabel: string[] = [];
+        let outcomeValue: number[] = [];
+        let quantityLabel: string[] = [];
+        let quantityValue: number[] = [];
+        console.log(priTotalProductInfo);
+        // 전체 작물 통계 정보
+        if (yearProductSelected == 0) {
+            //판매이익 Top4 뽑기
+            const sortedByOutcome: ProductValue[] = priTotalProductInfo
+                .sort(
+                    (a, b) =>
+                        a.totalAccPrivateProductOutcome -
+                        b.totalAccPrivateProductOutcome
+                )
+                .slice(0, 4)
+                .map((pd) => ({
+                    productId: pd.productId,
+                    productValue: pd.totalAccPrivateProductOutcome,
+                }));
+
+            //구매이익 Top4 뽑기
+            const sortedByIncome: ProductValue[] = priTotalProductInfo
+                .sort(
+                    (a, b) =>
+                        a.totalAccPrivateProductIncome -
+                        b.totalAccPrivateProductIncome
+                )
+                .slice(0, 4)
+                .map((pd) => ({
+                    productId: pd.productId,
+                    productValue: pd.totalAccPrivateProductIncome,
+                }));
+
+            //판매량 Top4 뽑기
+            const sortedByQuantity: ProductValue[] = priTotalProductInfo
+                .sort(
+                    (a, b) =>
+                        a.totalAccPrivateProductPurchaseQuantity -
+                        b.totalAccPrivateProductPurchaseQuantity
+                )
+                .slice(0, 4)
+                .map((pd) => ({
+                    productId: pd.productId,
+                    productValue: pd.totalAccPrivateProductPurchaseQuantity,
+                }));
+            sortedByIncome.map((item) => {
+                incomeLabel.push(loadProduct(item.productId, productList));
+                incomeValue.push(item.productValue);
+            });
+            sortedByOutcome.map((item) => {
+                outcomeLabel.push(loadProduct(item.productId, productList));
+                outcomeValue.push(item.productValue);
+            });
+            sortedByQuantity.map((item) => {
+                quantityLabel.push(loadProduct(item.productId, productList));
+                quantityValue.push(item.productValue);
+            });
+        }
+        // 연차별 작물 통계 정보
+        else {
+            top4IncomeProduct[yearProductSelected - 1].totalProduct.map(
+                (item) => {
+                    incomeLabel.push(loadProduct(item.productId, productList));
+                    incomeValue.push(item.productValue);
+                }
+            );
+            top4OutcomeProduct[yearProductSelected - 1].totalProduct.map(
+                (item) => {
+                    outcomeLabel.push(loadProduct(item.productId, productList));
+                    outcomeValue.push(item.productValue);
+                }
+            );
+            top4QuantityProduct[yearProductSelected - 1].totalProduct.map(
+                (item) => {
+                    quantityLabel.push(
+                        loadProduct(item.productId, productList)
+                    );
+                    quantityValue.push(item.productValue);
+                }
+            );
+        }
+        setPriProductIncomeLabels(incomeLabel);
+        setPriProductIncomeChartValue(incomeValue);
+        setPriProductOutcomeLabels(outcomeLabel);
+        setPriProductOutcomeChartValue(outcomeValue);
+        setPriProductQuantityLabels(quantityLabel);
+        setPriProductQuantityChartValue(quantityValue);
+    }, [yearProductSelected, priTotalProductInfo]);
+
+    // 연차별 전체 통계 정보
+    useEffect(() => {
+        let incomeLabel: string[] = [];
+        let incomeValue: number[] = [];
+        let outcomeLabel: string[] = [];
+        let outcomeValue: number[] = [];
+        let quantityLabel: string[] = [];
+        let quantityValue: number[] = [];
+        const sortedByOutcome: ProductValue[] = pubTotalProductInfo
+            .sort((a, b) => a.totalAccProductOutcome - b.totalAccProductOutcome)
+            .slice(0, 10)
+            .map((pd) => ({
+                productId: pd.productId,
+                productValue: pd.totalAccProductOutcome,
+            }));
+
+        //구매이익 Top10 뽑기
+        const sortedByIncome: ProductValue[] = pubTotalProductInfo
+            .sort((a, b) => a.totalAccProductIncome - b.totalAccProductIncome)
+            .slice(0, 10)
+            .map((pd) => ({
+                productId: pd.productId,
+                productValue: pd.totalAccProductIncome,
+            }));
+
+        //판매량 Top10 뽑기
+        const sortedByQuantity: ProductValue[] = pubTotalProductInfo
+            .sort(
+                (a, b) =>
+                    a.totalAccProductPurchaseQuantity -
+                    b.totalAccProductPurchaseQuantity
+            )
+            .slice(0, 10)
+            .map((pd) => ({
+                productId: pd.productId,
+                productValue: pd.totalAccProductPurchaseQuantity,
+            }));
+        sortedByIncome.map((item) => {
+            incomeLabel.push(loadProduct(item.productId, productList));
+            incomeValue.push(item.productValue);
+        });
+        sortedByOutcome.map((item) => {
+            outcomeLabel.push(loadProduct(item.productId, productList));
+            outcomeValue.push(item.productValue);
+        });
+        sortedByQuantity.map((item) => {
+            quantityLabel.push(loadProduct(item.productId, productList));
+            quantityValue.push(item.productValue);
+        });
+        setPubProductIncomeLabels(incomeLabel);
+        setPubProductIncomeChartValue(incomeValue);
+        setPubProductOutcomeLabels(outcomeLabel);
+        setPubProductOutcomeChartValue(outcomeValue);
+        setPubProductQuantityLabels(quantityLabel);
+        setPubProductQuantityChartValue(quantityValue);
+    }, [pubTotalProductInfo]);
+
     const priTotalData = {
         labels: labels,
         datasets: [
@@ -251,49 +529,73 @@ export default function FinReportModal({
         ],
     };
 
-    const priTotalProductIncomeData = {
-        labels: priProductLabels,
-        // priProductLabels,
-        datasets: [
-            {
-                label: '판매금액',
-                data: priTotalProductIncome,
-                borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
-            },
-        ],
-    };
-    const priTotalProductOutcomeData = {
-        labels: priProductLabels,
+    const priYearProductIncomeData = {
+        labels: priProductIncomeLabels,
         // priProductLabels,
         datasets: [
             {
                 label: '구매금액',
-                data: priTotalProductOutcome,
+                data: priProductIncomeChartValue,
                 borderColor: 'rgb(255, 99, 132)',
                 backgroundColor: 'rgba(255, 99, 132, 0.5)',
             },
         ],
     };
-    const priTotalProductPurchaseData = {
-        labels: priProductLabels,
+    const priYearProductOutcomeData = {
+        labels: priProductOutcomeLabels,
         // priProductLabels,
         datasets: [
             {
-                label: '개수구매',
-                data: priTotalProductPurchaseQuantity,
+                label: '판매금액',
+                data: priProductOutcomeChartValue,
                 borderColor: 'rgb(255, 99, 132)',
                 backgroundColor: 'rgba(255, 99, 132, 0.5)',
             },
         ],
     };
-    const priTotalProductSalseData = {
-        labels: priProductLabels,
+    const priYearProductPurchaseData = {
+        labels: priProductQuantityLabels,
         // priProductLabels,
         datasets: [
             {
-                label: '개수판매',
-                data: priTotalProductSalseQuantity,
+                label: '거래량',
+                data: priProductQuantityChartValue,
+                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+            },
+        ],
+    };
+    const pubProductIncomeData = {
+        labels: pubProductIncomeLabels,
+        // priProductLabels,
+        datasets: [
+            {
+                label: '구매금액',
+                data: pubProductIncomeChartValue,
+                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+            },
+        ],
+    };
+    const pubProductOutcomeData = {
+        labels: priProductOutcomeLabels,
+        // priProductLabels,
+        datasets: [
+            {
+                label: '판매금액',
+                data: pubProductOutcomeChartValue,
+                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+            },
+        ],
+    };
+    const pubProductPurchaseData = {
+        labels: priProductQuantityLabels,
+        // priProductLabels,
+        datasets: [
+            {
+                label: '거래량',
+                data: pubProductQuantityChartValue,
                 borderColor: 'rgb(255, 99, 132)',
                 backgroundColor: 'rgba(255, 99, 132, 0.5)',
             },
@@ -322,6 +624,9 @@ export default function FinReportModal({
     const changePriPurchaseBtn = (prop: boolean) => {
         setPriPurchaseFlag(prop);
     };
+    const changePubPurchaseBtn = (prop: number) => {
+        setPubPurchaseMode(prop);
+    };
     const changePriSalseBtn = (prop: boolean) => {
         setPriSalseFlag(prop);
     };
@@ -329,7 +634,19 @@ export default function FinReportModal({
     const closeResultModal = () => {
         setIsFinReportAvail(false);
     };
+    const handleYearProduct = (e: BaseSyntheticEvent) => {
+        setYearProductSelected(e.target.value);
+    };
 
+    const pubProductElement = () => {
+        if (pubPurchaseMode === 0) {
+            return <BarChart data={pubProductIncomeData} />;
+        } else if (pubPurchaseMode === 1) {
+            return <BarChart data={pubProductOutcomeData} />;
+        } else {
+            return <BarChart data={pubProductPurchaseData} />;
+        }
+    };
     const resultElement = () => {
         if (page === 0) {
             return (
@@ -459,7 +776,27 @@ export default function FinReportModal({
                                         다음
                                     </p>
                                 </div>
-                                <div>3년차</div>
+
+                                <select
+                                    onChange={handleYearProduct}
+                                    value={yearProductSelected}
+                                >
+                                    <option value="0" selected>
+                                        전체
+                                    </option>
+                                    {priYearProductInfo.map((item, index) => {
+                                        return (
+                                            <option
+                                                value={index + 1}
+                                                key={
+                                                    'product year key ' + index
+                                                }
+                                            >
+                                                {index + 1}년차
+                                            </option>
+                                        );
+                                    })}
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -469,13 +806,12 @@ export default function FinReportModal({
                                 <p className="w-full text-start">
                                     구매 작물 TOP4
                                 </p>
+
                                 {priPurchaseFlag ? (
-                                    <BarChart
-                                        data={priTotalProductPurchaseData}
-                                    />
+                                    <BarChart data={priYearProductIncomeData} />
                                 ) : (
                                     <BarChart
-                                        data={priTotalProductOutcomeData}
+                                        data={priYearProductOutcomeData}
                                     />
                                 )}
                                 <div className="absolute top-[1vw] right-[1vw]">
@@ -511,7 +847,7 @@ export default function FinReportModal({
                                                 : {}
                                         }
                                     >
-                                        구매량
+                                        판매금액
                                     </p>
                                 </div>
                             </div>
@@ -521,13 +857,7 @@ export default function FinReportModal({
                                 <p className="w-full text-start">
                                     구매 작물 TOP4
                                 </p>
-                                {priSalseFlag ? (
-                                    <BarChart data={priTotalProductSalseData} />
-                                ) : (
-                                    <BarChart
-                                        data={priTotalProductIncomeData}
-                                    />
-                                )}
+                                <BarChart data={priYearProductPurchaseData} />
                                 <div className="absolute top-[1vw] right-[1vw]">
                                     <p
                                         className="text-[1.2vw] p-[0.6vw] border-[0.2vw] color-border-subbold rounded-[1vw] cursor-pointer "
@@ -544,24 +874,7 @@ export default function FinReportModal({
                                                 : {}
                                         }
                                     >
-                                        판매금액
-                                    </p>
-                                    <p
-                                        className="text-[1.2vw] p-[0.6vw] my-[0.4vw] border-[0.2vw] color-border-subbold rounded-[1vw] cursor-pointer "
-                                        onClick={() => {
-                                            changePriSalseBtn(false);
-                                        }}
-                                        style={
-                                            !priSalseFlag
-                                                ? {
-                                                      backgroundColor:
-                                                          '#7e5a39',
-                                                      color: 'white',
-                                                  }
-                                                : {}
-                                        }
-                                    >
-                                        판매량
+                                        거래량
                                     </p>
                                 </div>
                             </div>
@@ -634,25 +947,17 @@ export default function FinReportModal({
                         <div className="w-[60%] h-full flex items-center justify-center bg-slate-400">
                             <div className="relative w-[90%] h-[90%] text-[2vw] p-[1vw] bg-white flex flex-col justify-between items-center border-[0.2vw] color-border-subbold rounded-[1vw]">
                                 <p className="w-full text-start">
-                                    구매 작물 TOP4
+                                    서버 거래 작물 TOP10
                                 </p>
-                                {priPurchaseFlag ? (
-                                    <BarChart
-                                        data={priTotalProductPurchaseData}
-                                    />
-                                ) : (
-                                    <BarChart
-                                        data={priTotalProductOutcomeData}
-                                    />
-                                )}
+                                {pubProductElement()}
                                 <div className="absolute top-[1vw] right-[1vw]">
                                     <p
-                                        className="text-[1.2vw] p-[0.6vw] border-[0.2vw] color-border-subbold rounded-[1vw] cursor-pointer "
+                                        className="text-[1.2vw] p-[0.6vw] border-[0.2vw] bg-white color-border-subbold rounded-[1vw] cursor-pointer "
                                         onClick={() => {
-                                            changePriPurchaseBtn(true);
+                                            changePubPurchaseBtn(0);
                                         }}
                                         style={
-                                            priPurchaseFlag
+                                            pubPurchaseMode === 0
                                                 ? {
                                                       backgroundColor:
                                                           '#7e5a39',
@@ -664,12 +969,12 @@ export default function FinReportModal({
                                         구매금액
                                     </p>
                                     <p
-                                        className="text-[1.2vw] p-[0.6vw] my-[0.4vw] border-[0.2vw] color-border-subbold rounded-[1vw] cursor-pointer "
+                                        className="text-[1.2vw] p-[0.6vw] my-[0.4vw] border-[0.2vw] bg-white color-border-subbold rounded-[1vw] cursor-pointer "
                                         onClick={() => {
-                                            changePriPurchaseBtn(false);
+                                            changePubPurchaseBtn(1);
                                         }}
                                         style={
-                                            !priPurchaseFlag
+                                            pubPurchaseMode === 1
                                                 ? {
                                                       backgroundColor:
                                                           '#7e5a39',
@@ -678,7 +983,24 @@ export default function FinReportModal({
                                                 : {}
                                         }
                                     >
-                                        구매량
+                                        판매금액
+                                    </p>
+                                    <p
+                                        className="text-[1.2vw] p-[0.6vw] my-[0.4vw] border-[0.2vw] bg-white color-border-subbold rounded-[1vw] cursor-pointer "
+                                        onClick={() => {
+                                            changePubPurchaseBtn(2);
+                                        }}
+                                        style={
+                                            pubPurchaseMode === 2
+                                                ? {
+                                                      backgroundColor:
+                                                          '#7e5a39',
+                                                      color: 'white',
+                                                  }
+                                                : {}
+                                        }
+                                    >
+                                        거래량
                                     </p>
                                 </div>
                             </div>
