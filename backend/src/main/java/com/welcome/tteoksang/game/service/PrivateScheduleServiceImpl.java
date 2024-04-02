@@ -24,7 +24,6 @@ public class PrivateScheduleServiceImpl implements PrivateScheduleService {
     private int rentFee;
     private final ScheduleService scheduleService;
     private final RedisService redisService;
-    private final BrokerRepository brokerRepository;
     Map<String, CheckPlayTimeInfo> userAlertPlayTimeMap = new HashMap<>();
 
     //gameInfo 초기화
@@ -50,7 +49,7 @@ public class PrivateScheduleServiceImpl implements PrivateScheduleService {
                     }
                 }
         );
-        log.debug("*initGameInfoForAllUsersPerTurn");
+//        log.debug("*initGameInfoForAllUsersPerTurn");
     }
 
 
@@ -66,7 +65,7 @@ public class PrivateScheduleServiceImpl implements PrivateScheduleService {
     @Override
     public void removeConnectedUser(String userId) {
         scheduleService.remove(userId);
-        log.debug("*remove" + userId);
+        log.debug("********remove" + userId + " since it disconnects!");
     }
 
     @Override

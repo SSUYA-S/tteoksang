@@ -63,7 +63,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
     @Value("${TURN_PERIOD_SEC}")
     private long turnPeriodSec;
 
-    @Value("${EVENT_ARISE_TURN_COUNT}")
+    @Value("${EVENT_ARISE_TURN_PERIOD}")
     private int eventTurnPeriod;
     @Value("${EVENT_ARISE_INITIAL_TURN}")
     private int eventInitialTurn;
@@ -75,6 +75,8 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
     private long halfYearBreakSec;
     @Value("${SEASON_YEAR_PERIOD}")
     private int seasonYearPeriod;
+    @Value("${BUYABLE_PRODUCT_TURN_PERIOD}")
+    private int buyableProductTurnPeriod;
     private final String TURN = "fluctuate";
     private final String PUBLIC_EVENT = "event";
     private final String NEWSPAPER = "news";
@@ -128,7 +130,8 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         boolean hasServerData = loadServerInfo();
         occurableEventList = new ArrayList<>(); //발생가능한 이벤트 종류: 공통+현재계절
         occurableProductIdList = new ArrayList<>(); //구매가능한 작물 종류: 공통+현재계절
-        updateQuarterYearList(); //계절마다 발생가능한 이벤트, 작물 초기화
+        updateQuarterYearList(); //계절마다 발생가능한 이벤트, 작물 초기화 ->처음에 updateTurn으로 시작하면서 진행됨 
+        //TODO - 최적화 확인
         //현재 적용 중 이벤트
         currentEventList = serverInfo.getSpecialEventIdList().stream().map(
                 specialEventId ->
@@ -137,7 +140,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         ).toList();
         initProductInfo(hasServerData);
         eventIndexList = new ArrayList<>(NEWS_NUM); //productInfoMap의 인덱스에 해당: 선정한 {NEWS_NUM}개 후보 이벤트
-
+        nextEventList = new ArrayList<>();
     }
 
 
@@ -221,6 +224,8 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         //TODO- 시즌 종료했을 때 필요한 정보들 어디로 다 보내기....
         redisService.deleteValues(RedisPrefix.SERVER_NEWS.prefix());
         redisService.deleteValues(RedisPrefix.SERVER_INFO.prefix());
+//        log.debug("delete news...."+redisService.hasKey(RedisPrefix.SERVER_NEWS.prefix()));
+//        log.debug("delete info...."+redisService.hasKey(RedisPrefix.SERVER_INFO.prefix()));
 
     }
 
@@ -228,7 +233,9 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
 
     //1턴마다 실행: 가격 변동, 구매 가능 리스트 변동
     private void executePerTurn() {
-        updateBuyableProduct();
+        if (serverInfo.getCurrentTurn() % buyableProductTurnPeriod == 0) {
+            updateBuyableProduct();
+        }
         fluctuateProduct();
         updateTurn();
         log.debug(serverInfo.getCurrentTurn() + "번째 턴 실행 :" + serverInfo.getTurnStartTime());
@@ -257,7 +264,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
     //계절마다 나타나는 작물, 이벤트 리스트 변경
     public void updateQuarterYearList() {
         ProductType currentSeason;
-        switch ((serverInfo.getCurrentTurn() % 360) / 90) {
+        switch ((serverInfo.getCurrentTurn() % (quarterYearTurnPeriod * 4)) / quarterYearTurnPeriod) {
             case 0:
                 currentSeason = ProductType.SPRING;
                 break;
@@ -305,8 +312,8 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         sendPublicMessage(MessageType.GET_NEWSPAPER, news);
         // 뉴스 저장해두기
         redisService.setValues(RedisPrefix.SERVER_NEWS.prefix(), news);
-        log.info(serverInfo.getSeasonId() + " || eventSize: " + possibleEventNum);
-        log.info(news.toString());
+//        log.info(serverInfo.getSeasonId() + " || eventSize: " + possibleEventNum);
+//        log.info(news.toString());
 //        System.out.println((ServerInfo)redisService.getValues("SERVER_INFO"));
     }
 
@@ -318,20 +325,25 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         ).map(eventIndex ->
                 occurableEventList.get(eventIndex)
         ).toList();
+        if (nextEventList.isEmpty()) return;
         nextEventList.stream().forEach(
                 event -> {
                     fluctationInfoMap.get(event.getProductId())
                             .setEventEffect(fluctationInfoMap.get(event.getProductId()).getEventEffect() + event.getEventVariance());
                 }
         );
-        log.debug("이벤트 결정 완료: " + nextEventList);
+//        log.debug("이벤트 결정 완료: " + nextEventList);
     }
 
     public void updateTurn() {
+        if (serverInfo.getCurrentTurn() % quarterYearTurnPeriod == 0) { //계절 변경. 0이라는 의미는..  이제
+            updateQuarterYearList();
+        }
         serverInfo.setCurrentTurn(serverInfo.getCurrentTurn() + 1);
         serverInfo.setTurnStartTime(LocalDateTime.now());
         if (serverInfo.getCurrentTurn() % eventTurnPeriod == 0) {
             serverInfo.setSpecialEventIdList(nextEventList.stream().map(event -> {
+                //TODO - 로그메세지 말고 redis에 저장하는 식으로 변경하기
                 SpecialEventLogInfo logInfo = SpecialEventLogInfo.builder()
                         .eventId(event.getEventId())
                         .seasonId(serverInfo.getSeasonId())
@@ -350,11 +362,8 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
                 return event.getEventId();
             }).toList());
             currentEventList = nextEventList;
-            nextEventList = null;
-            log.debug("==================event 변경==================");
-        }
-        if (serverInfo.getCurrentTurn() % quarterYearTurnPeriod == 0) {
-            updateQuarterYearList();
+            nextEventList = new ArrayList<>();
+//            log.debug("==================event 변경==================");
         }
         privateScheduleService.initGameInfoForAllUsersPerTurn();
         redisService.setValues(RedisPrefix.SERVER_INFO.prefix(), serverInfo);
@@ -380,7 +389,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
                 double maxRate = fluctationInfo.getMinFluctuationRate();
                 double minRate = (fluctationInfo.getMinFluctuationRate() * 2 - fluctationInfo.getMaxFluctuationRate()) * (1 - CORRECTION_VALUE);
                 randomRate = random.nextDouble(minRate, maxRate);
-                log.debug(productId + "@@@@@너무 비싸요@@@@@" + minRate + ">" + randomRate + "<" + maxRate);
+//                log.debug(productId + "@@@@@너무 비싸요@@@@@" + minRate + ">" + randomRate + "<" + maxRate);
                 //TODO- 그럼에도 계속 올라가는 경우 조정해줘야 할지 논의 필요-> 해줘야 한다...
             } else if (fluctationInfo.getMinFluctuationRate() > 1) {
                 //증가만 하는 경우
@@ -415,6 +424,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
             }
         }
         serverInfo.setBuyableProducts(buyableProductIndex.stream().map(i -> occurableProductIdList.get(i)).toList());
+        log.debug("buyableList UPDATE");
     }
 
     //가격 범위 변동 -> fluctMap 업데이트: 10일마다 실행
@@ -469,14 +479,14 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
     private void startHalfBreakTime() {
         //마지막 턴이 아닌 경우만 반기 결산
         if (serverInfo.getCurrentTurn() >= quarterYearTurnPeriod * 4 * seasonYearPeriod) return;
-        startBreakTime("반기",halfYearBreakSec);
+        startBreakTime("반기", halfYearBreakSec);
     }
 
     //이거는.. 시즌종료 호출될 때 호출!!
     private void startSeasonBreakTime() {
-        LocalDateTime seasonStartDateTime=serverSeasonInfoRepository.findFirstByOrderBySeasonIdDesc().getStartedAt();
-        long seasonBreakTimeSec=Duration.between(LocalDateTime.now(),seasonStartDateTime.plusDays(7)).toSeconds();
-        startBreakTime("시즌",seasonBreakTimeSec);
+        LocalDateTime seasonStartDateTime = serverSeasonInfoRepository.findFirstByOrderBySeasonIdDesc().getStartedAt();
+        long seasonBreakTimeSec = Duration.between(LocalDateTime.now(), seasonStartDateTime.plusDays(7)).toSeconds();
+        startBreakTime("시즌", seasonBreakTimeSec);
     }
 
     private void startBreakTime(String breakName, Long breakTimeSec) {
@@ -507,7 +517,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         }
         BreakTimeInfo breakTimeInfo = (BreakTimeInfo) redisService.getValues(RedisPrefix.SERVER_BREAK.prefix());
         breakTimeInfo.setIsBreakTime(false);
-        LocalDateTime testNow=LocalDateTime.now();
+        LocalDateTime testNow = LocalDateTime.now();
 //        log.debug("휴식시간은.."+breakTimeInfo.getBreakTime());
 //        log.debug("휴식시간 체크1.."+breakTimeInfo.getBreakTime().isBefore(testNow));
 //        log.debug("휴식시간 체크2.."+breakTimeInfo.getBreakTime().isAfter(testNow));
