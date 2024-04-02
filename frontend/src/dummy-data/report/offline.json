@@ -1,7 +1,7 @@
 {
     "lastGameTurn": 78,
     "rentFeeInfo": {
-        "billType": "overdue",
+        "billType": "basic",
         "rentFee": 10000,
         "productList": [
             {
