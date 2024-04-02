@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.welcome.tteoksang.game.dto.*;
 import com.welcome.tteoksang.game.dto.event.Article;
+import com.welcome.tteoksang.game.dto.event.BreakTimeInfo;
 import com.welcome.tteoksang.game.dto.log.LogMessage;
 import com.welcome.tteoksang.game.dto.log.SpecialEventLogInfo;
 import com.welcome.tteoksang.game.dto.res.GameMessageRes;
@@ -70,6 +71,10 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
     private int newsInitialTurn;
     @Value("${QUARTER_YEAR_TURN_PERIOD}")
     private int quarterYearTurnPeriod;
+    @Value("${HALF_YEAR_BREAK_SEC}")
+    private long halfYearBreakSec;
+    @Value("${SEASON_YEAR_PERIOD}")
+    private int seasonYearPeriod;
     private final String TURN = "fluctuate";
     private final String PUBLIC_EVENT = "event";
     private final String NEWSPAPER = "news";
@@ -102,6 +107,9 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
 //            serverInfo.setSpecialEventIdList(loadedServerInfo.getSpecialEventIdList());
 //            return true;
 //        }
+        redisService.deleteValues(RedisPrefix.SERVER_NEWS.prefix());
+        redisService.deleteValues(RedisPrefix.SERVER_INFO.prefix());
+//        redisService.deleteValues(RedisPrefix.SERVER_BREAK.prefix());
         ServerSeasonInfo seasonInfo = serverSeasonInfoRepository.findFirstByOrderBySeasonIdDesc();
         int gameSeason = 1;
         if (seasonInfo != null) {
@@ -185,48 +193,35 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         if (!hasServerData) serverInfo.setProductInfoMap(productInfoMap);
     }
 
-    private void initFluctMap() {
-        fluctationInfoMap = new HashMap<>();
-
-        productRepository.findAll().stream().forEach((product) -> {
-            ProductFluctuation fluctuation = productFluctuationRepository.findById(ProductFluctuationId.builder()
-                            .countPerTenDays(serverInfo.getCurrentTurn()).productId(product.getProductId())
-                            .build())
-                    .orElseThrow(ProductFluctuationNotFoundException::new);
-
-            double eventEffect = 0.0;
-            fluctationInfoMap.put(product.getProductId(), FluctationInfo.builder()
-                    .productAvgCost(product.getProductAvgCost())
-                    .minFluctuationRate(fluctuation.getMinFluctuationRate())
-                    .maxFluctuationRate(fluctuation.getMaxFluctuationRate())
-                    .EventEffect(eventEffect)
-                    .build());
-        });
-        currentEventList.stream().forEach(
-                event -> {
-                    fluctationInfoMap.get(event.getProductId()).setEventEffect(event.getEventVariance());
-                }
-        );
-    }
-
     //반기 스케쥴 등록/삭제
     public void startHalfYearGame() {
-        long eventPeriodSec=eventTurnPeriod*turnPeriodSec;
-        scheduleService.register(PUBLIC_EVENT, eventInitialTurn*turnPeriodSec, eventPeriodSec, () -> {
+        long eventPeriodSec = eventTurnPeriod * turnPeriodSec;
+        endBreak();
+        scheduleService.register(PUBLIC_EVENT, eventInitialTurn * turnPeriodSec, eventPeriodSec, () -> {
             createEvent();
         });
         scheduleService.register(TURN, turnPeriodSec, () -> {
             executePerTurn();
         });
-        scheduleService.register(NEWSPAPER, newsInitialTurn*turnPeriodSec, eventPeriodSec, () -> {
+        scheduleService.register(NEWSPAPER, newsInitialTurn * turnPeriodSec, eventPeriodSec, () -> {
             createNewspaper();
         });
     }
 
     public void endHalfYearGame() {
+        startHalfBreakTime();
         scheduleService.remove(TURN);
         scheduleService.remove(PUBLIC_EVENT);
         scheduleService.remove(NEWSPAPER);
+    }
+
+    @Override
+    public void endSeason() {
+        startSeasonBreakTime();
+        //TODO- 시즌 종료했을 때 필요한 정보들 어디로 다 보내기....
+        redisService.deleteValues(RedisPrefix.SERVER_NEWS.prefix());
+        redisService.deleteValues(RedisPrefix.SERVER_INFO.prefix());
+
     }
 
     //실행======================
@@ -236,7 +231,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         updateBuyableProduct();
         fluctuateProduct();
         updateTurn();
-        log.debug(serverInfo.getCurrentTurn() + "번째 턴 실행 :"+serverInfo.getTurnStartTime());
+        log.debug(serverInfo.getCurrentTurn() + "번째 턴 실행 :" + serverInfo.getTurnStartTime());
         sendPublicMessage(MessageType.GET_PUBLIC_EVENT,
                 PublicEventInfo.builder()
                         .inGameTime(LocalDateTime.now())
@@ -326,10 +321,10 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         nextEventList.stream().forEach(
                 event -> {
                     fluctationInfoMap.get(event.getProductId())
-                            .setEventEffect(fluctationInfoMap.get(event.getProductId()).getEventEffect()+event.getEventVariance());
+                            .setEventEffect(fluctationInfoMap.get(event.getProductId()).getEventEffect() + event.getEventVariance());
                 }
         );
-        log.debug("이벤트 결정 완료: "+nextEventList);
+        log.debug("이벤트 결정 완료: " + nextEventList);
     }
 
     public void updateTurn() {
@@ -383,8 +378,8 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
             if (productInfo.getProductCost() >= fluctationInfo.getProductAvgCost() * eventEffectRate * MAX_AVG_MULTIPLE_LIMIT) {
                 //평균값의 N배 이상인 경우, min, maxRate 값 변동! -> 변동폭 만큼 각 rate에서 준다
                 double maxRate = fluctationInfo.getMinFluctuationRate();
-                double minRate = (fluctationInfo.getMinFluctuationRate() * 2 - fluctationInfo.getMaxFluctuationRate())* (1 - CORRECTION_VALUE);
-                randomRate = random.nextDouble(minRate , maxRate);
+                double minRate = (fluctationInfo.getMinFluctuationRate() * 2 - fluctationInfo.getMaxFluctuationRate()) * (1 - CORRECTION_VALUE);
+                randomRate = random.nextDouble(minRate, maxRate);
                 log.debug(productId + "@@@@@너무 비싸요@@@@@" + minRate + ">" + randomRate + "<" + maxRate);
                 //TODO- 그럼에도 계속 올라가는 경우 조정해줘야 할지 논의 필요-> 해줘야 한다...
             } else if (fluctationInfo.getMinFluctuationRate() > 1) {
@@ -424,7 +419,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
 
     //가격 범위 변동 -> fluctMap 업데이트: 10일마다 실행
     public void updateFluctuationInfoPer10Days() {
-        int countPerTenDays = (serverInfo.getCurrentTurn()%(quarterYearTurnPeriod*4)) /10;
+        int countPerTenDays = (serverInfo.getCurrentTurn() % (quarterYearTurnPeriod * 4)) / 10;
         fluctationInfoMap.entrySet().stream().forEach(
                 (entry) -> {
                     ProductFluctuation fluctuation = productFluctuationRepository.findById(ProductFluctuationId.builder()
@@ -471,6 +466,61 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
                 .build());
     }
 
+    private void startHalfBreakTime() {
+        //마지막 턴이 아닌 경우만 반기 결산
+        if (serverInfo.getCurrentTurn() >= quarterYearTurnPeriod * 4 * seasonYearPeriod) return;
+        startBreakTime("반기",halfYearBreakSec);
+    }
+
+    //이거는.. 시즌종료 호출될 때 호출!!
+    private void startSeasonBreakTime() {
+        LocalDateTime seasonStartDateTime=serverSeasonInfoRepository.findFirstByOrderBySeasonIdDesc().getStartedAt();
+        long seasonBreakTimeSec=Duration.between(LocalDateTime.now(),seasonStartDateTime.plusDays(7)).toSeconds();
+        startBreakTime("시즌",seasonBreakTimeSec);
+    }
+
+    private void startBreakTime(String breakName, Long breakTimeSec) {
+        if (redisService.hasKey(RedisPrefix.SERVER_BREAK.prefix())) {
+            log.warn("Server is breaking now...");
+            return;
+        }
+        BreakTimeInfo breakTimeInfo = BreakTimeInfo.builder()
+                .isBreakTime(true)
+                .breakName(breakName)
+                .breakTime(LocalDateTime.now().plusSeconds(breakTimeSec))
+                .ingameTime(LocalDateTime.now())
+                .build();
+        sendPublicMessage(MessageType.GET_BREAK_TIME, breakTimeInfo);
+        redisService.setValues(RedisPrefix.SERVER_BREAK.prefix(), breakTimeInfo);
+        log.debug(breakName + " 휴식시간입니다..." + breakTimeInfo.toString());
+    }
+
+    private void endBreak() {
+        if (!redisService.hasKey(RedisPrefix.SERVER_BREAK.prefix())) {
+            sendPublicMessage(MessageType.GET_BREAK_TIME, BreakTimeInfo.builder()
+                    .breakName("시즌")
+                    .isBreakTime(false)
+                    .breakTime(LocalDateTime.now())
+                    .ingameTime(LocalDateTime.now())
+                    .build());
+            return;
+        }
+        BreakTimeInfo breakTimeInfo = (BreakTimeInfo) redisService.getValues(RedisPrefix.SERVER_BREAK.prefix());
+        breakTimeInfo.setIsBreakTime(false);
+        LocalDateTime testNow=LocalDateTime.now();
+//        log.debug("휴식시간은.."+breakTimeInfo.getBreakTime());
+//        log.debug("휴식시간 체크1.."+breakTimeInfo.getBreakTime().isBefore(testNow));
+//        log.debug("휴식시간 체크2.."+breakTimeInfo.getBreakTime().isAfter(testNow));
+//        if ("반기".equals(breakTimeInfo.getBreakName()) && breakTimeInfo.getBreakTime().isBefore(LocalDateTime.now())) {
+//            log.warn("아직 휴식시간이에용...." + breakTimeInfo.getBreakName()+" : "+breakTimeInfo.getBreakTime());
+//            return;
+//        }
+        breakTimeInfo.setIngameTime(LocalDateTime.now());
+        sendPublicMessage(MessageType.GET_BREAK_TIME, breakTimeInfo);
+        redisService.deleteValues(RedisPrefix.SERVER_BREAK.prefix());
+        log.debug("휴식시간이 종료되었습니다.");
+    }
+
     // /public에 메세지 발행
     public void sendPublicMessage(MessageType type, Object body) {
         log.debug(body.toString());
@@ -499,4 +549,18 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         return (NewsInfo) redisService.getValues(RedisPrefix.SERVER_NEWS.prefix());
     }
 
+    @Override
+    public BreakTimeInfo searchBreakTime() {
+        if (!redisService.hasKey(RedisPrefix.SERVER_BREAK.prefix())) {
+            return BreakTimeInfo.builder()
+                    .isBreakTime(false)
+                    .breakName("반기")
+                    .breakTime(LocalDateTime.now())
+                    .ingameTime(LocalDateTime.now())
+                    .build();
+        }
+        BreakTimeInfo breakTimeInfo = (BreakTimeInfo) redisService.getValues(RedisPrefix.SERVER_BREAK.prefix());
+        breakTimeInfo.setIngameTime(LocalDateTime.now());
+        return breakTimeInfo;
+    }
 }
