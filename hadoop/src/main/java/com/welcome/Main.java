@@ -162,7 +162,8 @@ public class Main {
                     reduceStatistics.setAccPrivateEventBonus(reduceStatistics.getAccPrivateEventBonus() + statistics.getAccPrivateEventBonus());
                     reduceStatistics.setAccPrivatePlayTime(reduceStatistics.getAccPrivatePlayTime() + statistics.getAccPrivatePlayTime());
                     int[] onlineTimeSlotCount = reduceStatistics.getAccPrivateOnlineTimeSlotCount();
-                    onlineTimeSlotCount[accPrivateOnlineTimeSlotCount] += 1;
+                    if (accPrivateOnlineTimeSlotCount != -1)
+                        onlineTimeSlotCount[accPrivateOnlineTimeSlotCount] += 1;
                     reduceStatistics.setAccPrivateOnlineTimeSlotCount(onlineTimeSlotCount);
                     reduceStatistics.setAccPrivateGamePlayCount(reduceStatistics.getAccPrivateGamePlayCount() + 1);
                     // 개인 이벤트는 일단 생략

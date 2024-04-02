@@ -20,7 +20,7 @@ public class Statistics {
     private long accPrivateEventBonus;  // 개인별 누적 이벤트 보너스
     private long maxPrivateProductIncome;  // 하나의 판매 단위에서 최대 판매 비용
     private int accPrivatePlayTime; // 누적 플레이 시간
-    private int accPrivateOnlineTimeSlotCount;  // 시간대 별 접속 횟수
+    private int accPrivateOnlineTimeSlotCount = -1;  // 시간대 별 접속 횟수
     private int accPrivateGamePlayCount;    // 개인별 누적 게임 생성 횟수
     private String accPrivateEventOccurId;  // 개인별 누적 발생 이벤트 아이디
 
