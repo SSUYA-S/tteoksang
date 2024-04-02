@@ -56,8 +56,8 @@ public class ReportServiceImpl implements ReportService {
                     .turn(serverInfo.getCurrentTurn())
                     .gold(redisGameInfo.getGold())
                     .rentFeeInfo(rentFeeInfo)
-                    .quarterProfit(0L)
-                    .inProductList(new ArrayList<>())
+                    .quarterProfit(0L)  // TODO: redis에 추가 필요
+                    .inProductList(new ArrayList<>()) // TODO: Public에서 불어와야됨
                     .titleId(userInfo.getTitleId())
                     .build();
         } else {
