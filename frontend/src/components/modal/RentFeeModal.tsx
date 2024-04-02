@@ -83,7 +83,7 @@ export default function RentFeeModal(props: Prop) {
                 </div>
                 <div
                     onClick={props.showReport}
-                    className="w-[90%] p-[1vw] h-[10%] m-[1vw] bg-white border-[0.2vw] color-border-subbold text-[1.5vw] color-text-subbold flex justify-center items-center cursor-pointer "
+                    className="w-[90%] p-[1vw] h-[10%] m-[1vw] bg-[#FFCEC3] border-[0.2vw] color-border-subbold text-[1.5vw] color-text-subbold flex justify-center items-center cursor-pointer hover:text-[#FFCEC3] hover:color-bg-subbold"
                 >
                     확인
                 </div>

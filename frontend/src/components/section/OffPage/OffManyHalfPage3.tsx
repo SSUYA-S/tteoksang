@@ -164,17 +164,17 @@ export default function OffManyHalfPage3(props: Prop) {
                         <p className="w-full h-[20%] ml-[0.5vw] mb-[0.5vh] text-left text-[2vw]">
                             1등
                         </p>
-                        <div className="w-full h-[80%] m-[0.5vw] border-[0.3vw] p-[0.3vw] color-border-subbold rounded flex">
+                        <div className="w-full h-[80%] m-[0.5vw] border-[0.3vw] p-[0.3vw] color-border-subbold rounded-[0.6vw] flex">
                             <div
-                                className="relative w-[30%] m-[0.5vw] rounded"
+                                className="relative w-[30%] m-[0.5vw] rounded-[0.6vw]"
                                 style={{ aspectRatio: 1 / 1 }}
                             >
                                 <img
-                                    className="absolute w-full h-full rounded"
+                                    className="absolute w-full h-full rounded-[0.6vw]"
                                     src={`/src/assets/images/profile/icon (${rankInfoList[rankMode].theFirstUserInfo.profileIconId}).png`}
                                 />
                                 <img
-                                    className="absolute w-full h-full rounded"
+                                    className="absolute w-full h-full rounded-[0.6vw]"
                                     src={`/src/assets/images/profile/frame (${rankInfoList[rankMode].theFirstUserInfo.profileFrameId}).png`}
                                 />
                             </div>
@@ -198,17 +198,17 @@ export default function OffManyHalfPage3(props: Prop) {
                         <p className="w-full h-[20%] ml-[0.5vw] mb-[0.5vh] text-left text-[2vw]">
                             당신
                         </p>
-                        <div className="w-full h-[80%] m-[0.5vw] border-[0.3vw] p-[0.3vw] color-border-subbold rounded flex">
+                        <div className="w-full h-[80%] m-[0.5vw] border-[0.3vw] p-[0.3vw] color-border-subbold rounded-[0.6vw] flex">
                             <div
-                                className="relative w-[30%] m-[0.5vw] rounded"
+                                className="relative w-[30%] m-[0.5vw] rounded-[0.6vw]"
                                 style={{ aspectRatio: 1 / 1 }}
                             >
                                 <img
-                                    className="absolute w-full h-full rounded"
+                                    className="absolute w-full h-full rounded-[0.6vw]"
                                     src={`/src/assets/images/profile/icon (${profileIcon}).png`}
                                 />
                                 <img
-                                    className="absolute w-full h-full rounded"
+                                    className="absolute w-full h-full rounded-[0.6vw]"
                                     src={`/src/assets/images/profile/frame (${profileFrame}).png`}
                                 />
                             </div>
