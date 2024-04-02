@@ -27,6 +27,7 @@ export default function OffHalfPage2(props: Prop) {
     );
 
     const options = {
+        responsive: true,
         plugins: {
             title: {
                 display: false,

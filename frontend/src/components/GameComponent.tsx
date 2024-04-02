@@ -113,7 +113,7 @@ export default function GameComponent(props: GameType) {
     const [isQtrReportAvail, setIsQtrReportAvail] = useState<boolean>(false); //분기
     const [isHlfReportAvail, setIsHlfReportAvail] = useState<boolean>(false); //반기
     const [isFinReportAvail, setIsFinReportAvail] = useState<boolean>(false); //전체
-    const [isOffReportAvail, setIsOffReportAvail] = useState<boolean>(true); //미접
+    const [isOffReportAvail, setIsOffReportAvail] = useState<boolean>(false); //미접
 
     const [qtrReport, setQtrReport] = useState<QuarterReportType | null>(null); //분기
     const [hlfReport, setHlfReport] = useState<HalfReportType | null>(null); //반기
@@ -158,7 +158,7 @@ export default function GameComponent(props: GameType) {
         } else if (type === 'FINAL_REPORT') {
             setIsFinReportAvail(true);
             setFinReport(body);
-        } else if (type === 'GET_OFFLINE_REPORT') {
+        } else if (type === 'OFFLINE_REPORT') {
             setIsOffReportAvail(true);
             setOffReport(body);
         }
@@ -1170,7 +1170,7 @@ export default function GameComponent(props: GameType) {
                         defaultMode={0}
                     />
 
-                    {isQtrReportAvail ? (
+                    {isQtrReportAvail && qtrReport ? (
                         <QuarterReportModal
                             titleList={initialData.titleList}
                             eventList={initialData.eventList}
@@ -1184,7 +1184,7 @@ export default function GameComponent(props: GameType) {
                     ) : (
                         <></>
                     )}
-                    {isHlfReportAvail ? (
+                    {isHlfReportAvail && hlfReport ? (
                         <HalfReportModal
                             titleList={initialData.titleList}
                             eventList={initialData.eventList}
@@ -1209,7 +1209,7 @@ export default function GameComponent(props: GameType) {
                         <></>
                     )}
 
-                    {isOffReportAvail ? (
+                    {isOffReportAvail && offReport ? (
                         <OffReportModal
                             offReport={offReport}
                             setIsOffReportAvail={setIsOffReportAvail}

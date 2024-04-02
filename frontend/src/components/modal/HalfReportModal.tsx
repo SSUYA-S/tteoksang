@@ -14,7 +14,7 @@ import { startNewGame } from '../../api/user';
 import { httpStatusCode } from '../../util/http-status';
 
 //dummy data(test 후 비활성화 필요)
-import Half from '../../dummy-data/report/half.json';
+// import Half from '../../dummy-data/report/half.json';
 import HalfPage1 from '../section/HalfPage/HalfPage1';
 import HalfPage2 from '../section/HalfPage/HalfPage2';
 import HalfPage3 from '../section/HalfPage/HalfPage3';
@@ -27,7 +27,7 @@ interface Prop {
     setIsHlfReportAvail: React.Dispatch<React.SetStateAction<boolean>>;
     webSocketId: string;
     webSocketClient: Client;
-    hlfReport: HalfReportType | null;
+    hlfReport: HalfReportType;
     setStartFlag: React.Dispatch<React.SetStateAction<boolean>>;
     achievementInfo: Achievement[];
 }
@@ -55,7 +55,7 @@ export default function HalfReportModal(props: Prop) {
     });
 
     //test 종료 후 이거 풀어
-    // const Half = props.hlfReport;
+    const Half = props.hlfReport;
 
     /**rentFeeModal에서 확인 누르면 보고서 보여지도록 만들기 */
     const showReport = () => {
@@ -167,7 +167,7 @@ export default function HalfReportModal(props: Prop) {
                                 <div className="w-[10%] h-full mx-[1.2vw] my-[1vh]"></div>
                             ) : (
                                 <div
-                                    className="w-[10%] h-full mx-[1.2vw] my-[1vh] border-[0.3vw] color-border-subbold cursor-pointer flex justify-center items-center"
+                                    className="w-[10%] h-full mx-[1.2vw] my-[1vh] border-[0.3vw] color-border-subbold cursor-pointer flex justify-center items-center rounded-[0.6vw] hover:color-bg-subbold hover:text-white"
                                     onClick={() => {
                                         if (page > 1) {
                                             setPage((prev) => prev - 1);
@@ -182,7 +182,7 @@ export default function HalfReportModal(props: Prop) {
                                 <div className="w-[10%] h-full mx-[1.2vw] my-[1vh]"></div>
                             ) : (
                                 <div
-                                    className="w-[10%] h-full mx-[1.2vw] my-[1vh] border-[0.3vw] color-border-subbold cursor-pointer flex justify-center items-center"
+                                    className="w-[10%] h-full mx-[1.2vw] my-[1vh] border-[0.3vw] color-border-subbold cursor-pointer flex justify-center items-center rounded-[0.6vw] hover:color-bg-subbold hover:text-white"
                                     onClick={() => {
                                         if (page < 4) {
                                             setPage((prev) => prev + 1);

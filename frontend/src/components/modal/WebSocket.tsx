@@ -64,12 +64,14 @@ export default function WebSocket(props: Prop) {
             .then((res) => {
                 if (res.status === httpStatusCode.OK) {
                     const id = res.data.webSocketId;
+                    console.log('websocketId : ' + id);
                     const client = handshake(id);
                     console.log('websocketId : ' + id);
                     client.onConnect = () => {
                         //public subscribe
                         client.subscribe('/topic/public', (message) => {
                             const msg = JSON.parse(message.body);
+                            console.log(msg);
                             switch (msg.type) {
                                 case 'GET_PUBLIC_EVENT':
                                     //공통 이벤트 수신
@@ -150,6 +152,7 @@ export default function WebSocket(props: Prop) {
                         //private channel 구독
                         client.subscribe(`/topic/private/${id}`, (message) => {
                             const msg = JSON.parse(message.body);
+                            console.log(msg);
                             switch (msg.type) {
                                 case 'CHANGE_TITLE':
                                     //칭호 변경 완료
@@ -395,7 +398,7 @@ export default function WebSocket(props: Prop) {
                                 case 'QUARTER_REPORT':
                                 case 'HALF_REPORT':
                                 case 'FINAL_REPORT':
-                                case 'GET_OFFLINE_REPORT':
+                                case 'OFFLINE_REPORT':
                                     //결산 리포트 왔을 때.
                                     if (msg.isSuccess) {
                                         props.reportReceived(
