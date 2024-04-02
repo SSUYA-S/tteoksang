@@ -5,8 +5,6 @@
 #root {
     width: 100vw;
     height: 100vh;
-    max-width: 3000px;
-    max-height: 1600px;
     margin: 0 auto;
     text-align: center;
     overflow-x: hidden;
@@ -46,7 +44,7 @@ body {
 }
 
 .scroll-pink::-webkit-scrollbar-thumb {
-    background-color: var(--color-sublight); /* 스크롤바의 색상을 지정합니다. */
+    background-color: #bc856e; /* 스크롤바의 색상을 지정합니다. */
     border-radius: 3px; /* 스크롤바 모서리를 둥글게 만듭니다. */
 }
 
