@@ -6,6 +6,8 @@ import com.welcome.tteoksang.game.dto.log.LogMessage;
 import com.welcome.tteoksang.game.dto.log.RentFeeLogInfo;
 import com.welcome.tteoksang.game.dto.log.SellLogInfo;
 import com.welcome.tteoksang.game.dto.res.GameMessageRes;
+import com.welcome.tteoksang.game.dto.result.half.Half;
+import com.welcome.tteoksang.game.dto.result.offline.OfflineReport;
 import com.welcome.tteoksang.game.dto.result.quarter.OverdueProduct;
 import com.welcome.tteoksang.game.dto.result.quarter.Quarter;
 import com.welcome.tteoksang.game.dto.result.quarter.RentFeeInfo;
@@ -22,6 +24,7 @@ import com.welcome.tteoksang.resource.type.MessageType;
 import com.welcome.tteoksang.user.dto.UserInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +41,12 @@ public class ReportServiceImpl implements ReportService {
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final ServerInfo serverInfo;
 
+    @Value("${RENT_FEE}")
+    private long rentFee;
+    @Value("${QUARTER_YEAR_TURN_PERIOD}")
+    private int quarterYearTurnPeriod;
+
+    //TODO- 환경변수를 어디 스태틱처럼 두고 쓰는게 낫나? 아니면 하나 싱글톤이든?
     final double DISCOUNT_RATE = 100.0; // 할인율을 %로 표현
 
     // 계절 결산 불러오기
@@ -244,7 +253,7 @@ public class ReportServiceImpl implements ReportService {
                         .rentFee(rentFee)
                         .productList(overdueProductList)
                         .build();
-                log.debug("압류된 정보: {}", overdueProductList.toString());
+                log.debug("압류된 정보: {}", overdueProductList);
             }
         }
         return rentFeeInfo;
@@ -321,5 +330,68 @@ public class ReportServiceImpl implements ReportService {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void sendHalfReportStatistics(int halfYearNumber) {
+
+    }
+
+    public void sendHalfReport(String userId) {
+
+
+    }
+
+    public OfflineReport searchOfflineReport(String userId) {
+        String gameInfoKey = RedisPrefix.INGAMEINFO.prefix() + userId;
+        RedisGameInfo gameInfo = (RedisGameInfo) redisService.getValues(gameInfoKey);
+        //접속 안 한 사이 밀린 rentFee를 계산
+        int lastPlayTurn = gameInfo.getLastPlayTurn();
+        gameInfo.setLastPlayTurn(serverInfo.getCurrentTurn());
+        if (serverInfo.getCurrentTurn() / quarterYearTurnPeriod == lastPlayTurn / quarterYearTurnPeriod) {
+            //미접속 결산 할 게 없다! -> isSuccess=false
+            gameInfo.setRentFee((serverInfo.getCurrentTurn() - lastPlayTurn) * gameInfo.getTotalProductQuantity() * rentFee);
+            redisService.setValues(gameInfoKey, gameInfo);
+            return null;
+        }
+        // 미접속 결산할 것이 있다!
+
+        //(계절이 안 지났으므로) 아직 정산시키지 않을 턴 수: 현재 턴은 아직 진행중이므로 제외
+        int unCalculateOfflineTurn = serverInfo.getCurrentTurn() % quarterYearTurnPeriod - 1;
+        //정산해야 할 턴 수
+        int calculateOfflineTurn = serverInfo.getCurrentTurn() - unCalculateOfflineTurn - lastPlayTurn;
+        long offlineRentFee = calculateOfflineTurn * gameInfo.getTotalProductQuantity() * rentFee;
+        gameInfo.setRentFee(gameInfo.getRentFee() + offlineRentFee);
+        redisService.setValues(gameInfoKey, gameInfo);
+
+        //TODO- 계절결산을 받아온다
+        Quarter quarter=Quarter.builder().build();
+        OfflineReport offlineReport=OfflineReport.builder()
+                .lastGameTurn(lastPlayTurn)
+                .quarterReport(quarter)
+                .gold(quarter.getGold())
+                .rentFeeInfo(quarter.getRentFeeInfo())
+                .build();
+
+        gameInfo.setRentFee(unCalculateOfflineTurn * gameInfo.getTotalProductQuantity() * rentFee);
+        redisService.setValues(gameInfoKey, gameInfo);
+        int halfYearOfLastPlayTurn = serverInfo.getCurrentTurn() / (quarterYearTurnPeriod * 2);
+        int halfYearOfCurrentTurn = serverInfo.getCurrentTurn() / (quarterYearTurnPeriod * 2);
+        if (halfYearOfLastPlayTurn == halfYearOfCurrentTurn) {
+            //계절 결산만 있다
+            //현재 계절에 대한 정보 제공
+            return offlineReport;
+        }
+        //TODO- 반기결산을 받아온다
+        Half half= Half.builder().build();
+        if (halfYearOfCurrentTurn - halfYearOfLastPlayTurn == 1) {
+            //반기 하나만 차이난다
+            //반기 하나에 대한 정보만 제공 => halfReport==recentHalfReport
+            offlineReport.setHalfReport(half);
+            return offlineReport;
+        }
+        //이전 플레이 반기와, 최근 반기에 대한 정보 제공
+        Half recentHalf= Half.builder().build();
+        offlineReport.setRecentHalfReport(recentHalf);
+        return offlineReport;
     }
 }
