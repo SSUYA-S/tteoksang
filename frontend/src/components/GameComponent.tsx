@@ -58,7 +58,9 @@ export default function GameComponent(props: GameType) {
     const [newsFlag, setNewsFlag] = useState<boolean>(false);
     const [inventoryFlag, setInventoryFlag] = useState<boolean>(false);
     //턴 시간
-    const [duration, setDuration] = useState<number>(20);
+    const [duration, setDuration] = useState<number>(
+        import.meta.env.TURN_PERIOD_SEC
+    );
     const [ingameTurn, setIngameTurn] = useState<number>(1);
     const [ingameTime, setIngameTime] = useState<string>('00:03:00');
     const [turnStartTime, setTurnStartTime] = useState<string>('00:03:00');
