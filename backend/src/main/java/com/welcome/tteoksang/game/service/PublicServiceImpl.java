@@ -260,7 +260,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
     //계절마다 나타나는 작물, 이벤트 리스트 변경
     public void updateQuarterYearList() {
         ProductType currentSeason;
-        switch ((serverInfo.getCurrentTurn() % 360) / 90) {
+        switch ((serverInfo.getCurrentTurn() % (quarterYearTurnPeriod*4)) / quarterYearTurnPeriod) {
             case 0:
                 currentSeason = ProductType.SPRING;
                 break;
@@ -338,6 +338,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         serverInfo.setCurrentTurn(serverInfo.getCurrentTurn() + 1);
         serverInfo.setTurnStartTime(LocalDateTime.now());
         if (serverInfo.getCurrentTurn() % eventTurnPeriod == 0) {
+            //TODO- nextEvent가 null인 경우 처리
             serverInfo.setSpecialEventIdList(nextEventList.stream().map(event -> {
                 //TODO - 로그메세지 말고 redis에 저장하는 식으로 변경하기
                 SpecialEventLogInfo logInfo = SpecialEventLogInfo.builder()
