@@ -235,8 +235,7 @@ export default function OffQuarterPage(props: Prop) {
                                 </div>
                             </div>
                             <div
-                                className="border-[0.5vw] w-[20%] h-[40%] text-[1.5vw] color-border-subbold text-center cursor-pointer"
-                                style={{ padding: 'auto' }}
+                                className="border-[0.2vw] w-[20%] h-[40%] py-[0.2vw] text-[1.5vw] color-border-subbold text-center cursor-pointer rounded-[0.6vw] hover:color-bg-subbold hover:text-white flex justify-center items-center"
                                 onClick={() => {
                                     props.setMode(2);
                                 }}
