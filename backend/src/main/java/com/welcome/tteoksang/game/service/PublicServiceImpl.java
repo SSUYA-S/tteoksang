@@ -63,7 +63,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
     @Value("${TURN_PERIOD_SEC}")
     private long turnPeriodSec;
 
-    @Value("${EVENT_ARISE_TURN_COUNT}")
+    @Value("${EVENT_ARISE_TURN_PERIOD}")
     private int eventTurnPeriod;
     @Value("${EVENT_ARISE_INITIAL_TURN}")
     private int eventInitialTurn;
@@ -75,6 +75,8 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
     private long halfYearBreakSec;
     @Value("${SEASON_YEAR_PERIOD}")
     private int seasonYearPeriod;
+    @Value("${BUYABLE_PRODUCT_TURN_PERIOD}")
+    private int buyableProductTurnPeriod;
     private final String TURN = "fluctuate";
     private final String PUBLIC_EVENT = "event";
     private final String NEWSPAPER = "news";
@@ -138,7 +140,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         ).toList();
         initProductInfo(hasServerData);
         eventIndexList = new ArrayList<>(NEWS_NUM); //productInfoMap의 인덱스에 해당: 선정한 {NEWS_NUM}개 후보 이벤트
-        nextEventList=new ArrayList<>();
+        nextEventList = new ArrayList<>();
     }
 
 
@@ -231,7 +233,9 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
 
     //1턴마다 실행: 가격 변동, 구매 가능 리스트 변동
     private void executePerTurn() {
-        updateBuyableProduct();
+        if (serverInfo.getCurrentTurn() % buyableProductTurnPeriod == 0) {
+            updateBuyableProduct();
+        }
         fluctuateProduct();
         updateTurn();
         log.debug(serverInfo.getCurrentTurn() + "번째 턴 실행 :" + serverInfo.getTurnStartTime());
@@ -260,7 +264,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
     //계절마다 나타나는 작물, 이벤트 리스트 변경
     public void updateQuarterYearList() {
         ProductType currentSeason;
-        switch ((serverInfo.getCurrentTurn() % (quarterYearTurnPeriod*4)) / quarterYearTurnPeriod) {
+        switch ((serverInfo.getCurrentTurn() % (quarterYearTurnPeriod * 4)) / quarterYearTurnPeriod) {
             case 0:
                 currentSeason = ProductType.SPRING;
                 break;
@@ -420,6 +424,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
             }
         }
         serverInfo.setBuyableProducts(buyableProductIndex.stream().map(i -> occurableProductIdList.get(i)).toList());
+        log.debug("buyableList UPDATE");
     }
 
     //가격 범위 변동 -> fluctMap 업데이트: 10일마다 실행
