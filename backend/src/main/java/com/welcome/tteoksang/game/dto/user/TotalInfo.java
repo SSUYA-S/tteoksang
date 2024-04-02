@@ -1,6 +1,7 @@
 package com.welcome.tteoksang.game.dto.user;
 
 import com.welcome.tteoksang.game.dto.ProductInfo;
+import com.welcome.tteoksang.game.dto.UserProduct;
 import lombok.*;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public class TotalInfo {
     private String turnStartTime;
     private Integer turn;
     private Integer themeId;
-    private Map<Integer, UserProductInfo> products; // 유저가 가지고 있는 농산물 정보
+    private List<UserProduct> productList; // 유저가 가지고 있는 농산물 정보
     private List<ProductInfo> productInfoList; // 서버 내 농산물 정보
     private List<Integer> buyAbleProductIdList;
     private Integer purchasedQuantity;

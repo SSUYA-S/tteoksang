@@ -11,6 +11,7 @@ import java.util.List;
 @Builder
 public class Quarter {
     private Integer turn;
+    private Long gold;
     private RentFeeInfo rentFeeInfo;
     private Long quarterProfit;
     private Long rentFee;

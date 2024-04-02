@@ -64,26 +64,26 @@ public class GameController {
 
     @GetMapping("/quarter/{webSocketId}")
     public void sendQuarter(@PathVariable("webSocketId") String webSocketId, @AuthenticationPrincipal User user) {
-        String logData = TestExample.quarter;
-        ObjectMapper mapper = new ObjectMapper();
-        boolean isSuccess = false;
-        Quarter message = null;
-        try {
-            message = mapper.readValue(logData, Quarter.class);
-            isSuccess = true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        String logData = TestExample.quarter;
+//        ObjectMapper mapper = new ObjectMapper();
+//        boolean isSuccess = false;
+//        Quarter message = null;
+//        try {
+//            message = mapper.readValue(logData, Quarter.class);
+//            isSuccess = true;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        GameMessageRes quarterResult = GameMessageRes.builder()
+//                .type(MessageType.QUARTER_REPORT)
+//                .isSuccess(isSuccess)
+//                .body(message)
+//                .build();
+//
+//        simpMessagingTemplate.convertAndSend("/topic/private/" + webSocketId, quarterResult);
 
-        GameMessageRes quarterResult = GameMessageRes.builder()
-                .type(MessageType.QUARTER_REPORT)
-                .isSuccess(isSuccess)
-                .body(message)
-                .build();
-
-        simpMessagingTemplate.convertAndSend("/topic/private/" + webSocketId, quarterResult);
-
-//        reportService.sendQuarterResult(user.getUserId(), webSocketId);
+        reportService.sendQuarterResult(user.getUserId(), webSocketId);
     }
 
     @GetMapping("/half/{webSocketId}")
