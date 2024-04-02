@@ -44,7 +44,7 @@ body {
 }
 
 .scroll-pink::-webkit-scrollbar-thumb {
-    background-color: var(--color-sublight); /* 스크롤바의 색상을 지정합니다. */
+    background-color: #bc856e; /* 스크롤바의 색상을 지정합니다. */
     border-radius: 3px; /* 스크롤바 모서리를 둥글게 만듭니다. */
 }
 
