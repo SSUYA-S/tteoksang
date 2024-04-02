@@ -116,10 +116,10 @@ export default function BreakTimePage(props: Prop) {
                 ) : (
                     <></>
                 )}
-                <div className="text-[3vw] text-white">
+                <div className="text-[2vw] text-white">
                     지금은 휴식시간입니다.
                 </div>
-                <div className="text-[2vw] text-white">
+                <div className="text-[1.5vw] text-white">
                     {`${hour > 9 ? hour : '0' + hour}시간 ${
                         min > 9 ? min : '0' + min
                     }분 ${sec > 9 ? sec : '0' + sec}초 남음`}

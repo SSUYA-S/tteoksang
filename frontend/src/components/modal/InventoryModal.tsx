@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 type inventoryType = {
     setInventoryFlag: React.Dispatch<React.SetStateAction<boolean>>;
     productSource: Product[];
+    openTradeElement: () => void;
 };
 
 export default function InventoryModal(props: inventoryType) {
@@ -43,7 +44,7 @@ export default function InventoryModal(props: inventoryType) {
                 className="absolute w-full h-full -z-10"
                 alt=""
             />
-            <div className="absolute left-[1vw] w-[95%] h-[90%] items-center justify-center flex flex-wrap overflow-y-auto px-[3vw] py-[2vw]">
+            <div className="absolute left-[1vw] w-[95%] h-[90%] items-start justify-start flex flex-wrap overflow-y-auto px-[3vw] py-[2vw]">
                 {myProduct.map((product: ProductBucket) => {
                     return (
                         <InventoryCard
@@ -62,6 +63,12 @@ export default function InventoryModal(props: inventoryType) {
                         />
                     );
                 })}
+            </div>
+            <div
+                className="absolute w-[17%] h-[10%] right-[5%] top-[10%] bg-white rounded-[0.6vw] cursor-pointer color-border-subbold border-[0.2vw] flex justify-center items-center color-text-subbold text-[1.5vw]"
+                onClick={props.openTradeElement}
+            >
+                구매/판매 모달로
             </div>
             <div
                 className="absolute text-[2vw] flex items-center justify-center text-white -top-[1.6vw] -right-[2vw] w-[4vw] h-[4vw] border-[0.4vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer"
