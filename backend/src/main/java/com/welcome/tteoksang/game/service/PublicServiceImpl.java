@@ -107,6 +107,9 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
 //            serverInfo.setSpecialEventIdList(loadedServerInfo.getSpecialEventIdList());
 //            return true;
 //        }
+        redisService.deleteValues(RedisPrefix.SERVER_NEWS.prefix());
+        redisService.deleteValues(RedisPrefix.SERVER_INFO.prefix());
+//        redisService.deleteValues(RedisPrefix.SERVER_BREAK.prefix());
         ServerSeasonInfo seasonInfo = serverSeasonInfoRepository.findFirstByOrderBySeasonIdDesc();
         int gameSeason = 1;
         if (seasonInfo != null) {
