@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 //dummy data
-import totalInfo from '../dummy-data/total-info.json';
+// import totalInfo from '../dummy-data/total-info.json';
 
 //.env
 
@@ -10,20 +10,20 @@ import totalInfo from '../dummy-data/total-info.json';
 import { Cookies } from 'react-cookie';
 
 //redux
-import {
-    brokerLevelState,
-    goldState,
-    myProductState,
-    purchasedQuantityState,
-    vehicleLevelState,
-    warehouseLevelState,
-} from '../util/myproduct-slice';
-import {
-    privateEventState,
-    specialEventState,
-    productInfoState,
-    buyableProductIdState,
-} from '../util/product-and-event';
+// import {
+//     brokerLevelState,
+//     goldState,
+//     myProductState,
+//     purchasedQuantityState,
+//     vehicleLevelState,
+//     warehouseLevelState,
+// } from '../util/myproduct-slice';
+// import {
+//     privateEventState,
+//     specialEventState,
+//     productInfoState,
+//     buyableProductIdState,
+// } from '../util/product-and-event';
 import { Achievement, ProfileFrame, ProfileIcon, Title } from '../type/types';
 import { checkMyPrevious, checkMyProfile, startNewGame } from '../api/user';
 import { httpStatusCode } from '../util/http-status';
@@ -38,6 +38,7 @@ import {
     profileIconeState,
     profileThemeState,
 } from '../util/counter-slice';
+import WarningModal from './modal/WarningModal';
 
 type startType = {
     setStartFlag: React.Dispatch<React.SetStateAction<boolean>>;
@@ -45,6 +46,7 @@ type startType = {
     titleData: Title[];
     profileFrameData: ProfileFrame[];
     profileIconData: ProfileIcon[];
+    startFlag: boolean;
 };
 export default function GameStartComponent(props: startType) {
     const achievementData = props.achievementData;
@@ -60,6 +62,8 @@ export default function GameStartComponent(props: startType) {
     //이전 기록이 존재하는가?
     const [isPreviousExist, setIsPreviousExist] = useState<boolean>(false);
     const [lastPlayTime, setLastPlayTime] = useState<string>('');
+
+    const [isTrytoReset, setIsTryToReset] = useState<boolean>(false);
 
     const bgmSetting = useSelector((state: any) => state.reduxFlag.bgmFlag);
 
@@ -94,6 +98,17 @@ export default function GameStartComponent(props: startType) {
     const onReady = () => {
         audio.pause();
         props.setStartFlag(true);
+        setIsTryToReset(false);
+    };
+
+    /**게임 초기화 후 시작 */
+    const resetAndStart = async () => {
+        //게임 포기 로직 추가
+        startNewGame().then((res) => {
+            if (res.status === httpStatusCode.OK) {
+                onReady();
+            }
+        });
     };
 
     useEffect(() => {
@@ -144,9 +159,36 @@ export default function GameStartComponent(props: startType) {
         }
     }, [cookies]);
 
+    //메인 화면 재 진입 시 이어하기 정보
+    useEffect(() => {
+        if (!props.startFlag && cookies.get('accessToken')) {
+            //이전 기록 조회
+            checkMyPrevious()
+                .then((res) => {
+                    if (res.status === httpStatusCode.OK) {
+                        const data = res.data;
+                        if (data.isExist) {
+                            setIsPreviousExist(true);
+                            setLastPlayTime(
+                                data.previousPlayInfo.previousPlayDate.replace(
+                                    'T',
+                                    ' '
+                                )
+                            );
+                            console.log(data);
+                        } else {
+                            setIsPreviousExist(false);
+                        }
+                    }
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        }
+    }, [props.startFlag]);
+
     useEffect(() => {
         if (loginFlag) {
-            console.log('ㅈㅈㄷㅈㄷ');
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker
                     .register('/sw.js')
@@ -211,15 +253,10 @@ export default function GameStartComponent(props: startType) {
                     <div
                         className="relative w-[40%] h-[40%] cursor-pointer bg-[#FFF6D6] border-black border-[0.5vw] flex justify-center items-center p-[0.5vw]"
                         onClick={() => {
-                            //게임 포기 로직 추가
-                            startNewGame().then((res) => {
-                                if (res.status === httpStatusCode.OK) {
-                                    onReady();
-                                }
-                            });
+                            setIsTryToReset(true);
                         }}
                     >
-                        <p className="text-[3vw]">시작하기</p>
+                        <p className="text-[3vw]">새로 시작하기</p>
                     </div>
                 </div>
             );
@@ -254,6 +291,19 @@ export default function GameStartComponent(props: startType) {
                 backgroundRepeat: 'no-repeat',
             }}
         >
+            {isTrytoReset ? (
+                <WarningModal
+                    handleOK={resetAndStart}
+                    handleCancel={() => {
+                        setIsTryToReset(false);
+                    }}
+                    message={`진행 상황이 초기화됩니다.\n정말 하시겠습니까?`}
+                    cancelMessage="아니오"
+                    okMessage="네"
+                />
+            ) : (
+                <></>
+            )}
             <div className="absolute w-[10%] h-[40%] flex flex-col justify-center items-center top-[4%] right-[0%] z-20">
                 <div
                     className="w-[50%] h-[30%] cursor-pointer z-10"
