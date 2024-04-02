@@ -447,55 +447,16 @@ public interface TestExample {
             "    ],\n" +
             "    \"specialEventReportList\": [\n" +
             "        {\n" +
-            "            \"year\": 1,\n" +
-            "            \"specialEventList\": [\n" +
-            "                {\n" +
-            "                    \"specialEventId\": 1,\n" +
-            "                    \"totalAccSpecialEventOccurCount\": 1\n" +
-            "                },\n" +
-            "                {\n" +
-            "                    \"specialEventId\": 3,\n" +
-            "                    \"totalAccSpecialEventOccurCount\": 1\n" +
-            "                },\n" +
-            "                {\n" +
-            "                    \"specialEventId\": 4,\n" +
-            "                    \"totalAccSpecialEventOccurCount\": 1\n" +
-            "                }\n" +
-            "            ]\n" +
+            "            \"specialEventName\": \"가뭄\",\n" +
+            "            \"totalAccSpecialEventOccurCount\": 5   \n" +
             "        },\n" +
             "        {\n" +
-            "            \"year\": 2,\n" +
-            "            \"specialEventList\": [\n" +
-            "                {\n" +
-            "                    \"specialEventId\": 2,\n" +
-            "                    \"totalAccSpecialEventOccurCount\": 1\n" +
-            "                },\n" +
-            "                {\n" +
-            "                    \"specialEventId\": 4,\n" +
-            "                    \"totalAccSpecialEventOccurCount\": 2\n" +
-            "                },\n" +
-            "                {\n" +
-            "                    \"specialEventId\": 5,\n" +
-            "                    \"totalAccSpecialEventOccurCount\": 1\n" +
-            "                }\n" +
-            "            ]\n" +
+            "            \"specialEventName\": \"풍작\",\n" +
+            "            \"totalAccSpecialEventOccurCount\": 7  \n" +
             "        },\n" +
             "        {\n" +
-            "            \"year\": 3,\n" +
-            "            \"specialEventList\": [\n" +
-            "                {\n" +
-            "                    \"specialEventId\": 1,\n" +
-            "                    \"totalAccSpecialEventOccurCount\": 3\n" +
-            "                },\n" +
-            "                {\n" +
-            "                    \"specialEventId\": 2,\n" +
-            "                    \"totalAccSpecialEventOccurCount\": 1\n" +
-            "                },\n" +
-            "                {\n" +
-            "                    \"specialEventId\": 5,\n" +
-            "                    \"totalAccSpecialEventOccurCount\": 1\n" +
-            "                }\n" +
-            "            ]\n" +
+            "            \"specialEventName\": \"사회 이슈\",\n" +
+            "            \"totalAccSpecialEventOccurCount\": 9   \n" +
             "        }\n" +
             "    ],\n" +
             "    \"achievementList\": [1, 2, 3, 4, 5],\n" +

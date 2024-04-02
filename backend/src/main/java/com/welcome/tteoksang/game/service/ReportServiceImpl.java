@@ -18,7 +18,9 @@ import com.welcome.tteoksang.redis.RedisPrefix;
 import com.welcome.tteoksang.redis.RedisService;
 import com.welcome.tteoksang.resource.dto.Broker;
 import com.welcome.tteoksang.resource.repository.BrokerRepository;
+import com.welcome.tteoksang.resource.repository.ProductRepository;
 import com.welcome.tteoksang.resource.type.MessageType;
+import com.welcome.tteoksang.resource.type.ProductType;
 import com.welcome.tteoksang.user.dto.UserInfo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +38,7 @@ public class ReportServiceImpl implements ReportService {
     private final RedisService redisService;
     private final BrokerRepository brokerRepository;
     private final SimpMessagingTemplate simpMessagingTemplate;
+    private final ProductRepository productRepository;
     private final ServerInfo serverInfo;
 
     final double DISCOUNT_RATE = 100.0; // 할인율을 %로 표현
@@ -52,15 +55,30 @@ public class ReportServiceImpl implements ReportService {
         if (redisService.hasKey(redisGameInfoKey)) {
             redisGameInfo = (RedisGameInfo) redisService.getValues(redisGameInfoKey);
             RentFeeInfo rentFeeInfo = calculateRentFee(userId, redisGameInfo);
+
+            // 현재 계절정보
+            ProductType seasonName = ProductType.values()[serverInfo.getCurrentTurn() % 4];
+            List<Integer> products = productRepository.findProductIdsByProductType(seasonName);
             responseBody = Quarter.builder()
                     .turn(serverInfo.getCurrentTurn())
                     .gold(redisGameInfo.getGold())
                     .rentFeeInfo(rentFeeInfo)
-                    .quarterProfit(0L)  // TODO: redis에 추가 필요
-                    .inProductList(new ArrayList<>()) // TODO: Public에서 불어와야됨
+                    .quarterProfit(redisGameInfo.getGold() - redisGameInfo.getLastQuarterGold())  // TODO: redis에 추가 필요
+                    .inProductList(products) // TODO: Public에서 불어와야됨
                     .titleId(userInfo.getTitleId())
                     .build();
+            if(rentFeeInfo.getBillType().equals("bankrupt")){
+                // 레디스 지우기
+                redisService.deleteValues(redisGameInfoKey);
+            }
+            else {
+                // 갱신된 레디스 정보의 이전 골드 반영
+                redisGameInfo = (RedisGameInfo) redisService.getValues(redisGameInfoKey);
+                redisGameInfo.setLastQuarterGold(redisGameInfo.getGold());
+                redisService.setValues(redisGameInfoKey, redisGameInfo);
+            }
         } else {
+            log.debug("오류 발생");
             isSuccess = false;
         }
 
@@ -233,9 +251,6 @@ public class ReportServiceImpl implements ReportService {
                         .rentFee(rentFee)
                         .productList(new ArrayList<>())
                         .build();
-
-                // 레디스 지우기
-                redisService.deleteValues(redisGameInfoKey);
             }
             // 가압류 - 순이익이 최대로
             else {

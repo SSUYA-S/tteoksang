@@ -8,6 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class SpecialEvent {
-    private String specialEventId;
+    private String specialEventName;
     private Integer totalAccSpecialEventOccurCount;
 }
