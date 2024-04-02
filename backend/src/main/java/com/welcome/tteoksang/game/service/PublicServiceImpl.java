@@ -29,6 +29,7 @@ import com.welcome.tteoksang.resource.repository.EventRepository;
 import com.welcome.tteoksang.resource.repository.ProductRepository;
 import com.welcome.tteoksang.resource.type.MessageType;
 import com.welcome.tteoksang.resource.type.ProductType;
+import com.welcome.tteoksang.user.repository.GameInfoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,6 +51,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
     private final ScheduleService scheduleService;
     private final RedisService redisService;
     private final PrivateScheduleService privateScheduleService;
+    private final GameInfoRepository gameInfoRepository;
 
     private final ProductRepository productRepository;
     private final ProductFluctuationRepository productFluctuationRepository;
@@ -222,6 +224,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
     public void endSeason() {
         startSeasonBreakTime();
         //TODO- 시즌 종료했을 때 필요한 정보들 어디로 다 보내기....
+        gameInfoRepository.deleteAll();
         redisService.deleteValues(RedisPrefix.SERVER_NEWS.prefix());
         redisService.deleteValues(RedisPrefix.SERVER_INFO.prefix());
 //        log.debug("delete news...."+redisService.hasKey(RedisPrefix.SERVER_NEWS.prefix()));
@@ -457,7 +460,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
                         sendPrivateMessage(userId, MessageType.ALERT_PLAYTIME, PlayTimeInfo.builder()
                                 .playTime(PLAY_LONG_TIME * entry.getValue().getAlertCount())
                                 .build());
-                        privateScheduleService.updateUserAlertPlayTimeMap(userId);
+                        privateScheduleService.updateUserAlertPlayTimeMap(userId,PLAY_LONG_TIME);
 
                     }
                 }
@@ -465,15 +468,15 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
     }
 
     public void sendPrivateMessage(String userId, MessageType type, Object body) {
-        log.debug("<PRIVATE> Message.." + userId + " " + type);
         if (!redisService.hasKey(RedisPrefix.WEBSOCKET.prefix() + userId))
             throw new AccessToInvalidWebSocketIdException();
         String webSocketId = (String) redisService.getValues(RedisPrefix.WEBSOCKET.prefix() + userId);
-        sendingOperations.convertAndSend("topic/private/" + webSocketId, GameMessageRes.builder()
+        sendingOperations.convertAndSend("/topic/private/" + webSocketId, GameMessageRes.builder()
                 .type(type)
                 .isSuccess(true)
                 .body(body)
                 .build());
+        log.debug("<PRIVATE> Message.." + webSocketId + " " + type);
     }
 
     private void startHalfBreakTime() {
