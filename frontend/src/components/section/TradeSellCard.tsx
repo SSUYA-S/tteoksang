@@ -51,7 +51,13 @@ export default function TradeSellCard({
     };
 
     return (
-        <div className="w-[48%] h-[48%] bg-white color-border-subbold border-[0.2vw] rounded-[0.8vw] mx-[0.2vw] my-[0.2vw]">
+        <div
+            className={`w-[48%] h-[48%] ${
+                productNumber > 0
+                    ? 'color-bg-main border-red-500'
+                    : 'bg-white color-border-subbold'
+            } border-[0.2vw] rounded-[0.8vw] mx-[0.2vw] my-[0.2vw]`}
+        >
             <p className="w-full h-[15%] flex justify-center items-center text-center text-[1.4vw] color-bg-brown1 color-text-main rounded-ss-[0.4vw] rounded-se-[0.4vw]">
                 {sellInfo.productName}
             </p>

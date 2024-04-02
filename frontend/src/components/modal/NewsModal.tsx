@@ -3,13 +3,14 @@ import { SetStateAction, useEffect, useState } from 'react';
 import { Article } from '../../type/types';
 
 type NewsType = {
-    setNewsFlag: React.Dispatch<SetStateAction<boolean>>;
     newsPublishTurn: number;
     newsArticleList: Article[];
+    newsFlag: boolean;
+    setShowNews: React.Dispatch<SetStateAction<boolean>>;
 };
 export default function NewsModal(props: NewsType) {
     const closeNewsModal = () => {
-        props.setNewsFlag(false);
+        props.setShowNews(false);
     };
     const [currentNews, setCurrentNews] = useState<Article[]>([]);
     const [date, setDate] = useState<number>(0);
@@ -21,7 +22,7 @@ export default function NewsModal(props: NewsType) {
         // ESC 키를 눌렀을 때 실행할 함수
         const handleKeyDown = (event: KeyboardEvent) => {
             if (event.key === 'Escape') {
-                props.setNewsFlag(false); // ESC 키가 눌리면 컴포넌트를 안 보이게 설정
+                props.setShowNews(false); // ESC 키가 눌리면 컴포넌트를 안 보이게 설정
             }
         };
         console.log('뉴스임미다');

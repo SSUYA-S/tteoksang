@@ -47,13 +47,15 @@ public class GameInfoServiceImpl implements GameInfoService {
 
     @Override
     public void startNewGame(String userId) {
+        String gameInfoKey = RedisPrefix.INGAMEINFO.prefix() + userId;
+        redisService.deleteValues(gameInfoKey);
         GameInfo prevGameInfo = gameInfoRepository.findById(userId).orElse(null);
         int newGameId = 1;
-        String gameInfoKey = RedisPrefix.INGAMEINFO.prefix() + userId;
         if (prevGameInfo != null) {
             newGameId = prevGameInfo.getGameId() + 1;
         }
 
+        // FIXME: 새게임 만들기
         byte[] newProducts = RedisSerializationUtil.serializeMap(new HashMap<>());
 
         GameInfo newGameInfo = GameInfo.builder()
@@ -61,6 +63,7 @@ public class GameInfoServiceImpl implements GameInfoService {
                 .gameId(newGameId)// 새로운 게임 ID
                 .gold(10000000L)
 //                .gold(10000L)
+                .lastQuarterGold(0L)
                 .warehouseLevel(1)
                 .vehicleLevel(1)
                 .brokerLevel(1)
@@ -138,6 +141,7 @@ public class GameInfoServiceImpl implements GameInfoService {
                         .userId(userId)
                         .gameId(1)// 현재 게임 ID
                         .gold(10000L)
+                        .lastQuarterGold(0L)
                         .warehouseLevel(1)
                         .vehicleLevel(1)
                         .brokerLevel(1)
@@ -160,6 +164,7 @@ public class GameInfoServiceImpl implements GameInfoService {
         RedisGameInfo redisGameInfo = RedisGameInfo.builder()
                 .gameId(newGameInfo.getGameId())
                 .gold(newGameInfo.getGold())
+                .lastQuarterGold(newGameInfo.getLastQuarterGold())
                 .warehouseLevel(newGameInfo.getWarehouseLevel())
                 .vehicleLevel(newGameInfo.getVehicleLevel())
                 .brokerLevel(newGameInfo.getBrokerLevel())

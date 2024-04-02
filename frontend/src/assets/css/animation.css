@@ -16,15 +16,15 @@
 @keyframes alert-error {
     0% {
         opacity: 1;
-        z-index: 30;
+        z-index: 60;
     }
     30% {
         opacity: 1;
-        z-index: 30;
+        z-index: 60;
     }
     90% {
         opacity: 0;
-        z-index: 30;
+        z-index: 60;
     }
     100% {
         opacity: 0;
