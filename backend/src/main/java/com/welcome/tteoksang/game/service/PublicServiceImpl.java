@@ -71,8 +71,8 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
     private int newsInitialTurn;
     @Value("${QUARTER_YEAR_TURN_PERIOD}")
     private int quarterYearTurnPeriod;
-    @Value("${HALF_YEAR_BREAK_PERIOD_SEC}")
-    private long halfYearBreakPeriodSec;
+    @Value("${HALF_YEAR_BREAK_SEC}")
+    private long halfYearBreakSec;
     @Value("${SEASON_YEAR_PERIOD}")
     private int seasonYearPeriod;
     private final String TURN = "fluctuate";
@@ -469,7 +469,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
     private void startHalfBreakTime() {
         //마지막 턴이 아닌 경우만 반기 결산
         if (serverInfo.getCurrentTurn() >= quarterYearTurnPeriod * 4 * seasonYearPeriod) return;
-        startBreakTime("반기",halfYearBreakPeriodSec);
+        startBreakTime("반기",halfYearBreakSec);
     }
 
     //이거는.. 시즌종료 호출될 때 호출!!
