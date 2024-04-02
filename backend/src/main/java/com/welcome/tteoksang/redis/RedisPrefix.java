@@ -7,6 +7,7 @@ public enum RedisPrefix {
     RESET_PASSOWRD("resetPassword:"),
     SERVER_INFO("serverInfo"),
     SERVER_NEWS("serverNews"),
+    SERVER_BREAK("serverBreak"),
     USERINFO("userInfo:"),
     WEBSOCKET("webSocket:"),
     INGAMEINFO("inGameInfo:");

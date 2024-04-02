@@ -15,5 +15,12 @@ public interface PublicService {
     void updateTurn();
     public void fluctuateProduct();
     void updateFluctuationInfoPer10Days();
+
+    void startHalfBreakTime();
+    //이거는.. 시즌종료 호출될 때 호출!!
+    void startSeasonBreakTime();
+
+    void endBreak();
+
     void sendPublicMessage(MessageType type, Object body);
 }

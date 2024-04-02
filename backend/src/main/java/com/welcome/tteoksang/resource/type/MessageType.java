@@ -22,7 +22,9 @@ public enum MessageType {
     QUARTER_REPORT(19),
     HALF_REPORT(20),
     FINAL_REPORT(21),
-    OFFLINE_REPORT(22);
+    OFFLINE_REPORT(22),
+
+    GET_BREAK_TIME(23);
 
     private int code;
     MessageType(int code){

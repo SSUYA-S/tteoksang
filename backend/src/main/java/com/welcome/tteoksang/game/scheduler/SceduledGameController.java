@@ -59,6 +59,7 @@ public class SceduledGameController {
         scheduleService.register("finishSeason", LocalDateTime.now(), offset,
                 () -> {
                     scheduleService.removeAllSchedule();
+                    publicService.startSeasonBreakTime();
                     log.debug("======시즌을 종료합니다======");
                 });
     }
