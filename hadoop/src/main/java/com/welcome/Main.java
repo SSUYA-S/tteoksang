@@ -128,15 +128,91 @@ public class Main {
     // reduce function
     public static class LogReducer extends Reducer<Text, Text, Text, Text> {
 
-        public void reduce(Text key, Text value, Context context) throws IOException, InterruptedException {
-            ObjectMapper mapper = new ObjectMapper();
-            try {
+        public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
 
-            } catch (Exception e) {
-
+            // 새로운 반기 객체 생성
+            ReduceStatistics reduceStatistics = new ReduceStatistics();
+            // 각각의 ReduceProductInfo를 관리하기 위한 맵 초기화
+            reduceStatistics.setReduceProductInfoMap(new HashMap<>());
+            // game 접속 시간대 계산을 위한
+            int[] gamePlayCount = new int[8];
+            for (int i=0; i<=56; i++) {
+                ReduceProductInfo reduceProductInfo = new ReduceProductInfo();
+                // productKey 별로 key값 할당
+                reduceStatistics.getReduceProductInfoMap().put((long) i, reduceProductInfo);
             }
+
+            // 입력값을 순회하며 반기 객체에 데이터 추가
+            for (Text value : values) {
+                ObjectMapper mapper = new ObjectMapper();
+                try {
+                    // Json 형태의 문자열을 Statistics 객체로 변환 -> 개인것의 저장을 그렇게 했으니까
+                    Statistics statistics = mapper.readValue(value.toString(), Statistics.class);
+
+                    int accPrivateOnlineTimeSlotCount = statistics.getAccPrivateOnlineTimeSlotCount();
+                    // ProductInfo 값이 필요하지 않은 통계값
+                    reduceStatistics.setAccPrivateRentFee(reduceStatistics.getAccPrivateRentFee() + statistics.getAccPrivateRentFee());
+                    reduceStatistics.setTotalAccPrivateProductIncome(reduceStatistics.getTotalAccPrivateProductIncome() + statistics.getAccPrivateRentFee());
+                    reduceStatistics.setAccPrivateUpgradeFee(reduceStatistics.getAccPrivateUpgradeFee() + statistics.getAccPrivateUpgradeFee());
+                    reduceStatistics.setAccPrivateEventBonus(reduceStatistics.getAccPrivateEventBonus() + statistics.getAccPrivateEventBonus());
+                    reduceStatistics.setAccPrivatePlayTime(reduceStatistics.getAccPrivatePlayTime() + statistics.getAccPrivatePlayTime());
+                    int[] onlineTimeSlotCount = reduceStatistics.getAccPrivateOnlineTimeSlotCount();
+                    onlineTimeSlotCount[accPrivateOnlineTimeSlotCount] += 1;
+                    reduceStatistics.setAccPrivateOnlineTimeSlotCount(onlineTimeSlotCount);
+                    reduceStatistics.setAccPrivateGamePlayCount(reduceStatistics.getAccPrivateGamePlayCount() + 1);
+                    // 개인 이벤트는 일단 생략
+
+                    // ProductInfo 변수
+                    for (Map.Entry<Long, ProductInfo> entry : statistics.getProductInfoMap().entrySet()) {
+                        Long productId = entry.getKey();
+                        ProductInfo productInfo = entry.getValue();
+
+                        // ReduceStatistics ReduceProductInfo 객체 가져오기
+                        ReduceProductInfo reduceProductInfo = reduceStatistics.getReduceProductInfoMap().getOrDefault(productId, new ReduceProductInfo());
+                        // 기존 값에 원하는 값 업데이트
+                        reduceProductInfo.setAccPrivateProductPurchaseQuantity(reduceProductInfo.getAccPrivateProductPurchaseQuantity() + productInfo.getAccPrivateProductPurchaseQuantity());
+                        reduceProductInfo.setMaxPrivateProductPurchaseQuantity(Math.max(reduceProductInfo.getMaxPrivateProductPurchaseQuantity(), productInfo.getMaxPrivateProductPurchaseQuantity()));
+                        reduceProductInfo.setAccPrivateProductOutcome(reduceProductInfo.getAccPrivateProductOutcome() + productInfo.getAccPrivateProductOutcome());
+                        reduceProductInfo.setAccPrivateProductSalesQuantity(reduceProductInfo.getAccPrivateProductSalesQuantity() + productInfo.getAccPrivateProductSalesQuantity());
+                        reduceProductInfo.setMaxPrivateProductSalesQuantity(Math.max(reduceProductInfo.getMaxPrivateProductSalesQuantity(), productInfo.getMaxPrivateProductSalesQuantity()));
+                        reduceProductInfo.setAccPrivateProductIncome(reduceProductInfo.getAccPrivateProductIncome() + productInfo.getAccPrivateProductIncome());
+                        reduceProductInfo.setAccPrivateProductProfit(reduceProductInfo.getAccPrivateProductProfit() + productInfo.getAccPrivateProductProfit());
+                        reduceProductInfo.setMaxPrivateProductProfit(Math.max(reduceProductInfo.getMaxPrivateProductProfit(), productInfo.getMaxPrivateProductProfit()));
+                        reduceProductInfo.setMaxPrivateProductHoldingQuantity(Math.max(reduceProductInfo.getMaxPrivateProductHoldingQuantity(), productInfo.getMaxPrivateProductHoldingQuantity()));
+                        reduceProductInfo.setMaxPrivateProductPurchaseCost(Math.max(reduceProductInfo.getMaxPrivateProductPurchaseCost(), productInfo.getMaxPrivateProductPurchaseCost()));
+                        reduceProductInfo.setMinPrivateProductPurchaseCost(Math.min(reduceProductInfo.getMinPrivateProductPurchaseCost(), productInfo.getMinPrivateProductPurchaseCost()));
+                        reduceProductInfo.setMaxPrivateProductSalesCost(Math.max(reduceProductInfo.getMaxPrivateProductSalesCost(), productInfo.getMaxPrivateProductSalesCost()));
+                        reduceProductInfo.setMinPrivateProductSalesCost(Math.min(reduceProductInfo.getMinPrivateProductSalesCost(), productInfo.getMinPrivateProductSalesCost()));
+                        reduceProductInfo.setAccPrivateBrokerFee(reduceProductInfo.getAccPrivateBrokerFee() + productInfo.getAccPrivateBrokerFee());
+
+                        // ReduceStatistics 중 productInfo 값이 필요한 것 확인
+                        reduceStatistics.setTotalAccPrivateBrokerFee(reduceStatistics.getTotalAccPrivateBrokerFee() + productInfo.getAccPrivateBrokerFee());
+                        reduceStatistics.setTotalAccPrivateProductIncome(reduceStatistics.getTotalAccPrivateProductIncome() + productInfo.getAccPrivateProductIncome());
+                        reduceStatistics.setTotalAccPrivateProductOutcome(reduceStatistics.getTotalAccPrivateProductOutcome() + productInfo.getAccPrivateProductOutcome());
+                        reduceStatistics.setTotalAccPrivateProductProfit(reduceStatistics.getTotalAccPrivateProductProfit() + productInfo.getAccPrivateProductProfit());
+                        // 밑에 큰 손 어떻게 할건지??
+                        reduceStatistics.setMaxPrivateProductOutcome(Math.max(reduceStatistics.getMaxPrivateProductOutcome(), productInfo.getAccPrivateProductOutcome()));
+
+                        // reduceProductInfo 값을 저장
+                        reduceStatistics.getReduceProductInfoMap().put((long) productId, reduceProductInfo);
+                    }
+
+                    // ReduceProductInfo 객체를 갱신하거나 생성해 ReduceStatistics에 추가
+//                    for (Map.Entry<Long, ReduceProductInfo> entry : mapper.getRed)
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // ReduceStatistics 객체를 Json 형태의 문자열로 반환하여 출력
+            ObjectMapper mapper = new ObjectMapper();
+            String outputValue = mapper.writeValueAsString(reduceStatistics);
+            context.write(key, new Text(outputValue));
+
         }
     }
+
+
 
     public static void main(String[] args) {
 
@@ -176,6 +252,7 @@ public class Main {
             System.out.println("밑에가 json형식으로 나와야 하는데 말이지요?");
             long rentFee = Long.parseLong(bodyMap.get("rentFee").toString());
             statistics.setAccPrivateRentFee(rentFee);
+            statistics.setAccPrivateGamePlayCount(500);
 //            Statistics statistics = new Statistics();
 //            String outputValue = mapper.writeValueAsString(statistics);
 //            System.out.println(outputValue);
@@ -184,8 +261,25 @@ public class Main {
             //productInfo.setAccPrivateBrokerFee(19204L);
             // Statistics 객체에 ProductInfo를 추가
             //statistics.getProductInfoMap().put(productId, productInfo);
+
             String outputValue = mapper.writeValueAsString(statistics);
             System.out.println(outputValue);
+
+
+            ReduceStatistics reduceStatistics = new ReduceStatistics();
+            Statistics secstatistics = mapper.readValue(outputValue.toString(), Statistics.class);
+            reduceStatistics.setAccPrivateUpgradeFee(secstatistics.getAccPrivateRentFee());
+            reduceStatistics.setAccPrivateGamePlayCount(secstatistics.getAccPrivateGamePlayCount());
+            reduceStatistics.setAccPrivatePlayTime(200);
+            for (int i=0; i<=56; i++) {
+                ReduceProductInfo reduceProductInfo = new ReduceProductInfo();
+                // key값 할당
+                reduceStatistics.getReduceProductInfoMap().put((long) i, reduceProductInfo);
+            }
+            String secoutputValue = mapper.writeValueAsString(reduceStatistics);
+            System.out.println(secoutputValue);
+
+
             switch (logType){
                 case "BUY":
                     System.out.println("쌰아 이게 맞나");
@@ -196,6 +290,8 @@ public class Main {
 
         }
 
+
+        // 진짜 Main 함수 시작
         Configuration conf = new Configuration();
         try {
 //            String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
