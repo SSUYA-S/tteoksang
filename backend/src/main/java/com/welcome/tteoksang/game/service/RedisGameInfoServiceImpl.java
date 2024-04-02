@@ -41,6 +41,7 @@ public class RedisGameInfoServiceImpl implements RedisGameInfoService {
                         .userId(userId)
                         .gameId(redisGameInfo.getGameId())
                         .gold(redisGameInfo.getGold())
+                        .lastQuarterGold(redisGameInfo.getLastQuarterGold())
                         .warehouseLevel(redisGameInfo.getWarehouseLevel())
                         .vehicleLevel(redisGameInfo.getVehicleLevel())
                         .brokerLevel(redisGameInfo.getBrokerLevel())
