@@ -38,6 +38,5 @@ export const options = {
 };
 
 export function HorizenBarChart(prop: any) {
-    console.log(prop);
     return <Bar options={options} data={prop.data} />;
 }

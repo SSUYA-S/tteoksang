@@ -37,6 +37,5 @@ export const options = {
 };
 
 export function BarChart(prop: any) {
-    console.log(prop);
     return <Bar options={options} data={prop.data} />;
 }
