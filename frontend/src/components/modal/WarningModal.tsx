@@ -11,7 +11,7 @@ export default function WarningModal(props: WarningProps) {
         <>
             <div className="absolute top-0 left-0 w-full h-full z-[60] bg-black bg-opacity-70"></div>
             <div className="absolute w-[60%] h-[40%] top-[30%] left-[20%] color-bg-main color-border-subbold border-[0.2vw] z-[70] flex flex-col justify-around">
-                <div className="h-[30%] text-[3vw] color-text-textcolor">
+                <div className="h-[30%] text-[3vw] color-text-textcolor whitespace-pre-wrap">
                     {props.message}
                 </div>
                 <div className="h-[30%] flex justify-around">
