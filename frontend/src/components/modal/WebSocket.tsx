@@ -65,6 +65,7 @@ export default function WebSocket(props: Prop) {
                 if (res.status === httpStatusCode.OK) {
                     const id = res.data.webSocketId;
                     const client = handshake(id);
+                    console.log('websocketId : ' + id);
                     client.onConnect = () => {
                         //public subscribe
                         client.subscribe('/topic/public', (message) => {
