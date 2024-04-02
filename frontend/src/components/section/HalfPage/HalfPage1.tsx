@@ -228,7 +228,7 @@ export default function HalfPage1(props: Prop) {
                                 {Array.from(eventHashMap).map((value) => {
                                     return (
                                         <img
-                                            className="h-[80%] m-[1vw] rounded aspect-square object-cover flex-shrink-0"
+                                            className="h-[80%] m-[1vw] rounded-[0.6vw] aspect-square object-cover flex-shrink-0"
                                             src={loadEventImg(value[0])}
                                             onMouseOver={() => {
                                                 hoverEventImg(value[0]);

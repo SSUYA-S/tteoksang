@@ -6,7 +6,7 @@ import {
     HalfReceipt,
     Achievement,
 } from '../../type/types';
-import offlineData from '../../dummy-data/report/offline.json';
+// import offlineData from '../../dummy-data/report/offline.json';
 import { useEffect, useState } from 'react';
 import RentFeeModal from './RentFeeModal';
 import { Client } from '@stomp/stompjs';
@@ -23,7 +23,7 @@ import { startNewGame } from '../../api/user';
 import { httpStatusCode } from '../../util/http-status';
 
 interface Prop {
-    offReport: OfflineReportType | null;
+    offReport: OfflineReportType;
     setIsOffReportAvail: React.Dispatch<React.SetStateAction<boolean>>;
     nowTurn: number;
     productList: Product[];
@@ -37,11 +37,11 @@ interface Prop {
 
 export default function OffReportModal(props: Prop) {
     //data load 부분(데이터 도착시 주석 처리 바람)
-    const Off = offlineData;
-    // const Off = props.offReport;
+    // const Off = offlineData;
+    const Off = props.offReport;
 
-    const nowTurn = 350;
-    // const nowTurn = props.nowTurn;
+    // const nowTurn = 350;
+    const nowTurn = props.nowTurn;
 
     //0: 임대료, 1: 보고서
     const [mode, setMode] = useState<number>(0);
@@ -215,7 +215,7 @@ export default function OffReportModal(props: Prop) {
                                 <div className="w-[10%] h-full mx-[1.2vw] my-[1vh]"></div>
                             ) : (
                                 <div
-                                    className="w-[10%] h-full mx-[1.2vw] my-[1vh] border-[0.3vw] color-border-subbold cursor-pointer flex justify-center items-center"
+                                    className="w-[10%] h-full mx-[1.2vw] my-[1vh] border-[0.3vw] color-border-subbold cursor-pointer flex justify-center items-center rounded-[0.6vw] hover:color-bg-subbold hover:text-white"
                                     onClick={() => {
                                         if (page > 1) {
                                             setPage((prev) => prev - 1);
@@ -230,7 +230,7 @@ export default function OffReportModal(props: Prop) {
                                 <div className="w-[10%] h-full mx-[1.2vw] my-[1vh]"></div>
                             ) : (
                                 <div
-                                    className="w-[10%] h-full mx-[1.2vw] my-[1vh] border-[0.3vw] color-border-subbold cursor-pointer flex justify-center items-center"
+                                    className="w-[10%] h-full mx-[1.2vw] my-[1vh] border-[0.3vw] color-border-subbold cursor-pointer flex justify-center items-center rounded-[0.6vw] hover:color-bg-subbold hover:text-white"
                                     onClick={() => {
                                         if (page < 4) {
                                             setPage((prev) => prev + 1);

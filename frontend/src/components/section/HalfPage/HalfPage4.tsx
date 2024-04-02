@@ -136,7 +136,7 @@ export default function HalfPage4(props: Prop) {
                     <div className="w-full h-[85%] flex flex-col overflow-y-auto">
                         {props.achievementList.map((achievement) => {
                             return (
-                                <div className="w-[90%] h-[10vh] border-[0.3vw] color-border-subbold flex justify-start my-[1vh] p-[1vh] items-center">
+                                <div className="w-[90%] h-[10vh] border-[0.3vw] color-border-subbold flex justify-start my-[1vh] p-[1vh] items-center rounded-[0.6vw]">
                                     <img
                                         className="w-[4vw] h-[4vw] m-[0.8vw]"
                                         src={`/src/assets/images/profile/achivement (${achievement.achievementId}).png`}
