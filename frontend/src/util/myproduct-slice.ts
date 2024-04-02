@@ -42,6 +42,33 @@ export const myProductSlice = createSlice({
         purchasedQuantityState: (state: myProductState, action) => {
             state.purchasedQuantity = action.payload;
         },
+        overdueMethod: (state: myProductState, action) => {
+            const productList = action.payload;
+            //해시맵
+            const newHashMap = new Map();
+            for (let i = 0; i < productList.length; i++) {
+                newHashMap.set(
+                    productList[i].productId,
+                    productList[i].productQuantity
+                );
+            }
+
+            //내 상태에 반영
+            const newList = [];
+            for (let i = 0; i < state.myProductList.length; i++) {
+                const id = state.myProductList[i].productId;
+                const newProduct = state.myProductList[i];
+                //있으면 감소
+                if (newHashMap.get(id)) {
+                    newProduct.productQuantity -= newHashMap.get(id);
+                }
+                //남으면 추가
+                if (newProduct.productQuantity > 0) {
+                    newList.push(newProduct);
+                }
+            }
+            state.myProductList = newList;
+        },
     },
 });
 
@@ -52,5 +79,6 @@ export const {
     brokerLevelState,
     goldState,
     purchasedQuantityState,
+    overdueMethod,
 } = myProductSlice.actions;
 export default myProductSlice.reducer;
