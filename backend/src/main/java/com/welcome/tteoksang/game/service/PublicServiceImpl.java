@@ -138,7 +138,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         ).toList();
         initProductInfo(hasServerData);
         eventIndexList = new ArrayList<>(NEWS_NUM); //productInfoMap의 인덱스에 해당: 선정한 {NEWS_NUM}개 후보 이벤트
-
+        nextEventList=new ArrayList<>();
     }
 
 
@@ -321,7 +321,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         ).map(eventIndex ->
                 occurableEventList.get(eventIndex)
         ).toList();
-        if (nextEventList == null || nextEventList.isEmpty()) return;
+        if (nextEventList.isEmpty()) return;
         nextEventList.stream().forEach(
                 event -> {
                     fluctationInfoMap.get(event.getProductId())
@@ -338,7 +338,6 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         serverInfo.setCurrentTurn(serverInfo.getCurrentTurn() + 1);
         serverInfo.setTurnStartTime(LocalDateTime.now());
         if (serverInfo.getCurrentTurn() % eventTurnPeriod == 0) {
-            //TODO- nextEvent가 null인 경우 처리
             serverInfo.setSpecialEventIdList(nextEventList.stream().map(event -> {
                 //TODO - 로그메세지 말고 redis에 저장하는 식으로 변경하기
                 SpecialEventLogInfo logInfo = SpecialEventLogInfo.builder()
@@ -359,7 +358,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
                 return event.getEventId();
             }).toList());
             currentEventList = nextEventList;
-            nextEventList = null;
+            nextEventList = new ArrayList<>();
 //            log.debug("==================event 변경==================");
         }
         privateScheduleService.initGameInfoForAllUsersPerTurn();
