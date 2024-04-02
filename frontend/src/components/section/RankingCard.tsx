@@ -23,7 +23,7 @@ export default function RankingCard({
             onMouseOver={openDesc}
             onMouseOut={closeDesc}
         >
-            <div className="relative w-[25%] h-full flex items-center justify-center">
+            <div className="relative w-[18%] h-full flex items-center justify-center">
                 <img
                     className="absolute w-full z-10 rounded-[0.6vw]"
                     src={`/src/assets/images/profile/frame (${theFirstUserInfo.profileFrameId}).png`}
@@ -44,6 +44,7 @@ export default function RankingCard({
                             {theFirstUserInfo.userNickname}
                         </p>
                     </div>
+                    <div></div>
                     <p className="text-[1.2vw]">점수 : {theFirstRecord} </p>
                 </div>
                 <div>
