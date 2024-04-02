@@ -558,4 +558,18 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         return (NewsInfo) redisService.getValues(RedisPrefix.SERVER_NEWS.prefix());
     }
 
+    @Override
+    public BreakTimeInfo searchBreakTime() {
+        if (!redisService.hasKey(RedisPrefix.SERVER_BREAK.prefix())) {
+            return BreakTimeInfo.builder()
+                    .isBreakTime(false)
+                    .breakName("반기")
+                    .breakTime(LocalDateTime.now())
+                    .ingameTime(LocalDateTime.now())
+                    .build();
+        }
+        BreakTimeInfo breakTimeInfo=(BreakTimeInfo) redisService.getValues(RedisPrefix.SERVER_BREAK.prefix());
+        breakTimeInfo.setIngameTime(LocalDateTime.now());
+        return breakTimeInfo;
+    }
 }

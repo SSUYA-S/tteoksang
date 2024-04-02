@@ -203,7 +203,13 @@ public class PrivateGameController {
             case GET_NEWSPAPER:{
                 isSuccess=true;
                 responseBody=privateGetPublicService.searchNewspaper();
+                break;
             }
+
+            case GET_BREAK_TIME:
+                isSuccess=true;
+                responseBody=privateGetPublicService.searchBreakTime();
+                break;
             // 정의되지 않은 요청
             default: {
                 break;
