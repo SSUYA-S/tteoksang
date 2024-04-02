@@ -24,7 +24,7 @@ public class FinalResult {
     private Integer vehicleLevel;
     private List<PrivateUpgradeReport> privateUpgradeReportList;
     private List<PrivateEventReport> privateEventReportList;
-    private List<SpecialEventReport> specialEventReportList;
+    private List<SpecialEvent> specialEventReportList;
     private List<Integer> achievementList;
     private Integer privateAccPrivatePlayTime;
     private List<PrivateTimeSlotReport> privateTimeSlotReportList;

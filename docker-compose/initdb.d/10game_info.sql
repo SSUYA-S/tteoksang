@@ -2,6 +2,7 @@ create table if not exists game_info(
     user_id char(36), #PK
     game_id int not null, #PK
     gold    bigint not null,
+    last_quarter_gold    bigint not null,
     warehouse_level tinyint not null,
     vehicle_level tinyint not null,
     broker_level tinyint not null,
