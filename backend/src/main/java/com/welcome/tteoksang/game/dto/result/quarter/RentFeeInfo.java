@@ -1,7 +1,14 @@
-package com.welcome.tteoksang.game.dto.result;
+package com.welcome.tteoksang.game.dto.result.quarter;
+
+import lombok.*;
 
 import java.util.List;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class RentFeeInfo {
     private String billType;
     private Long rentFee;
