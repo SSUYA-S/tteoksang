@@ -44,6 +44,7 @@ import { loadProduct } from '../util/loadProduct';
 import { useNavigate } from 'react-router-dom';
 import logoutServiceWorker from '../util/logoutServiceWorker';
 import FinReportModal from './modal/FinReportModal';
+import BreakTimePage from './page-component/BreakTimePage';
 
 type GameType = {
     initialData: InitialData;
@@ -58,7 +59,9 @@ export default function GameComponent(props: GameType) {
     const [newsFlag, setNewsFlag] = useState<boolean>(false);
     const [inventoryFlag, setInventoryFlag] = useState<boolean>(false);
     //턴 시간
-    const [duration, setDuration] = useState<number>(20);
+    const [duration, setDuration] = useState<number>(
+        import.meta.env.TURN_PERIOD_SEC
+    );
     const [ingameTurn, setIngameTurn] = useState<number>(1);
     const [ingameTime, setIngameTime] = useState<string>('00:03:00');
     const [turnStartTime, setTurnStartTime] = useState<string>('00:03:00');
@@ -124,6 +127,23 @@ export default function GameComponent(props: GameType) {
     //게임 나가기 관련
     const [isGetoutProceeding, setIsGetoutProceeding] =
         useState<boolean>(false);
+
+    //지금은 브레이크 타임인가?
+    const [isBreakTime, setIsBreakTime] = useState<boolean>(false);
+
+    //timer setting
+    const [breakTime, setBreakTime] = useState<string>('');
+    const [timerStartTime, setTimerStartTime] = useState<string>('');
+
+    const startTimer = (ingameTime: string, breakTime: string) => {
+        setBreakTime(breakTime);
+        setTimerStartTime(ingameTime);
+        setIsBreakTime(true);
+    };
+
+    const endTimer = () => {
+        setIsBreakTime(false);
+    };
 
     let navigate = useNavigate();
 
@@ -205,6 +225,10 @@ export default function GameComponent(props: GameType) {
      * 로그아웃 모달 비활성화 */
     const handleCloseErrorModal = () => {
         setIsLogoutProceeding(false);
+    };
+
+    const handleGetOutModal = () => {
+        setIsGetoutProceeding(false);
     };
 
     /** handleWithdrawal()
@@ -607,183 +631,274 @@ export default function GameComponent(props: GameType) {
 
     return (
         <section className="mainBackground relative w-full h-full flex flex-col justify-center items-center">
-            <div
-                className="absolute w-[40%] h-[10%] left-[30%] top-[40%] bg-black -z-10 rounded text-white opacity-0 flex justify-center items-center"
-                ref={AlertRef}
-            >
-                <p className="text-[1.5vw]">{alertMessage}</p>
-            </div>
-            {isGetoutProceeding ? (
-                <WarningModal
-                    handleOK={handleGetOut}
-                    handleCancel={handleCloseErrorModal}
-                    message="메인화면으로 돌아가시겠습니까?"
-                    cancelMessage="취소"
-                    okMessage="나가기"
-                />
+            {isBreakTime ? (
+                <>
+                    <BreakTimePage
+                        webSocketClient={webSocketClient}
+                        alertError={alertError}
+                        setStartFlag={props.setStartFlag}
+                        webSocketId={webSocketId}
+                        proceedLogout={proceedLogout}
+                        proceedWithdrawal={proceedWithdrawal}
+                        breakTime={breakTime}
+                        timerStartTime={timerStartTime}
+                    />
+                    {isLogoutProceeding ? (
+                        <WarningModal
+                            handleOK={handleLogOut}
+                            handleCancel={handleCloseErrorModal}
+                            message="로그아웃 하시겠습니까?"
+                            cancelMessage="취소"
+                            okMessage="로그아웃"
+                        />
+                    ) : (
+                        <></>
+                    )}
+                    {isWithdrawalProceeding ? (
+                        <WarningModal
+                            handleOK={handleWithdrawal}
+                            handleCancel={cancelWithdrawal}
+                            message="정말로 회원탈퇴 하시겠습니까?"
+                            cancelMessage="취소"
+                            okMessage="회원탈퇴"
+                        />
+                    ) : (
+                        <></>
+                    )}
+                </>
             ) : (
-                <></>
-            )}
-            {isLogoutProceeding ? (
-                <WarningModal
-                    handleOK={handleLogOut}
-                    handleCancel={handleCloseErrorModal}
-                    message="로그아웃 하시겠습니까?"
-                    cancelMessage="취소"
-                    okMessage="로그아웃"
-                />
-            ) : (
-                <></>
-            )}
-            {isWithdrawalProceeding ? (
-                <WarningModal
-                    handleOK={handleWithdrawal}
-                    handleCancel={cancelWithdrawal}
-                    message="정말로 회원탈퇴 하시겠습니까?"
-                    cancelMessage="취소"
-                    okMessage="회원탈퇴"
-                />
-            ) : (
-                <></>
-            )}
-            <img
-                src={`/src/assets/images/background/bg-${profileTheme}-morning.webp`}
-                className="bg-image -z-20"
-                style={{
-                    opacity: theme === 'morning' ? '1' : '0',
-                }}
-            />
-            <img
-                src={`/src/assets/images/background/bg-${profileTheme}-evening.webp`}
-                className="bg-image -z-20"
-                style={{
-                    opacity: theme === 'evening' ? '1' : '0',
-                }}
-            />
-            <img
-                src={`/src/assets/images/background/bg-${profileTheme}-night.webp`}
-                className="bg-image -z-20"
-                style={{
-                    opacity: theme === 'night' ? '1' : '0',
-                }}
-            />
-            <img
-                src={`/src/assets/images/background/bg-${profileTheme}-morning.webp`}
-                className="bg-image -z-30"
-            />
-            <img
-                src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-morning.webp`}
-                className="bg-image -z-10"
-                style={{
-                    opacity:
-                        theme === 'morning' && themeModeSetting !== 0
-                            ? '1'
-                            : '0',
-                }}
-            />
-            <img
-                src={`/src/assets/images/backgroundts/bg-${profileTheme}-morning-transparent.webp`}
-                className="bg-image"
-                style={{
-                    opacity:
-                        theme === 'morning' && themeModeSetting !== 0
-                            ? '1'
-                            : '0',
-                }}
-            />
-            <img
-                src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-evening.webp`}
-                className="bg-image -z-10"
-                style={{
-                    opacity:
-                        theme === 'evening' && themeModeSetting !== 0
-                            ? '1'
-                            : '0',
-                }}
-            />
-            <img
-                src={`/src/assets/images/backgroundts/bg-${profileTheme}-evening-transparent.webp`}
-                className="bg-image"
-                style={{
-                    opacity:
-                        theme === 'evening' && themeModeSetting !== 0
-                            ? '1'
-                            : '0',
-                }}
-            />
-            <img
-                src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-night.webp`}
-                className="bg-image -z-10"
-                style={{
-                    opacity:
-                        theme === 'night' && themeModeSetting !== 0 ? '1' : '0',
-                }}
-            />
-            <img
-                src={`/src/assets/images/backgroundts/bg-${profileTheme}-night-transparent.webp`}
-                className="bg-image"
-                style={{
-                    opacity:
-                        theme === 'night' && themeModeSetting !== 0 ? '1' : '0',
-                }}
-            />
-            <img
-                src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-morning.webp`}
-                className="bg-image -z-20"
-                style={{
-                    opacity: themeModeSetting !== 0 ? '1' : '0',
-                }}
-            />
-            <img
-                src={`/src/assets/images/backgroundts/bg-${profileTheme}-morning-transparent.webp`}
-                className="bg-image -z-10"
-                style={{
-                    opacity: themeModeSetting !== 0 ? '1' : '0',
-                }}
-            />
-
-            <div className="absolute top-0 w-[60%] h-[100%]">
-                {/* <LottieRain /> */}
-            </div>
-
-            {/* 좌측 상단 ui */}
-            <div className="absolute w-[25%] h-[16%] top-[4%] left-[2%]">
-                <img
-                    src="/src/assets/images/layout/ui-board.webp"
-                    className="absolute w-full h-full z-20"
-                    alt=""
-                />
-                <div className="relative w-full h-full flex items-center justify-center rounded-[0.4vw] cursor-pointer z-20">
+                <>
                     <div
-                        className="relative w-full h-full flex "
-                        onClick={() => openMypageElement()}
+                        className="absolute w-[40%] h-[10%] left-[30%] top-[40%] bg-black -z-10 rounded text-white opacity-0 flex justify-center items-center"
+                        ref={AlertRef}
                     >
-                        <div
-                            className="relative  m-0"
-                            style={{ aspectRatio: 1 / 1 }}
-                        >
-                            <img
-                                className="absolute h-full cursor-pointer p-[0.6vw] object-cover"
-                                src={`/src/assets/images/profile/icon (${profileIcon}).png`}
-                            />
-                            <img
-                                className="absolute h-full cursor-pointer p-[0.6vw] object-cover"
-                                src={`/src/assets/images/profile/frame (${profileFrame}).png`}
-                            />
-                        </div>
+                        <p className="text-[1.5vw]">{alertMessage}</p>
+                    </div>
+                    {isGetoutProceeding ? (
+                        <WarningModal
+                            handleOK={handleGetOut}
+                            handleCancel={handleGetOutModal}
+                            message="메인화면으로 돌아가시겠습니까?"
+                            cancelMessage="취소"
+                            okMessage="나가기"
+                        />
+                    ) : (
+                        <></>
+                    )}
+                    {isLogoutProceeding ? (
+                        <WarningModal
+                            handleOK={handleLogOut}
+                            handleCancel={handleCloseErrorModal}
+                            message="로그아웃 하시겠습니까?"
+                            cancelMessage="취소"
+                            okMessage="로그아웃"
+                        />
+                    ) : (
+                        <></>
+                    )}
+                    {isWithdrawalProceeding ? (
+                        <WarningModal
+                            handleOK={handleWithdrawal}
+                            handleCancel={cancelWithdrawal}
+                            message="정말로 회원탈퇴 하시겠습니까?"
+                            cancelMessage="취소"
+                            okMessage="회원탈퇴"
+                        />
+                    ) : (
+                        <></>
+                    )}
+                    <img
+                        src={`/src/assets/images/background/bg-${profileTheme}-morning.webp`}
+                        className="bg-image -z-20"
+                        style={{
+                            opacity: theme === 'morning' ? '1' : '0',
+                        }}
+                    />
+                    <img
+                        src={`/src/assets/images/background/bg-${profileTheme}-evening.webp`}
+                        className="bg-image -z-20"
+                        style={{
+                            opacity: theme === 'evening' ? '1' : '0',
+                        }}
+                    />
+                    <img
+                        src={`/src/assets/images/background/bg-${profileTheme}-night.webp`}
+                        className="bg-image -z-20"
+                        style={{
+                            opacity: theme === 'night' ? '1' : '0',
+                        }}
+                    />
+                    <img
+                        src={`/src/assets/images/background/bg-${profileTheme}-morning.webp`}
+                        className="bg-image -z-30"
+                    />
+                    <img
+                        src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-morning.webp`}
+                        className="bg-image -z-10"
+                        style={{
+                            opacity:
+                                theme === 'morning' && themeModeSetting !== 0
+                                    ? '1'
+                                    : '0',
+                        }}
+                    />
+                    <img
+                        src={`/src/assets/images/backgroundts/bg-${profileTheme}-morning-transparent.webp`}
+                        className="bg-image"
+                        style={{
+                            opacity:
+                                theme === 'morning' && themeModeSetting !== 0
+                                    ? '1'
+                                    : '0',
+                        }}
+                    />
+                    <img
+                        src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-evening.webp`}
+                        className="bg-image -z-10"
+                        style={{
+                            opacity:
+                                theme === 'evening' && themeModeSetting !== 0
+                                    ? '1'
+                                    : '0',
+                        }}
+                    />
+                    <img
+                        src={`/src/assets/images/backgroundts/bg-${profileTheme}-evening-transparent.webp`}
+                        className="bg-image"
+                        style={{
+                            opacity:
+                                theme === 'evening' && themeModeSetting !== 0
+                                    ? '1'
+                                    : '0',
+                        }}
+                    />
+                    <img
+                        src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-night.webp`}
+                        className="bg-image -z-10"
+                        style={{
+                            opacity:
+                                theme === 'night' && themeModeSetting !== 0
+                                    ? '1'
+                                    : '0',
+                        }}
+                    />
+                    <img
+                        src={`/src/assets/images/backgroundts/bg-${profileTheme}-night-transparent.webp`}
+                        className="bg-image"
+                        style={{
+                            opacity:
+                                theme === 'night' && themeModeSetting !== 0
+                                    ? '1'
+                                    : '0',
+                        }}
+                    />
+                    <img
+                        src={`/src/assets/images/backgroundts/bg-ts-${themeModeSetting}-morning.webp`}
+                        className="bg-image -z-20"
+                        style={{
+                            opacity: themeModeSetting !== 0 ? '1' : '0',
+                        }}
+                    />
+                    <img
+                        src={`/src/assets/images/backgroundts/bg-${profileTheme}-morning-transparent.webp`}
+                        className="bg-image -z-10"
+                        style={{
+                            opacity: themeModeSetting !== 0 ? '1' : '0',
+                        }}
+                    />
 
-                        <div className="relative w-[65%] flex flex-col items-center justify-center ps-[5%]">
+                    <div className="absolute top-0 w-[60%] h-[100%]">
+                        {/* <LottieRain /> */}
+                    </div>
+
+                    {/* 좌측 상단 ui */}
+                    <div className="absolute w-[25%] h-[16%] top-[4%] left-[2%]">
+                        <img
+                            src="/src/assets/images/layout/ui-board.webp"
+                            className="absolute w-full h-full z-20"
+                            alt=""
+                        />
+                        <div className="relative w-full h-full flex items-center justify-center rounded-[0.4vw] cursor-pointer z-20">
+                            <div
+                                className="relative w-full h-full flex "
+                                onClick={() => openMypageElement()}
+                            >
+                                <div
+                                    className="relative  m-0"
+                                    style={{ aspectRatio: 1 / 1 }}
+                                >
+                                    <img
+                                        className="absolute h-full cursor-pointer p-[0.6vw] object-cover"
+                                        src={`/src/assets/images/profile/icon (${profileIcon}).png`}
+                                    />
+                                    <img
+                                        className="absolute h-full cursor-pointer p-[0.6vw] object-cover"
+                                        src={`/src/assets/images/profile/frame (${profileFrame}).png`}
+                                    />
+                                </div>
+
+                        <div className="relative w-[65%] flex flex-col items-center justify-center ps-[1%]">
                             {titleInfo.length > 0 && titleId === 1 ? (
                                 <></>
                             ) : (
-                                <p className="w-full text-start mx-2 text-[1.5vw] text-green-500">
+                                <p className="w-full text-start text-[1.2vw] color-text-sublight whitespace-nowrap overflow-hidden text-ellipsis">
                                     {titleInfo[titleId - 1].titleName}
                                 </p>
                             )}
-                            <p className="w-full text-start mx-2 my-[5%] text-[2vw] text-green-500">
+                            <p className="w-full text-start my-[2%] text-[1.1vw] color-text-textcolor whitespace-nowrap overflow-hidden text-ellipsis">
                                 {userNickname}
                             </p>
                         </div>
+                    </div>
+                </div>
+                <div className="flex">
+                    <div
+                        className="relative m-[0.4vw] w-[18%] h-full bg-red-50 aspect-square cursor-pointer rounded-full border-[0.2vw]"
+                        onClick={() => {
+                            changeMode(0);
+                        }}
+                    >
+                        <img
+                            className="rounded-full"
+                            src="/src/assets/images/etc/ui-ts-door-1.webp"
+                            alt=""
+                        />
+                    </div>
+                    <div
+                        className="relative m-[0.4vw] w-[18%] h-full bg-red-50 aspect-square cursor-pointer rounded-full border-[0.2vw]"
+                        onClick={() => {
+                            changeMode(1);
+                        }}
+                    >
+                        <img
+                            className="rounded-full"
+                            src="/src/assets/images/etc/ui-ts-door-2.webp"
+                            alt=""
+                        />
+                    </div>
+                    <div
+                        className="relative m-[0.4vw] w-[18%] h-full bg-red-50 aspect-square cursor-pointer rounded-full border-[0.2vw]"
+                        onClick={() => {
+                            changeMode(2);
+                        }}
+                    >
+                        <img
+                            className="rounded-full"
+                            src="/src/assets/images/etc/ui-ts-door-3.webp"
+                            alt=""
+                        />
+                    </div>
+                    <div
+                        className="relative m-[0.4vw] w-[18%] h-full bg-red-50 aspect-square cursor-pointer rounded-full border-[0.2vw]"
+                        onClick={() => {
+                            changeMode(3);
+                        }}
+                    >
+                        <img
+                            className="rounded-full"
+                            src="/src/assets/images/etc/ui-ts-door-4.webp"
+                            alt=""
+                        />
                     </div>
                 </div>
             </div>
@@ -806,42 +921,8 @@ export default function GameComponent(props: GameType) {
                                 src="/src/assets/images/icon/ui-icon-coin.png"
                                 alt=""
                             />
-                            <p className="text-[1.6vw]">
+                            <p className="text-[1.4vw]">
                                 {nowMoney.toLocaleString()}
-                            </p>
-                        </div>
-                        <div className="flex">
-                            <p
-                                className="px-[0.4vw] cursor-pointer"
-                                onClick={() => {
-                                    changeMode(0);
-                                }}
-                            >
-                                a
-                            </p>
-                            <p
-                                className="px-[0.4vw] cursor-pointer"
-                                onClick={() => {
-                                    changeMode(1);
-                                }}
-                            >
-                                b
-                            </p>
-                            <p
-                                className="px-[0.4vw] cursor-pointer"
-                                onClick={() => {
-                                    changeMode(2);
-                                }}
-                            >
-                                c
-                            </p>
-                            <p
-                                className="px-[0.4vw] cursor-pointer"
-                                onClick={() => {
-                                    changeMode(3);
-                                }}
-                            >
-                                d
                             </p>
                         </div>
                     </div>
@@ -889,7 +970,7 @@ export default function GameComponent(props: GameType) {
                                     }}
                                 >
                                     <img
-                                        className=" w-[5vw] bg-white rounded-full border-[0.4vw] color-border-main"
+                                        className=" w-[4.8vw] bg-white rounded-full border-[0.2vw] border-white"
                                         style={{ aspectRatio: 1 / 1 }}
                                         src={loadEventImg(item.eventName)}
                                         alt=""
@@ -901,189 +982,247 @@ export default function GameComponent(props: GameType) {
                 </div>
             </div>
 
-            {/* 좌측 하단 ui */}
-            <div className="absolute w-[40%] h-[20%] bottom-[4%] left-[1%]">
-                <div className="relative w-full h-full flex items-center justify-start">
-                    <div
-                        className="w-[19%] h-[100%] cursor-pointer"
-                        onClick={() => {
-                            openTradeElement();
-                        }}
-                    >
-                        <img
-                            className="w-full"
-                            src="/src/assets/images/icon/ui-icon-trade.webp"
-                            alt=""
-                            style={{ aspectRatio: 1 / 1 }}
-                        />
-                        <img
-                            src="/src/assets/images/icon/ui-icon-trade-text.webp"
-                            alt=""
-                        />
+                    {/* 좌측 하단 ui */}
+                    <div className="absolute w-[40%] h-[20%] bottom-[4%] left-[1%]">
+                        <div className="relative w-full h-full flex items-center justify-start">
+                            <div
+                                className="w-[19%] h-[100%] cursor-pointer"
+                                onClick={() => {
+                                    openTradeElement();
+                                }}
+                            >
+                                <img
+                                    className="w-full"
+                                    src="/src/assets/images/icon/ui-icon-trade.webp"
+                                    alt=""
+                                    style={{ aspectRatio: 1 / 1 }}
+                                />
+                                <img
+                                    src="/src/assets/images/icon/ui-icon-trade-text.webp"
+                                    alt=""
+                                />
+                            </div>
+
+                            <div
+                                className="w-[19%] h-[100%] cursor-pointer"
+                                onClick={() => {
+                                    openFacilityElement();
+                                }}
+                            >
+                                <img
+                                    className="w-full"
+                                    src="/src/assets/images/icon/ui-icon-facility.webp"
+                                    alt=""
+                                    style={{ aspectRatio: 1 / 1 }}
+                                />
+                                <img
+                                    src="/src/assets/images/icon/ui-icon-facility-text.webp"
+                                    alt=""
+                                />
+                            </div>
+                            <div
+                                className="w-[19%] h-[100%] cursor-pointer"
+                                onClick={() => {
+                                    openInventoryElement();
+                                }}
+                            >
+                                <img
+                                    className="w-full"
+                                    src="/src/assets/images/icon/ui-icon-inventory.webp"
+                                    alt=""
+                                    style={{ aspectRatio: 1 / 1 }}
+                                />
+                                <img
+                                    src="/src/assets/images/icon/ui-icon-inventory-text.webp"
+                                    alt=""
+                                />
+                            </div>
+                            <div
+                                className="w-[19%] h-[100%] cursor-pointer"
+                                onClick={() => {
+                                    openNewsElement();
+                                }}
+                            >
+                                <img
+                                    className="w-full"
+                                    src="/src/assets/images/icon/ui-icon-newspaper.webp"
+                                    alt=""
+                                    style={{ aspectRatio: 1 / 1 }}
+                                />
+                                <img
+                                    src="/src/assets/images/icon/ui-icon-newspaper-text.webp"
+                                    alt=""
+                                />
+                            </div>
+                        </div>
                     </div>
 
-                    <div
-                        className="w-[19%] h-[100%] cursor-pointer"
-                        onClick={() => {
-                            openFacilityElement();
-                        }}
-                    >
-                        <img
-                            className="w-full"
-                            src="/src/assets/images/icon/ui-icon-facility.webp"
-                            alt=""
-                            style={{ aspectRatio: 1 / 1 }}
-                        />
-                        <img
-                            src="/src/assets/images/icon/ui-icon-facility-text.webp"
-                            alt=""
-                        />
+                    {/* 우측 하단 ui */}
+                    <div className="absolute w-[40%] h-[20%]  bottom-[4%] right-[1%]">
+                        <div className="relative w-full h-full flex items-center justify-end">
+                            <div
+                                className="w-[19%] h-[100%] cursor-pointer"
+                                onClick={() => {
+                                    openSettingElement();
+                                }}
+                            >
+                                <img
+                                    className="w-full"
+                                    src="/src/assets/images/icon/ui-icon-setting.webp"
+                                    alt=""
+                                    style={{ aspectRatio: 1 / 1 }}
+                                />
+                                <img
+                                    src="/src/assets/images/icon/ui-icon-setting-text.webp"
+                                    alt=""
+                                />
+                            </div>
+                            <div
+                                className="w-[19%] h-[100%] cursor-pointer"
+                                onClick={() => {
+                                    setIsGetoutProceeding(true);
+                                }}
+                            >
+                                <img
+                                    className="w-full"
+                                    src="/src/assets/images/icon/ui-icon-quit.webp"
+                                    alt=""
+                                    style={{ aspectRatio: 1 / 1 }}
+                                />
+                                <img
+                                    src="/src/assets/images/icon/ui-icon-quit-text.webp"
+                                    alt=""
+                                />
+                            </div>
+                        </div>
                     </div>
-                    <div
-                        className="w-[19%] h-[100%] cursor-pointer"
-                        onClick={() => {
-                            openInventoryElement();
-                        }}
-                    >
-                        <img
-                            className="w-full"
-                            src="/src/assets/images/icon/ui-icon-inventory.webp"
-                            alt=""
-                            style={{ aspectRatio: 1 / 1 }}
-                        />
-                        <img
-                            src="/src/assets/images/icon/ui-icon-inventory-text.webp"
-                            alt=""
-                        />
-                    </div>
-                    <div
-                        className="w-[19%] h-[100%] cursor-pointer"
-                        onClick={() => {
-                            openNewsElement();
-                        }}
-                    >
-                        <img
-                            className="w-full"
-                            src="/src/assets/images/icon/ui-icon-newspaper.webp"
-                            alt=""
-                            style={{ aspectRatio: 1 / 1 }}
-                        />
-                        <img
-                            src="/src/assets/images/icon/ui-icon-newspaper-text.webp"
-                            alt=""
-                        />
-                    </div>
-                </div>
-            </div>
 
-            {/* 우측 하단 ui */}
-            <div className="absolute w-[40%] h-[20%]  bottom-[4%] right-[1%]">
-                <div className="relative w-full h-full flex items-center justify-end">
-                    <div
-                        className="w-[19%] h-[100%] cursor-pointer"
-                        onClick={() => {
-                            openSettingElement();
-                        }}
-                    >
-                        <img
-                            className="w-full"
-                            src="/src/assets/images/icon/ui-icon-setting.webp"
-                            alt=""
-                            style={{ aspectRatio: 1 / 1 }}
+                    {tradeFlag ? (
+                        <TradeModal
+                            setTradeFlag={setTradeFlag}
+                            updateNowMoney={updateNowMoney}
+                            nowMoney={nowMoney}
+                            infraInfo={initialData.infraList}
+                            productResource={initialData.productList}
+                            client={webSocketClient}
+                            turn={ingameTurn}
+                            webSocketId={webSocketId}
                         />
-                        <img
-                            src="/src/assets/images/icon/ui-icon-setting-text.webp"
-                            alt=""
+                    ) : (
+                        <></>
+                    )}
+                    {facilityFlag ? (
+                        <InfraModal
+                            setFacilityFlag={setFacilityFlag}
+                            updateNowMoney={updateNowMoney}
+                            infraInfo={initialData.infraList}
+                            client={webSocketClient}
+                            webSocketId={webSocketId}
                         />
-                    </div>
-                    <div
-                        className="w-[19%] h-[100%] cursor-pointer"
-                        onClick={() => {
-                            setIsGetoutProceeding(true);
-                        }}
-                    >
-                        <img
-                            className="w-full"
-                            src="/src/assets/images/icon/ui-icon-quit.webp"
-                            alt=""
-                            style={{ aspectRatio: 1 / 1 }}
+                    ) : (
+                        <></>
+                    )}
+                    {settingFlag ? (
+                        <SettingModal
+                            setSettingFlag={setSettingFlag}
+                            proceedLogout={proceedLogout}
+                            proceedWithdrawal={proceedWithdrawal}
                         />
-                        <img
-                            src="/src/assets/images/icon/ui-icon-quit-text.webp"
-                            alt=""
+                    ) : (
+                        <></>
+                    )}
+                    {mypageFlag ? (
+                        <MyPageModal
+                            setMypageFlag={setMyPageFlag}
+                            titleInfo={initialData.titleList}
+                            profileFrameInfo={initialData.profileFrameList}
+                            themeInfo={initialData.themeList}
+                            iconInfo={initialData.profileIconList}
+                            achievementList={initialData.achievementList}
                         />
-                    </div>
-                </div>
-            </div>
+                    ) : (
+                        <></>
+                    )}
+                    {newsFlag ? (
+                        <NewsModal
+                            setNewsFlag={setNewsFlag}
+                            newsPublishTurn={newsPublishTurn}
+                            newsArticleList={newsArticleList}
+                        />
+                    ) : (
+                        <></>
+                    )}
+                    {inventoryFlag ? (
+                        <InventoryModal
+                            setInventoryFlag={setInventoryFlag}
+                            productSource={initialData.productList}
+                        />
+                    ) : (
+                        <></>
+                    )}
+                    <ChattingModal
+                        client={webSocketClient}
+                        alertError={alertError}
+                        defaultMode={0}
+                    />
 
-            {tradeFlag ? (
-                <TradeModal
-                    setTradeFlag={setTradeFlag}
-                    updateNowMoney={updateNowMoney}
-                    nowMoney={nowMoney}
-                    infraInfo={initialData.infraList}
-                    productResource={initialData.productList}
-                    client={webSocketClient}
-                    turn={ingameTurn}
-                    webSocketId={webSocketId}
-                />
-            ) : (
-                <></>
+                    {isQtrReportAvail ? (
+                        <QuarterReportModal
+                            titleList={initialData.titleList}
+                            eventList={initialData.eventList}
+                            productList={initialData.productList}
+                            setIsQtrReportAvail={setIsQtrReportAvail}
+                            webSocketId={webSocketId}
+                            webSocketClient={webSocketClient}
+                            qtrReport={qtrReport}
+                            setStartFlag={props.setStartFlag}
+                        />
+                    ) : (
+                        <></>
+                    )}
+                    {isHlfReportAvail ? (
+                        <HalfReportModal
+                            titleList={initialData.titleList}
+                            eventList={initialData.eventList}
+                            productList={initialData.productList}
+                            setIsHlfReportAvail={setIsHlfReportAvail}
+                            webSocketId={webSocketId}
+                            webSocketClient={webSocketClient}
+                            hlfReport={hlfReport}
+                            setStartFlag={props.setStartFlag}
+                            achievementInfo={initialData.achievementList}
+                        />
+                    ) : (
+                        <></>
+                    )}
+                    {isFinReportAvail ? (
+                        <FinReportModal
+                            setIsFinReportAvail={setIsFinReportAvail}
+                        />
+                    ) : (
+                        <></>
+                    )}
+
+                    {isOffReportAvail ? (
+                        <OffReportModal
+                            offReport={offReport}
+                            setIsOffReportAvail={setIsOffReportAvail}
+                            nowTurn={ingameTurn}
+                            productList={initialData.productList}
+                            webSocketId={webSocketId}
+                            webSocketClient={webSocketClient}
+                            titleList={initialData.titleList}
+                            eventList={initialData.eventList}
+                            achievementInfo={initialData.achievementList}
+                            setStartFlag={props.setStartFlag}
+                        />
+                    ) : (
+                        <></>
+                    )}
+                    {/* 현재 이벤트 보여주기 */}
+                    {currentViewEvent.length > 0 ? currentViewElement() : <></>}
+                </>
             )}
-            {facilityFlag ? (
-                <InfraModal
-                    setFacilityFlag={setFacilityFlag}
-                    updateNowMoney={updateNowMoney}
-                    infraInfo={initialData.infraList}
-                    client={webSocketClient}
-                    webSocketId={webSocketId}
-                />
-            ) : (
-                <></>
-            )}
-            {settingFlag ? (
-                <SettingModal
-                    setSettingFlag={setSettingFlag}
-                    proceedLogout={proceedLogout}
-                    proceedWithdrawal={proceedWithdrawal}
-                />
-            ) : (
-                <></>
-            )}
-            {mypageFlag ? (
-                <MyPageModal
-                    setMypageFlag={setMyPageFlag}
-                    titleInfo={initialData.titleList}
-                    profileFrameInfo={initialData.profileFrameList}
-                    themeInfo={initialData.themeList}
-                    iconInfo={initialData.profileIconList}
-                    achievementList={initialData.achievementList}
-                />
-            ) : (
-                <></>
-            )}
-            {newsFlag ? (
-                <NewsModal
-                    setNewsFlag={setNewsFlag}
-                    newsPublishTurn={newsPublishTurn}
-                    newsArticleList={newsArticleList}
-                />
-            ) : (
-                <></>
-            )}
-            {inventoryFlag ? (
-                <InventoryModal
-                    setInventoryFlag={setInventoryFlag}
-                    productSource={initialData.productList}
-                />
-            ) : (
-                <></>
-            )}
-            <ChattingModal
-                client={webSocketClient}
-                alertError={alertError}
-                defaultMode={0}
-            />
             <WebSocket
                 setWebSocketClient={setWebSocketClient}
                 setWebSocketId={setWebSocketId}
@@ -1097,60 +1236,9 @@ export default function GameComponent(props: GameType) {
                 setNewsPublishTurn={setNewsPublishTurn}
                 setNewsArticleList={setNewsArticleList}
                 setNewsFlag={setNewsFlag}
+                startTimer={startTimer}
+                endTimer={endTimer}
             />
-            {isQtrReportAvail ? (
-                <QuarterReportModal
-                    titleList={initialData.titleList}
-                    eventList={initialData.eventList}
-                    productList={initialData.productList}
-                    setIsQtrReportAvail={setIsQtrReportAvail}
-                    webSocketId={webSocketId}
-                    webSocketClient={webSocketClient}
-                    qtrReport={qtrReport}
-                    setStartFlag={props.setStartFlag}
-                />
-            ) : (
-                <></>
-            )}
-            {isHlfReportAvail ? (
-                <HalfReportModal
-                    titleList={initialData.titleList}
-                    eventList={initialData.eventList}
-                    productList={initialData.productList}
-                    setIsHlfReportAvail={setIsHlfReportAvail}
-                    webSocketId={webSocketId}
-                    webSocketClient={webSocketClient}
-                    hlfReport={hlfReport}
-                    setStartFlag={props.setStartFlag}
-                    achievementInfo={initialData.achievementList}
-                />
-            ) : (
-                <></>
-            )}
-            {isFinReportAvail ? (
-                <FinReportModal setIsFinReportAvail={setIsFinReportAvail} />
-            ) : (
-                <></>
-            )}
-
-            {isOffReportAvail ? (
-                <OffReportModal
-                    offReport={offReport}
-                    setIsOffReportAvail={setIsOffReportAvail}
-                    nowTurn={ingameTurn}
-                    productList={initialData.productList}
-                    webSocketId={webSocketId}
-                    webSocketClient={webSocketClient}
-                    titleList={initialData.titleList}
-                    eventList={initialData.eventList}
-                    achievementInfo={initialData.achievementList}
-                    setStartFlag={props.setStartFlag}
-                />
-            ) : (
-                <></>
-            )}
-            {/* 현재 이벤트 보여주기 */}
-            {currentViewEvent.length > 0 ? currentViewElement() : <></>}
         </section>
     );
 }

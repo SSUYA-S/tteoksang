@@ -54,7 +54,7 @@ export default function NicknameChangeModal(props: PropType) {
                     onKeyDown={enterPressed}
                 />
                 <div
-                    className="text-[2vw] w-[30%] h-[30%] bg-black text-white mt-[1vh] flex justify-center items-center cursor-pointer"
+                    className="text-[1.6vw] w-[30%] h-[20%] flex items-center justify-center text-white color-bg-subbold p-[0.2vw] cursor-pointer rounded-[0.8vw]"
                     onClick={sendChangeRequest}
                 >
                     변경하기

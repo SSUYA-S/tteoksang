@@ -76,13 +76,13 @@ export default function NewsModal(props: NewsType) {
                 <div className="relative w-[90%] h-[65%] flex ">
                     <div className="w-[60%] h-full pe-[0.8vw]">
                         {currentNews.length > 0 ? (
-                            <div className="w-full h-[55%]  text-start text-[3.0vw] overflow-y-scroll">
+                            <div className="w-full h-[55%]  text-start text-[2vw] overflow-y-scroll">
                                 <p className="h-full text-ellipsis overflow-hidden">
                                     {currentNews[0].articleHeadline}
                                 </p>
                             </div>
                         ) : (
-                            <div className="w-full h-[55%]  text-start text-[3.6vw]">
+                            <div className="w-full h-[55%]  text-start text-[2vw]">
                                 <p>
                                     계속되는 지각 변동. 조만간 무슨 일이
                                     생길지도???
@@ -101,7 +101,7 @@ export default function NewsModal(props: NewsType) {
                     </div>
                     <div className="w-[40%] h-full">
                         {currentNews.length > 2 ? (
-                            <div className="w-full h-[50%] b text-start text-[2.4vw] overflow-y-scroll">
+                            <div className="w-full h-[50%] b text-start text-[2.0vw] overflow-y-scroll">
                                 {currentNews[2].articleHeadline}
                             </div>
                         ) : (
@@ -112,7 +112,7 @@ export default function NewsModal(props: NewsType) {
                             </div>
                         )}
                         {currentNews.length > 3 ? (
-                            <div className="w-full h-[50%] b text-start text-[2.4vw] overflow-y-scroll">
+                            <div className="w-full h-[50%] b text-start text-[2.0vw] overflow-y-scroll">
                                 {currentNews[3].articleHeadline}
                             </div>
                         ) : (
