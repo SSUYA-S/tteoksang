@@ -5,7 +5,7 @@ import TitleChangeModal from './TitleChangeModal';
 import { Client } from '@stomp/stompjs';
 
 //dummy data(test 후 비활성화 필요)
-import Quarter from '../../dummy-data/report/quarter.json';
+// import Quarter from '../../dummy-data/report/quarter.json';
 import QuarterPage1 from '../section/QuarterPage/QuarterPage1';
 import { startNewGame } from '../../api/user';
 import { httpStatusCode } from '../../util/http-status';
@@ -17,7 +17,7 @@ interface Prop {
     setIsQtrReportAvail: React.Dispatch<React.SetStateAction<boolean>>;
     webSocketId: string;
     webSocketClient: Client;
-    qtrReport: QuarterReportType | null;
+    qtrReport: QuarterReportType;
     setStartFlag: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -27,7 +27,7 @@ export default function QuarterReportModal(props: Prop) {
     const [season, setSeason] = useState<string>('봄');
 
     //test 종료 후 이거 풀어
-    // const Quarter = props.qtrReport;
+    const Quarter = props.qtrReport;
 
     /**rentFeeModal에서 확인 누르면 보고서 보여지도록 만들기 */
     const showReport = () => {

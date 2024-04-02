@@ -8,6 +8,7 @@ import {
     Tooltip,
     Legend,
 } from 'chart.js';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
 
 interface Prop {
@@ -27,6 +28,7 @@ export default function HalfPage2(props: Prop) {
     );
 
     const options = {
+        responsive: true,
         plugins: {
             title: {
                 display: false,
@@ -43,6 +45,9 @@ export default function HalfPage2(props: Prop) {
             y: {
                 stacked: true,
             },
+        },
+        options: {
+            maintainAspectRatio: true,
         },
     };
 
@@ -163,7 +168,9 @@ export default function HalfPage2(props: Prop) {
                             receipt.totalIncome - receipt.totalOutcome
                         }G`}</p>
                     </div>
-                    <Bar options={options} data={data} height={'200%'} />
+                    <div className="w-full h-[50%]">
+                        <Bar options={options} data={data} height={'200%'} />
+                    </div>
                 </div>
             </div>
         </>

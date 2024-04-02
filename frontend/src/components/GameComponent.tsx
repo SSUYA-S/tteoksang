@@ -60,7 +60,7 @@ export default function GameComponent(props: GameType) {
     const [inventoryFlag, setInventoryFlag] = useState<boolean>(false);
     //턴 시간
     const [duration, setDuration] = useState<number>(
-        import.meta.env.TURN_PERIOD_SEC
+        import.meta.env.VITE_TURN_PERIOD_SEC
     );
     const [ingameTurn, setIngameTurn] = useState<number>(1);
     const [ingameTime, setIngameTime] = useState<string>('00:03:00');
@@ -113,7 +113,7 @@ export default function GameComponent(props: GameType) {
     const [isQtrReportAvail, setIsQtrReportAvail] = useState<boolean>(false); //분기
     const [isHlfReportAvail, setIsHlfReportAvail] = useState<boolean>(false); //반기
     const [isFinReportAvail, setIsFinReportAvail] = useState<boolean>(false); //전체
-    const [isOffReportAvail, setIsOffReportAvail] = useState<boolean>(true); //미접
+    const [isOffReportAvail, setIsOffReportAvail] = useState<boolean>(false); //미접
 
     const [qtrReport, setQtrReport] = useState<QuarterReportType | null>(null); //분기
     const [hlfReport, setHlfReport] = useState<HalfReportType | null>(null); //반기
@@ -158,7 +158,7 @@ export default function GameComponent(props: GameType) {
         } else if (type === 'FINAL_REPORT') {
             setIsFinReportAvail(true);
             setFinReport(body);
-        } else if (type === 'GET_OFFLINE_REPORT') {
+        } else if (type === 'OFFLINE_REPORT') {
             setIsOffReportAvail(true);
             setOffReport(body);
         }
@@ -837,150 +837,154 @@ export default function GameComponent(props: GameType) {
                                     />
                                 </div>
 
-                        <div className="relative w-[65%] flex flex-col items-center justify-center ps-[1%]">
-                            {titleInfo.length > 0 && titleId === 1 ? (
-                                <></>
-                            ) : (
-                                <p className="w-full text-start text-[1.2vw] color-text-sublight whitespace-nowrap overflow-hidden text-ellipsis">
-                                    {titleInfo[titleId - 1].titleName}
-                                </p>
-                            )}
-                            <p className="w-full text-start my-[2%] text-[1.1vw] color-text-textcolor whitespace-nowrap overflow-hidden text-ellipsis">
-                                {userNickname}
-                            </p>
+                                <div className="relative w-[65%] flex flex-col items-center justify-center ps-[1%]">
+                                    {titleInfo.length > 0 && titleId === 1 ? (
+                                        <></>
+                                    ) : (
+                                        <p className="w-full text-start text-[1.2vw] color-text-sublight whitespace-nowrap overflow-hidden text-ellipsis">
+                                            {titleInfo[titleId - 1].titleName}
+                                        </p>
+                                    )}
+                                    <p className="w-full text-start my-[2%] text-[1.1vw] color-text-textcolor whitespace-nowrap overflow-hidden text-ellipsis">
+                                        {userNickname}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex">
+                            <div
+                                className="relative m-[0.4vw] w-[18%] h-full bg-red-50 aspect-square cursor-pointer rounded-full border-[0.2vw]"
+                                onClick={() => {
+                                    changeMode(0);
+                                }}
+                            >
+                                <img
+                                    className="rounded-full"
+                                    src="/src/assets/images/etc/ui-ts-door-1.webp"
+                                    alt=""
+                                />
+                            </div>
+                            <div
+                                className="relative m-[0.4vw] w-[18%] h-full bg-red-50 aspect-square cursor-pointer rounded-full border-[0.2vw]"
+                                onClick={() => {
+                                    changeMode(1);
+                                }}
+                            >
+                                <img
+                                    className="rounded-full"
+                                    src="/src/assets/images/etc/ui-ts-door-2.webp"
+                                    alt=""
+                                />
+                            </div>
+                            <div
+                                className="relative m-[0.4vw] w-[18%] h-full bg-red-50 aspect-square cursor-pointer rounded-full border-[0.2vw]"
+                                onClick={() => {
+                                    changeMode(2);
+                                }}
+                            >
+                                <img
+                                    className="rounded-full"
+                                    src="/src/assets/images/etc/ui-ts-door-3.webp"
+                                    alt=""
+                                />
+                            </div>
+                            <div
+                                className="relative m-[0.4vw] w-[18%] h-full bg-red-50 aspect-square cursor-pointer rounded-full border-[0.2vw]"
+                                onClick={() => {
+                                    changeMode(3);
+                                }}
+                            >
+                                <img
+                                    className="rounded-full"
+                                    src="/src/assets/images/etc/ui-ts-door-4.webp"
+                                    alt=""
+                                />
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className="flex">
-                    <div
-                        className="relative m-[0.4vw] w-[18%] h-full bg-red-50 aspect-square cursor-pointer rounded-full border-[0.2vw]"
-                        onClick={() => {
-                            changeMode(0);
-                        }}
-                    >
-                        <img
-                            className="rounded-full"
-                            src="/src/assets/images/etc/ui-ts-door-1.webp"
-                            alt=""
-                        />
-                    </div>
-                    <div
-                        className="relative m-[0.4vw] w-[18%] h-full bg-red-50 aspect-square cursor-pointer rounded-full border-[0.2vw]"
-                        onClick={() => {
-                            changeMode(1);
-                        }}
-                    >
-                        <img
-                            className="rounded-full"
-                            src="/src/assets/images/etc/ui-ts-door-2.webp"
-                            alt=""
-                        />
-                    </div>
-                    <div
-                        className="relative m-[0.4vw] w-[18%] h-full bg-red-50 aspect-square cursor-pointer rounded-full border-[0.2vw]"
-                        onClick={() => {
-                            changeMode(2);
-                        }}
-                    >
-                        <img
-                            className="rounded-full"
-                            src="/src/assets/images/etc/ui-ts-door-3.webp"
-                            alt=""
-                        />
-                    </div>
-                    <div
-                        className="relative m-[0.4vw] w-[18%] h-full bg-red-50 aspect-square cursor-pointer rounded-full border-[0.2vw]"
-                        onClick={() => {
-                            changeMode(3);
-                        }}
-                    >
-                        <img
-                            className="rounded-full"
-                            src="/src/assets/images/etc/ui-ts-door-4.webp"
-                            alt=""
-                        />
-                    </div>
-                </div>
-            </div>
 
-            {/* 우측 상단 ui */}
-            <div className="absolute w-[25%] h-[14%] top-[4%] right-[2%] flex flex-col items-end">
-                <div className="relative w-full h-full flex items-center justify-center">
-                    <div className="relative w-[65%] h-full flex flex-col items-center justify-around rounded-[1vw] color-text-textcolor left-[2vw] z-20">
-                        <img
-                            src="/src/assets/images/layout/ui-board.webp"
-                            className="absolute w-full h-full -z-10"
-                            alt=""
-                        />
-                        <p className="text-[1.4vw]">
-                            {gameYear}년 {gameMonth}월 {gameDay}일
-                        </p>
-                        <div className="flex items-center justify-start">
-                            <img
-                                className="absolute left-0 mx-[1vw] w-[12%]"
-                                src="/src/assets/images/icon/ui-icon-coin.png"
-                                alt=""
-                            />
-                            <p className="text-[1.4vw]">
-                                {nowMoney.toLocaleString()}
-                            </p>
-                        </div>
-                    </div>
-                    <div
-                        className="relative w-[35%] flex items-center justify-center rounded-full border-[0.4vw] color-border-subbold z-20"
-                        style={{ aspectRatio: 1 / 1 }}
-                    >
-                        <CircularTimer
-                            duration={duration}
-                            ingameTime={ingameTime}
-                            setTurnTimer={setTurnTimer}
-                            setIngameTurn={setIngameTurn}
-                        />
-                        <div className="absolute w-full h-full rounded-full border-[0.4vw] border-white flex items-center justify-center">
-                            <div
-                                className="absolute w-full h-full"
-                                style={{
-                                    backgroundImage:
-                                        'url(/src/assets/images/icon/ui-icon-timeCircle.png)',
-                                    backgroundSize: 'contain ',
-                                    backgroundPosition: 'center',
-                                    backgroundRepeat: 'no-repeat',
-                                }}
-                            ></div>
-                            <div
-                                className="absolute w-[60%] h-[60%] z-20 bg-no-repeat bg-center"
-                                style={{
-                                    backgroundImage: `url(/src/assets/images/icon/ui-season-${seasonImg}.png)`,
-                                    backgroundSize: 'contain ',
-                                    backgroundPosition: 'center',
-                                    backgroundRepeat: 'no-repeat',
-                                }}
-                            />
-                        </div>
-                    </div>
-                </div>
-                <div className="flex py-[2vw]">
-                    {currentSpecialEvent.map((item) => {
-                        if (item.eventArray.length > 0) {
-                            return (
-                                <div
-                                    className="relative px-[0.4vw] cursor-pointer"
-                                    onClick={() => {
-                                        viewPubEventDetail(item.eventArray);
-                                    }}
-                                >
+                    {/* 우측 상단 ui */}
+                    <div className="absolute w-[25%] h-[14%] top-[4%] right-[2%] flex flex-col items-end">
+                        <div className="relative w-full h-full flex items-center justify-center">
+                            <div className="relative w-[65%] h-full flex flex-col items-center justify-around rounded-[1vw] color-text-textcolor left-[2vw] z-20">
+                                <img
+                                    src="/src/assets/images/layout/ui-board.webp"
+                                    className="absolute w-full h-full -z-10"
+                                    alt=""
+                                />
+                                <p className="text-[1.4vw]">
+                                    {gameYear}년 {gameMonth}월 {gameDay}일
+                                </p>
+                                <div className="flex items-center justify-start">
                                     <img
-                                        className=" w-[4.8vw] bg-white rounded-full border-[0.2vw] border-white"
-                                        style={{ aspectRatio: 1 / 1 }}
-                                        src={loadEventImg(item.eventName)}
+                                        className="absolute left-0 mx-[1vw] w-[12%]"
+                                        src="/src/assets/images/icon/ui-icon-coin.png"
                                         alt=""
                                     />
+                                    <p className="text-[1.4vw]">
+                                        {nowMoney.toLocaleString()}
+                                    </p>
                                 </div>
-                            );
-                        }
-                    })}
-                </div>
-            </div>
+                            </div>
+                            <div
+                                className="relative w-[35%] flex items-center justify-center rounded-full border-[0.4vw] color-border-subbold z-20"
+                                style={{ aspectRatio: 1 / 1 }}
+                            >
+                                <CircularTimer
+                                    duration={duration}
+                                    ingameTime={ingameTime}
+                                    setTurnTimer={setTurnTimer}
+                                    setIngameTurn={setIngameTurn}
+                                />
+                                <div className="absolute w-full h-full rounded-full border-[0.4vw] border-white flex items-center justify-center">
+                                    <div
+                                        className="absolute w-full h-full"
+                                        style={{
+                                            backgroundImage:
+                                                'url(/src/assets/images/icon/ui-icon-timeCircle.png)',
+                                            backgroundSize: 'contain ',
+                                            backgroundPosition: 'center',
+                                            backgroundRepeat: 'no-repeat',
+                                        }}
+                                    ></div>
+                                    <div
+                                        className="absolute w-[60%] h-[60%] z-20 bg-no-repeat bg-center"
+                                        style={{
+                                            backgroundImage: `url(/src/assets/images/icon/ui-season-${seasonImg}.png)`,
+                                            backgroundSize: 'contain ',
+                                            backgroundPosition: 'center',
+                                            backgroundRepeat: 'no-repeat',
+                                        }}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex py-[2vw]">
+                            {currentSpecialEvent.map((item) => {
+                                if (item.eventArray.length > 0) {
+                                    return (
+                                        <div
+                                            className="relative px-[0.4vw] cursor-pointer"
+                                            onClick={() => {
+                                                viewPubEventDetail(
+                                                    item.eventArray
+                                                );
+                                            }}
+                                        >
+                                            <img
+                                                className=" w-[4.8vw] bg-white rounded-full border-[0.2vw] border-white"
+                                                style={{ aspectRatio: 1 / 1 }}
+                                                src={loadEventImg(
+                                                    item.eventName
+                                                )}
+                                                alt=""
+                                            />
+                                        </div>
+                                    );
+                                }
+                            })}
+                        </div>
+                    </div>
 
                     {/* 좌측 하단 ui */}
                     <div className="absolute w-[40%] h-[20%] bottom-[4%] left-[1%]">
@@ -1166,7 +1170,7 @@ export default function GameComponent(props: GameType) {
                         defaultMode={0}
                     />
 
-                    {isQtrReportAvail ? (
+                    {isQtrReportAvail && qtrReport ? (
                         <QuarterReportModal
                             titleList={initialData.titleList}
                             eventList={initialData.eventList}
@@ -1180,7 +1184,7 @@ export default function GameComponent(props: GameType) {
                     ) : (
                         <></>
                     )}
-                    {isHlfReportAvail ? (
+                    {isHlfReportAvail && hlfReport ? (
                         <HalfReportModal
                             titleList={initialData.titleList}
                             eventList={initialData.eventList}
@@ -1203,7 +1207,7 @@ export default function GameComponent(props: GameType) {
                         <></>
                     )}
 
-                    {isOffReportAvail ? (
+                    {isOffReportAvail && offReport ? (
                         <OffReportModal
                             offReport={offReport}
                             setIsOffReportAvail={setIsOffReportAvail}
