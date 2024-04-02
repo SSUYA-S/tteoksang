@@ -1160,11 +1160,7 @@ export default function GameComponent(props: GameType) {
                         <></>
                     )}
                     {settingFlag ? (
-                        <SettingModal
-                            setSettingFlag={setSettingFlag}
-                            proceedLogout={proceedLogout}
-                            proceedWithdrawal={proceedWithdrawal}
-                        />
+                        <SettingModal setSettingFlag={setSettingFlag} />
                     ) : (
                         <></>
                     )}
@@ -1176,6 +1172,8 @@ export default function GameComponent(props: GameType) {
                             themeInfo={initialData.themeList}
                             iconInfo={initialData.profileIconList}
                             achievementList={initialData.achievementList}
+                            proceedLogout={proceedLogout}
+                            proceedWithdrawal={proceedWithdrawal}
                         />
                     ) : (
                         <></>
