@@ -226,11 +226,12 @@ export default function GameComponent(props: GameType) {
 
         const res = await logout();
         if (res.status === httpStatusCode.OK) {
-            setIsLogoutProceeding(false);
             logoutServiceWorker();
+            setIsLogoutProceeding(false);
 
             // navigate('/');
             props.setStartFlag(false);
+            window.location.reload();
         } else {
             console.log('Logout error');
         }
@@ -261,6 +262,7 @@ export default function GameComponent(props: GameType) {
             logoutServiceWorker();
             props.setStartFlag(false);
             setIsWithdrawalProceeding(false);
+            window.location.reload();
         } else {
             console.log('회원 탈퇴 불가');
         }
