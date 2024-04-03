@@ -7,7 +7,13 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class TteokValues {
+@ToString
+public class TteokValues implements Comparable<TteokValues> {
     private Integer productId;
-    private Integer value;
+    private Long value;
+
+    @Override
+    public int compareTo(TteokValues o) {
+        return this.value.compareTo(o.value);
+    }
 }
