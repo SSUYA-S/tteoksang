@@ -25,6 +25,7 @@ public interface TestExample {
 
     String half = "{\n" +
             "    \"turn\": 361,\n" +
+            "    \"gold\": 600000,\n" +
             "    \"rentFeeInfo\": {\n" +
             "        \"billType\": \"basic\",\n" +
             "        \"rentFee\": 40000,\n" +
@@ -158,7 +159,7 @@ public interface TestExample {
             "            }\n" +
             "        ]\n" +
             "    },\n" +
-            "    \"achievementList\": [{ \"achievementId\": 2 }, { \"achievementId\": 5 }]\n" +
+            "    \"achievementList\": [2,5]\n" +
             "}\n";
 
     String finalReport = "{\n" +
