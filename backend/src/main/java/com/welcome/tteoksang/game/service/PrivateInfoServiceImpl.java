@@ -37,7 +37,7 @@ public class PrivateInfoServiceImpl implements PrivateInfoService {
         UserInfo userInfo = getUserInfo(userId, webSocketId);
         Object responseBody = body;
         boolean isSuccess = false;
-        if (redisGameInfo != null) {
+        if (redisGameInfo != null && serverInfo.getProductInfoMap()!=null) {
 
             responseBody = TotalInfo.builder()
                     .gold(redisGameInfo.getGold())
