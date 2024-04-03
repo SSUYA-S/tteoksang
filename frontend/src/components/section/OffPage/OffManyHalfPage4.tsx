@@ -1,10 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-    Product,
-    Stat,
-    AchievementReport,
-    Achievement,
-} from '../../../type/types';
+import { Product, Stat, Achievement } from '../../../type/types';
 
 interface Prop {
     productList: Product[];
@@ -12,7 +7,7 @@ interface Prop {
     tteokrockStatistics: Stat;
     bestSellerStatistics: Stat;
     achievementInfo: Achievement[];
-    achievementList: AchievementReport[];
+    achievementList: number[];
     newTteoksang: Stat;
     newTteokrock: Stat;
     newBestSeller: Stat;
@@ -172,12 +167,12 @@ export default function OffManyHalfPage4(props: Prop) {
                         달성 도전과제
                     </div>
                     <div className="w-full h-[85%] flex flex-col overflow-y-auto">
-                        {props.achievementList.map((achievement) => {
+                        {props.achievementList.map((achievementId) => {
                             return (
                                 <div className="w-[90%] h-[10vh] border-[0.3vw] color-border-subbold flex justify-start my-[1vh] p-[1vh] items-center">
                                     <img
                                         className="w-[4vw] h-[4vw] m-[0.8vw]"
-                                        src={`/src/assets/images/profile/achivement (${achievement.achievementId}).png`}
+                                        src={`/src/assets/images/profile/achivement (${achievementId}).png`}
                                         alt=""
                                         style={{
                                             aspectRatio: 1 / 1,
@@ -187,16 +182,14 @@ export default function OffManyHalfPage4(props: Prop) {
                                         <p className="text-[3vh]">
                                             {
                                                 props.achievementInfo[
-                                                    achievement.achievementId -
-                                                        1
+                                                    achievementId - 1
                                                 ].achievementName
                                             }
                                         </p>
                                         <p className="text-[2vh] text-gray-400">
                                             {
                                                 props.achievementInfo[
-                                                    achievement.achievementId -
-                                                        1
+                                                    achievementId - 1
                                                 ].achievementDescription
                                             }
                                         </p>
