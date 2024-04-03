@@ -382,7 +382,7 @@ export default function InfraModal(props: InfraType) {
                         </div>
                         <div className="relative w-[80%] h-[80%] flex items-end justify-around">
                             <div className="relative w-[33%] h-[90%]">
-                                <div className="absolute w-full bottom-[0.5vw] bg-white rounded-[0.6vw] border-[0.2vw] color-border-subbold">
+                                <div className="absolute w-full bottom-[0vw] bg-white rounded-[0.6vw] border-[0.2vw] color-border-subbold">
                                     <p className="text-[1.4vw] color-text-textcolor ">
                                         {facilityType === 1
                                             ? props.infraInfo.vehicleInfoList[
@@ -396,7 +396,7 @@ export default function InfraModal(props: InfraType) {
                                                   brokerLevel - 1
                                               ].brokerName}
                                     </p>
-                                    <p className="text-[1.4vw] color-text-textcolor \\">
+                                    <p className="text-[1.4vw] color-text-textcolor ">
                                         {facilityType === 1
                                             ? '탈 것 용량 : ' +
                                               props.infraInfo.vehicleInfoList[
@@ -416,7 +416,7 @@ export default function InfraModal(props: InfraType) {
                                 </div>
 
                                 <div
-                                    className="relative w-full h-[80%] "
+                                    className="relative w-full h-[80%] bottom-[0.2vw] "
                                     style={{
                                         backgroundImage: `url("/src/assets/images/facility/${urlFacilityName} (${nowLevel}).webp")`,
                                         backgroundRepeat: 'no-repeat',
@@ -471,7 +471,7 @@ export default function InfraModal(props: InfraType) {
                 {facilityElement()}
             </div>
             <div
-                className="absolute text-[1.6vw] flex items-center justify-center text-white -top-[0.4vw] -right-[0.4vw] w-[4vw] h-[4vw] border-[0.3vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer"
+                className="absolute text-[1.6vw] flex items-center justify-center text-white top-[0.4vw] right-[0.4vw] w-[4vw] h-[4vw] border-[0.3vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer"
                 onClick={() => {
                     closeFacilityModal();
                 }}

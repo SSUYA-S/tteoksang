@@ -725,7 +725,7 @@ export default function MyPageModal(props: MyPageType) {
                 </div>
                 <div
                     className={
-                        'absolute right-[5%] bottom-[5%] w-[9vw]  text-white color-bg-subbold p-[0.2vw] text-[1.4vw] cursor-pointer rounded-[0.8vw] '
+                        'absolute right-[5%] bottom-[5%] w-[9vw] border-[0.2vw] color-border-subbold text-white color-bg-subbold p-[0.6vw] text-[1.4vw] cursor-pointer rounded-[0.8vw] hover:bg-white hover:color-text-subbold hover:color-border-subbold '
                     }
                     onClick={() => saveSettings()}
                 >
