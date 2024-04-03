@@ -5,6 +5,7 @@ public enum RedisPrefix {
     REGIST("regist:"),
     CHANGE_EMAIL("changeEmail:"),
     SERVER_STATISTICS("serverStatistics"),
+    SERVER_HALF_STATISTICS("serverHalfStatistics"),
     SERVER_INFO("serverInfo"),
     SERVER_NEWS("serverNews"),
     SERVER_BREAK("serverBreak"),

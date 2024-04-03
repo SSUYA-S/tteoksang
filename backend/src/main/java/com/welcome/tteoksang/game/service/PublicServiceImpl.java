@@ -10,6 +10,7 @@ import com.welcome.tteoksang.game.dto.log.SpecialEventLogInfo;
 import com.welcome.tteoksang.game.dto.res.GameMessageRes;
 import com.welcome.tteoksang.game.dto.event.NewsInfo;
 import com.welcome.tteoksang.game.dto.event.PublicEventInfo;
+import com.welcome.tteoksang.game.dto.result.half.TteokValues;
 import com.welcome.tteoksang.game.dto.server.*;
 import com.welcome.tteoksang.game.dto.user.PlayTimeInfo;
 import com.welcome.tteoksang.game.exception.AccessToInvalidWebSocketIdException;
@@ -20,6 +21,7 @@ import com.welcome.tteoksang.game.repository.ProductFluctuationRepository;
 import com.welcome.tteoksang.game.repository.ServerSeasonInfoRepository;
 import com.welcome.tteoksang.game.scheduler.ScheduleService;
 import com.welcome.tteoksang.game.scheduler.ServerInfo;
+import com.welcome.tteoksang.kafka.KafkaTest;
 import com.welcome.tteoksang.redis.RedisPrefix;
 import com.welcome.tteoksang.redis.RedisService;
 import com.welcome.tteoksang.resource.dto.Event;
@@ -50,8 +52,9 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
     private final ScheduleService scheduleService;
     private final RedisService redisService;
     private final PrivateScheduleService privateScheduleService;
-    private final GameInfoRepository gameInfoRepository;
+    private final RestTemplateService restTemplateService;
 
+    private final GameInfoRepository gameInfoRepository;
     private final ProductRepository productRepository;
     private final ProductFluctuationRepository productFluctuationRepository;
     private final EventRepository eventRepository;
@@ -59,6 +62,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
 
     private final SimpMessageSendingOperations sendingOperations;
     private final ServerInfo serverInfo;
+    private final RedisStatisticsUtil redisStatisticsUtil;
     private final Random random = new Random();
 
     @Value("${TURN_PERIOD_SEC}")
@@ -97,7 +101,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
     private int NEWS_NUM = 4;
     private int BUYABLE_PRODUCT_NUM = 6;
 
-    private final int PLAY_LONG_TIME = 2; //3시간
+    private final int PLAY_LONG_TIME = 3; //3시간
 
     private boolean loadServerInfo() {
 //        if(redisService.hasKey(RedisPrefix.SERVER_INFO.prefix())){
@@ -151,10 +155,10 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
                 .forEach(eventName -> eventCountMap.put(eventName, 0));
         Map<Integer, CostRateStatistics> productCostRateMap = serverInfo.getProductInfoMap().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> new CostRateStatistics(entry.getValue().getProductCost(), 0), (a, b) -> b));
 
-//        redisService.setValues(RedisPrefix.SERVER_STATISTICS.prefix(), RedisStatistics.builder()
-//                .eventCountMap(eventCountMap)
-//                .productCostRateMap(productCostRateMap)
-//                .build());
+        redisService.setValues(RedisPrefix.SERVER_STATISTICS.prefix(), RedisStatistics.builder()
+                .eventCountMap(eventCountMap)
+                .productCostRateMap(productCostRateMap)
+                .build());
     }
 
 
@@ -223,6 +227,10 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         scheduleService.register(NEWSPAPER, newsInitialTurn * turnPeriodSec, eventPeriodSec, () -> {
             createNewspaper();
         });
+        restTemplateService.startHalfYearRequest(serverInfo.getSeasonId(), serverInfo.getCurrentTurn()/(quarterYearTurnPeriod*2)+1);
+        redisService.setValues(RedisPrefix.SERVER_HALF_STATISTICS.prefix(), RedisHalfStatistics.builder()
+                .productCostRateMap(serverInfo.getProductInfoMap().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> new CostRateStatistics(entry.getValue().getProductCost(), 0), (a, b) -> b)))
+                .build());
     }
 
     public void endHalfYearGame() {
@@ -230,7 +238,27 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         scheduleService.remove(TURN);
         scheduleService.remove(PUBLIC_EVENT);
         scheduleService.remove(NEWSPAPER);
+        restTemplateService.endHalfYearRequest(serverInfo.getSeasonId(), serverInfo.getCurrentTurn()/(quarterYearTurnPeriod*2));
+
         // TODO - redisStatistics에서 떡상,떡락... 하기
+        RedisHalfStatistics redisHalfStatistics = (RedisHalfStatistics) redisService.getValues(RedisPrefix.SERVER_HALF_STATISTICS.prefix());
+        RedisStatistics redisStatistics= (RedisStatistics) redisService.getValues(RedisPrefix.SERVER_STATISTICS.prefix());
+        log.debug(redisStatistics.getEventCountMap().toString());
+
+        redisHalfStatistics.getProductCostRateMap().entrySet().stream().forEach(entry -> {
+//            productCostRateMap.put(entry.getKey(), redisStatisticsUtil.makeCompact(entry.getValue()));
+            CostRateStatistics costRateStatistics= redisStatisticsUtil.makeCompact(entry.getValue());
+            //통계구하기
+//            long tteoksang=redisStatisticsUtil.getTteoksang(costRateStatistics);
+//            long tteokrock=redisStatisticsUtil.getTteokrock(costRateStatistics);
+//            log.debug(entry.getKey()+": "+tteoksang+" / "+tteokrock);
+            //전체통계에 반영
+            redisStatisticsUtil.concatCostRateStatistics(redisStatistics.getProductCostRateMap().get(entry.getKey()),costRateStatistics );
+        });
+        redisService.setValues(RedisPrefix.SERVER_HALF_STATISTICS.prefix(), redisHalfStatistics);
+        redisService.setValues(RedisPrefix.SERVER_STATISTICS.prefix(), redisStatistics);
+
+
     }
 
     @Override
@@ -249,7 +277,15 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
     //TODO-전체결산
     void createEndReport() {
         //레디스 통계정보
-//        RedisStatistics redisStatistics = (RedisStatistics) redisService.getValues(RedisPrefix.SERVER_STATISTICS.prefix());
+        RedisStatistics redisStatistics = (RedisStatistics) redisService.getValues(RedisPrefix.SERVER_STATISTICS.prefix());
+        redisStatistics.getProductCostRateMap().entrySet().stream().forEach(
+                entry->{
+                    CostRateStatistics costRateStatistics= redisStatisticsUtil.makeCompact(entry.getValue());
+                    //통계구하기
+                    redisStatisticsUtil.getTteoksang(costRateStatistics);
+                    redisStatisticsUtil.getTteokrock(costRateStatistics);
+                }
+        );
         //이벤트 맵에서 TOP3 뽑으면 된다
     }
 
@@ -366,20 +402,20 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         serverInfo.setCurrentTurn(serverInfo.getCurrentTurn() + 1);
         serverInfo.setTurnStartTime(LocalDateTime.now());
         if (serverInfo.getCurrentTurn() % eventTurnPeriod == 0) {
-//            RedisStatistics redisStatistics = (RedisStatistics) redisService.getValues(RedisPrefix.SERVER_STATISTICS.prefix());
-//            Map<String, Integer> eventCountMap = redisStatistics.getEventCountMap();
+            RedisStatistics redisStatistics = (RedisStatistics) redisService.getValues(RedisPrefix.SERVER_STATISTICS.prefix());
+            Map<String, Integer> eventCountMap = redisStatistics.getEventCountMap();
 
             serverInfo.setSpecialEventIdList(nextEventList.stream().map(event -> {
                 //이벤트 발생횟수 업데이트
                 String eventName = event.getEventName();
-//                eventCountMap.put(eventName, eventCountMap.get(eventName) + 1);
+                eventCountMap.put(eventName, eventCountMap.get(eventName) + 1);
 
                 return event.getEventId();
             }).toList());
             currentEventList = nextEventList;
             nextEventList = new ArrayList<>();
             //레디스에 통계 저장
-//            redisService.setValues(RedisPrefix.SERVER_STATISTICS.prefix(), redisStatistics);
+            redisService.setValues(RedisPrefix.SERVER_STATISTICS.prefix(), redisStatistics);
 
         }
         privateScheduleService.initGameInfoForAllUsersPerTurn();
@@ -392,6 +428,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
 
     //가격 변동
     public void fluctuateProduct() {
+        RedisHalfStatistics redisHalfStatistics=(RedisHalfStatistics) redisService.getValues(RedisPrefix.SERVER_HALF_STATISTICS.prefix());
         //FluctMap에 따라 각 작물 가격 변동
         Map<Integer, ServerProductInfo> tempFluctMap = new HashMap<>();
         for (Map.Entry<Integer, ServerProductInfo> entry : serverInfo.getProductInfoMap().entrySet()) {
@@ -420,8 +457,8 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
                 //가격이 너무 작은 경우, 평균 가격의 일부 얻으므로써 보정
                 newCost += (int) (fluctationInfo.getProductAvgCost() * randomRate * MIN_AVG_MULTIPLE_LIMIT);
             }
-//            RedisStatistics redisStatistics=(RedisStatistics) redisService.getValues(RedisPrefix.SERVER_STATISTICS.prefix());
-//            redisStatistics.getProductCostRateMap().get(productId).addCostInfo(new CostInfo(newCost, serverInfo.getCurrentTurn()));
+            //TODO 가격 변동 저장...
+            redisStatisticsUtil.addCostInfo(redisHalfStatistics.getProductCostRateMap().get(productId),new CostInfo(newCost, serverInfo.getCurrentTurn()));
             //임시 배열에 저장, 한 번에 값들 업데이트 하기 위함!
             tempFluctMap.put(productId, ServerProductInfo.builder()
                     .productCost(newCost)
@@ -430,6 +467,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
                     .build());
         }
         serverInfo.setProductInfoMap(tempFluctMap);
+        redisService.setValues(RedisPrefix.SERVER_HALF_STATISTICS.prefix(), redisHalfStatistics);
     }
 
     //구매가능 작물 리스트 변동
@@ -462,15 +500,15 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
                 }
         );
     }
-
-    //    @Scheduled(cron = "0 0  * * * *")
-    @Scheduled(cron = "0 * * * * *")
+//TODO- PlayTIME ALERT
+        @Scheduled(cron = "0 0  * * * *")
+//    @Scheduled(cron = "0 * * * * *")
     public void checkLongPlayTime() {
         LocalDateTime currentTime = LocalDateTime.now();
         privateScheduleService.getUserAlertPlayTimeMap().entrySet().stream().forEach(
                 entry -> {
-                    if (Duration.between(entry.getValue().getChecked(), currentTime).toMinutes() >= PLAY_LONG_TIME) {
-//                    if (Duration.between(entry.getValue().getChecked(),currentTime).toHours() >= PLAY_LONG_TIME) {
+//                    if (Duration.between(entry.getValue().getChecked(), currentTime).toMinutes() >= PLAY_LONG_TIME) {
+                    if (Duration.between(entry.getValue().getChecked(),currentTime).toHours() >= PLAY_LONG_TIME) {
 
                         String userId = entry.getKey();
                         sendPrivateMessage(userId, MessageType.ALERT_PLAYTIME, PlayTimeInfo.builder()
