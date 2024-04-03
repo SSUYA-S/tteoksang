@@ -713,7 +713,7 @@ export default function FinReportModal({
                             <div className="w-full text-start text-[1.8vw] flex justify-start items-center">
                                 <p>수입 및 지출 (1 / 2)</p>
                                 <p
-                                    className="border-[0.2vw] color-border-subbold mx-[1vw] px-[1vw] py-[0.2vw] cursor-pointer"
+                                    className="border-[0.2vw] color-border-subbold mx-[0.6vw] px-[1vw] py-[0.1vw] text-[1.4vw] cursor-pointer hover:color-bg-subbold hover:text-white rounded-[0.4vw] btn-animation"
                                     onClick={() => {
                                         changePage(1);
                                     }}
@@ -814,7 +814,7 @@ export default function FinReportModal({
                                 <div className="flex justify-center items-center">
                                     <p>수입 및 지출 (2 / 2)</p>
                                     <p
-                                        className="border-[0.2vw] color-border-subbold mx-[1vw] px-[1vw] py-[0.2vw] cursor-pointer"
+                                        className="border-[0.2vw] color-border-subbold mx-[0.6vw] px-[1vw] py-[0.1vw] text-[1.4vw] cursor-pointer hover:color-bg-subbold hover:text-white rounded-[0.4vw] btn-animation"
                                         onClick={() => {
                                             changePage(0);
                                         }}
@@ -822,7 +822,7 @@ export default function FinReportModal({
                                         이전
                                     </p>
                                     <p
-                                        className="border-[0.2vw] color-border-subbold mx-[1vw] px-[1vw] py-[0.2vw] cursor-pointer"
+                                        className="border-[0.2vw] color-border-subbold mx-[0.6vw] px-[1vw] py-[0.1vw] text-[1.4vw] cursor-pointer hover:color-bg-subbold hover:text-white rounded-[0.4vw] btn-animation"
                                         onClick={() => {
                                             changePage(2);
                                         }}
@@ -956,7 +956,7 @@ export default function FinReportModal({
                             <div className="w-full text-start text-[1.8vw] flex justify-start items-center">
                                 <p>게임 통계 (1 / 2)</p>
                                 <p
-                                    className="border-[0.2vw] color-border-subbold mx-[1vw] px-[1vw] py-[0.2vw] cursor-pointer"
+                                    className="border-[0.2vw] color-border-subbold mx-[0.6vw] px-[1vw] py-[0.1vw] text-[1.4vw] cursor-pointer hover:color-bg-subbold hover:text-white rounded-[0.4vw] btn-animation"
                                     onClick={() => {
                                         changePage(1);
                                     }}
@@ -964,7 +964,7 @@ export default function FinReportModal({
                                     이전
                                 </p>
                                 <p
-                                    className="border-[0.2vw] color-border-subbold mx-[1vw] px-[1vw] py-[0.2vw] cursor-pointer"
+                                    className="border-[0.2vw] color-border-subbold mx-[0.6vw] px-[1vw] py-[0.1vw] text-[1.4vw] cursor-pointer hover:color-bg-subbold hover:text-white rounded-[0.4vw] btn-animation"
                                     onClick={() => {
                                         changePage(3);
                                     }}
@@ -1057,20 +1057,12 @@ export default function FinReportModal({
                             <div className="w-full text-start text-[1.8vw] flex justify-start items-center">
                                 <p>게임 통계 (2 / 2)</p>
                                 <p
-                                    className="border-[0.2vw] color-border-subbold mx-[1vw] px-[1vw] py-[0.2vw] cursor-pointer"
+                                    className="border-[0.2vw] color-border-subbold mx-[0.6vw] px-[1vw] py-[0.1vw] text-[1.4vw] cursor-pointer hover:color-bg-subbold hover:text-white rounded-[0.4vw] btn-animation"
                                     onClick={() => {
                                         changePage(2);
                                     }}
                                 >
                                     이전
-                                </p>
-                                <p
-                                    className="border-[0.2vw] color-border-subbold mx-[1vw] px-[1vw] py-[0.2vw] cursor-pointer"
-                                    onClick={() => {
-                                        changePage(3);
-                                    }}
-                                >
-                                    다음
                                 </p>
                             </div>
                         </div>
@@ -1133,7 +1125,7 @@ export default function FinReportModal({
                                     {finReport?.achievementList.map((item) => {
                                         console.log(item);
                                         return (
-                                            <li className="h-[30%]">
+                                            <li className="h-[30%] my-[0.4vw]">
                                                 <AchievementCard
                                                     achievementId={item}
                                                     achievementInfo={

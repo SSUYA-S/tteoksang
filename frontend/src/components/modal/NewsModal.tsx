@@ -79,7 +79,7 @@ export default function NewsModal(props: NewsType) {
                         {currentNews.length > 0 ? (
                             <div className="relative w-full h-[50%]  text-start text-[2vw] overflow-y-scroll">
                                 <span
-                                    className="relative h-fit text-ellipsis overflow-hidden z-10 "
+                                    className="relative h-fit text-ellipsis overflow-hidden z-10 py-[0.3vw] px-[0.2vw]"
                                     style={{ backgroundColor: '#ececec' }}
                                 >
                                     {currentNews[0].articleHeadline}
@@ -93,7 +93,7 @@ export default function NewsModal(props: NewsType) {
                         ) : (
                             <div className="relative w-full h-[50%]  text-start text-[2vw]">
                                 <span
-                                    className="relative h-fit text-ellipsis overflow-hidden z-10 "
+                                    className="relative h-fit text-ellipsis overflow-hidden z-10 py-[0.3vw] px-[0.2vw]"
                                     style={{ backgroundColor: '#ececec' }}
                                 >
                                     계속되는 지각 변동. 조만간 무슨 일이
@@ -109,7 +109,7 @@ export default function NewsModal(props: NewsType) {
                         {currentNews.length > 1 ? (
                             <div className="relative w-full h-[50%]  text-start text-[2vw] overflow-y-scroll">
                                 <span
-                                    className="relative h-fit text-ellipsis overflow-hidden z-10 "
+                                    className="relative h-fit text-ellipsis overflow-hidden z-10 py-[0.3vw] px-[0.2vw]"
                                     style={{ backgroundColor: '#ececec' }}
                                 >
                                     {currentNews[1].articleHeadline}
@@ -123,7 +123,7 @@ export default function NewsModal(props: NewsType) {
                         ) : (
                             <div className="relative w-full h-[50%]  text-start text-[2vw]">
                                 <span
-                                    className="relative h-fit text-ellipsis overflow-hidden z-10 "
+                                    className="relative h-fit text-ellipsis overflow-hidden z-10 py-[0.3vw] px-[0.2vw]"
                                     style={{ backgroundColor: '#ececec' }}
                                 >
                                     떡상 주가 계속 상승중!
@@ -140,7 +140,7 @@ export default function NewsModal(props: NewsType) {
                         {currentNews.length > 2 ? (
                             <div className="relative w-full h-[50%] text-start text-[2.0vw] overflow-y-scroll">
                                 <span
-                                    className="relative h-fit text-ellipsis overflow-hidden z-10 "
+                                    className="relative h-fit text-ellipsis overflow-hidden z-10 py-[0.3vw] px-[0.2vw]"
                                     style={{ backgroundColor: '#ececec' }}
                                 >
                                     {currentNews[2].articleHeadline}
@@ -154,7 +154,7 @@ export default function NewsModal(props: NewsType) {
                         ) : (
                             <div className="relative w-full h-[50%]  text-start text-[2vw] ">
                                 <span
-                                    className="relative h-fit text-ellipsis overflow-hidden z-10 "
+                                    className="relative h-fit text-ellipsis overflow-hidden z-10 py-[0.3vw] px-[0.2vw]"
                                     style={{ backgroundColor: '#ececec' }}
                                 >
                                     배추의 움직임이 심상치 않은걸로 밝혀져
@@ -169,7 +169,7 @@ export default function NewsModal(props: NewsType) {
                         {currentNews.length > 3 ? (
                             <div className="relative w-full h-[45%] text-start text-[2.0vw] overflow-y-scroll">
                                 <span
-                                    className="relative h-fit text-ellipsis overflow-hidden z-10 "
+                                    className="relative h-fit text-ellipsis overflow-hidden z-10 py-[0.3vw] px-[0.2vw]"
                                     style={{ backgroundColor: '#ececec' }}
                                 >
                                     {currentNews[3].articleHeadline}
@@ -183,7 +183,7 @@ export default function NewsModal(props: NewsType) {
                         ) : (
                             <div className="relative w-full h-[45%]  text-start text-[1.8vw] ">
                                 <span
-                                    className="relative h-fit text-ellipsis overflow-hidden z-10 "
+                                    className="relative h-fit text-ellipsis overflow-hidden z-10 py-[0.3vw] px-[0.2vw]"
                                     style={{ backgroundColor: '#ececec' }}
                                 >
                                     조만간 인기 아이돌 ㅇㅇㅇㅇㅇ의 데뷔가
