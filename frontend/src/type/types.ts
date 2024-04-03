@@ -342,7 +342,7 @@ export interface HalfReportType {
     tteoksangStatistics: Stat;
     tteokrockStatistics: Stat;
     bestSellerStatistics: Stat;
-    achievementList: AchievementReport[];
+    achievementList: number[];
 }
 
 /**전체 결산 리포트를 위한 type */

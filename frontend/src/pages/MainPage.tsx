@@ -247,6 +247,7 @@ export default function MainPage() {
                     titleData={initialData.titleList}
                     profileFrameData={initialData.profileFrameList}
                     profileIconData={initialData.profileIconList}
+                    themeData={initialData.themeList}
                 />
             ) : (
                 <GameComponent

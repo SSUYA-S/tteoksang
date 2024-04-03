@@ -536,12 +536,12 @@ export default function TradeModal(props: tradeType) {
                                 물품 구매
                             </p>
                             <div className="w-[45%]">
-                                <div className="w-full flex justify-between text-[1.3vw] color-text-textcolor me-[1vw]">
+                                <div className="w-full flex justify-between text-[1vw] color-text-textcolor me-[1vw]">
                                     <p>현재 소지 금액</p>
                                     <p>{props.nowMoney.toLocaleString()}</p>
                                 </div>
 
-                                <div className="w-full flex justify-between text-[1.3vw] color-text-textcolor me-[1vw]">
+                                <div className="w-full flex justify-between text-[1vw] color-text-textcolor me-[1vw]">
                                     <p>예상 창고 용량</p>
                                     <p>
                                         {totalNumber}/
@@ -552,7 +552,7 @@ export default function TradeModal(props: tradeType) {
                                         }
                                     </p>
                                 </div>
-                                <div className="w-full flex justify-between text-[1.3vw] color-text-textcolor me-[1vw]">
+                                <div className="w-full flex justify-between text-[1vw] color-text-textcolor me-[1vw]">
                                     <p>예상 탈 것 용량</p>
                                     <p>
                                         {myProductInfo.purchasedQuantity +
@@ -607,12 +607,12 @@ export default function TradeModal(props: tradeType) {
                                 물품 판매
                             </p>
                             <div className="w-[45%]">
-                                <div className="w-full flex justify-between text-[1.3vw] color-text-textcolor me-[1vw]">
+                                <div className="w-full flex justify-between text-[1vw] color-text-textcolor me-[1vw]">
                                     <p>현재 소지 금액</p>
                                     <p>{props.nowMoney.toLocaleString()}</p>
                                 </div>
 
-                                <div className="w-full flex justify-between text-[1.3vw] color-text-textcolor me-[1vw]">
+                                <div className="w-full flex justify-between text-[1vw] color-text-textcolor me-[1vw]">
                                     <p>예상 창고 용량</p>
                                     <p>
                                         {totalNumber}/
@@ -623,7 +623,7 @@ export default function TradeModal(props: tradeType) {
                                         }
                                     </p>
                                 </div>
-                                <div className="w-full flex justify-between text-[1.3vw] color-text-textcolor me-[1vw]">
+                                <div className="w-full flex justify-between text-[1vw] color-text-textcolor me-[1vw]">
                                     <p>예상 탈 것 용량</p>
                                     <p>
                                         {myProductInfo.purchasedQuantity}/
@@ -683,13 +683,13 @@ export default function TradeModal(props: tradeType) {
                             </p>
                             <div className="w-[40%] justify-between flex pb-[0.2vh]">
                                 <p
-                                    className="text-[1.5vw] w-[40%] border-[0.2vw] color-border-subbold color-text-textcolor cursor-pointer hover:color-bg-subbold hover:color-text-main flex justify-center items-center"
+                                    className="text-[1.5vw] w-[40%] border-[0.2vw] color-border-subbold color-text-textcolor cursor-pointer btn-animation hover:color-bg-subbold hover:color-text-main flex justify-center items-center"
                                     onClick={() => setIsFilter((prev) => !prev)}
                                 >
                                     {isFilter ? '전체 보기' : '내 것만 보기'}
                                 </p>
                                 <p
-                                    className="text-[1.5vw] w-[40%] border-[0.2vw] color-border-subbold color-text-textcolor cursor-pointer hover:color-bg-subbold hover:color-text-main flex justify-center items-center"
+                                    className="text-[1.5vw] w-[40%] border-[0.2vw] color-border-subbold color-text-textcolor cursor-pointer btn-animation hover:color-bg-subbold hover:color-text-main flex justify-center items-center"
                                     onClick={() => {
                                         setIsFilter(false);
                                         setSortMode(0);
@@ -705,7 +705,7 @@ export default function TradeModal(props: tradeType) {
                                     <tr className="relative border-b-[0.2vw] color-border-subbold">
                                         <th className="w-[25%]">작물</th>
                                         <th
-                                            className="w-[25%] cursor-pointer"
+                                            className="w-[25%] cursor-pointer btn-animation"
                                             onClick={() => {
                                                 if (sortMode == 1) {
                                                     setSortMode(2);
@@ -723,7 +723,7 @@ export default function TradeModal(props: tradeType) {
                                             }`}
                                         </th>
                                         <th
-                                            className="w-[25%] cursor-pointer"
+                                            className="w-[25%] cursor-pointer btn-animation"
                                             onClick={() => {
                                                 if (sortMode == 3) {
                                                     setSortMode(4);
@@ -739,7 +739,7 @@ export default function TradeModal(props: tradeType) {
                                                 : ' -'
                                         }`}</th>
                                         <th
-                                            className="w-[25%] cursor-pointer"
+                                            className="w-[25%] cursor-pointer btn-animation"
                                             onClick={() => {
                                                 if (sortMode == 5) {
                                                     setSortMode(6);
@@ -884,7 +884,7 @@ export default function TradeModal(props: tradeType) {
             </div>
             {tradeElement()}
             <div
-                className="absolute text-[2vw] flex items-center justify-center text-white top-[1vw] right-[1vw] w-[4vw] h-[4vw] border-[0.4vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer"
+                className="absolute text-[2vw] flex items-center justify-center text-white top-[1vw] right-[1vw] w-[4vw] h-[4vw] border-[0.4vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer btn-animation"
                 onClick={closeTradeModal}
             >
                 X
