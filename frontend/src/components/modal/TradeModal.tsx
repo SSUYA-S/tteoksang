@@ -359,6 +359,8 @@ export default function TradeModal(props: tradeType) {
                 (props.nowMoney - totalCost) / productInfo.productCost;
         }
 
+        maxAddValue = Math.floor(maxAddValue);
+
         return maxAddValue;
     };
 
