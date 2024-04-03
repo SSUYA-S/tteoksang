@@ -52,8 +52,10 @@ public class ReportServiceImpl implements ReportService {
     //TODO- 환경변수를 어디 스태틱처럼 두고 쓰는게 낫나? 아니면 하나 싱글톤이든?
     final double DISCOUNT_RATE = 100.0; // 할인율을 %로 표현
 
+
     // 계절 결산 불러오기
-    public void sendQuarterResult(String userId, String webSocketId) {
+    @Override
+    public GameMessageRes sendQuarterResult(String userId, String webSocketId) {
         boolean isSuccess = true;
         Object responseBody = "";
         // 레디스에서 결산 데이터 불러오기
@@ -63,6 +65,7 @@ public class ReportServiceImpl implements ReportService {
         UserInfo userInfo = (UserInfo) redisService.getValues(userInfoKey);
         if (redisService.hasKey(redisGameInfoKey)) {
             redisGameInfo = (RedisGameInfo) redisService.getValues(redisGameInfoKey);
+            // 결산 데이터
             RentFeeInfo rentFeeInfo = calculateRentFee(userId, redisGameInfo);
 
             // 현재 계절정보
@@ -96,9 +99,43 @@ public class ReportServiceImpl implements ReportService {
                 .isSuccess(isSuccess)
                 .body(responseBody)
                 .build();
-
-        simpMessagingTemplate.convertAndSend("/topic/private/" + webSocketId, quarterResult);
+        return  quarterResult;
     }
+
+    @Override
+    public void sendHalfResult(String userId, String webSocketId) {
+        boolean isSuccess = true;
+        Object responseBody = "";
+
+        String redisGameInfoKey = RedisPrefix.INGAMEINFO.prefix() + userId;
+        // 레디스에서 데이터 불러오기
+        if (redisService.hasKey(redisGameInfoKey)) {
+            // 레디스 정보
+            RedisGameInfo redisGameInfo = (RedisGameInfo) redisService.getValues(redisGameInfoKey);
+            int turn = serverInfo.getCurrentTurn();
+            long gold = redisGameInfo.getGold();
+
+            // 계절 결산 내용
+            GameMessageRes quarterResult = sendQuarterResult(userId, webSocketId);
+            // 계절 정보 가져오기
+            Quarter quarter = (Quarter) quarterResult.getBody();
+
+            // 계절 결산의 내용의 Rentfee를 그대로 사용
+            RentFeeInfo rentFeeInfo = quarter.getRentFeeInfo();
+
+//            // 몽고 디비에서 데이터 불러오기
+//            long totalProductIncome = totalAccPrivateProductIncome; //ReduceProductInfo
+//            long totalProductOutcome = totalAccPrivateProductOutcome;    //ReduceProductInfo
+//            long totalBrokerFee = accPrivateBrokerFee;  //ReduceProductInfo
+//            long totalUpgradeFee = accPrivateUpgradeFee;    //ReduceStatistics
+//            long totalRentFee = accPrivateRentFee;  //ReduceStatistics
+//            long eventBonus = accPrivateEventBonus; //ReduceStatistics
+//            long participantCount = accPrivateGamePlayCount; // ReduceStatistics
+
+
+        }
+    }
+
 
     private RentFeeInfo calculateRentFee(String userId, RedisGameInfo redisGameInfo) {
         RentFeeInfo rentFeeInfo;

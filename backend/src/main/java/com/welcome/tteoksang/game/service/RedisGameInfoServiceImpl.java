@@ -33,10 +33,7 @@ public class RedisGameInfoServiceImpl implements RedisGameInfoService {
                 // FIXME: 상품 직렬화 과정이 필요함
                 byte[] gameInfoProducts = RedisSerializationUtil.serializeMap(redisGameInfo.getProducts());
                 // 엔티티로 저장
-                GameInfo gameInfo = gameInfoRepository.findById(userId).orElse(null);
-                if (gameInfo != null) {
-                    gameInfoRepository.deleteById(userId);
-                }
+                gameInfoRepository.findById(userId).ifPresent(gameInfo -> gameInfoRepository.deleteById(userId));
                 GameInfo presentGameInfo = GameInfo.builder()
                         .userId(userId)
                         .gameId(redisGameInfo.getGameId())
