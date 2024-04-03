@@ -1,0 +1,11 @@
+spring:
+  config:
+    import:
+      - optional:file:.env[.properties]
+logging:
+  level:
+    com:
+      welcome:
+        data: debug
+server:
+  port: 9099
