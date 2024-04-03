@@ -179,7 +179,7 @@ export default function TradeSellCard({
                 <div
                     className="h-[70%] py-[0.2vw] px-[0.6vw] flex items-center text-[1.1vw] mx-[0.2vw] color-bg-orange1 rounded-[0.4vw] text-white cursor-pointer"
                     onClick={() => {
-                        console.log('Hello');
+                        // console.log('Hello');
                         changeProductNumber(sellInfo.myProduct.productQuantity);
                     }}
                 >

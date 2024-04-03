@@ -130,15 +130,15 @@ export default function TradeModal(props: tradeType) {
                 .vehicleCapacity - myProductInfo.purchasedQuantity
         );
 
-        console.log(
-            props.infraInfo.warehouseInfoList[myProductInfo.warehouseLevel - 1]
-                .warehouseCapacity - nowStock
-        );
-        console.log(
-            props.infraInfo.vehicleInfoList[myProductInfo.vehicleLevel - 1]
-                .vehicleCapacity
-        );
-        console.log(myProductInfo.purchasedQuantity);
+        // console.log(
+        //     props.infraInfo.warehouseInfoList[myProductInfo.warehouseLevel - 1]
+        //         .warehouseCapacity - nowStock
+        // );
+        // console.log(
+        //     props.infraInfo.vehicleInfoList[myProductInfo.vehicleLevel - 1]
+        //         .vehicleCapacity
+        // );
+        // console.log(myProductInfo.purchasedQuantity);
     }, [
         myProductInfo.purchasedQuantity,
         myProductInfo.warehouseLevel,
@@ -316,7 +316,7 @@ export default function TradeModal(props: tradeType) {
         });
         //구매 가능 수량 초과
         // console.log(maximumBuyableAmount.current);
-        console.log(newList);
+        // console.log(newList);
         if (
             totalBuyNum > maximumBuyableAmount.current ||
             totalBuyCost > props.nowMoney
