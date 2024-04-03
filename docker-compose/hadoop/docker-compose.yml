@@ -1,0 +1,43 @@
+version: '3.7'
+
+services:
+  data:
+    image: ssuyas/spark-base
+    container_name: TteoksangData
+    restart: unless-stopped
+    environment:
+      - YARN_SITE__YARN_NODEMANAGER_RESOURCE_DETECT_HARDWARE_CAPABILITIES=true
+      - SPARK_ENV__SPARK_EXECUTOR_CORES=1
+      - SPARK_ENV__SPARK_EXECUTOR_INSTANCES=2
+      - SPARK_ENV__SPARK_EXECUTOR_MEMORY=2g
+      - HADOOP_HOME=/opt/hadoop-3.3.6
+    volumes:
+      - ./dags:/home/hdfs/airflow/dags
+      - ./jars:/home/hdfs/jars
+      - ./logs:/home/hdfs/logs
+    ports:
+      - "8032:8032"
+      - "8082:8080"
+      - "8088:8088"
+      - "8042:8042"
+      - "18080:18080"
+      - "15002:15002"
+      - "9090:9090"
+
+  logger:
+    image: ssuyas/tteoksang_logger
+    container_name: TteoksangLogger
+    restart: unless-stopped
+    environment:
+      - LOG_PATH=${LOG_PATH}
+      - KAFKA_TOPIC_LOG=${KAFKA_TOPIC_LOG}
+      - DATA_KAFKA_BOOTSTRAP_SERVERS=${DATA_KAFKA_BOOTSTRAP_SERVERS}
+      - DATA_KAFKA_CONSUMER_GROUP_ID=${DATA_KAFKA_CONSUMER_GROUP_ID}
+      - DATA_KAFKA_TOPIC=${$DATA_KAFKA_TOPIC}
+      - LOG_PATH=${LOG_PATH}
+      - AIRFLOW_URL=${AIRFLOW_URL}
+      - DATA_SERVER_URL=${DATA_SERVER_URL}
+    volumes:
+      - ./logs:${LOG_PATH}
+    ports:
+      - "9099:9099"
