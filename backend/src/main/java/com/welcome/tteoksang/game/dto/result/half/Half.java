@@ -13,18 +13,19 @@ import java.util.List;
 @Builder
 public class Half {
     private Integer turn;
+    private Long gold;
     private RentFeeInfo rentFeeInfo;
     private Quarter quarterReport;
     private Long totalProductIncome;
     private Long totalProductOutcome;
-    private Integer totalBrokerFee;
-    private Integer totalUpgradeFee;
+    private Long totalBrokerFee;
+    private Long totalUpgradeFee;
     private Long totalRentFee;
-    private Integer eventBonus; // 개인 이벤트
+    private Long eventBonus; // 개인 이벤트
     private Integer participantCount; // 사용자 수
     private List<RankInfo> rankInfoList;
     private TteoksangStatistics tteoksangStatistics;
     private TteokrockStatistics tteokrockStatistics;
     private BestSellerStatistics bestSellerStatistics;
-    private List<AchievementInfo>achievementList;
+    private List<Integer>achievementList;
 }
