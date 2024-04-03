@@ -65,7 +65,7 @@ export default function NewsModal(props: NewsType) {
                         <p className="w-full h-[0.2vw] bg-black"></p>
                     </div>
                     <div
-                        className="absolute text-[2.6vw] cursor-pointer top-[1.6vw] right-[0vw]"
+                        className="absolute text-[2.6vw] cursor-pointer btn-animation top-[1.6vw] right-[0vw]"
                         onClick={() => {
                             closeNewsModal();
                         }}

@@ -24,7 +24,13 @@ import { Cookies } from 'react-cookie';
 //     productInfoState,
 //     buyableProductIdState,
 // } from '../util/product-and-event';
-import { Achievement, ProfileFrame, ProfileIcon, Title } from '../type/types';
+import {
+    Achievement,
+    ProfileFrame,
+    ProfileIcon,
+    Theme,
+    Title,
+} from '../type/types';
 import { checkMyPrevious, checkMyProfile, startNewGame } from '../api/user';
 import { httpStatusCode } from '../util/http-status';
 import { profileData } from '../type/types';
@@ -39,6 +45,7 @@ import {
     profileThemeState,
 } from '../util/counter-slice';
 import WarningModal from './modal/WarningModal';
+import MyPageModal from './modal/MyPageModal';
 
 type startType = {
     setStartFlag: React.Dispatch<React.SetStateAction<boolean>>;
@@ -47,17 +54,23 @@ type startType = {
     profileFrameData: ProfileFrame[];
     profileIconData: ProfileIcon[];
     startFlag: boolean;
+    themeData: Theme[];
 };
 export default function GameStartComponent(props: startType) {
     const achievementData = props.achievementData;
     const titleData = props.titleData;
     const profileFrameData = props.profileFrameData;
     const profileIconData = props.profileIconData;
+    const themeData = props.themeData;
+
     const [loginFlag, setLoginFlag] = useState<boolean>(false);
     const [playing, setPlaying] = useState<boolean>(false);
     const [audio, setAudio] = useState(
         new Audio('/src/assets/bgm/start_theme_bgm.mp3')
     );
+
+    //마이페이지
+    const [isMyPageOpen, setIsMyPageOpen] = useState<boolean>(false);
 
     //이전 기록이 존재하는가?
     const [isPreviousExist, setIsPreviousExist] = useState<boolean>(false);
@@ -235,7 +248,7 @@ export default function GameStartComponent(props: startType) {
                     {isPreviousExist ? (
                         <>
                             <div
-                                className="relative w-[40%] h-[55%] cursor-pointer bg-[#FFE27B] border-black border-[0.5vw] flex flex-col justify-center items-center p-[0.5vw]"
+                                className="relative w-[40%] h-[55%] cursor-pointer btn-animation bg-[#FFE27B] border-black border-[0.5vw] flex flex-col justify-center items-center p-[0.5vw]"
                                 onClick={() => {
                                     // loadGameData();
                                     onReady();
@@ -246,7 +259,7 @@ export default function GameStartComponent(props: startType) {
                             </div>
                             <div className="h-[5%]"></div>
                             <div
-                                className="relative w-[40%] h-[40%] cursor-pointer bg-[#FFF6D6] border-black border-[0.5vw] flex justify-center items-center p-[0.5vw]"
+                                className="relative w-[40%] h-[40%] cursor-pointer btn-animation bg-[#FFF6D6] border-black border-[0.5vw] flex justify-center items-center p-[0.5vw]"
                                 onClick={() => {
                                     setIsTryToReset(true);
                                 }}
@@ -257,7 +270,7 @@ export default function GameStartComponent(props: startType) {
                     ) : (
                         <>
                             <div
-                                className="relative w-[40%] h-[40%] cursor-pointer bg-[#FFF6D6] border-black border-[0.5vw] flex justify-center items-center p-[0.5vw]"
+                                className="relative w-[40%] h-[40%] cursor-pointer btn-animation bg-[#FFF6D6] border-black border-[0.5vw] flex justify-center items-center p-[0.5vw]"
                                 onClick={() => {
                                     onReady();
                                 }}
@@ -272,7 +285,7 @@ export default function GameStartComponent(props: startType) {
             return (
                 <>
                     <div
-                        className=" rounded-full flex items-center justify-center my-[4vw] px-[1vw] py-[0.4vw] text-[2vw] font-bold cursor-pointer"
+                        className=" rounded-full flex items-center justify-center my-[4vw] px-[1vw] py-[0.4vw] text-[2vw] font-bold cursor-pointer btn-animation"
                         onClick={() => {
                             toggle();
                             onClickLogin();
@@ -299,6 +312,18 @@ export default function GameStartComponent(props: startType) {
                 backgroundRepeat: 'no-repeat',
             }}
         >
+            {isMyPageOpen ? (
+                <MyPageModal
+                    setMypageFlag={setIsMyPageOpen}
+                    titleInfo={titleData}
+                    profileFrameInfo={profileFrameData}
+                    themeInfo={themeData}
+                    iconInfo={profileIconData}
+                    achievementList={achievementData}
+                />
+            ) : (
+                <></>
+            )}
             {isTrytoReset ? (
                 <WarningModal
                     handleOK={resetAndStart}
@@ -314,7 +339,7 @@ export default function GameStartComponent(props: startType) {
             )}
             <div className="absolute w-[10%] h-[40%] flex flex-col justify-center items-center top-[4%] right-[0%] z-20">
                 <div
-                    className="w-[50%] h-[30%] cursor-pointer z-10"
+                    className="w-[50%] h-[30%] cursor-pointer btn-animation z-10"
                     style={{
                         backgroundImage:
                             'url(/src/assets/images/icon/ui-icon-ranking.png)',
@@ -325,7 +350,7 @@ export default function GameStartComponent(props: startType) {
                 />
                 <div className="h-[5%]" />
                 <div
-                    className="w-[50%] h-[30%] cursor-pointer z-10"
+                    className="w-[50%] h-[30%] cursor-pointer btn-animation z-10"
                     style={{
                         backgroundImage:
                             'url(/src/assets/images/icon/ui-icon-mypage.png)',
@@ -333,11 +358,12 @@ export default function GameStartComponent(props: startType) {
                         backgroundPosition: 'center',
                         backgroundRepeat: 'no-repeat',
                     }}
+                    onClick={() => setIsMyPageOpen(true)}
                 />
                 <div className="h-[5%]" />
                 {playing ? (
                     <div
-                        className="w-[50%] h-[30%] cursor-pointer"
+                        className="w-[50%] h-[30%] cursor-pointer btn-animation"
                         style={{
                             backgroundImage:
                                 'url(/src/assets/images/icon/ui-icon-volumeon.png)',
@@ -351,7 +377,7 @@ export default function GameStartComponent(props: startType) {
                     ></div>
                 ) : (
                     <div
-                        className="w-[50%] h-[30%] cursor-pointer"
+                        className="w-[50%] h-[30%] cursor-pointer btn-animation"
                         style={{
                             backgroundImage:
                                 'url(/src/assets/images/icon/ui-icon-volumeoff.png)',

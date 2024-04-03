@@ -624,7 +624,7 @@ export default function GameComponent(props: GameType) {
                     })}
                 </div>
                 <div
-                    className="absolute text-[2vw] flex items-center justify-center text-white top-[2.2vw] right-[3vw] w-[4vw] h-[4vw] border-[0.4vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer"
+                    className="absolute text-[2vw] flex items-center justify-center text-white top-[2.2vw] right-[3vw] w-[4vw] h-[4vw] border-[0.4vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer btn-animation"
                     onClick={() => {
                         setCurrentViewEvent([]);
                     }}
@@ -840,7 +840,7 @@ export default function GameComponent(props: GameType) {
                             className="absolute w-full h-full z-20"
                             alt=""
                         />
-                        <div className="relative w-full h-full flex items-center justify-center rounded-[0.4vw] cursor-pointer z-20">
+                        <div className="relative w-full h-full flex items-center justify-center rounded-[0.4vw] cursor-pointer btn-animation z-20">
                             <div
                                 className="relative w-full h-full flex "
                                 onClick={() => openMypageElement()}
@@ -850,11 +850,11 @@ export default function GameComponent(props: GameType) {
                                     style={{ aspectRatio: 1 / 1 }}
                                 >
                                     <img
-                                        className="absolute h-full cursor-pointer p-[0.6vw] object-cover"
+                                        className="absolute h-full cursor-pointer btn-animation p-[0.6vw] object-cover"
                                         src={`/src/assets/images/profile/icon (${profileIcon}).png`}
                                     />
                                     <img
-                                        className="absolute h-full cursor-pointer p-[0.6vw] object-cover"
+                                        className="absolute h-full cursor-pointer btn-animation p-[0.6vw] object-cover"
                                         src={`/src/assets/images/profile/frame (${profileFrame}).png`}
                                     />
                                 </div>
@@ -875,7 +875,7 @@ export default function GameComponent(props: GameType) {
                         </div>
                         <div className="flex">
                             <div
-                                className="relative m-[0.4vw] w-[18%] h-full bg-red-50 aspect-square cursor-pointer rounded-full border-[0.2vw]"
+                                className="relative m-[0.4vw] w-[18%] h-full bg-red-50 aspect-square cursor-pointer btn-animation rounded-full border-[0.2vw]"
                                 onClick={() => {
                                     changeMode(0);
                                 }}
@@ -887,7 +887,7 @@ export default function GameComponent(props: GameType) {
                                 />
                             </div>
                             <div
-                                className="relative m-[0.4vw] w-[18%] h-full bg-red-50 aspect-square cursor-pointer rounded-full border-[0.2vw]"
+                                className="relative m-[0.4vw] w-[18%] h-full bg-red-50 aspect-square cursor-pointer btn-animation rounded-full border-[0.2vw]"
                                 onClick={() => {
                                     changeMode(1);
                                 }}
@@ -899,7 +899,7 @@ export default function GameComponent(props: GameType) {
                                 />
                             </div>
                             <div
-                                className="relative m-[0.4vw] w-[18%] h-full bg-red-50 aspect-square cursor-pointer rounded-full border-[0.2vw]"
+                                className="relative m-[0.4vw] w-[18%] h-full bg-red-50 aspect-square cursor-pointer btn-animation rounded-full border-[0.2vw]"
                                 onClick={() => {
                                     changeMode(2);
                                 }}
@@ -911,7 +911,7 @@ export default function GameComponent(props: GameType) {
                                 />
                             </div>
                             <div
-                                className="relative m-[0.4vw] w-[18%] h-full bg-red-50 aspect-square cursor-pointer rounded-full border-[0.2vw]"
+                                className="relative m-[0.4vw] w-[18%] h-full bg-red-50 aspect-square cursor-pointer btn-animation rounded-full border-[0.2vw]"
                                 onClick={() => {
                                     changeMode(3);
                                 }}
@@ -986,7 +986,7 @@ export default function GameComponent(props: GameType) {
                                 if (item.eventArray.length > 0) {
                                     return (
                                         <div
-                                            className="relative px-[0.4vw] cursor-pointer"
+                                            className="relative px-[0.4vw] cursor-pointer btn-animation"
                                             onClick={() => {
                                                 viewPubEventDetail(
                                                     item.eventArray
@@ -1012,7 +1012,7 @@ export default function GameComponent(props: GameType) {
                     <div className="absolute w-[40%] h-[20%] bottom-[4%] left-[1%]">
                         <div className="relative w-full h-full flex items-center justify-start">
                             <div
-                                className="w-[19%] h-[100%] cursor-pointer"
+                                className="w-[19%] h-[100%] cursor-pointer btn-animation"
                                 onClick={() => {
                                     openTradeElement();
                                 }}
@@ -1030,7 +1030,7 @@ export default function GameComponent(props: GameType) {
                             </div>
 
                             <div
-                                className="w-[19%] h-[100%] cursor-pointer"
+                                className="w-[19%] h-[100%] cursor-pointer btn-animation"
                                 onClick={() => {
                                     openFacilityElement();
                                 }}
@@ -1047,7 +1047,7 @@ export default function GameComponent(props: GameType) {
                                 />
                             </div>
                             <div
-                                className="w-[19%] h-[100%] cursor-pointer"
+                                className="w-[19%] h-[100%] cursor-pointer btn-animation"
                                 onClick={() => {
                                     openInventoryElement();
                                 }}
@@ -1064,7 +1064,7 @@ export default function GameComponent(props: GameType) {
                                 />
                             </div>
                             <div
-                                className={`relative w-[19%] h-[100%] cursor-pointer ${
+                                className={`relative w-[19%] h-[100%] cursor-pointer btn-animation ${
                                     newsFlag
                                         ? 'border-red-500 border-[0.2vw] rounded-[0.6vw] bg-white'
                                         : ''
@@ -1098,7 +1098,7 @@ export default function GameComponent(props: GameType) {
                     <div className="absolute w-[40%] h-[20%]  bottom-[4%] right-[1%]">
                         <div className="relative w-full h-full flex items-center justify-end">
                             <div
-                                className="w-[19%] h-[100%] cursor-pointer"
+                                className="w-[19%] h-[100%] cursor-pointer btn-animation"
                                 onClick={() => {
                                     openSettingElement();
                                 }}
@@ -1115,7 +1115,7 @@ export default function GameComponent(props: GameType) {
                                 />
                             </div>
                             <div
-                                className="w-[19%] h-[100%] cursor-pointer"
+                                className="w-[19%] h-[100%] cursor-pointer btn-animation"
                                 onClick={() => {
                                     setIsGetoutProceeding(true);
                                 }}
