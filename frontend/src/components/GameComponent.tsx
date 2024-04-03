@@ -834,7 +834,7 @@ export default function GameComponent(props: GameType) {
                     </div>
 
                     {/* 좌측 상단 ui */}
-                    <div className="absolute w-[25%] h-[16%] top-[4%] left-[2%]">
+                    <div className="absolute w-[22%] h-[16%] top-[4%] left-[2%]">
                         <img
                             src="/src/assets/images/layout/ui-board.webp"
                             className="absolute w-full h-full z-20"
@@ -863,11 +863,11 @@ export default function GameComponent(props: GameType) {
                                     {titleInfo.length > 0 && titleId === 1 ? (
                                         <></>
                                     ) : (
-                                        <p className="w-full text-start text-[1.2vw] color-text-sublight whitespace-nowrap overflow-hidden text-ellipsis">
+                                        <p className="w-full text-start text-[1.4vw] color-text-sublight whitespace-nowrap overflow-hidden text-ellipsis">
                                             {titleInfo[titleId - 1].titleName}
                                         </p>
                                     )}
-                                    <p className="w-full text-start my-[2%] text-[1.1vw] color-text-textcolor whitespace-nowrap overflow-hidden text-ellipsis">
+                                    <p className="w-full text-start my-[2%] text-[1.5vw] color-text-textcolor whitespace-nowrap overflow-hidden text-ellipsis">
                                         {userNickname}
                                     </p>
                                 </div>
@@ -1160,11 +1160,7 @@ export default function GameComponent(props: GameType) {
                         <></>
                     )}
                     {settingFlag ? (
-                        <SettingModal
-                            setSettingFlag={setSettingFlag}
-                            proceedLogout={proceedLogout}
-                            proceedWithdrawal={proceedWithdrawal}
-                        />
+                        <SettingModal setSettingFlag={setSettingFlag} />
                     ) : (
                         <></>
                     )}
@@ -1176,6 +1172,8 @@ export default function GameComponent(props: GameType) {
                             themeInfo={initialData.themeList}
                             iconInfo={initialData.profileIconList}
                             achievementList={initialData.achievementList}
+                            proceedLogout={proceedLogout}
+                            proceedWithdrawal={proceedWithdrawal}
                         />
                     ) : (
                         <></>
