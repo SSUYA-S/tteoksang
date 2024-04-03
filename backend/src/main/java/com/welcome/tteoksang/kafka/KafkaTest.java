@@ -1,6 +1,8 @@
 package com.welcome.tteoksang.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.welcome.tteoksang.game.dto.result.SeasonHalfPrivateStatistics;
+import com.welcome.tteoksang.game.dto.result.SeasonHalfStatistics;
 import com.welcome.tteoksang.game.dto.result.half.TteokValues;
 import com.welcome.tteoksang.game.dto.server.RedisHalfStatistics;
 import com.welcome.tteoksang.game.dto.server.RedisStatisticsUtil;
@@ -87,15 +89,14 @@ public class KafkaTest {
     }
 
     // 여기서 하둡에서 보낸 데이터를 받아서 몽고 디비로 넣음
-//    @KafkaListener(topics = "tteoksang_hadoop", containerFactory = "kafkaListenerContainFactory")
-//    public void receiveHadoopDataResult(@Payload String hadoopData) {
-//        ObjectMapper mapper = new ObjectMapper();
-//        try {
-//            Message message = mapper.readValue(hadoopData, Message.class);
-//            log.debug("Type: {}", message.getType());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        log.debug("Kafka: {}", hadoopData);
-//    }
+    @KafkaListener(topics = "tteoksang_hadoop", containerFactory = "kafkaListenerContainerFactory")
+    public void receiveHadoopDataResult(@Payload String hadoopData) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            SeasonHalfPrivateStatistics message = mapper.readValue(hadoopData, SeasonHalfPrivateStatistics.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        log.debug("Kafka: {}", hadoopData);
+    }
 }

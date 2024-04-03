@@ -31,6 +31,9 @@ public class GameInfo implements Serializable {
     @Column(name = "last_quarter_gold")
     private Long lastQuarterGold;
 
+    @Column(name = "last_half_gold")
+    private Long lastHalfGold;
+
     @Column(name = "warehouse_level")
     private Integer warehouseLevel;
 
