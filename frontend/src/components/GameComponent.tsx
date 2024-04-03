@@ -226,11 +226,12 @@ export default function GameComponent(props: GameType) {
 
         const res = await logout();
         if (res.status === httpStatusCode.OK) {
-            setIsLogoutProceeding(false);
             logoutServiceWorker();
+            setIsLogoutProceeding(false);
 
             // navigate('/');
             props.setStartFlag(false);
+            window.location.reload();
         } else {
             console.log('Logout error');
         }
@@ -261,6 +262,7 @@ export default function GameComponent(props: GameType) {
             logoutServiceWorker();
             props.setStartFlag(false);
             setIsWithdrawalProceeding(false);
+            window.location.reload();
         } else {
             console.log('회원 탈퇴 불가');
         }
@@ -840,7 +842,7 @@ export default function GameComponent(props: GameType) {
                             className="absolute w-full h-full z-20"
                             alt=""
                         />
-                        <div className="relative w-full h-full flex items-center justify-center rounded-[0.4vw] cursor-pointer btn-animation z-20">
+                        <div className="relative w-full h-full flex items-center justify-center rounded-[0.4vw] cursor-pointer z-20">
                             <div
                                 className="relative w-full h-full flex "
                                 onClick={() => openMypageElement()}

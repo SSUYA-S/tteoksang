@@ -166,7 +166,7 @@ export default function MyPageModal(props: MyPageType) {
     //animation 효과
 
     const menuElement = () => {
-        if (menu === 0) {
+        if (menu === 99) {
             return (
                 <>
                     <div className="w-full h-[25%] flex justify-between items-center px-[2.2vw] ">
@@ -310,7 +310,7 @@ export default function MyPageModal(props: MyPageType) {
                     </div>
                 </>
             );
-        } else if (menu === 1) {
+        } else if (menu === 100) {
             return (
                 <>
                     <div className="w-full h-[25%] flex justify-between items-center px-[2.2vw]">
@@ -402,7 +402,7 @@ export default function MyPageModal(props: MyPageType) {
                     </div>
                 </>
             );
-        } else if (menu === 2) {
+        } else if (menu === 2 || menu === 0) {
             return (
                 <>
                     <div className="w-full h-[25%] flex justify-between items-center px-[2.2vw]">
@@ -695,7 +695,7 @@ export default function MyPageModal(props: MyPageType) {
                 {menuElement()}
 
                 <div className="absolute -top-[2.1vw] left-[10%] flex">
-                    <div
+                    {/* <div
                         className={
                             'w-[9vw]  text-white bg-red-500 pt-[0.2vw] text-[1.4vw] cursor-pointer rounded-t-[1vw] ' +
                             (menu === 0 ? 'h-[4.2vw]' : 'h-[2.1vw]')
@@ -703,7 +703,7 @@ export default function MyPageModal(props: MyPageType) {
                         onClick={() => changeMenu(0)}
                     >
                         도전과제
-                    </div>
+                    </div> */}
                     {/* <div
                         className={
                             'w-[9vw]  text-white bg-blue-500 pt-[0.2vw] text-[1.4vw] mx-[2vw] cursor-pointer rounded-t-[1vw] ' +
@@ -725,7 +725,7 @@ export default function MyPageModal(props: MyPageType) {
                 </div>
                 <div
                     className={
-                        'absolute right-[5%] bottom-[5%] w-[9vw]  text-white color-bg-subbold p-[0.2vw] text-[1.4vw] cursor-pointer rounded-[0.8vw] '
+                        'absolute right-[5%] bottom-[5%] w-[9vw] border-[0.2vw] color-border-subbold text-white color-bg-subbold p-[0.6vw] text-[1.4vw] cursor-pointer rounded-[0.8vw] hover:bg-white hover:color-text-subbold hover:color-border-subbold '
                     }
                     onClick={() => saveSettings()}
                 >
