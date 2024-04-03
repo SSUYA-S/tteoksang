@@ -80,11 +80,11 @@ export default function QuarterReportModal(props: Prop) {
                 if (res.status === httpStatusCode.OK) {
                     props.setStartFlag(false);
                 } else {
-                    console.log('response error');
+                    // console.log('response error');
                 }
             })
             .catch((err) => {
-                console.log(err);
+                // console.log(err);
             });
     };
 
