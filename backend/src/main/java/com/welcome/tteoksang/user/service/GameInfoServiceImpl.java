@@ -61,9 +61,10 @@ public class GameInfoServiceImpl implements GameInfoService {
         GameInfo newGameInfo = GameInfo.builder()
                 .userId(userId)
                 .gameId(newGameId)// 새로운 게임 ID
-                .gold(10000000L)
+                .gold(30000000L)
 //                .gold(10000L)
                 .lastQuarterGold(0L)
+                .lastHalfGold(0L)
                 .warehouseLevel(1)
                 .vehicleLevel(1)
                 .brokerLevel(1)
@@ -140,8 +141,9 @@ public class GameInfoServiceImpl implements GameInfoService {
                 gameInfo = GameInfo.builder()
                         .userId(userId)
                         .gameId(1)// 현재 게임 ID
-                        .gold(10000L)
+                        .gold(30000000L)
                         .lastQuarterGold(0L)
+                        .lastHalfGold(0L)
                         .warehouseLevel(1)
                         .vehicleLevel(1)
                         .brokerLevel(1)
@@ -159,12 +161,14 @@ public class GameInfoServiceImpl implements GameInfoService {
         }
     }
 
+    // FIXME redis 수정시 반영 해야됨
     private void inItRedisGameInfo(String userId, GameInfo newGameInfo, Map<Integer, UserProductInfo> products, String gameInfoKey) {
         // 레디스에 이전 게임 데이터 저장
         RedisGameInfo redisGameInfo = RedisGameInfo.builder()
                 .gameId(newGameInfo.getGameId())
                 .gold(newGameInfo.getGold())
                 .lastQuarterGold(newGameInfo.getLastQuarterGold())
+                .lastHalfGold(newGameInfo.getLastHalfGold())
                 .warehouseLevel(newGameInfo.getWarehouseLevel())
                 .vehicleLevel(newGameInfo.getVehicleLevel())
                 .brokerLevel(newGameInfo.getBrokerLevel())

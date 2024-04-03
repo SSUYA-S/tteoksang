@@ -89,7 +89,7 @@ public class KafkaTest {
     }
 
     // 여기서 하둡에서 보낸 데이터를 받아서 몽고 디비로 넣음
-    @KafkaListener(topics = "tteoksang_hadoop", containerFactory = "kafkaListenerContainFactory")
+    @KafkaListener(topics = "tteoksang_hadoop", containerFactory = "kafkaListenerContainerFactory")
     public void receiveHadoopDataResult(@Payload String hadoopData) {
         ObjectMapper mapper = new ObjectMapper();
         try {

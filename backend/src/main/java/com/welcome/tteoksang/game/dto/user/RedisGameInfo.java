@@ -21,6 +21,7 @@ public class RedisGameInfo implements Serializable {
     private Integer gameId;
     private Long gold;
     private Long lastQuarterGold;
+    private Long lastHalfGold;
     private Integer warehouseLevel;
     private Integer vehicleLevel;
     private Integer brokerLevel;
