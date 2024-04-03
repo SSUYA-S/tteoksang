@@ -25,7 +25,7 @@ export default function TradeSellReceipt({
                 className="absolute w-full h-full -z-10"
                 alt=""
             />
-            <p className="h-[15%] text-[2.4vw] flex items-center justify-center">
+            <p className="h-[18%] text-[2.4vw] flex items-center justify-center">
                 판매 영수증
             </p>
             <div className="w-[90%] h-[60%] text-[1.2vw]">

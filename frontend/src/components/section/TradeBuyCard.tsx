@@ -183,7 +183,7 @@ export default function TradeBuyCard({
                 >
                     최대
                 </div>
-                <div className="w-[60%] h-[70%] py-[0.2vw] px-4 flex items-center justify-center text-[1.8vw] mx-[0.2vw] color-bg-orange1 rounded-[0.4vw] text-white cursor-default">
+                <div className="w-[60%] h-[70%] py-[0.2vw] px-4 flex items-center justify-center text-[1.8vw] mx-[0.2vw] color-bg-white color-text-textcolor border-[0.2vw] color-border-brown1 rounded-[0.4vw] color-text-brown1 cursor-default">
                     {productTotalCost.toLocaleString() + '(G)'}
                 </div>
             </div>
