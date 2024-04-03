@@ -132,7 +132,7 @@ export default function InfraModal(props: InfraType) {
                                 changeFailityType(1);
                             }}
                         >
-                            <p className="absolute w-[60%] mx-auto text-[1.4vw] bottom-[0.5vw] bg-white rounded-[0.6vw] border-[0.3vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white">
+                            <p className="absolute w-[60%] mx-auto text-[1.4vw] bottom-[0.5vw] bg-white rounded-[0.6vw] border-[0.3vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white btn-animation">
                                 운송수단
                             </p>
                             <div
@@ -154,7 +154,7 @@ export default function InfraModal(props: InfraType) {
                                 changeFailityType(2);
                             }}
                         >
-                            <p className="absolute w-[60%] mx-auto text-[1.4vw] bottom-[0.5vw] bg-white rounded-[0.6vw] border-[0.3vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white">
+                            <p className="absolute w-[60%] mx-auto text-[1.4vw] bottom-[0.5vw] bg-white rounded-[0.6vw] border-[0.3vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white btn-animation">
                                 창고
                             </p>
                             <div
@@ -174,7 +174,7 @@ export default function InfraModal(props: InfraType) {
                                 changeFailityType(3);
                             }}
                         >
-                            <p className="absolute w-[60%] mx-auto text-[1.4vw] bottom-[0.5vw] bg-white rounded-[0.6vw] border-[0.3vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white">
+                            <p className="absolute w-[60%] mx-auto text-[1.4vw] bottom-[0.5vw] bg-white rounded-[0.6vw] border-[0.3vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white btn-animation">
                                 중개소
                             </p>
                             <div
@@ -200,16 +200,30 @@ export default function InfraModal(props: InfraType) {
             if (checkMaxLevel()) {
                 return (
                     <section className="w-full h-full flex flex-col items-center justify-center ">
-                        <div className="w-[40%] h-[20%] mt-[1vw] flex items-center justify-center  text-[1.6vw] bg-white rounded-[1vw] border-[0.4vw] color-border-subbold color-text-textcolor">
-                            {facilityType === 1
-                                ? '운송수단 업그레이드'
-                                : facilityType === 2
-                                ? '창고 업그레이드'
-                                : '중개소 업그레이드'}
+                        <div className="w-[40%] h-[20%] mt-[1vw] flex items-center justify-center  text-[1.6vw] rounded-[1vw] color-text-textcolor">
+                            {facilityType === 1 ? (
+                                <img
+                                    className="w-[70%]"
+                                    src="/src/assets/images/facility/text-upgrade-transport.webp"
+                                    alt=""
+                                />
+                            ) : facilityType === 2 ? (
+                                <img
+                                    className="w-[55%]"
+                                    src="/src/assets/images/facility/text-upgrade-warehouse.webp"
+                                    alt=""
+                                />
+                            ) : (
+                                <img
+                                    className="w-[60%]"
+                                    src="/src/assets/images/facility/text-upgrade-broker.webp"
+                                    alt=""
+                                />
+                            )}
                         </div>
                         <div className="relative w-[80%] h-[80%] flex items-end justify-around">
-                            <div className="w-[33%] h-[85%] flex flex-col justify-end ">
-                                <div className="bg-white rounded-[1vw] py-[1vw]">
+                            <div className="relative w-[33%] h-[85%] flex flex-col justify-end ">
+                                <div className="absolute w-full bottom-[0.5vw] bg-white rounded-[0.6vw] border-[0.2vw] color-border-subbold z-10">
                                     <p className="text-[1.4vw]">
                                         {facilityType === 1
                                             ? props.infraInfo.vehicleInfoList[
@@ -243,7 +257,7 @@ export default function InfraModal(props: InfraType) {
                                 </div>
 
                                 <div
-                                    className="w-full h-[80%]"
+                                    className="relative w-full h-[80%] bottom-[5vw]"
                                     style={{
                                         backgroundImage: `url("/src/assets/images/facility/${urlFacilityName} (${nowLevel}).webp")`,
                                         backgroundRepeat: 'no-repeat',
@@ -253,11 +267,15 @@ export default function InfraModal(props: InfraType) {
                                     }}
                                 ></div>
                             </div>
-                            <div className="w-[34%] h-[60%] text-[2.4vw]">
-                                다음단계
+                            <div className="w-[34%] h-[60%] text-[2.4vw] flex flex-col items-center">
+                                <img
+                                    className="w-[50%]"
+                                    src="/src/assets/images/facility/text-next-level.webp"
+                                    alt=""
+                                />
                             </div>
-                            <div className="w-[33%] h-[85%] flex flex-col justify-end">
-                                <div className="bg-white rounded-[1vw] py-[1vw]">
+                            <div className="relative w-[33%] h-[85%] flex flex-col justify-end">
+                                <div className="absolute w-full bottom-[0.5vw] bg-white rounded-[0.6vw] border-[0.2vw] color-border-subbold z-10">
                                     <p className="text-[1.4vw]">
                                         {facilityType === 1
                                             ? props.infraInfo.vehicleInfoList[
@@ -290,7 +308,7 @@ export default function InfraModal(props: InfraType) {
                                     </p>
                                 </div>
                                 <div
-                                    className="w-full h-[80%]"
+                                    className="relative w-full h-[80%] bottom-[5vw]"
                                     style={{
                                         backgroundImage: `url("/src/assets/images/facility/${urlFacilityName} (${
                                             nowLevel + 1
@@ -304,7 +322,7 @@ export default function InfraModal(props: InfraType) {
                             </div>
                         </div>
                         <div
-                            className="absolute bottom-[2vw] flex flex-col items-center justify-center py-[0.6vw] px-[6vw] bg-white rounded-[1.4vw] border-[0.4vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white cursor-pointer"
+                            className="absolute bottom-[2vw] flex flex-col items-center justify-center py-[0.4vw] px-[4vw] bg-white rounded-[1.4vw] border-[0.4vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white cursor-pointer btn-animation"
                             onClick={() => {
                                 //업그레이드 명령 내리고 창 닫기
                                 upgradeFacility();
@@ -326,12 +344,14 @@ export default function InfraModal(props: InfraType) {
                             </p>
                         </div>
                         <div
-                            className="absolute top-[1vw] left-[0.4vw] flex flex-col py-[0.8vw] px-[6vw] bg-white rounded-[1.4vw] border-[0.4vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-whiter cursor-pointer"
+                            className="absolute top-[1vw] left-[0.4vw] flex flex-col py-[0.4vw] px-[4vw] bg-white rounded-[0.6vw] border-[0.2vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white cursor-pointer btn-animation"
                             onClick={() => {
                                 changeFailityType(0);
                             }}
                         >
-                            <p className="text-[1.6vw]">뒤로</p>
+                            <p className="text-[1.6vw] hover:text-white">
+                                뒤로
+                            </p>
                         </div>
                     </section>
                 );
@@ -339,47 +359,64 @@ export default function InfraModal(props: InfraType) {
                 //레벨 최대
                 return (
                     <section className="w-full h-full flex flex-col items-center justify-center ">
-                        <div className="w-[50%] mt-[1vw] h-[20%] text-[1.6vw] flex items-center justify-center bg-white rounded-[1vw] border-[0.4vw] color-border-subbold color-text-textcolor">
-                            {facilityType === 1
-                                ? '운송수단 레벨이 최대치입니다.'
-                                : facilityType === 2
-                                ? '창고 레벨이 최대치입니다.'
-                                : '중개소 레벨이 최대치입니다.'}
+                        <div className="w-[50%] mt-[1vw] h-[20%] text-[1.6vw] flex items-center justify-center color-text-textcolor">
+                            {facilityType === 1 ? (
+                                <img
+                                    className="w-[80%]"
+                                    src="/src/assets/images/facility/text-max-transport.webp"
+                                    alt=""
+                                />
+                            ) : facilityType === 2 ? (
+                                <img
+                                    className="w-[65%]"
+                                    src="/src/assets/images/facility/text-max-warehouse.webp"
+                                    alt=""
+                                />
+                            ) : (
+                                <img
+                                    className="w-[70%]"
+                                    src="/src/assets/images/facility/text-max-broker.webp"
+                                    alt=""
+                                />
+                            )}
                         </div>
                         <div className="relative w-[80%] h-[80%] flex items-end justify-around">
-                            <div className="w-[33%] h-[90%]">
-                                <p className="text-[1.4vw] bg-white color-text-textcolor">
-                                    {facilityType === 1
-                                        ? props.infraInfo.vehicleInfoList[
-                                              vehicleLevel - 1
-                                          ].vehicleName
-                                        : facilityType === 2
-                                        ? props.infraInfo.warehouseInfoList[
-                                              warehouseLevel - 1
-                                          ].warehouseName
-                                        : props.infraInfo.brokerInfoList[
-                                              brokerLevel - 1
-                                          ].brokerName}
-                                </p>
-                                <p className="text-[1.4vw] bg-white color-text-textcolor">
-                                    {facilityType === 1
-                                        ? '탈 것 용량 : ' +
-                                          props.infraInfo.vehicleInfoList[
-                                              vehicleLevel - 1
-                                          ].vehicleCapacity
-                                        : facilityType === 2
-                                        ? '창고 용량 : ' +
-                                          props.infraInfo.warehouseInfoList[
-                                              warehouseLevel - 1
-                                          ].warehouseCapacity
-                                        : '중개소 수수료 : ' +
-                                          props.infraInfo.brokerInfoList[
-                                              brokerLevel - 1
-                                          ].brokerFeeRate +
-                                          '%'}
-                                </p>
+                            <div className="relative w-[33%] h-[90%]">
+                                <div className="absolute w-full bottom-[0.5vw] bg-white rounded-[0.6vw] border-[0.2vw] color-border-subbold">
+                                    <p className="text-[1.4vw] color-text-textcolor ">
+                                        {facilityType === 1
+                                            ? props.infraInfo.vehicleInfoList[
+                                                  vehicleLevel - 1
+                                              ].vehicleName
+                                            : facilityType === 2
+                                            ? props.infraInfo.warehouseInfoList[
+                                                  warehouseLevel - 1
+                                              ].warehouseName
+                                            : props.infraInfo.brokerInfoList[
+                                                  brokerLevel - 1
+                                              ].brokerName}
+                                    </p>
+                                    <p className="text-[1.4vw] color-text-textcolor \\">
+                                        {facilityType === 1
+                                            ? '탈 것 용량 : ' +
+                                              props.infraInfo.vehicleInfoList[
+                                                  vehicleLevel - 1
+                                              ].vehicleCapacity
+                                            : facilityType === 2
+                                            ? '창고 용량 : ' +
+                                              props.infraInfo.warehouseInfoList[
+                                                  warehouseLevel - 1
+                                              ].warehouseCapacity
+                                            : '중개소 수수료 : ' +
+                                              props.infraInfo.brokerInfoList[
+                                                  brokerLevel - 1
+                                              ].brokerFeeRate +
+                                              '%'}
+                                    </p>
+                                </div>
+
                                 <div
-                                    className="w-full h-[80%]"
+                                    className="relative w-full h-[80%] "
                                     style={{
                                         backgroundImage: `url("/src/assets/images/facility/${urlFacilityName} (${nowLevel}).webp")`,
                                         backgroundRepeat: 'no-repeat',
@@ -391,16 +428,18 @@ export default function InfraModal(props: InfraType) {
                             </div>
                         </div>
                         <div
-                            className="absolute top-[1vw] left-[1vw] flex flex-col items-center justify-center py-[0.4vw] px-[4vw] bg-white rounded-[1.4vw] border-[0.4vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white cursor-pointer"
+                            className="absolute top-[1vw] left-[1vw] flex flex-col items-center justify-center py-[0.4vw] px-[4vw] bg-white rounded-[0.6vw] border-[0.2vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white cursor-pointer btn-animation"
                             onClick={() => {
                                 //업그레이드 명령 내리고 창 닫기
                                 changeFailityType(0);
                             }}
                         >
-                            <p className="text-[1.6vw]">뒤로</p>
+                            <p className="text-[1.6vw] hover:text-white">
+                                뒤로
+                            </p>
                         </div>
                         <div
-                            className="absolute bottom-[1vw] right-[1vw] flex flex-col items-center justify-center py-[0.4vw] px-[4vw]  bg-white rounded-[1.4vw] border-[0.4vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white cursor-pointer"
+                            className="absolute bottom-[1vw] right-[1vw] flex flex-col items-center justify-center py-[0.4vw] px-[4vw]  bg-white rounded-[0.6vw] border-[0.2vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white cursor-pointer btn-animation"
                             onClick={() => {
                                 changeFailityType(0);
                             }}
@@ -432,7 +471,7 @@ export default function InfraModal(props: InfraType) {
                 {facilityElement()}
             </div>
             <div
-                className="absolute text-[1.6vw] flex items-center justify-center text-white -top-[2vw] -right-[2vw] w-[4vw] h-[4vw] border-[0.3vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer"
+                className="absolute text-[1.6vw] flex items-center justify-center text-white -top-[0.4vw] -right-[0.4vw] w-[4vw] h-[4vw] border-[0.3vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer"
                 onClick={() => {
                     closeFacilityModal();
                 }}

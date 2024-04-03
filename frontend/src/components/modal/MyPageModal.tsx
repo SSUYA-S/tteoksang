@@ -28,6 +28,8 @@ type MyPageType = {
     themeInfo: Theme[];
     iconInfo: ProfileIcon[];
     achievementList: Achievement[];
+    proceedLogout: () => void;
+    proceedWithdrawal: () => void;
 };
 export default function MyPageModal(props: MyPageType) {
     const [menu, setMenu] = useState<number>(0);
@@ -567,7 +569,7 @@ export default function MyPageModal(props: MyPageType) {
             )}
             <div className="w-[32%] h-[85%] flex flex-col py-[1vw] items-center bg-white border-[0.2vw] color-border-brown1 rounded-[1vw]">
                 <div
-                    className="relative w-[13vw] border-[0.2vw]"
+                    className="relative w-[12vw] h-[35%] border-[0.2vw]"
                     style={{ aspectRatio: 1 / 1 }}
                 >
                     <img
@@ -583,8 +585,8 @@ export default function MyPageModal(props: MyPageType) {
                         style={{ aspectRatio: 1 / 1 }}
                     />
                 </div>
-                <div className="flex flex-col w-[80%]">
-                    <div className="flex w-full justify-between items-center mt-[1vw]">
+                <div className="flex flex-col w-[80%] h-[25%] ">
+                    <div className="flex w-full justify-between items-center mt-[0.8vw]">
                         <p className="text-[1.5vw] text-green-500">칭호</p>
                         {titleId === 1 ? (
                             <p className="text-[1.2vw]  text-gray-400">
@@ -596,7 +598,7 @@ export default function MyPageModal(props: MyPageType) {
                             </p>
                         )}
                     </div>
-                    <div className="flex w-full justify-between items-center my-[1vw]">
+                    <div className="flex w-full justify-between items-center my-[0.6vw]">
                         <div
                             className="w-[30%] text-[1.5vw] cursor-pointer"
                             onClick={() => setIsNicknameChanging(true)}
@@ -621,7 +623,7 @@ export default function MyPageModal(props: MyPageType) {
                         <p className="text-[1.3vw]">{`${career}년차`}</p>
                     </div>
                 </div>
-                <div className="w-[80%] flex flex-col color-border-subbold border-[0.2vw] mt-[2vw] px-[0.5vw]">
+                <div className="w-[80%] h-[30%]  flex flex-col color-border-subbold border-[0.2vw] mt-[1vw] px-[0.5vw]">
                     <div className="pt-[0.2vw] text-[1vw] text-left pl-[1vw]">
                         현재 착용 중인 아이템
                     </div>
@@ -672,6 +674,20 @@ export default function MyPageModal(props: MyPageType) {
                             />
                         </div>
                     </div>
+                </div>
+                <div className="w-[80%] h-[10%]  flex items-center justify-between mt-[0.4vw]">
+                    <p
+                        className="h-fit text-[1.3vw] border-[0.1vw] py-[0.4vw] px-[1.6vw] rounded-[0.6vw] color-border-orange1 color-text-orange1 bg-white cursor-pointer hover:color-bg-orange1 hover:text-white btn-animation"
+                        onClick={props.proceedLogout}
+                    >
+                        로그아웃
+                    </p>
+                    <p
+                        className="h-fit text-[1.3vw] border-[0.1vw] py-[0.4vw] px-[1.6vw] rounded-[0.6vw] border-white bg-red-600 text-white cursor-pointer hover:text-red-600 hover:bg-white hover:border-red-600 btn-animation"
+                        onClick={props.proceedWithdrawal}
+                    >
+                        회원탈퇴
+                    </p>
                 </div>
             </div>
             <div className="w-[1%]"></div>

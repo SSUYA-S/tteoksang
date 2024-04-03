@@ -830,7 +830,7 @@ export default function TradeModal(props: tradeType) {
                 <div className="h-[15%]" />
                 <div className="flex flex-col items-center ">
                     <div
-                        className="w-[70%] text-[1.4vw] my-[0.4vw] py-[0.8vw] bg-white color-text-textcolor border-[0.2vw] color-border-sublight rounded-[0.6vw] cursor-pointer"
+                        className="w-[70%] text-[1.4vw] my-[0.4vw] py-[0.8vw] bg-white color-text-textcolor border-[0.2vw] color-border-sublight rounded-[0.6vw] cursor-pointer btn-animation"
                         onClick={() => {
                             changeTab(0);
                         }}
@@ -847,7 +847,7 @@ export default function TradeModal(props: tradeType) {
                         구매
                     </div>
                     <div
-                        className="w-[70%] text-[1.4vw] my-[0.4vw] py-[0.8vw] bg-white color-text-textcolor border-[0.2vw] color-border-sublight rounded-[0.6vw] cursor-pointer"
+                        className="w-[70%] text-[1.4vw] my-[0.4vw] py-[0.8vw] bg-white color-text-textcolor border-[0.2vw] color-border-sublight rounded-[0.6vw] cursor-pointer btn-animation"
                         onClick={() => {
                             changeTab(1);
                         }}
@@ -864,7 +864,7 @@ export default function TradeModal(props: tradeType) {
                         판매
                     </div>
                     <div
-                        className="w-[70%] text-[1.4vw] my-[0.4vw] py-[0.8vw] bg-white color-text-textcolor border-[0.2vw] color-border-sublight rounded-[0.6vw] cursor-pointer"
+                        className="w-[70%] text-[1.4vw] my-[0.4vw] py-[0.8vw] bg-white color-text-textcolor border-[0.2vw] color-border-sublight rounded-[0.6vw] cursor-pointer btn-animation"
                         onClick={() => {
                             changeTab(2);
                         }}
