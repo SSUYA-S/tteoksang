@@ -47,5 +47,5 @@ public class SeasonHalfPrivateStatistics {
 
     private Map<Integer, ProductStatistic> productStatistics;
 
-    private EventStatistics eventStatistics;
+//    private EventStatistics eventStatistics;
 }
