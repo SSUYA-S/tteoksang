@@ -10,9 +10,7 @@ import com.welcome.tteoksang.game.dto.log.SpecialEventLogInfo;
 import com.welcome.tteoksang.game.dto.res.GameMessageRes;
 import com.welcome.tteoksang.game.dto.event.NewsInfo;
 import com.welcome.tteoksang.game.dto.event.PublicEventInfo;
-import com.welcome.tteoksang.game.dto.server.FluctationInfo;
-import com.welcome.tteoksang.game.dto.server.ServerProductInfo;
-import com.welcome.tteoksang.game.dto.server.ServerSeasonInfo;
+import com.welcome.tteoksang.game.dto.server.*;
 import com.welcome.tteoksang.game.dto.user.PlayTimeInfo;
 import com.welcome.tteoksang.game.exception.AccessToInvalidWebSocketIdException;
 import com.welcome.tteoksang.game.exception.CurrentTurnNotInNormalRangeException;
@@ -41,6 +39,7 @@ import org.springframework.validation.annotation.Validated;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -143,6 +142,19 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         initProductInfo(hasServerData);
         eventIndexList = new ArrayList<>(NEWS_NUM); //productInfoMap의 인덱스에 해당: 선정한 {NEWS_NUM}개 후보 이벤트
         nextEventList = new ArrayList<>();
+
+        //이벤트 이름에 따른 이벤트 발생 개수 셀 해시맵 생성
+        Map<String, Integer> eventCountMap = new HashMap<>();
+        eventRepository.findAll().stream()
+                .map(Event::getEventName)
+                .collect(Collectors.toSet())
+                .forEach(eventName -> eventCountMap.put(eventName, 0));
+        Map<Integer, CostRateStatistics> productCostRateMap = serverInfo.getProductInfoMap().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> new CostRateStatistics(entry.getValue().getProductCost(), 0), (a, b) -> b));
+
+//        redisService.setValues(RedisPrefix.SERVER_STATISTICS.prefix(), RedisStatistics.builder()
+//                .eventCountMap(eventCountMap)
+//                .productCostRateMap(productCostRateMap)
+//                .build());
     }
 
 
@@ -218,6 +230,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         scheduleService.remove(TURN);
         scheduleService.remove(PUBLIC_EVENT);
         scheduleService.remove(NEWSPAPER);
+        // TODO - redisStatistics에서 떡상,떡락... 하기
     }
 
     @Override
@@ -230,6 +243,14 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
 //        log.debug("delete news...."+redisService.hasKey(RedisPrefix.SERVER_NEWS.prefix()));
 //        log.debug("delete info...."+redisService.hasKey(RedisPrefix.SERVER_INFO.prefix()));
 
+        //TODO-전체결산 해야 함!
+    }
+
+    //TODO-전체결산
+    void createEndReport() {
+        //레디스 통계정보
+//        RedisStatistics redisStatistics = (RedisStatistics) redisService.getValues(RedisPrefix.SERVER_STATISTICS.prefix());
+        //이벤트 맵에서 TOP3 뽑으면 된다
     }
 
     //실행======================
@@ -345,28 +366,21 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         serverInfo.setCurrentTurn(serverInfo.getCurrentTurn() + 1);
         serverInfo.setTurnStartTime(LocalDateTime.now());
         if (serverInfo.getCurrentTurn() % eventTurnPeriod == 0) {
+//            RedisStatistics redisStatistics = (RedisStatistics) redisService.getValues(RedisPrefix.SERVER_STATISTICS.prefix());
+//            Map<String, Integer> eventCountMap = redisStatistics.getEventCountMap();
+
             serverInfo.setSpecialEventIdList(nextEventList.stream().map(event -> {
-                //TODO - 로그메세지 말고 redis에 저장하는 식으로 변경하기
-                SpecialEventLogInfo logInfo = SpecialEventLogInfo.builder()
-                        .eventId(event.getEventId())
-                        .seasonId(serverInfo.getSeasonId())
-                        .build();
-                LogMessage logMessage = LogMessage.builder()
-                        .type("SPECIAL_EVENT")
-                        .body(logInfo)
-                        .build();
-                ObjectMapper objectMapper = new ObjectMapper();
-                try {
-                    String logData = objectMapper.writeValueAsString(logMessage);
-                    log.debug(logData);
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
-                }
+                //이벤트 발생횟수 업데이트
+                String eventName = event.getEventName();
+//                eventCountMap.put(eventName, eventCountMap.get(eventName) + 1);
+
                 return event.getEventId();
             }).toList());
             currentEventList = nextEventList;
             nextEventList = new ArrayList<>();
-//            log.debug("==================event 변경==================");
+            //레디스에 통계 저장
+//            redisService.setValues(RedisPrefix.SERVER_STATISTICS.prefix(), redisStatistics);
+
         }
         privateScheduleService.initGameInfoForAllUsersPerTurn();
         redisService.setValues(RedisPrefix.SERVER_INFO.prefix(), serverInfo);
@@ -406,6 +420,8 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
                 //가격이 너무 작은 경우, 평균 가격의 일부 얻으므로써 보정
                 newCost += (int) (fluctationInfo.getProductAvgCost() * randomRate * MIN_AVG_MULTIPLE_LIMIT);
             }
+//            RedisStatistics redisStatistics=(RedisStatistics) redisService.getValues(RedisPrefix.SERVER_STATISTICS.prefix());
+//            redisStatistics.getProductCostRateMap().get(productId).addCostInfo(new CostInfo(newCost, serverInfo.getCurrentTurn()));
             //임시 배열에 저장, 한 번에 값들 업데이트 하기 위함!
             tempFluctMap.put(productId, ServerProductInfo.builder()
                     .productCost(newCost)
@@ -460,7 +476,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
                         sendPrivateMessage(userId, MessageType.ALERT_PLAYTIME, PlayTimeInfo.builder()
                                 .playTime(PLAY_LONG_TIME * entry.getValue().getAlertCount())
                                 .build());
-                        privateScheduleService.updateUserAlertPlayTimeMap(userId,PLAY_LONG_TIME);
+                        privateScheduleService.updateUserAlertPlayTimeMap(userId, PLAY_LONG_TIME);
 
                     }
                 }

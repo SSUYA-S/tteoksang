@@ -4,7 +4,7 @@ public enum RedisPrefix {
     REFRESH_TOKEN("loginRefresh:"),
     REGIST("regist:"),
     CHANGE_EMAIL("changeEmail:"),
-    RESET_PASSOWRD("resetPassword:"),
+    SERVER_STATISTICS("serverStatistics"),
     SERVER_INFO("serverInfo"),
     SERVER_NEWS("serverNews"),
     SERVER_BREAK("serverBreak"),
