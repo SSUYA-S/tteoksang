@@ -47,9 +47,9 @@ import {
 import WarningModal from './modal/WarningModal';
 import MyPageModal from './modal/MyPageModal';
 
-import logoutServiceWorker from "../util/logoutServiceWorker.ts";
-import {logout} from "../api/auth.ts";
-import {withdrawal} from "../api/user";
+import logoutServiceWorker from '../util/logoutServiceWorker.ts';
+import { logout } from '../api/auth.ts';
+import { withdrawal } from '../api/user';
 
 type startType = {
     setStartFlag: React.Dispatch<React.SetStateAction<boolean>>;
@@ -88,7 +88,6 @@ export default function GameStartComponent(props: startType) {
     const [isWithdrawalProceeding, setIsWithdrawalProceeding] =
         useState<boolean>(false);
 
-
     const bgmSetting = useSelector((state: any) => state.reduxFlag.bgmFlag);
 
     const dispatch = useDispatch();
@@ -124,16 +123,16 @@ export default function GameStartComponent(props: startType) {
     const handleLogOut = async () => {
         const res = await logout();
         if (res.status === httpStatusCode.OK) {
-            setIsLogoutProceeding(false);
             logoutServiceWorker();
+            setIsLogoutProceeding(false);
 
             // navigate('/');
+            window.location.reload();
             props.setStartFlag(false);
         } else {
             console.log('Logout error');
         }
     };
-
 
     const proceedLogout = () => {
         setIsLogoutProceeding(true);
@@ -154,6 +153,7 @@ export default function GameStartComponent(props: startType) {
             logoutServiceWorker();
             props.setStartFlag(false);
             setIsWithdrawalProceeding(false);
+            window.location.reload();
         } else {
             console.log('회원 탈퇴 불가');
         }
@@ -422,16 +422,6 @@ export default function GameStartComponent(props: startType) {
                 <></>
             )}
             <div className="absolute w-[10%] h-[40%] flex flex-col justify-center items-center top-[4%] right-[0%] z-20">
-                <div
-                    className="w-[50%] h-[30%] cursor-pointer btn-animation z-10"
-                    style={{
-                        backgroundImage:
-                            'url(/src/assets/images/icon/ui-icon-ranking.png)',
-                        backgroundSize: 'contain ',
-                        backgroundPosition: 'center',
-                        backgroundRepeat: 'no-repeat',
-                    }}
-                />
                 <div className="h-[5%]" />
                 <div
                     className="w-[50%] h-[30%] cursor-pointer btn-animation z-10"

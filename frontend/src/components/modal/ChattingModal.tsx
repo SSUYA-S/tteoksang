@@ -127,7 +127,7 @@ export default function ChattingModal(props: Props) {
                         type="text"
                         onChange={updateMessage}
                         value={message}
-                        className="w-[85%] overflow-y-auto rounded m-[0.2vw] text-[1vw] p-[0.5vw]"
+                        className="w-[85%] overflow-y-auto rounded m-[0.2vw] text-[1.4vw] p-[0.5vw]"
                         onKeyDown={(event) => {
                             if (event.key === 'Enter') {
                                 sendMessage();
