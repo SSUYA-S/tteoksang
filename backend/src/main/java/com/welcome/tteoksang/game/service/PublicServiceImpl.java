@@ -10,6 +10,7 @@ import com.welcome.tteoksang.game.dto.log.SpecialEventLogInfo;
 import com.welcome.tteoksang.game.dto.res.GameMessageRes;
 import com.welcome.tteoksang.game.dto.event.NewsInfo;
 import com.welcome.tteoksang.game.dto.event.PublicEventInfo;
+import com.welcome.tteoksang.game.dto.result.half.TteokValues;
 import com.welcome.tteoksang.game.dto.server.*;
 import com.welcome.tteoksang.game.dto.user.PlayTimeInfo;
 import com.welcome.tteoksang.game.exception.AccessToInvalidWebSocketIdException;
@@ -20,6 +21,7 @@ import com.welcome.tteoksang.game.repository.ProductFluctuationRepository;
 import com.welcome.tteoksang.game.repository.ServerSeasonInfoRepository;
 import com.welcome.tteoksang.game.scheduler.ScheduleService;
 import com.welcome.tteoksang.game.scheduler.ServerInfo;
+import com.welcome.tteoksang.kafka.KafkaTest;
 import com.welcome.tteoksang.redis.RedisPrefix;
 import com.welcome.tteoksang.redis.RedisService;
 import com.welcome.tteoksang.resource.dto.Event;
@@ -243,19 +245,20 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         RedisStatistics redisStatistics= (RedisStatistics) redisService.getValues(RedisPrefix.SERVER_STATISTICS.prefix());
         log.debug(redisStatistics.getEventCountMap().toString());
 
-        List<int[]> tteocksangList=new ArrayList<>();
-//        Map<Integer, CostRateStatistics> productCostRateMap = new HashMap<>(redisHalfStatistics.getProductCostRateMap().size());
         redisHalfStatistics.getProductCostRateMap().entrySet().stream().forEach(entry -> {
 //            productCostRateMap.put(entry.getKey(), redisStatisticsUtil.makeCompact(entry.getValue()));
             CostRateStatistics costRateStatistics= redisStatisticsUtil.makeCompact(entry.getValue());
             //통계구하기
-            long tteoksang=redisStatisticsUtil.getTteoksang(costRateStatistics);
-            long tteokrock=redisStatisticsUtil.getTteokrock(costRateStatistics);
-            log.debug(entry.getKey()+": "+tteoksang+" / "+tteokrock);
+//            long tteoksang=redisStatisticsUtil.getTteoksang(costRateStatistics);
+//            long tteokrock=redisStatisticsUtil.getTteokrock(costRateStatistics);
+//            log.debug(entry.getKey()+": "+tteoksang+" / "+tteokrock);
             //전체통계에 반영
             redisStatisticsUtil.concatCostRateStatistics(redisStatistics.getProductCostRateMap().get(entry.getKey()),costRateStatistics );
         });
+        redisService.setValues(RedisPrefix.SERVER_HALF_STATISTICS.prefix(), redisHalfStatistics);
         redisService.setValues(RedisPrefix.SERVER_STATISTICS.prefix(), redisStatistics);
+
+
     }
 
     @Override

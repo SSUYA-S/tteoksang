@@ -26,11 +26,11 @@ public class RestTemplateService {
     public void startHalfYearRequest(int seasonId, int halfId){
         log.debug("start.."+seasonId+", "+halfId);
 //        getForEntity("/resources/checksum");
-        getForEntity("/start/"+seasonId+"/"+halfId);
+//        getForEntity("/start/"+seasonId+"/"+halfId);
     }
     public void endHalfYearRequest(int seasonId, int halfId){
         log.debug("end.."+seasonId+", "+halfId);
 //        getForEntity("/resources/checksum");
-        getForEntity("/end/"+seasonId+"/"+halfId);
+//        getForEntity("/end/"+seasonId+"/"+halfId);
     }
 }
