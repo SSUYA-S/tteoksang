@@ -50,8 +50,9 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
     private final ScheduleService scheduleService;
     private final RedisService redisService;
     private final PrivateScheduleService privateScheduleService;
-    private final GameInfoRepository gameInfoRepository;
+    private final RestTemplateService restTemplateService;
 
+    private final GameInfoRepository gameInfoRepository;
     private final ProductRepository productRepository;
     private final ProductFluctuationRepository productFluctuationRepository;
     private final EventRepository eventRepository;
@@ -224,7 +225,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         scheduleService.register(NEWSPAPER, newsInitialTurn * turnPeriodSec, eventPeriodSec, () -> {
             createNewspaper();
         });
-
+        restTemplateService.startHalfYearRequest(serverInfo.getSeasonId(), serverInfo.getCurrentTurn()/(quarterYearTurnPeriod*2)+1);
         redisService.setValues(RedisPrefix.SERVER_HALF_STATISTICS.prefix(), RedisHalfStatistics.builder()
                 .productCostRateMap(serverInfo.getProductInfoMap().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> new CostRateStatistics(entry.getValue().getProductCost(), 0), (a, b) -> b)))
                 .build());
@@ -235,18 +236,22 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         scheduleService.remove(TURN);
         scheduleService.remove(PUBLIC_EVENT);
         scheduleService.remove(NEWSPAPER);
+        restTemplateService.endHalfYearRequest(serverInfo.getSeasonId(), serverInfo.getCurrentTurn()/(quarterYearTurnPeriod*2));
+
         // TODO - redisStatistics에서 떡상,떡락... 하기
         RedisHalfStatistics redisHalfStatistics = (RedisHalfStatistics) redisService.getValues(RedisPrefix.SERVER_HALF_STATISTICS.prefix());
         RedisStatistics redisStatistics= (RedisStatistics) redisService.getValues(RedisPrefix.SERVER_STATISTICS.prefix());
         log.debug(redisStatistics.getEventCountMap().toString());
 
+        List<int[]> tteocksangList=new ArrayList<>();
 //        Map<Integer, CostRateStatistics> productCostRateMap = new HashMap<>(redisHalfStatistics.getProductCostRateMap().size());
         redisHalfStatistics.getProductCostRateMap().entrySet().stream().forEach(entry -> {
 //            productCostRateMap.put(entry.getKey(), redisStatisticsUtil.makeCompact(entry.getValue()));
             CostRateStatistics costRateStatistics= redisStatisticsUtil.makeCompact(entry.getValue());
             //통계구하기
-            redisStatisticsUtil.getTteoksang(costRateStatistics);
-            redisStatisticsUtil.getTteokrock(costRateStatistics);
+            long tteoksang=redisStatisticsUtil.getTteoksang(costRateStatistics);
+            long tteokrock=redisStatisticsUtil.getTteokrock(costRateStatistics);
+            log.debug(entry.getKey()+": "+tteoksang+" / "+tteokrock);
             //전체통계에 반영
             redisStatisticsUtil.concatCostRateStatistics(redisStatistics.getProductCostRateMap().get(entry.getKey()),costRateStatistics );
         });
@@ -420,6 +425,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
 
     //가격 변동
     public void fluctuateProduct() {
+        RedisHalfStatistics redisHalfStatistics=(RedisHalfStatistics) redisService.getValues(RedisPrefix.SERVER_HALF_STATISTICS.prefix());
         //FluctMap에 따라 각 작물 가격 변동
         Map<Integer, ServerProductInfo> tempFluctMap = new HashMap<>();
         for (Map.Entry<Integer, ServerProductInfo> entry : serverInfo.getProductInfoMap().entrySet()) {
@@ -449,8 +455,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
                 newCost += (int) (fluctationInfo.getProductAvgCost() * randomRate * MIN_AVG_MULTIPLE_LIMIT);
             }
             //TODO 가격 변동 저장...
-//            RedisStatistics redisStatistics=(RedisStatistics) redisService.getValues(RedisPrefix.SERVER_STATISTICS.prefix());
-//            redisStatistics.getProductCostRateMap().get(productId).addCostInfo(new CostInfo(newCost, serverInfo.getCurrentTurn()));
+            redisStatisticsUtil.addCostInfo(redisHalfStatistics.getProductCostRateMap().get(productId),new CostInfo(newCost, serverInfo.getCurrentTurn()));
             //임시 배열에 저장, 한 번에 값들 업데이트 하기 위함!
             tempFluctMap.put(productId, ServerProductInfo.builder()
                     .productCost(newCost)
@@ -459,6 +464,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
                     .build());
         }
         serverInfo.setProductInfoMap(tempFluctMap);
+        redisService.setValues(RedisPrefix.SERVER_HALF_STATISTICS.prefix(), redisHalfStatistics);
     }
 
     //구매가능 작물 리스트 변동
