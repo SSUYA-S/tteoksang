@@ -68,7 +68,7 @@ export default function TradeSellCard({
                             productUnit}
                     </p>
                     <p className="h-[20%] text-[1vw] color-text-subbold pt-[0.5vw] ">
-                        {'구매 가능'}
+                        {'판매 가능'}
                     </p>
                     <div
                         className={
@@ -80,7 +80,7 @@ export default function TradeSellCard({
                         }}
                     ></div>
                     <p className="h-[20%] text-[1vw] color-text-darkgray">
-                        {`${productUnit.trim()}당 ${productCost.toLocaleString()}G`}
+                        {`${productUnit.trim()}당 ${sellInfo.productInfo.productCost.toLocaleString()}G`}
                     </p>
                 </div>
                 <div className="w-[70%] h-full flex flex-col justify-center">
