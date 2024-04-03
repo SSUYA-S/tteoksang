@@ -71,7 +71,7 @@ export default function InventoryModal(props: inventoryType) {
                 구매/판매 모달로
             </div>
             <div
-                className="absolute text-[2vw] flex items-center justify-center text-white -top-[1.6vw] -right-[2vw] w-[4vw] h-[4vw] border-[0.4vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer"
+                className="absolute text-[2vw] flex items-center justify-center text-white top-[0.4vw] right-[0.4vw] w-[4vw] h-[4vw] border-[0.4vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer"
                 onClick={() => {
                     closeInventoryModal();
                 }}

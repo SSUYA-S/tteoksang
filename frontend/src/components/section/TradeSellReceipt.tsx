@@ -62,7 +62,7 @@ export default function TradeSellReceipt({
                     <p>{totalProfit.toLocaleString()}</p>
                 </div>
                 <div
-                    className="w-[80%] text-center my-[0.4vw] mx-auto py-[0.4vw] border-[0.2vw] rounded-[1vw] color-border-subbold cursor-pointer hover:color-bg-subbold hover:text-white"
+                    className="w-[80%] text-center my-[0.4vw] mx-auto py-[0.4vw] border-[0.2vw] rounded-[1vw] color-border-subbold cursor-pointer hover:color-bg-subbold hover:text-white btn-animation"
                     onClick={sellProduct}
                 >
                     판매

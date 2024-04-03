@@ -535,35 +535,43 @@ export default function TradeModal(props: tradeType) {
                             <p className="text-[3vw] color-text-textcolor">
                                 물품 구매
                             </p>
-                            <div className="w-[45%]">
-                                <div className="w-full flex justify-between text-[1vw] color-text-textcolor me-[1vw]">
+                            <div className="w-[55%]">
+                                <div className="w-full flex justify-between text-[1.4vw] color-text-textcolor me-[1vw]">
                                     <p>현재 소지 금액</p>
                                     <p>{props.nowMoney.toLocaleString()}</p>
                                 </div>
-
-                                <div className="w-full flex justify-between text-[1vw] color-text-textcolor me-[1vw]">
-                                    <p>예상 창고 용량</p>
-                                    <p>
-                                        {totalNumber}/
-                                        {
-                                            props.infraInfo.warehouseInfoList[
-                                                myProductInfo.warehouseLevel - 1
-                                            ].warehouseCapacity
-                                        }
-                                    </p>
-                                </div>
-                                <div className="w-full flex justify-between text-[1vw] color-text-textcolor me-[1vw]">
-                                    <p>예상 탈 것 용량</p>
-                                    <p>
-                                        {myProductInfo.purchasedQuantity +
-                                            (totalNumber - nowStock)}
-                                        /
-                                        {
-                                            props.infraInfo.vehicleInfoList[
-                                                myProductInfo.vehicleLevel - 1
-                                            ].vehicleCapacity
-                                        }
-                                    </p>
+                                <div className="w-full flex justify-between ">
+                                    <div className="flex justify-between text-[1.1vw] color-text-textcolor">
+                                        <p className="me-[0.4vw]">
+                                            예상 창고 용량
+                                        </p>
+                                        <p>
+                                            {totalNumber}/
+                                            {
+                                                props.infraInfo
+                                                    .warehouseInfoList[
+                                                    myProductInfo.warehouseLevel -
+                                                        1
+                                                ].warehouseCapacity
+                                            }
+                                        </p>
+                                    </div>
+                                    <div className="flex justify-between text-[1.1vw] color-text-textcolor">
+                                        <p className="me-[0.4vw]">
+                                            일일 구매 한도
+                                        </p>
+                                        <p>
+                                            {myProductInfo.purchasedQuantity +
+                                                (totalNumber - nowStock)}
+                                            /
+                                            {
+                                                props.infraInfo.vehicleInfoList[
+                                                    myProductInfo.vehicleLevel -
+                                                        1
+                                                ].vehicleCapacity
+                                            }
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -606,33 +614,42 @@ export default function TradeModal(props: tradeType) {
                             <p className="text-[3vw] color-text-textcolor">
                                 물품 판매
                             </p>
-                            <div className="w-[45%]">
-                                <div className="w-full flex justify-between text-[1vw] color-text-textcolor me-[1vw]">
+                            <div className="w-[55%]">
+                                <div className="w-full flex justify-between text-[1.4vw] color-text-textcolor me-[1vw]">
                                     <p>현재 소지 금액</p>
                                     <p>{props.nowMoney.toLocaleString()}</p>
                                 </div>
 
-                                <div className="w-full flex justify-between text-[1vw] color-text-textcolor me-[1vw]">
-                                    <p>예상 창고 용량</p>
-                                    <p>
-                                        {totalNumber}/
-                                        {
-                                            props.infraInfo.warehouseInfoList[
-                                                myProductInfo.warehouseLevel - 1
-                                            ].warehouseCapacity
-                                        }
-                                    </p>
-                                </div>
-                                <div className="w-full flex justify-between text-[1vw] color-text-textcolor me-[1vw]">
-                                    <p>예상 탈 것 용량</p>
-                                    <p>
-                                        {myProductInfo.purchasedQuantity}/
-                                        {
-                                            props.infraInfo.vehicleInfoList[
-                                                myProductInfo.vehicleLevel - 1
-                                            ].vehicleCapacity
-                                        }
-                                    </p>
+                                <div className="w-full flex justify-between ">
+                                    <div className="flex justify-between text-[1.1vw] color-text-textcolor">
+                                        <p className="me-[0.4vw]">
+                                            예상 창고 용량
+                                        </p>
+                                        <p>
+                                            {totalNumber}/
+                                            {
+                                                props.infraInfo
+                                                    .warehouseInfoList[
+                                                    myProductInfo.warehouseLevel -
+                                                        1
+                                                ].warehouseCapacity
+                                            }
+                                        </p>
+                                    </div>
+                                    <div className="flex justify-between text-[1.1vw] color-text-textcolor">
+                                        <p className="me-[0.4vw]">
+                                            일일 구매 한도
+                                        </p>
+                                        <p>
+                                            {myProductInfo.purchasedQuantity}/
+                                            {
+                                                props.infraInfo.vehicleInfoList[
+                                                    myProductInfo.vehicleLevel -
+                                                        1
+                                                ].vehicleCapacity
+                                            }
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -683,13 +700,13 @@ export default function TradeModal(props: tradeType) {
                             </p>
                             <div className="w-[40%] justify-between flex pb-[0.2vh]">
                                 <p
-                                    className="text-[1.5vw] w-[40%] border-[0.2vw] color-border-subbold color-text-textcolor cursor-pointer btn-animation hover:color-bg-subbold hover:color-text-main flex justify-center items-center"
+                                    className="text-[1.3vw] bg-white w-[40%] border-[0.2vw] rounded-[0.4vw] color-border-subbold color-text-textcolor cursor-pointer btn-animation hover:color-bg-subbold hover:color-text-main flex justify-center items-center"
                                     onClick={() => setIsFilter((prev) => !prev)}
                                 >
                                     {isFilter ? '전체 보기' : '내 것만 보기'}
                                 </p>
                                 <p
-                                    className="text-[1.5vw] w-[40%] border-[0.2vw] color-border-subbold color-text-textcolor cursor-pointer btn-animation hover:color-bg-subbold hover:color-text-main flex justify-center items-center"
+                                    className="text-[1.3vw] bg-white w-[40%] border-[0.2vw] rounded-[0.4vw] color-border-subbold color-text-textcolor cursor-pointer btn-animation hover:color-bg-subbold hover:color-text-main flex justify-center items-center"
                                     onClick={() => {
                                         setIsFilter(false);
                                         setSortMode(0);
