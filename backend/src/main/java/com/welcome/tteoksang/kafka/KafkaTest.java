@@ -1,12 +1,24 @@
 package com.welcome.tteoksang.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.welcome.tteoksang.game.dto.result.half.TteokValues;
+import com.welcome.tteoksang.game.dto.server.RedisHalfStatistics;
+import com.welcome.tteoksang.game.dto.server.RedisStatisticsUtil;
+import com.welcome.tteoksang.redis.RedisPrefix;
+import com.welcome.tteoksang.redis.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * String 형태의 json을 보낸다
@@ -33,6 +45,9 @@ public class KafkaTest {
     @Value("${KAFKA_TOPIC_LOG}")
     String testTopicName;
 
+    private final RedisService redisService;
+    private final RedisStatisticsUtil redisStatisticsUtil;
+
     @KafkaListener(topics = "tteoksang_log", containerFactory = "kafkaListenerContainerFactory")
     public void receiveLogDataResult(@Payload String logData) {
 
@@ -44,5 +59,29 @@ public class KafkaTest {
             e.printStackTrace();
         }
         log.debug("Kafka: {}", logData);
+    }
+
+    public List<TteokValues> getTteoksangStatistics() {
+        RedisHalfStatistics redisHalfStatistics = (RedisHalfStatistics) redisService.getValues(RedisPrefix.SERVER_HALF_STATISTICS.prefix());
+        List<TteokValues> tteokValuesList = redisHalfStatistics.getProductCostRateMap().entrySet().stream().map(entry ->
+                TteokValues.builder()
+                        .productId(entry.getKey())
+                        .value(redisStatisticsUtil.getTteoksang(entry.getValue()))
+                        .build()
+        ).collect(Collectors.toList());
+        tteokValuesList.sort(Collections.reverseOrder());
+        return tteokValuesList;
+    }
+
+    public List<TteokValues> getTteokrockStatistics() {
+        RedisHalfStatistics redisHalfStatistics = (RedisHalfStatistics) redisService.getValues(RedisPrefix.SERVER_HALF_STATISTICS.prefix());
+        List<TteokValues> tteokValuesList = redisHalfStatistics.getProductCostRateMap().entrySet().stream().map(entry ->
+                TteokValues.builder()
+                        .productId(entry.getKey())
+                        .value(redisStatisticsUtil.getTteokrock(entry.getValue()))
+                        .build()
+        ).collect(Collectors.toList());
+        Collections.sort(tteokValuesList);
+        return tteokValuesList;
     }
 }
