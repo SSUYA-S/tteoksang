@@ -59,6 +59,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
 
     private final SimpMessageSendingOperations sendingOperations;
     private final ServerInfo serverInfo;
+    private final RedisStatisticsUtil redisStatisticsUtil;
     private final Random random = new Random();
 
     @Value("${TURN_PERIOD_SEC}")
@@ -151,10 +152,10 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
                 .forEach(eventName -> eventCountMap.put(eventName, 0));
         Map<Integer, CostRateStatistics> productCostRateMap = serverInfo.getProductInfoMap().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> new CostRateStatistics(entry.getValue().getProductCost(), 0), (a, b) -> b));
 
-//        redisService.setValues(RedisPrefix.SERVER_STATISTICS.prefix(), RedisStatistics.builder()
-//                .eventCountMap(eventCountMap)
-//                .productCostRateMap(productCostRateMap)
-//                .build());
+        redisService.setValues(RedisPrefix.SERVER_STATISTICS.prefix(), RedisStatistics.builder()
+                .eventCountMap(eventCountMap)
+                .productCostRateMap(productCostRateMap)
+                .build());
     }
 
 
@@ -223,6 +224,10 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         scheduleService.register(NEWSPAPER, newsInitialTurn * turnPeriodSec, eventPeriodSec, () -> {
             createNewspaper();
         });
+
+        redisService.setValues(RedisPrefix.SERVER_HALF_STATISTICS.prefix(), RedisHalfStatistics.builder()
+                .productCostRateMap(serverInfo.getProductInfoMap().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> new CostRateStatistics(entry.getValue().getProductCost(), 0), (a, b) -> b)))
+                .build());
     }
 
     public void endHalfYearGame() {
@@ -231,6 +236,21 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         scheduleService.remove(PUBLIC_EVENT);
         scheduleService.remove(NEWSPAPER);
         // TODO - redisStatistics에서 떡상,떡락... 하기
+        RedisHalfStatistics redisHalfStatistics = (RedisHalfStatistics) redisService.getValues(RedisPrefix.SERVER_HALF_STATISTICS.prefix());
+        RedisStatistics redisStatistics= (RedisStatistics) redisService.getValues(RedisPrefix.SERVER_STATISTICS.prefix());
+        log.debug(redisStatistics.getEventCountMap().toString());
+
+//        Map<Integer, CostRateStatistics> productCostRateMap = new HashMap<>(redisHalfStatistics.getProductCostRateMap().size());
+        redisHalfStatistics.getProductCostRateMap().entrySet().stream().forEach(entry -> {
+//            productCostRateMap.put(entry.getKey(), redisStatisticsUtil.makeCompact(entry.getValue()));
+            CostRateStatistics costRateStatistics= redisStatisticsUtil.makeCompact(entry.getValue());
+            //통계구하기
+            redisStatisticsUtil.getTteoksang(costRateStatistics);
+            redisStatisticsUtil.getTteokrock(costRateStatistics);
+            //전체통계에 반영
+            redisStatisticsUtil.concatCostRateStatistics(redisStatistics.getProductCostRateMap().get(entry.getKey()),costRateStatistics );
+        });
+        redisService.setValues(RedisPrefix.SERVER_STATISTICS.prefix(), redisStatistics);
     }
 
     @Override
@@ -249,7 +269,15 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
     //TODO-전체결산
     void createEndReport() {
         //레디스 통계정보
-//        RedisStatistics redisStatistics = (RedisStatistics) redisService.getValues(RedisPrefix.SERVER_STATISTICS.prefix());
+        RedisStatistics redisStatistics = (RedisStatistics) redisService.getValues(RedisPrefix.SERVER_STATISTICS.prefix());
+        redisStatistics.getProductCostRateMap().entrySet().stream().forEach(
+                entry->{
+                    CostRateStatistics costRateStatistics= redisStatisticsUtil.makeCompact(entry.getValue());
+                    //통계구하기
+                    redisStatisticsUtil.getTteoksang(costRateStatistics);
+                    redisStatisticsUtil.getTteokrock(costRateStatistics);
+                }
+        );
         //이벤트 맵에서 TOP3 뽑으면 된다
     }
 
@@ -366,20 +394,20 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         serverInfo.setCurrentTurn(serverInfo.getCurrentTurn() + 1);
         serverInfo.setTurnStartTime(LocalDateTime.now());
         if (serverInfo.getCurrentTurn() % eventTurnPeriod == 0) {
-//            RedisStatistics redisStatistics = (RedisStatistics) redisService.getValues(RedisPrefix.SERVER_STATISTICS.prefix());
-//            Map<String, Integer> eventCountMap = redisStatistics.getEventCountMap();
+            RedisStatistics redisStatistics = (RedisStatistics) redisService.getValues(RedisPrefix.SERVER_STATISTICS.prefix());
+            Map<String, Integer> eventCountMap = redisStatistics.getEventCountMap();
 
             serverInfo.setSpecialEventIdList(nextEventList.stream().map(event -> {
                 //이벤트 발생횟수 업데이트
                 String eventName = event.getEventName();
-//                eventCountMap.put(eventName, eventCountMap.get(eventName) + 1);
+                eventCountMap.put(eventName, eventCountMap.get(eventName) + 1);
 
                 return event.getEventId();
             }).toList());
             currentEventList = nextEventList;
             nextEventList = new ArrayList<>();
             //레디스에 통계 저장
-//            redisService.setValues(RedisPrefix.SERVER_STATISTICS.prefix(), redisStatistics);
+            redisService.setValues(RedisPrefix.SERVER_STATISTICS.prefix(), redisStatistics);
 
         }
         privateScheduleService.initGameInfoForAllUsersPerTurn();
@@ -420,6 +448,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
                 //가격이 너무 작은 경우, 평균 가격의 일부 얻으므로써 보정
                 newCost += (int) (fluctationInfo.getProductAvgCost() * randomRate * MIN_AVG_MULTIPLE_LIMIT);
             }
+            //TODO 가격 변동 저장...
 //            RedisStatistics redisStatistics=(RedisStatistics) redisService.getValues(RedisPrefix.SERVER_STATISTICS.prefix());
 //            redisStatistics.getProductCostRateMap().get(productId).addCostInfo(new CostInfo(newCost, serverInfo.getCurrentTurn()));
             //임시 배열에 저장, 한 번에 값들 업데이트 하기 위함!
