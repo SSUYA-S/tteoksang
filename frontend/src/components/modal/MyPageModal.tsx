@@ -677,13 +677,13 @@ export default function MyPageModal(props: MyPageType) {
                 </div>
                 <div className="w-[80%] h-[10%]  flex items-center justify-between mt-[0.4vw]">
                     <p
-                        className="h-fit text-[1.3vw] border-[0.1vw] py-[0.4vw] px-[1.6vw] rounded-[0.6vw] color-border-orange1 color-text-orange1 bg-white cursor-pointer"
+                        className="h-fit text-[1.3vw] border-[0.1vw] py-[0.4vw] px-[1.6vw] rounded-[0.6vw] color-border-orange1 color-text-orange1 bg-white cursor-pointer hover:color-bg-orange1 hover:text-white btn-animation"
                         onClick={props.proceedLogout}
                     >
                         로그아웃
                     </p>
                     <p
-                        className="h-fit text-[1.3vw] border-[0.1vw] py-[0.4vw] px-[1.6vw] rounded-[0.6vw] border-white bg-red-600 text-white cursor-pointer"
+                        className="h-fit text-[1.3vw] border-[0.1vw] py-[0.4vw] px-[1.6vw] rounded-[0.6vw] border-white bg-red-600 text-white cursor-pointer hover:text-red-600 hover:bg-white hover:border-red-600 btn-animation"
                         onClick={props.proceedWithdrawal}
                     >
                         회원탈퇴
