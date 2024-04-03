@@ -233,7 +233,7 @@ export default function GameComponent(props: GameType) {
             props.setStartFlag(false);
             window.location.reload();
         } else {
-            console.log('Logout error');
+            // console.log('Logout error');
         }
     };
 
@@ -264,7 +264,7 @@ export default function GameComponent(props: GameType) {
             setIsWithdrawalProceeding(false);
             window.location.reload();
         } else {
-            console.log('회원 탈퇴 불가');
+            // console.log('회원 탈퇴 불가');
         }
     };
 
@@ -333,14 +333,14 @@ export default function GameComponent(props: GameType) {
     const cookies = new Cookies();
     useEffect(() => {
         if (!cookies.get('accessToken')) {
-            console.log('토큰 만료!!!');
+            // console.log('토큰 만료!!!');
             props.setStartFlag(false);
         }
     }, [cookies]);
 
     //init
     useEffect(() => {
-        console.log(ingameTurn % 360);
+        // console.log(ingameTurn % 360);
         if (ingameTurn % 360 > 0 && ingameTurn % 360 < 91) {
             setSeasonImg('spring');
         } else if (ingameTurn % 360 > 90 || ingameTurn % 360 < 181) {
@@ -364,7 +364,7 @@ export default function GameComponent(props: GameType) {
 
     // 인게임 시간 설정
     useEffect(() => {
-        console.log(ingameTurn % 360);
+        // console.log(ingameTurn % 360);
         if (ingameTurn % 360 > 0 && ingameTurn % 360 < 91) {
             setSeasonImg('spring');
         } else if (ingameTurn % 360 > 90 && ingameTurn % 360 < 181) {
@@ -421,10 +421,10 @@ export default function GameComponent(props: GameType) {
         // dispatch(specialEventState(randomNum));
         //specialEvent에 [1,3,6 이런식으로 생김]
         //json에서 evendId가 1,3,6인것을 받아양함
-        console.log(publicEvent);
+        // console.log(publicEvent);
         if (publicEvent) {
-            console.log('보여줍니다 콘솔');
-            console.log(publicEvent);
+            // console.log('보여줍니다 콘솔');
+            // console.log(publicEvent);
             const newPublicEvent = initialData.eventList.filter((event) =>
                 publicEvent.includes(event.eventId)
             );
@@ -452,7 +452,7 @@ export default function GameComponent(props: GameType) {
             //가뭄, 흉작, 풍작, 풍작, 풍작
             //가뭄, 흉작, 풍작
 
-            console.log(pushData);
+            // console.log(pushData);
             setCurrentSpecialEvent(pushData);
         }
     }, [publicEvent]);

@@ -66,20 +66,20 @@ export default function WebSocket(props: Prop) {
             .then((res) => {
                 if (res.status === httpStatusCode.OK) {
                     const id = res.data.webSocketId;
-                    console.log('websocketId : ' + id);
+                    // console.log('websocketId : ' + id);
                     const client = handshake(id);
-                    console.log('websocketId : ' + id);
+                    // console.log('websocketId : ' + id);
                     client.onConnect = () => {
                         //public subscribe
                         client.subscribe('/topic/public', (message) => {
                             const msg = JSON.parse(message.body);
-                            console.log(msg);
+                            // console.log(msg);
                             switch (msg.type) {
                                 case 'GET_PUBLIC_EVENT':
                                     //공통 이벤트 수신
                                     if (msg.isSuccess) {
                                         const info = msg.body;
-                                        console.log(info);
+                                        // console.log(info);
                                         dispatch(
                                             productInfoState(
                                                 info.productInfoList
@@ -175,7 +175,7 @@ export default function WebSocket(props: Prop) {
                         //private channel 구독
                         client.subscribe(`/topic/private/${id}`, (message) => {
                             const msg = JSON.parse(message.body);
-                            console.log(msg);
+                            // console.log(msg);
                             switch (msg.type) {
                                 case 'CHANGE_TITLE':
                                     //칭호 변경 완료
@@ -282,7 +282,7 @@ export default function WebSocket(props: Prop) {
                                     if (msg.isSuccess) {
                                         props.setStartFlag(false);
                                     } else {
-                                        console.log(`ERROR ON ${msg.type}`);
+                                        // console.log(`ERROR ON ${msg.type}`);
                                     }
                                     break;
                                 case 'GET_INGAME_TIME':
@@ -299,7 +299,7 @@ export default function WebSocket(props: Prop) {
                                             )
                                         );
                                     } else {
-                                        console.log(`ERROR ON ${msg.type}`);
+                                        // console.log(`ERROR ON ${msg.type}`);
                                     }
                                     break;
                                 case 'GET_MY_GOLD':
@@ -308,7 +308,7 @@ export default function WebSocket(props: Prop) {
                                         const res = msg.body;
                                         dispatch(goldState(res.gold));
                                     } else {
-                                        console.log(`ERROR ON ${msg.type}`);
+                                        // console.log(`ERROR ON ${msg.type}`);
                                     }
                                     break;
                                 case 'GET_INFRA_LEVEL':
@@ -327,7 +327,7 @@ export default function WebSocket(props: Prop) {
                                             brokerLevelState(res.brokerLevel)
                                         );
                                     } else {
-                                        console.log(`ERROR ON ${msg.type}`);
+                                        // console.log(`ERROR ON ${msg.type}`);
                                     }
                                     break;
                                 case 'GET_WAREHOUSE_INFO':
@@ -349,7 +349,7 @@ export default function WebSocket(props: Prop) {
                                             myProductState(res.productList)
                                         );
                                     } else {
-                                        console.log(`ERROR ON ${msg.type}`);
+                                        // console.log(`ERROR ON ${msg.type}`);
                                     }
                                     break;
                                 case 'GET_TOTAL_INFO':
@@ -481,7 +481,7 @@ export default function WebSocket(props: Prop) {
                 }
             })
             .catch((err) => {
-                console.log(err);
+                // console.log(err);
             });
     }, []);
 

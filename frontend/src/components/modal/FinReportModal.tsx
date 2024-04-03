@@ -154,7 +154,7 @@ export default function FinReportModal({
         '9년차',
     ];
     useEffect(() => {
-        console.log(finReport);
+        // console.log(finReport);
         const fetchPriTotalData = async () => {
             let totalIncome = 0;
             let totalOutcome = 0;
@@ -233,7 +233,7 @@ export default function FinReportModal({
                     outcomeValue += data.totalAccPrivateProductOutcome;
                     yearProductList.year = item.year;
 
-                    console.log('결산데이터');
+                    // console.log('결산데이터');
 
                     //연도별 개인 작물 전체년 통계
                     setPriTotalProductInfo((prevItems) => {
@@ -296,7 +296,7 @@ export default function FinReportModal({
             // 서버 전체 작물 통계
             await finReport!.publicProductReportList.map((item) => {
                 item.productList.map((data) => {
-                    console.log('결산데이터');
+                    // console.log('결산데이터');
 
                     //연도별 개인 작물 전체년 통계
                     setPubTotalProductInfo((prevItems) => {
@@ -349,7 +349,7 @@ export default function FinReportModal({
     useEffect(() => {
         // 차트를 위해서 개당 작물에 대한 개수 정보 저장
         priTotalProductInfo.map((item, index) => {
-            console.log(item);
+            // console.log(item);
             setPriTotalProductIncome((prev) => [
                 ...prev,
                 item.totalAccPrivateProductIncome,
@@ -366,10 +366,10 @@ export default function FinReportModal({
         });
     }, [priTotalProductInfo]);
 
-    useEffect(() => {
-        console.log('연간 구매 개수');
-        console.log(priYearProductInfo);
-    }, [priYearProductInfo]);
+    // useEffect(() => {
+    //     // console.log('연간 구매 개수');
+    //     // console.log(priYearProductInfo);
+    // }, [priYearProductInfo]);
 
     // 연차별 개인 통계 정보
     useEffect(() => {
@@ -379,7 +379,7 @@ export default function FinReportModal({
         let outcomeValue: number[] = [];
         let quantityLabel: string[] = [];
         let quantityValue: number[] = [];
-        console.log(priTotalProductInfo);
+        // console.log(priTotalProductInfo);
         // 전체 작물 통계 정보
         if (yearProductSelected == 0) {
             //판매이익 Top4 뽑기
@@ -1123,7 +1123,7 @@ export default function FinReportModal({
                                 </p>
                                 <ul className="h-full flex flex-col">
                                     {finReport?.achievementList.map((item) => {
-                                        console.log(item);
+                                        // console.log(item);
                                         return (
                                             <li className="h-[30%] my-[0.4vw]">
                                                 <AchievementCard

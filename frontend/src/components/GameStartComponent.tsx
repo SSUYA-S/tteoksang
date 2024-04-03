@@ -132,7 +132,7 @@ export default function GameStartComponent(props: startType) {
             setIsMyPageOpen(false);
             setLoginFlag(false);
         } else {
-            console.log('Logout error');
+            // console.log('Logout error');
         }
     };
 
@@ -159,7 +159,7 @@ export default function GameStartComponent(props: startType) {
             setIsMyPageOpen(false);
             window.location.reload();
         } else {
-            console.log('회원 탈퇴 불가');
+            // console.log('회원 탈퇴 불가');
         }
     };
 
@@ -206,7 +206,7 @@ export default function GameStartComponent(props: startType) {
                     }
                 })
                 .catch((err) => {
-                    console.log(err);
+                    // console.log(err);
                 });
 
             setLoginFlag(true);
@@ -224,14 +224,14 @@ export default function GameStartComponent(props: startType) {
                                     ' '
                                 )
                             );
-                            console.log(data);
+                            // console.log(data);
                         } else {
                             setIsPreviousExist(false);
                         }
                     }
                 })
                 .catch((err) => {
-                    console.log(err);
+                    // console.log(err);
                 });
         }
     }, [cookies]);
@@ -252,14 +252,14 @@ export default function GameStartComponent(props: startType) {
                                     ' '
                                 )
                             );
-                            console.log(data);
+                            // console.log(data);
                         } else {
                             setIsPreviousExist(false);
                         }
                     }
                 })
                 .catch((err) => {
-                    console.log(err);
+                    // console.log(err);
                 });
         }
     }, [props.startFlag]);
@@ -270,19 +270,19 @@ export default function GameStartComponent(props: startType) {
                 navigator.serviceWorker
                     .register('/sw.js')
                     .then((registration) => {
-                        console.log(
-                            'Service worker registered successfully',
-                            registration
-                        );
+                        // console.log(
+                        //     'Service worker registered successfully',
+                        //     registration
+                        // );
                     })
                     .catch((error) => {
-                        console.log(
-                            'Service worker registration failed',
-                            error
-                        );
+                        // console.log(
+                        //     'Service worker registration failed',
+                        //     error
+                        // );
                     });
             } else {
-                console.log('Service workers are not supported.');
+                // console.log('Service workers are not supported.');
             }
         }
     }, [loginFlag]);

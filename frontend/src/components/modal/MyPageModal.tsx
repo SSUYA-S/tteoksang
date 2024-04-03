@@ -114,39 +114,39 @@ export default function MyPageModal(props: MyPageType) {
             .then((res) => {
                 if (res.status === httpStatusCode.OK) {
                     dispatch(profileFrameState(tempFrame));
-                    console.log('success');
+                    // console.log('success');
                 } else {
-                    console.log('Fail');
+                    // console.log('Fail');
                 }
             })
             .catch((err) => {
-                console.log(err);
+                // console.log(err);
             });
         //테마 변경 요청
         changeProfileTheme(tempTheme)
             .then((res) => {
                 if (res.status === httpStatusCode.OK) {
                     dispatch(profileThemeState(tempTheme));
-                    console.log('success');
+                    // console.log('success');
                 } else {
-                    console.log('fail');
+                    // console.log('fail');
                 }
             })
             .catch((err) => {
-                console.log(err);
+                // console.log(err);
             });
         //아이콘 변경 요청
         changeProfileIcon(tempIcon)
             .then((res) => {
                 if (res.status === httpStatusCode.OK) {
                     dispatch(profileIconeState(tempIcon));
-                    console.log('Success');
+                    // console.log('Success');
                 } else {
-                    console.log('fail');
+                    // console.log('fail');
                 }
             })
             .catch((err) => {
-                console.log(err);
+                // console.log(err);
             });
     };
 
