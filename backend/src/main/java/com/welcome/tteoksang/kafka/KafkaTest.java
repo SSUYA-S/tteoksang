@@ -32,8 +32,9 @@ import org.springframework.stereotype.Component;
 public class KafkaTest {
     @Value("${KAFKA_TOPIC_LOG}")
     String testTopicName;
-
-    @KafkaListener(topics = "tteoksang_log", containerFactory = "kafkaListenerContainerFactory")
+    //tteoksang_log
+    //tteoksang_hadoop
+    @KafkaListener(topics = "${KAFKA_TOPIC_LOG}", containerFactory = "kafkaListenerContainerFactory")
     public void receiveLogDataResult(@Payload String logData) {
 
         ObjectMapper mapper = new ObjectMapper();
@@ -45,4 +46,17 @@ public class KafkaTest {
         }
         log.debug("Kafka: {}", logData);
     }
+
+    // 여기서 하둡에서 보낸 데이터를 받아서 몽고 디비로 넣음
+//    @KafkaListener(topics = "tteoksang_hadoop", containerFactory = "kafkaListenerContainFactory")
+//    public void receiveHadoopDataResult(@Payload String hadoopData) {
+//        ObjectMapper mapper = new ObjectMapper();
+//        try {
+//            Message message = mapper.readValue(hadoopData, Message.class);
+//            log.debug("Type: {}", message.getType());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        log.debug("Kafka: {}", hadoopData);
+//    }
 }

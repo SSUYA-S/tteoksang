@@ -6,7 +6,8 @@ import com.welcome.tteoksang.game.dto.log.LogMessage;
 import com.welcome.tteoksang.game.dto.log.RentFeeLogInfo;
 import com.welcome.tteoksang.game.dto.log.SellLogInfo;
 import com.welcome.tteoksang.game.dto.res.GameMessageRes;
-import com.welcome.tteoksang.game.dto.result.half.Half;
+import com.welcome.tteoksang.game.dto.result.*;
+import com.welcome.tteoksang.game.dto.result.half.*;
 import com.welcome.tteoksang.game.dto.result.offline.OfflineReport;
 import com.welcome.tteoksang.game.dto.result.quarter.OverdueProduct;
 import com.welcome.tteoksang.game.dto.result.quarter.Quarter;
@@ -15,6 +16,8 @@ import com.welcome.tteoksang.game.dto.server.ServerProductInfo;
 import com.welcome.tteoksang.game.dto.user.RedisGameInfo;
 import com.welcome.tteoksang.game.dto.user.UserProductInfo;
 import com.welcome.tteoksang.game.exception.BrokerNotExistException;
+import com.welcome.tteoksang.game.repository.SeasonHalfPrivateStatisticsRepository;
+import com.welcome.tteoksang.game.repository.SeasonHalfStatisticsRepository;
 import com.welcome.tteoksang.game.scheduler.ServerInfo;
 import com.welcome.tteoksang.redis.RedisPrefix;
 import com.welcome.tteoksang.redis.RedisService;
@@ -39,10 +42,16 @@ import java.util.stream.Collectors;
 public class ReportServiceImpl implements ReportService {
 
     private final RedisService redisService;
+//    private final SeasonHalfPrivateStatisticsService seasonHalfPrivateStatisticsService;
+//    private final SeasonHalfStatisticsService seasonHalfStatisticsService;
+    private final SeasonHalfPrivateStatisticsRepository seasonHalfPrivateStatisticsRepository;
+    private final SeasonHalfStatisticsRepository seasonHalfStatisticsRepository;
     private final BrokerRepository brokerRepository;
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final ProductRepository productRepository;
     private final ServerInfo serverInfo;
+    private final Rank severRank;
+
 
     @Value("${RENT_FEE}")
     private long rentFee;
@@ -76,7 +85,7 @@ public class ReportServiceImpl implements ReportService {
                     .gold(redisGameInfo.getGold())
                     .rentFeeInfo(rentFeeInfo)
                     .quarterProfit(redisGameInfo.getGold() - redisGameInfo.getLastQuarterGold())  // TODO: redis에 추가 필요
-                    .inProductList(products) // TODO: Public에서 불어와야됨
+                    .inProductList(products)
                     .titleId(userInfo.getTitleId())
                     .build();
             if(rentFeeInfo.getBillType().equals("bankrupt")){
@@ -103,7 +112,7 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public void sendHalfResult(String userId, String webSocketId) {
+    public GameMessageRes sendHalfResult(String userId, String webSocketId) {
         boolean isSuccess = true;
         Object responseBody = "";
 
@@ -123,18 +132,70 @@ public class ReportServiceImpl implements ReportService {
             // 계절 결산의 내용의 Rentfee를 그대로 사용
             RentFeeInfo rentFeeInfo = quarter.getRentFeeInfo();
 
-//            // 몽고 디비에서 데이터 불러오기
-//            long totalProductIncome = totalAccPrivateProductIncome; //ReduceProductInfo
-//            long totalProductOutcome = totalAccPrivateProductOutcome;    //ReduceProductInfo
-//            long totalBrokerFee = accPrivateBrokerFee;  //ReduceProductInfo
-//            long totalUpgradeFee = accPrivateUpgradeFee;    //ReduceStatistics
-//            long totalRentFee = accPrivateRentFee;  //ReduceStatistics
-//            long eventBonus = accPrivateEventBonus; //ReduceStatistics
-//            long participantCount = accPrivateGamePlayCount; // ReduceStatistics
+            // 몽고 디비 키 생성
+            String mongoDBKey = serverInfo.getSeasonId() + (turn/quarterYearTurnPeriod * 2)
+                    + userId + redisGameInfo.getGameId();
+
+            // 통계량 조회
+            SeasonHalfPrivateStatistics halfPrivateStatistics
+                    = seasonHalfPrivateStatisticsRepository.findById(mongoDBKey).orElseThrow(RuntimeException::new);
+            SeasonHalfStatistics halfStatistics
+                    = seasonHalfStatisticsRepository.findById(mongoDBKey).orElseThrow(RuntimeException::new);
 
 
+            // 몽고 디비에서 데이터 불러오기
+            long totalProductIncome = halfPrivateStatistics.getTotalAccPrivateProductIncome(); //ReduceProductInfo
+            long totalProductOutcome = halfPrivateStatistics.getTotalAccPrivateProductOutcome();    //ReduceProductInfo
+            long totalBrokerFee = halfPrivateStatistics.getTotalAccPrivateBrokerFee();  //ReduceProductInfo
+            long totalUpgradeFee = halfPrivateStatistics.getAccPrivateUpgradeFee();    //ReduceStatistics
+            long totalRentFee = halfPrivateStatistics.getAccPrivateRentFee();  //ReduceStatistics
+            long eventBonus = halfPrivateStatistics.getAccPrivateEventBonus(); //ReduceStatistics
+            int participantCount = halfStatistics.getAccGamePlayCount(); // ReduceStatistics
+
+            // 나의 랭킹 정보
+            List<RankInfo> myRankInfo = findMyRankInfo(halfPrivateStatistics, userId);
+
+            // 떡락/떡상
+            TteoksangStatistics tteoksangStatistics = halfStatistics.getTteoksangStatistics();
+            TteokrockStatistics tteokrockStatistics = halfStatistics.getTteokrockStatistics();
+
+            // 제일 많이 팔린 작물, 제일 적게 팔린 작물
+            BestSellerStatistics bestSellerStatistics = halfStatistics.getBestSellerStatistics();
+
+            // achievementList 빈 배열 보내기
+            List<Integer> achievementList = new ArrayList<>();
+
+            responseBody = Half.builder()
+                    .turn(turn)
+                    .gold(gold)
+                    .rentFeeInfo(rentFeeInfo)
+                    .quarterReport(quarter)
+                    .totalProductIncome(totalProductIncome)
+                    .totalProductOutcome(totalProductOutcome)
+                    .totalBrokerFee(totalBrokerFee)
+                    .totalUpgradeFee(totalUpgradeFee)
+                    .totalRentFee(totalRentFee)
+                    .eventBonus(eventBonus)
+                    .participantCount(participantCount).
+                    rankInfoList(myRankInfo)
+                    .tteoksangStatistics(tteoksangStatistics)
+                    .tteokrockStatistics(tteokrockStatistics)
+                    .bestSellerStatistics(bestSellerStatistics)
+                    .achievementList(achievementList)
+                    .build();
+        } else {
+            log.debug("오류 발생");
+            isSuccess = false;
         }
+
+        return GameMessageRes.builder()
+                .type(MessageType.QUARTER_REPORT)
+                .isSuccess(isSuccess)
+                .body(responseBody)
+                .build();
     }
+
+
 
 
     private RentFeeInfo calculateRentFee(String userId, RedisGameInfo redisGameInfo) {
@@ -329,6 +390,104 @@ public class ReportServiceImpl implements ReportService {
                 // 내림차순으로 정렬
                 .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
                 .collect(Collectors.toList());
+    }
+
+    // 랭킹 구하기
+    private List<RankInfo> findMyRankInfo(SeasonHalfPrivateStatistics halfPrivateStatistics, String userId) {
+        List<RankInfo> rankInfoList = new ArrayList<>();
+        // 나의 랭킹 뽑기
+        List<Sellerbrity> sellerbrityRank = severRank.getSellerbrityRank();
+        int mySellerbrityRank = sellerbrityRank.size();
+        for (int i = 0; i < sellerbrityRank.size(); i++) {
+            Sellerbrity sellerbrity = sellerbrityRank.get(i);
+            if (sellerbrity.getUserId().equals(userId)) {
+                mySellerbrityRank = i + 1; // 등수는 1부터 시작하므로, 인덱스 + 1
+                break; // 찾았으므로 반복문 종료
+            }
+        }
+
+        // 1등 유저 정보
+        String userInfoKey = RedisPrefix.USERINFO.prefix() + sellerbrityRank.get(0).getUserId();
+        UserInfo sellerbrityUserInfo = (UserInfo) redisService.getValues(userInfoKey);
+
+        TheFirstUserInfo theFirstSellerbrityUserInfo = TheFirstUserInfo.builder()
+                .userNickname(sellerbrityUserInfo.getNickname())
+                .profileFrameId(sellerbrityUserInfo.getProfileFrameId())
+                .profileIconId(sellerbrityUserInfo.getProfileIconId())
+                .build();
+
+        rankInfoList.add(RankInfo.builder()
+                .rankName("판매왕")
+                .rankDescription("가장 많은 순수익을 얻은 사람(반기 기준)")
+                .theFirstUserInfo(theFirstSellerbrityUserInfo)
+                .theFirstRecord(sellerbrityRank.get(0).getTotalAccPrivateProductProfit())
+                .myRank(mySellerbrityRank)
+                .myRecord(halfPrivateStatistics.getTotalAccPrivateProductProfit())
+                .build());
+
+        // 부자
+        List<Millionaire> millionaireRank = severRank.getMillionaireRank();
+        int myMillionaireRank = millionaireRank.size();
+        for (int i = 0; i < millionaireRank.size(); i++) {
+            Millionaire millionaire = millionaireRank.get(i);
+            if (millionaire.getUserId().equals(userId)) {
+                myMillionaireRank = i + 1; // 등수는 1부터 시작하므로, 인덱스 + 1
+                break; // 찾았으므로 반복문 종료
+            }
+        }
+
+        // 1등 유저 정보
+        userInfoKey = RedisPrefix.USERINFO.prefix() + millionaireRank.get(0).getUserId();
+        UserInfo millionairUserInfo = (UserInfo) redisService.getValues(userInfoKey);
+
+        TheFirstUserInfo theFirstMillionairUserInfo = TheFirstUserInfo.builder()
+                .userNickname( millionairUserInfo.getNickname())
+                .profileFrameId( millionairUserInfo.getProfileFrameId())
+                .profileIconId( millionairUserInfo.getProfileIconId())
+                .build();
+
+        String userKey = RedisPrefix.INGAMEINFO.prefix() + userId;
+        RedisGameInfo redisGameInfo = (RedisGameInfo) redisService.getValues(userKey);
+
+        rankInfoList.add(RankInfo.builder()
+                .rankName("부자")
+                .rankDescription("현재 보유 금액")
+                .theFirstUserInfo(theFirstMillionairUserInfo)
+                .theFirstRecord(millionaireRank.get(0).getGold())
+                .myRank(myMillionaireRank)
+                .myRecord(redisGameInfo.getGold())
+                .build());
+
+        // 떡상
+        List<Tteoksang> tteoksangRank = severRank.getTteoksangRank();
+        int myTteoksangRank = tteoksangRank.size();
+        for (int i = 0; i < tteoksangRank.size(); i++) {
+            Tteoksang tteoksang = tteoksangRank.get(i);
+            if (tteoksang.getUserId().equals(userId)) {
+                myTteoksangRank = i + 1; // 등수는 1부터 시작하므로, 인덱스 + 1
+                break; // 찾았으므로 반복문 종료
+            }
+        }
+        // 1등 유저 정보
+        userInfoKey = RedisPrefix.USERINFO.prefix() + tteoksangRank.get(0).getUserId();
+        UserInfo tteoksangUserInfo = (UserInfo) redisService.getValues(userInfoKey);
+
+        TheFirstUserInfo theFirstTteoksangUserInfo = TheFirstUserInfo.builder()
+                .userNickname(tteoksangUserInfo.getNickname())
+                .profileFrameId(tteoksangUserInfo.getProfileFrameId())
+                .profileIconId(tteoksangUserInfo.getProfileIconId())
+                .build();
+
+        rankInfoList.add(RankInfo.builder()
+                .rankName("떡상")
+                .rankDescription("가장 높은 수익률(반기 기준)")
+                .theFirstUserInfo(theFirstTteoksangUserInfo)
+                .theFirstRecord(tteoksangRank.get(0).getProfitGold())
+                .myRank(myTteoksangRank)
+                .myRecord(redisGameInfo.getGold() - redisGameInfo.getLastQuarterGold())
+                .build());
+
+        return rankInfoList;
     }
 
     private void sendSellLog(String userId, RedisGameInfo redisGameInfo, Integer productId, long logProductIncome, int logSoldQuantity, long logProductProfit, int serverPrice) {
