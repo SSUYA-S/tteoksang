@@ -5,7 +5,6 @@ import com.welcome.tteoksang.game.dto.user.RedisGameInfo;
 import com.welcome.tteoksang.game.scheduler.ScheduleService;
 import com.welcome.tteoksang.redis.RedisPrefix;
 import com.welcome.tteoksang.redis.RedisService;
-import com.welcome.tteoksang.resource.repository.BrokerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -24,7 +24,14 @@ public class PrivateScheduleServiceImpl implements PrivateScheduleService {
     private int rentFee;
     private final ScheduleService scheduleService;
     private final RedisService redisService;
+    private final ReportService reportService;
     Map<String, CheckPlayTimeInfo> userAlertPlayTimeMap = new HashMap<>();
+
+    @Override
+    public List<String> getConnectedUserId(){
+        return userAlertPlayTimeMap.keySet().stream().toList();
+    }
+
 
     //gameInfo 초기화
     @Override
