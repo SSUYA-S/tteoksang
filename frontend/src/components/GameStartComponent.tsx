@@ -47,6 +47,10 @@ import {
 import WarningModal from './modal/WarningModal';
 import MyPageModal from './modal/MyPageModal';
 
+import logoutServiceWorker from "../util/logoutServiceWorker.ts";
+import {logout} from "../api/auth.ts";
+import {withdrawal} from "../api/user";
+
 type startType = {
     setStartFlag: React.Dispatch<React.SetStateAction<boolean>>;
     achievementData: Achievement[];
@@ -78,6 +82,13 @@ export default function GameStartComponent(props: startType) {
 
     const [isTrytoReset, setIsTryToReset] = useState<boolean>(false);
 
+    const [isLogoutProceeding, setIsLogoutProceeding] =
+        useState<boolean>(false);
+
+    const [isWithdrawalProceeding, setIsWithdrawalProceeding] =
+        useState<boolean>(false);
+
+
     const bgmSetting = useSelector((state: any) => state.reduxFlag.bgmFlag);
 
     const dispatch = useDispatch();
@@ -105,6 +116,55 @@ export default function GameStartComponent(props: startType) {
     const onClickLogin = () => {
         //로그인 표시
         window.location.href = import.meta.env.VITE_REACT_GOOGLE_LOGIN_URL;
+    };
+
+    /** handleLogOut()
+     *  로그아웃
+     */
+    const handleLogOut = async () => {
+        const res = await logout();
+        if (res.status === httpStatusCode.OK) {
+            setIsLogoutProceeding(false);
+            logoutServiceWorker();
+
+            // navigate('/');
+            props.setStartFlag(false);
+        } else {
+            console.log('Logout error');
+        }
+    };
+
+
+    const proceedLogout = () => {
+        setIsLogoutProceeding(true);
+    };
+
+    /** handleCloseErrorModal()
+     * 로그아웃 모달 비활성화 */
+    const handleCloseErrorModal = () => {
+        setIsLogoutProceeding(false);
+    };
+
+    /** handleWithdrawal()
+     *  회원 탈퇴를 진행한다.
+     */
+    const handleWithdrawal = async () => {
+        const res = await withdrawal();
+        if (res.status === httpStatusCode.OK) {
+            logoutServiceWorker();
+            props.setStartFlag(false);
+            setIsWithdrawalProceeding(false);
+        } else {
+            console.log('회원 탈퇴 불가');
+        }
+    };
+
+    const proceedWithdrawal = () => {
+        setIsWithdrawalProceeding(true);
+    };
+
+    const cancelWithdrawal = () => {
+        setIsWithdrawalProceeding(false);
     };
 
     /**게임 시작 */
@@ -312,6 +372,28 @@ export default function GameStartComponent(props: startType) {
                 backgroundRepeat: 'no-repeat',
             }}
         >
+            {isLogoutProceeding ? (
+                <WarningModal
+                    handleOK={handleLogOut}
+                    handleCancel={handleCloseErrorModal}
+                    message="로그아웃 하시겠습니까?"
+                    cancelMessage="취소"
+                    okMessage="로그아웃"
+                />
+            ) : (
+                <></>
+            )}
+            {isWithdrawalProceeding ? (
+                <WarningModal
+                    handleOK={handleWithdrawal}
+                    handleCancel={cancelWithdrawal}
+                    message="정말로 회원탈퇴 하시겠습니까?"
+                    cancelMessage="취소"
+                    okMessage="회원탈퇴"
+                />
+            ) : (
+                <></>
+            )}
             {isMyPageOpen ? (
                 <MyPageModal
                     setMypageFlag={setIsMyPageOpen}
@@ -320,6 +402,8 @@ export default function GameStartComponent(props: startType) {
                     themeInfo={themeData}
                     iconInfo={profileIconData}
                     achievementList={achievementData}
+                    proceedLogout={proceedLogout}
+                    proceedWithdrawal={proceedWithdrawal}
                 />
             ) : (
                 <></>
