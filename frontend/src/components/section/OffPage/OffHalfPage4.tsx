@@ -41,7 +41,7 @@ export default function OffHalfPage4(props: Prop) {
                                     ].productName
                                 } : ${
                                     props.tteoksangStatistics.values[0].value
-                                }%`}
+                                }(G)`}
                             </p>
                         </div>
                         <div className="w-[50%] h-full flex flex-col items-center">
@@ -63,7 +63,7 @@ export default function OffHalfPage4(props: Prop) {
                                     ].productName
                                 } : ${
                                     props.tteokrockStatistics.values[0].value
-                                }%`}
+                                }(G)`}
                             </p>
                         </div>
                     </div>

@@ -129,6 +129,8 @@ export default function GameStartComponent(props: startType) {
             // navigate('/');
             window.location.reload();
             props.setStartFlag(false);
+            setIsMyPageOpen(false);
+            setLoginFlag(false);
         } else {
             console.log('Logout error');
         }
@@ -153,6 +155,8 @@ export default function GameStartComponent(props: startType) {
             logoutServiceWorker();
             props.setStartFlag(false);
             setIsWithdrawalProceeding(false);
+            setLoginFlag(false);
+            setIsMyPageOpen(false);
             window.location.reload();
         } else {
             console.log('회원 탈퇴 불가');

@@ -85,7 +85,7 @@ export default function OffManyHalfPage4(props: Prop) {
                                     props.productList[
                                         tteoksang.values[0].productId
                                     ].productName
-                                } : ${tteoksang.values[0].value}%`}
+                                } : ${tteoksang.values[0].value}(G)`}
                             </p>
                         </div>
                         <div className="w-[50%] h-full flex flex-col items-center">
@@ -104,7 +104,7 @@ export default function OffManyHalfPage4(props: Prop) {
                                     props.productList[
                                         tteokrock.values[0].productId
                                     ].productName
-                                } : ${tteokrock.values[0].value}%`}
+                                } : ${tteokrock.values[0].value}(G)`}
                             </p>
                         </div>
                     </div>
