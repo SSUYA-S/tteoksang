@@ -36,7 +36,7 @@ export default function TitleChangeModal(props: Prop) {
                 testMap.map((id: number) => {
                     newList.push(props.titleList[id - 1]);
                 });
-                console.log(newList);
+                // console.log(newList);
                 setAcquired(newList);
             }
         });

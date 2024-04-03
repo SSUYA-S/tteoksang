@@ -24,13 +24,13 @@ export default function NicknameChangeModal(props: PropType) {
                 if (res.status === httpStatusCode.OK) {
                     dispatch(userNicknameState(nickName));
                     props.closeModal();
-                    console.log('Success');
+                    // console.log('Success');
                 } else {
-                    console.log('Fail');
+                    // console.log('Fail');
                 }
             })
             .catch((err) => {
-                console.log(err);
+                // console.log(err);
             });
     };
 

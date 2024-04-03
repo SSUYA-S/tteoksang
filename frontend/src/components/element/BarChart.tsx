@@ -8,8 +8,8 @@ import {
     Legend,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import report from '../../dummy-data/report/final.json';
-import { useEffect, useState } from 'react';
+// import report from '../../dummy-data/report/final.json';
+// import { useEffect, useState } from 'react';
 
 ChartJS.register(
     CategoryScale,

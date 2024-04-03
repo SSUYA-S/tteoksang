@@ -6,8 +6,8 @@ type AchievementCardType = {
     achievementInfo: Achievement[];
 };
 export default function AchievementCard(props: AchievementCardType) {
-    console.log('업적입니다');
-    console.log(props.achievementId);
+    // console.log('업적입니다');
+    // console.log(props.achievementId);
     const achievement: Achievement = loadAchievement(
         props.achievementId,
         props.achievementInfo

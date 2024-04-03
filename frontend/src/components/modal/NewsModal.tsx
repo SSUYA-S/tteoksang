@@ -25,8 +25,8 @@ export default function NewsModal(props: NewsType) {
                 props.setShowNews(false); // ESC 키가 눌리면 컴포넌트를 안 보이게 설정
             }
         };
-        console.log('뉴스임미다');
-        console.log(props.newsArticleList);
+        // console.log('뉴스임미다');
+        // console.log(props.newsArticleList);
         setDate(props.newsPublishTurn);
         // 컴포넌트가 마운트될 때 keydown 이벤트 리스너 추가
         document.addEventListener('keydown', handleKeyDown);
@@ -38,8 +38,8 @@ export default function NewsModal(props: NewsType) {
     }, []);
 
     useEffect(() => {
-        console.log('새신문 도착');
-        console.log(props.newsArticleList);
+        // console.log('새신문 도착');
+        // console.log(props.newsArticleList);
         setDate(props.newsPublishTurn);
         setCurrentNews(props.newsArticleList);
     }, [props.newsArticleList]);
