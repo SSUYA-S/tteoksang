@@ -45,7 +45,7 @@ export default function OffReportModal(props: Prop) {
 
     //0: 임대료, 1: 보고서
     const [mode, setMode] = useState<number>(0);
-    //어떤 종류? 분기, 반기, 여러 반기
+    //어떤 종류? 분기, 반기, 여러 반기(0, 1, 2순)
     const [reportType, setReportType] = useState<number>(0);
     //페이지
     const [page, setPage] = useState<number>(1);
@@ -71,56 +71,22 @@ export default function OffReportModal(props: Prop) {
     useEffect(() => {
         //분기가 안 지난 경우는 아얘 정보가 오지 않으니 고려 안함.
         //몇개 반기, 분기가 지나갔는지 파악
-        //1.각 turn수를 바탕으로 해당 분기가 몇 년 몇 월 시작인지 찾기
-        //2. 이를 토대로 몇 개의 반기가 지나갔는지 계산하기
-        //3. 2개이상 -> reportType 2, 1개 -> reportType 1, 0개 -> reportType 0
-        //0개 분기가 지나간 경우는 서버에서 정보가 전해지지 않는다. 무조건 1개 분기에 대한 정보는 있으니, 그를 기준으로 하자
+        //1. 분기만 있으면 halfReport = null
+        //2. 반기 1개면 halfReport.turn === recentHalfReport.turn
 
-        //지난 턴의 분기 시작은?
-        let lastYear = Math.floor((Off.lastGameTurn - 1 + 60) / 360);
-        let lastMonth =
-            ((Math.floor((Off.lastGameTurn - 1) / 30) + 2) % 12) + 1;
-        if (lastMonth <= 2) {
-            lastMonth = 12;
-            lastYear -= 1;
-        } else if (lastMonth <= 5) {
-            lastMonth = 3;
-        } else if (lastMonth <= 8) {
-            lastMonth = 6;
-        } else if (lastMonth <= 11) {
-            lastMonth = 9;
-        }
-        //lastMonth === 12면 수정 불필요
-
-        //이번 정산 턴 기준은?
-        let nowYear = Math.floor((nowTurn - 1 + 60) / 360);
-        let nowMonth = ((Math.floor((nowTurn - 1) / 30) + 2) % 12) + 1;
-        if (nowMonth <= 2) {
-            nowMonth = 12;
-            nowYear -= 1;
-        } else if (nowMonth <= 5) {
-            nowMonth = 3;
-        } else if (nowMonth <= 8) {
-            nowMonth = 6;
-        } else if (nowMonth <= 11) {
-            nowMonth = 9;
-        }
-
-        const lastHlf = 2 * lastYear + Math.floor((lastMonth - 1) / 6);
-        const nowHlf = 2 * nowYear + Math.floor((nowMonth - 1) / 6);
-        if (nowHlf - lastHlf >= 2) {
-            setReportType(2);
-        } else if (nowHlf - lastHlf == 1) {
+        if (!Off.halfReport) {
+            setReportType(0);
+        } else if (Off.halfReport.turn === Off.recentHalfReport.turn) {
             setReportType(1);
         } else {
-            setReportType(0);
+            setReportType(2);
         }
 
         //반기 보고서는 존재하는가?
         if (Off) {
             //반기 보고서 존재 시
             // console.log(Off.halfReport);
-            if (Off.halfReport !== null || Off.halfReport !== undefined) {
+            if (Off.halfReport) {
                 //반기 수익 계산
                 let income = Off.halfReport.totalProductIncome;
                 let outcome =
@@ -334,7 +300,9 @@ export default function OffReportModal(props: Prop) {
                                         rankInfoList={
                                             Off.halfReport.rankInfoList
                                         }
-                                        recentRankInfoList={Off.rankInfoList}
+                                        recentRankInfoList={
+                                            Off.recentHalfReport.rankInfoList
+                                        }
                                     />
                                 ) : (
                                     <OffManyHalfPage4
@@ -352,9 +320,18 @@ export default function OffReportModal(props: Prop) {
                                         achievementList={
                                             Off.halfReport.achievementList
                                         }
-                                        newTteoksang={Off.tteoksangStatistics}
-                                        newTteokrock={Off.tteokrockStatistics}
-                                        newBestSeller={Off.bestSellerStatistics}
+                                        newTteoksang={
+                                            Off.recentHalfReport
+                                                .tteoksangStatistics
+                                        }
+                                        newTteokrock={
+                                            Off.recentHalfReport
+                                                .tteokrockStatistics
+                                        }
+                                        newBestSeller={
+                                            Off.recentHalfReport
+                                                .bestSellerStatistics
+                                        }
                                     />
                                 )
                             ) : (

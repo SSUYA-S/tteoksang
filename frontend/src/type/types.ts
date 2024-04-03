@@ -369,13 +369,9 @@ export interface FinalReportType {
 export interface OfflineReportType {
     lastGameTurn: number;
     rentFeeInfo: RentFeeInfoType;
-    halfReport: HalfReportType;
     quarterReport: QuarterReportType;
-    participantCount: number;
-    rankInfoList: RankReportType[];
-    tteoksangStatistics: Stat;
-    tteokrockStatistics: Stat;
-    bestSellerStatistics: Stat;
+    halfReport: HalfReportType;
+    recentHalfReport: HalfReportType;
 }
 
 export interface HalfReceipt {
