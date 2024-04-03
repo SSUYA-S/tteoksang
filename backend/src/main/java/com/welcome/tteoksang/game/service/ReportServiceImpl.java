@@ -47,7 +47,6 @@ public class ReportServiceImpl implements ReportService {
     private final SeasonHalfPrivateStatisticsRepository seasonHalfPrivateStatisticsRepository;
     private final SeasonHalfStatisticsRepository seasonHalfStatisticsRepository;
     private final BrokerRepository brokerRepository;
-    private final SimpMessagingTemplate simpMessagingTemplate;
     private final ProductRepository productRepository;
     private final ServerInfo serverInfo;
     private final Rank severRank;
@@ -64,7 +63,7 @@ public class ReportServiceImpl implements ReportService {
 
     // 계절 결산 불러오기
     @Override
-    public GameMessageRes sendQuarterResult(String userId, String webSocketId) {
+    public GameMessageRes sendQuarterResult(String userId) {
         boolean isSuccess = true;
         Object responseBody = "";
         // 레디스에서 결산 데이터 불러오기
@@ -112,7 +111,7 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public GameMessageRes sendHalfResult(String userId, String webSocketId) {
+    public GameMessageRes sendHalfResult(String userId) {
         boolean isSuccess = true;
         Object responseBody = "";
 
@@ -125,7 +124,7 @@ public class ReportServiceImpl implements ReportService {
             long gold = redisGameInfo.getGold();
 
             // 계절 결산 내용
-            GameMessageRes quarterResult = sendQuarterResult(userId, webSocketId);
+            GameMessageRes quarterResult = sendQuarterResult(userId);
             // 계절 정보 가져오기
             Quarter quarter = (Quarter) quarterResult.getBody();
 

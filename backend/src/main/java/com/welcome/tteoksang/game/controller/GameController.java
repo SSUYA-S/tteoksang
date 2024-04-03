@@ -83,7 +83,7 @@ public class GameController {
 //
 //        simpMessagingTemplate.convertAndSend("/topic/private/" + webSocketId, quarterResult);
 
-        GameMessageRes quarterResult = reportService.sendQuarterResult(user.getUserId(), webSocketId);
+        GameMessageRes quarterResult = reportService.sendQuarterResult(user.getUserId());
         simpMessagingTemplate.convertAndSend("/topic/private/" + webSocketId, quarterResult);
     }
 
