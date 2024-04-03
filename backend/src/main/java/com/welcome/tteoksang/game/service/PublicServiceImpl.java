@@ -101,7 +101,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
     private int NEWS_NUM = 4;
     private int BUYABLE_PRODUCT_NUM = 6;
 
-    private final int PLAY_LONG_TIME = 2; //3시간
+    private final int PLAY_LONG_TIME = 3; //3시간
 
     private boolean loadServerInfo() {
 //        if(redisService.hasKey(RedisPrefix.SERVER_INFO.prefix())){
@@ -500,15 +500,15 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
                 }
         );
     }
-
-    //    @Scheduled(cron = "0 0  * * * *")
-    @Scheduled(cron = "0 * * * * *")
+//TODO- PlayTIME ALERT
+        @Scheduled(cron = "0 0  * * * *")
+//    @Scheduled(cron = "0 * * * * *")
     public void checkLongPlayTime() {
         LocalDateTime currentTime = LocalDateTime.now();
         privateScheduleService.getUserAlertPlayTimeMap().entrySet().stream().forEach(
                 entry -> {
-                    if (Duration.between(entry.getValue().getChecked(), currentTime).toMinutes() >= PLAY_LONG_TIME) {
-//                    if (Duration.between(entry.getValue().getChecked(),currentTime).toHours() >= PLAY_LONG_TIME) {
+//                    if (Duration.between(entry.getValue().getChecked(), currentTime).toMinutes() >= PLAY_LONG_TIME) {
+                    if (Duration.between(entry.getValue().getChecked(),currentTime).toHours() >= PLAY_LONG_TIME) {
 
                         String userId = entry.getKey();
                         sendPrivateMessage(userId, MessageType.ALERT_PLAYTIME, PlayTimeInfo.builder()
