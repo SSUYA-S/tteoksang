@@ -24,7 +24,13 @@ import { Cookies } from 'react-cookie';
 //     productInfoState,
 //     buyableProductIdState,
 // } from '../util/product-and-event';
-import { Achievement, ProfileFrame, ProfileIcon, Title } from '../type/types';
+import {
+    Achievement,
+    ProfileFrame,
+    ProfileIcon,
+    Theme,
+    Title,
+} from '../type/types';
 import { checkMyPrevious, checkMyProfile, startNewGame } from '../api/user';
 import { httpStatusCode } from '../util/http-status';
 import { profileData } from '../type/types';
@@ -48,12 +54,15 @@ type startType = {
     profileFrameData: ProfileFrame[];
     profileIconData: ProfileIcon[];
     startFlag: boolean;
+    themeData: Theme[];
 };
 export default function GameStartComponent(props: startType) {
     const achievementData = props.achievementData;
     const titleData = props.titleData;
     const profileFrameData = props.profileFrameData;
     const profileIconData = props.profileIconData;
+    const themeData = props.themeData;
+
     const [loginFlag, setLoginFlag] = useState<boolean>(false);
     const [playing, setPlaying] = useState<boolean>(false);
     const [audio, setAudio] = useState(
@@ -303,6 +312,18 @@ export default function GameStartComponent(props: startType) {
                 backgroundRepeat: 'no-repeat',
             }}
         >
+            {isMyPageOpen ? (
+                <MyPageModal
+                    setMypageFlag={setIsMyPageOpen}
+                    titleInfo={titleData}
+                    profileFrameInfo={profileFrameData}
+                    themeInfo={themeData}
+                    iconInfo={profileIconData}
+                    achievementList={achievementData}
+                />
+            ) : (
+                <></>
+            )}
             {isTrytoReset ? (
                 <WarningModal
                     handleOK={resetAndStart}
