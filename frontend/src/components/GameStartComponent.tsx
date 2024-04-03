@@ -47,9 +47,9 @@ import {
 import WarningModal from './modal/WarningModal';
 import MyPageModal from './modal/MyPageModal';
 
-import logoutServiceWorker from "../util/logoutServiceWorker.ts";
-import {logout} from "../api/auth.ts";
-import {withdrawal} from "../api/user";
+import logoutServiceWorker from '../util/logoutServiceWorker.ts';
+import { logout } from '../api/auth.ts';
+import { withdrawal } from '../api/user';
 
 type startType = {
     setStartFlag: React.Dispatch<React.SetStateAction<boolean>>;
@@ -87,7 +87,6 @@ export default function GameStartComponent(props: startType) {
 
     const [isWithdrawalProceeding, setIsWithdrawalProceeding] =
         useState<boolean>(false);
-
 
     const bgmSetting = useSelector((state: any) => state.reduxFlag.bgmFlag);
 
@@ -129,11 +128,12 @@ export default function GameStartComponent(props: startType) {
 
             // navigate('/');
             props.setStartFlag(false);
+            setIsMyPageOpen(false);
+            setLoginFlag(false);
         } else {
             console.log('Logout error');
         }
     };
-
 
     const proceedLogout = () => {
         setIsLogoutProceeding(true);
@@ -154,6 +154,8 @@ export default function GameStartComponent(props: startType) {
             logoutServiceWorker();
             props.setStartFlag(false);
             setIsWithdrawalProceeding(false);
+            setLoginFlag(false);
+            setIsMyPageOpen(false);
         } else {
             console.log('회원 탈퇴 불가');
         }
