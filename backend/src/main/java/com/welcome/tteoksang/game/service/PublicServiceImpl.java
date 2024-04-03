@@ -437,6 +437,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
             FluctationInfo fluctationInfo = fluctationInfoMap.get(productId);
             //random값 생성
             double randomRate;
+            double offset=0.0;
             double eventEffectRate = 1 + fluctationInfo.getEventEffect() / 100;
             if (productInfo.getProductCost() >= fluctationInfo.getProductAvgCost() * eventEffectRate * MAX_AVG_MULTIPLE_LIMIT) {
                 //평균값의 N배 이상인 경우, min, maxRate 값 변동! -> 변동폭 만큼 각 rate에서 준다
@@ -445,6 +446,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
                 randomRate = random.nextDouble(minRate, maxRate);
 //                log.debug(productId + "@@@@@너무 비싸요@@@@@" + minRate + ">" + randomRate + "<" + maxRate);
                 //TODO- 그럼에도 계속 올라가는 경우 조정해줘야 할지 논의 필요-> 해줘야 한다...
+                offset=fluctationInfo.getProductAvgCost()*randomRate*(1+CORRECTION_VALUE);
             } else if (fluctationInfo.getMinFluctuationRate() > 1) {
                 //증가만 하는 경우
                 randomRate = random.nextDouble(fluctationInfo.getMinFluctuationRate() * eventEffectRate * (1 - CORRECTION_VALUE), (fluctationInfo.getMaxFluctuationRate() + 0.001) * eventEffectRate);
@@ -452,7 +454,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
                 //평균적인 경우
                 randomRate = random.nextDouble(fluctationInfo.getMinFluctuationRate() * eventEffectRate * (1 - CORRECTION_VALUE), (fluctationInfo.getMaxFluctuationRate() + 0.001) * eventEffectRate * (1 + CORRECTION_VALUE));
             }
-            int newCost = (int) (productInfo.getProductCost() * randomRate);
+            int newCost = (int) (productInfo.getProductCost() * randomRate-offset);
             if (productInfo.getProductCost() <= fluctationInfo.getProductAvgCost() * MIN_AVG_MULTIPLE_LIMIT) {
                 //가격이 너무 작은 경우, 평균 가격의 일부 얻으므로써 보정
                 newCost += (int) (fluctationInfo.getProductAvgCost() * randomRate * MIN_AVG_MULTIPLE_LIMIT);
