@@ -422,16 +422,6 @@ export default function GameStartComponent(props: startType) {
                 <></>
             )}
             <div className="absolute w-[10%] h-[40%] flex flex-col justify-center items-center top-[4%] right-[0%] z-20">
-                <div
-                    className="w-[50%] h-[30%] cursor-pointer btn-animation z-10"
-                    style={{
-                        backgroundImage:
-                            'url(/src/assets/images/icon/ui-icon-ranking.png)',
-                        backgroundSize: 'contain ',
-                        backgroundPosition: 'center',
-                        backgroundRepeat: 'no-repeat',
-                    }}
-                />
                 <div className="h-[5%]" />
                 <div
                     className="w-[50%] h-[30%] cursor-pointer btn-animation z-10"
