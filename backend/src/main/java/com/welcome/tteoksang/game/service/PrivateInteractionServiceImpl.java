@@ -256,6 +256,7 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
 
             // 초기 설정
             Map<Integer, UserProductInfo> products = redisGameInfo.getProducts();
+            Map<Integer, UserProductInfo> copyProducts = new HashMap<>(products);
             // 현재 소지 금액
             long remainGold = redisGameInfo.getGold();
             // 창고에 있는 전체 수량
@@ -346,23 +347,35 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
                         throw new RuntimeException(e);
                     }
 
-                    // product 반영
-                    products.replace(messageProductId, UserProductInfo.builder()
-                            .productQuantity(remainQuantity)
-                            .productPurchaseQuantity(redisProductInfo.getProductPurchaseQuantity())
-                            .productTotalCost(calculateProductTotalCost)
-                            .build()
-                    );
+                    // 개수가 0이 되면 products에서 제거
+                    if(remainQuantity != 0){
+                        copyProducts.put(messageProductId, UserProductInfo.builder()
+                                .productQuantity(remainQuantity)
+                                .productPurchaseQuantity(redisProductInfo.getProductPurchaseQuantity())
+                                .productTotalCost(calculateProductTotalCost)
+                                .build()
+                        );
+                    } else {
+                        // 수량이 0일 때는 해당 농산물을 copyProducts에서 제거
+                        copyProducts.remove(messageProductId);
+                    }
+//                    // product 반영
+//                    products.replace(messageProductId, UserProductInfo.builder()
+//                            .productQuantity(remainQuantity)
+//                            .productPurchaseQuantity(redisProductInfo.getProductPurchaseQuantity())
+//                            .productTotalCost(calculateProductTotalCost)
+//                            .build()
+//                    );
                 }
 
                 // 레디스 갱신
                 redisGameInfo.setGold(remainGold);
-                redisGameInfo.setProducts(products);
+                redisGameInfo.setProducts(copyProducts);
                 redisGameInfo.setTotalProductQuantity(totalProductQuantity);
 
                 redisService.setValues(redisGameInfoKey, redisGameInfo);
 
-                List<ProductTradeInfo> newProductList = getProductList(products);
+                List<ProductTradeInfo> newProductList = getProductList(copyProducts);
                 // 메세지 바디에 모든 농산물 정보를 저장
                 responseBody = SellProductInfo.builder()
                         .gold(redisGameInfo.getGold())
