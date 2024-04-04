@@ -61,7 +61,7 @@ public class GameInfoServiceImpl implements GameInfoService {
         GameInfo newGameInfo = GameInfo.builder()
                 .userId(userId)
                 .gameId(newGameId)// 새로운 게임 ID
-                .gold(30000000L)
+                .gold(2000000L)
 //                .gold(10000L)
                 .lastQuarterGold(0L)
                 .lastHalfGold(0L)
@@ -141,7 +141,7 @@ public class GameInfoServiceImpl implements GameInfoService {
                 gameInfo = GameInfo.builder()
                         .userId(userId)
                         .gameId(1)// 현재 게임 ID
-                        .gold(30000000L)
+                        .gold(2000000L)
                         .lastQuarterGold(0L)
                         .lastHalfGold(0L)
                         .warehouseLevel(1)
