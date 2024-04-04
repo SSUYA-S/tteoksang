@@ -72,6 +72,11 @@
 ![IntelliJ](https://img.shields.io/badge/IntelliJ%20IDEA-000000.svg?&style=for-the-badge&logo=IntelliJ%20IDEA&logoColor=white)
 
 ### Infra
+![Jenkins](https://img.shields.io/badge/Jenkins-D24939.svg?&style=for-the-badge&logo=Jenkins&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED.svg?&style=for-the-badge&logo=Docker&logoColor=white)
+![NGINX](https://img.shields.io/badge/NGINX-009639.svg?&style=for-the-badge&logo=NGINX&logoColor=white)
+![Amazon_EC2](https://img.shields.io/badge/Amazon_EC2-FF9900.svg?&style=for-the-badge&logo=Amazon_EC2&logoColor=white)
+
 
 ### Frontend
 
@@ -89,8 +94,23 @@
 ![StompJS](https://img.shields.io/badge/StompJS-000000.svg?&style=for-the-badge)
 
 ### Backend
+![Java17](https://img.shields.io/badge/Java17-000000.svg?&style=for-the-badge)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F.svg?&style=for-the-badge&logo=SpringBoot&logoColor=white)
+![Spring Security](https://img.shields.io/badge/Spring_Security-6DB33F.svg?&style=for-the-badge&logo=SpringSecurity&logoColor=white)
+![JPA](https://img.shields.io/badge/JPA-000000.svg?&style=for-the-badge)
+![WebSocket](https://img.shields.io/badge/WebSocket-000000.svg?&style=for-the-badge)
+![MariaDB](https://img.shields.io/badge/MariaDB-003545.svg?&style=for-the-badge&logo=MariaDB&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-47A248.svg?&style=for-the-badge&logo=MongoDB&logoColor=white)
 
 ### Data
+![Jupyter](https://img.shields.io/badge/Jupyter-F37626.svg?&style=for-the-badge&logo=Jupyter&logoColor=white)
+![pandas](https://img.shields.io/badge/pandas-150458.svg?&style=for-the-badge&logo=pandas&logoColor=white)
+![scikitlearn](https://img.shields.io/badge/scikitlearn-F7931E.svg?&style=for-the-badge&logo=scikitlearn&logoColor=white)
+![Apache_Hadoop](https://img.shields.io/badge/Apache_Hadoop-66CCFF.svg?&style=for-the-badge&logo=ApacheHadoop&logoColor=white)
+![Apache_Spark](https://img.shields.io/badge/Apache_Spark-E25A1C.svg?&style=for-the-badge&logo=ApacheSpark&logoColor=white)
+![Apache_Airflow](https://img.shields.io/badge/Apache_Airflow-017CEE.svg?&style=for-the-badge&logo=ApacheAirflow&logoColor=white)
+![Apache_Kafka](https://img.shields.io/badge/Apache_Kafka-231F20.svg?&style=for-the-badge&logo=ApacheKafka&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3776AB.svg?&style=for-the-badge&logo=Python&logoColor=white)
 
 ### 그 외
 
@@ -117,14 +137,16 @@
 7. 정기적으로 신문이 옵니다. 신문을 통해 앞으로 올 이벤트의 예측이 가능합니다. 작물 가격은 이벤트의 영향도 받으니 잘 읽어보시고 예측해 보세요^^.
 8. 현재 적용중인 특수 이벤트의 확인도 가능합니다. 이벤트 정보를 보고 전략적인 매매를 합시다.
 9. 매 계절이 끝나면 결산 정보가 옵니다. 현재 나의 상태를 확인해가며 진행합시다.
-10. 게임도 너무 오래하면 안되겠죠? 오래 접속하면 경고창을 띄우고, 반기마다 9분씩 휴식 시간을 드립니다. 9분 동안은 사람들과 떠들면서 푹 쉬세요^^
+10. 게임도 너무 오래하면 안되겠죠? 오래 접속하면 경고창을 띄우고, 반기마다 9분씩 휴식 시간을 드립니다.
 11. 게임이 끝나고 새 시즌이 시작되었습니다. 지난 시즌의 전체 결산 정보를 확인하고, 이 결과에 따라 새 시즌의 시작 자본금이 정해집니다. 열심히 한 분은 더 많은 자본을 가지고 시작하니 매우 유리하겠죠?
 
--   게임의 전반적 플레이는 위와 같이 진행됩니다. 이제 각 화면에 대한 자세한 설명을 통해 구체적인 플레이 방법을 익혀봅시다.
+-   게임의 전반적 플레이는 위와 같이 진행됩니다. 이제 실제 화면을 보며 자세한 설명을 통해 구체적인 플레이 방법을 익혀봅시다.
 
 ## 플레이 화면 및 기능 설명
 
 ### 1. 로그인과 회원가입
+
+![loginAndRegist](./README_ASSETS/startScreen/loginAndRegister.gif)
 
 -   먼저 게임에 로그인을 해봅시다.
 -   저희 게임은 OAuth2 기반의 구글 로그인을 지원합니다.
@@ -134,6 +156,8 @@
 
 #### 첫 접속 시, 시즌 시작 시 화면
 
+![start](./README_ASSETS/startScreen/newStart.gif)
+
 -   로그인을 하면 다음과 같은 화면이 나옵니다.
 -   시작하기 버튼을 누르면 게임이 시작됩니다.
 -   시즌 시작 후 첫 접속 시 다음 화면이 나옵니다.
@@ -142,10 +166,13 @@
 
 #### 첫 접속이 아니라면?
 
+![continue](./README_ASSETS/startScreen/continue.gif)
+
 -   이번 시즌 내에 플레이 기록이 있다면 마지막 플레이 시간과 이어하기 버튼이 활성화 됩니다. 이 버튼을 누르면 게임을 이어서 할 수 있습니다.
 -   만약 처음부터 다시 시작하고 싶으시다면? 새로 시작하기 버튼을 누르실 수 있습니다. 새로 시작할 경우 기존 정보는 모두 날아가니 신중하게 눌러주세요^^
 
 ### 3. 메인 화면
+![main](./README_ASSETS/gameMain/main.PNG)
 
 -   메인 화면입니다. 번호로 표시된 각 기능을 설명드리갰습니다.
 
@@ -185,63 +212,74 @@
     - 게임 시작 화면으로 나가실 수 있는 버튼입니다.
 
 ### 4. 구매와 판매
+![buy](./README_ASSETS/gameMain/buy.gif)
 
 -   구매 화면에서는 작물의 구매가 가능합니다. 구매 가능한 작물들의 정보와 현재 시설과 소지금 정보, 구매 가능 정보가 표시됩니다.
 -   구매 가능한 작물과 작물의 가격은 매 턴마다 변합니다.
 -   작물의 현실 수확량을 기반으로 개별 품목별 구매 수량 제한도 있습니다. 싸다고 마음대로 살 수 없으니 조심하세요!!!
 
+![sell](./README_ASSETS/gameMain/sell.gif)
 -   판매 화면에서는 현재 소지한 작물의 정보와 시설, 소지금 정보를 볼 수 있습니다.
 -   작물은 언제든 판매 가능합니다. 시세는 매 턴마다 변동됩니다.
 -   판매 시 수수료가 발생합니다. 거래소 레벨에 따라 수수료가 변동됩니다.
 
+![info](./README_ASSETS/gameMain/info.gif)
 -   시세 화면에서는 전체 작물의 시세를 확인 가능합니다.
 -   개당 가격, 보유개수, 등락폭에 따른 정렬 기능을 지원합니다.
 -   내 것만 보기 필터나 정렬, 필터 초기화 기능도 지원합니다.
 
 ### 5. 시설 업그레이드
-
+![upgrade](./README_ASSETS/gameMain/upgrade.gif)
 -   시설의 업그레이드가 가능한 화면입니다. 업그레이드를 원하는 품목을 눌러 업그레이드해 봅시다.
--   운송수단을 업그레이드하면 일일 전체 작물 구매 한도가 증가합니다. 운송수단이 좋아야 한번에 더 많이 옮기죠^^
--   창고를 업그레이드하면 보관할 수 있는 작물의 수가 늘어납니다. 많이 사고 많이 팔 수 있으면 좋겠죠?
--   거래소를 업그레이드하면 판매 수수료가 낮아집니다. 수수료가 적으면 이윤이 더 많아집니다.
+-   운송수단을 업그레이드하면 일일 전체 작물 구매 한도가 증가합니다.
+-   창고를 업그레이드하면 보관할 수 있는 작물의 수가 늘어납니다.
+-   거래소를 업그레이드하면 판매 수수료가 낮아집니다.
 
-### 6. 창고와 신문
-
+### 6. 창고와 신문, 그리고 이벤트
+![inventory](./README_ASSETS/gameMain/inventory.gif)
 -   창고 화면에서는 현재 보유 중인 품목의 정보와 매매 모달로의 이동이 가능합니다. 구경하다가 팔거나 사고 싶으면 바로 이동합시다.
+
+![news](./README_ASSETS/gameMain/news.gif)
 -   정기적으로 신문이 도착합니다. 신문 기사를 통해 앞으로 올 특수 이벤트의 예측이 가능합니다. 단! 신문 기사에 실렸다고 모두 일어나지는 않습니다. 어떤게 진짜일지 예측해 봅시다.
 
-### 7. 마이페이지
+![event](./README_ASSETS/gameMain/event.gif)
+- 이벤트가 왔다면 이렇게 확인해 볼 수 있습니다. 어떤 종류의 이벤트인지, 어떤 작물이 어떤 영향을 받는지가 나옵니다.
 
+### 7. 마이페이지
+![mypage](./README_ASSETS/mypage/nickname.gif)
 -   마이페이지 모달에서는 현재 적용중인 칭호, 닉네임, 경력(플레이 몇 시즌 했는지), 아이템, 도전과제 달성 여부를 조회 가능합니다.
 -   닉네임의 변경이 가능합니다. 원하는 이름으로 바꿔보세요.
+![changeTheme](./README_ASSETS/mypage/changeTheme.gif)
 -   꾸미기를 통해 프레임, 아이콘, 테마의 변경이 가능합니다. 프로필을 예쁘게 꾸며봐요.
--   달성한 도전과제를 확인할 수 있습니다. 도전과제 기능은 추후 구현 예정입니다.
+![logout](./README_ASSETS/mypage/logout.gif)
+![withdrawal](./README_ASSETS/mypage/withdrawal.gif)
 -   로그아웃, 회원 탈퇴도 가능합니다.
 
 ### 8. 환경 설정
-
+![setting](./README_ASSETS/mypage/settings.gif)
 -   BGM, 효과음, 테마 시간 설정이 가능합니다.
 -   BGM을 켜고 끌 수 있습니다.
 -   화면에서는 테마의 시간 설정이 가능합니다. 인게임 시간에 따라 낮, 저녁, 밤이 반복되게 할 수도 있고, 특정 테마로 고정 가능합니다.
 -   효과음은 현재 게임에 존재하지 않습니다. 추후, 구현 시 켜고 끄는 기능이 추가될 예정입니다.
 
-### 9. 휴식 시간
-
--   반기나 한 시즌이 끝날 때마다 휴식 화면에 들어가실 수 있습니다.
+### 9. 결산 시간
+![breakTime](./README_ASSETS/gameMain/rest.gif)
+-   반기나 한 시즌이 끝날 때마다 결산을 위한 대기 화면에 들어가게 됩니다.
 -   채팅이나 환경 설정이 가능하고, 남은 시간의 확인도 가능합니다.
 -   물론, 나가실 수도 있습니다.
--   이 시간 동안 정산이 이루어집니다.
+-   이 시간 동안 반기, 전체 결산이 이루어집니다.
 -   가끔은 게임을 쉬고 스트레칭도 해봐요^^.
 
 ### 10. 결산
-
--   결산은 크게 4가지로 구분됩니다. 분기, 반기, 미접속, 전체입니다.
+![quarterReport](./README_ASSETS/gameMain/quarterReport.gif)
+-   결산은 크게 4가지로 구분됩니다. 분기, 계절, 미접속, 전체입니다.
 -   결산 시마다 임대료가 청구됩니다. 임대료는 매 턴마다 보유하던 작물의 수량으로 결정됩니다. 잔뜩 사서 오래 보관하면 임대료 폭탄을 맞으니 구매, 판매 시기에도 더 고도의 전략이 필요합니다.
 
--   분기 결산은 봄, 가을이 끝날 때마다 나옵니다. 이번 분기의 순수익과
+-   계절 결산은 봄, 가을이 끝날 때마다 나옵니다. 이번 분기의 순수익과
     임대료에 따른 당기 순수익, 사용중인 칭호, 다음 계절의 이벤트와 제철 작물을 확인 가능합니다.
--   칭호 변경은 매 결산 시에만 가능합니다. 향후 칭호에 따른 효과가 추가될 예정입니다.
+    -   칭호 변경은 매 결산 시에만 가능합니다. 향후 칭호에 따른 효과가 추가될 예정입니다.
 
+![halfReport](./README_ASSETS/gameMain/halfReport.gif)
 -   반기 결산은 여름, 겨울이 끝나고 휴식 시간이 끝나면 나옵니다.
 
     -   첫 페이지는 분기 결산과 같은 페이지로 이번에는 분기 전체 수입과 지출, 이를 토대로 계산한 순수익이 나옵니다. 또, 칭호와 칭호 변경, 다음 계절에 대한 예고가 나옵니다.
@@ -249,16 +287,18 @@
     -   세번째 페이지에서는 랭킹이 나옵니다. 항목별로 1등과 나의 성적을 비교해보며 경쟁심을 불태웁시다.
     -   네번째 페이지는 통계와 달성한 도전 과제가 나오는 화면입니다. 이번 반기 가장 높은 등락폭을 기록한 작물, 최다, 최소 거래 작물을 확인해 보실 수 있습니다. 도전 과제도 확인 가능합니다(추가 구현 예정).
 
+![offReport](./README_ASSETS/gameMain/offlineReport.gif)
 -   미접속 결산은 오랜 기간 미접속한 경우 나옵니다.
 
     -   분기 결산 정보만 있으면 분기 결산을 보여줍니다.
     -   반기 결산 정보가 있으면 해당 반기 결산을 보여줍니다.
     -   여러 반기를 쉬었다면? 마지막으로 접속한 반기에서 나온 수익, 지출 목록과 당시와 최근의 랭킹, 통계 정보를 보여줍니다.
 
+![finalReport](./README_ASSETS/gameMain/finalReport.gif)
 -   전체 결산은 한 시즌이 끝나고 다음 시즌이 시작되어 접속하면 보여줍니다. 지난 시즌의 결과에 따라 새 시즌의 기본 시작금이 정해집니다.
     -   1페이지에서는 연도별 수입, 지출, 순수입을 보여주고, 이를 통한 총 수입, 총 지출, 총 순수익을 보여줍니다.
-    -   2페이지에서는 시즌동안 구매, 판매된 작물의 상위 4개 품목을 보여줍니다. 지난 시즌에는 뭐가 많이 구매되고 팔렸는지 구경해 봅시다.
-    -   3페이지에서는 작물별 거래량과 변동폭을 확인하고, 자주 발생한 특수 이벤트 상위 3개를 보여줍니다.
+    -   2페이지에서는 시즌동안 구매, 판매된 작물의 상위 4개 품목을 보여줍니다. 지난 시즌에는 뭐가 많이 구매되고 팔렸는지 구경해 봅시다. 연도별로도 확인 가능합니다.
+    -   3페이지에서는 작물별 거래량과 구매, 판매금액을 확인하고, 자주 발생한 특수 이벤트 상위 3개를 보여줍니다.
     -   마지막 페이지에서는 시즌 랭킹 정보와 획득 도전과제, 업그레이드 레벨, 플레이 시간, 거래 작물 개수를 보여줍니다. 그리고 이 모든 정보를 토대로 다음 시즌 시작금을 받고, 보상 받기를 누르며 새 게임이 시작됩니다.
 
 ---
@@ -314,6 +354,52 @@
 
 ---
 
+## 프론트 엔드 기술
+- React : JavaScript 라이브러리. SPA를 통한 컴포넌트별 효율적인 페이지 구현과 성능 최적화를 위해 사용.
+- TypeScript : JavaScript의 동적 타입 문법으로 인한 에러 방지를 위해 사용.
+- Axios : 서버와의 HTTP 비동기 통신을 위해 사용. Fetch보다 훨씬 다양한 기능을 지원해 사용
+- Vite : Esbuild 기반 프론트엔드 빌드툴. 빠른 HMR(Hot Module Replacement: 모듈 전체가 아닌 일부만 다시 로드하는 방식)을 지원해 자주 비교되는 CRA 방식보다 빌드 속도가 빠르다.
+- PWA : 모바일 환경 하에서도 네이티브 앱처럼 작동하는 사이트를 만들기 위해 사용
+- StompJS : 웹소켓 통신을 더 쉽게 도와주는 라이브러리.
+    - Why Websocket? 게임 특성상 서버에서 정보를 직접 주는 것도 필요. 폴링은 쓸데없는 자원 낭비가 있고, 채팅때문에 웹소켓 연결이 필수적이니 웹소켓 채택.
+- NodeJS : 자바스크립트를 런타임 환경에서도 구동 가능하게 해주는 도구. 이 중, npm이라는 패키지 관리자를 이용해 자바스크립트 패키지를 관리하는게 편해서 채택.
+- ReduxToolkit : 프론트엔드의 중앙 저장소를 위해 사용. Redux보다 편리한 도구를 많이 추가. 게임 특성상 데이터가 이곳저곳 프롭되는게 관리하기 어려워 채택.
+- TailwindCSS : CSS 라이브러리. CSS를 class명을 이용해 적용하게 해 훨씬 편하고, 다양한 커스터마이징이 가능해 채택.
+
+
+## 백엔드 기술
+- Spring Boot - Security
+    - 설명
+        - 모든 서비스의 시작은 로그인 및 유저 관리가 있다. 스프링에서 제공하는 시큐리티를 이용하여 로그인 기능을 안전하게 구현할 수 있다.
+    - 선정 이유
+        - 전문가들이 빌드한 spring security 프레임 워크를 사용하면, 웹 어플리케이션을 최소한의 구성으로 쉽게 보호할 수 있다.
+            
+            전문적인 보안 코드는 시큐리티가 담당하기 때문에 개발자는 비즈니스 로직에 더 신경을 쓸 수 있게 된다.
+            
+    - 사용 기술
+        - OAuth2.0
+        - JWT
+
+- Spring Boot - JPA
+    - 설명
+        - ORM(Object-Relational Mapping) 기술 표준으로, 객체와 관계형 데이터베이스의 데이터를 매핑하는 기술이다.
+    - 선정 이유
+        1. SQL중심 개발에서 객체 중심 개발을 하여 개발 생산성을 높일 수 있습니다.
+        2. 기존에는 필드 변경 시 모든 쿼리를 수정해야 하는 불편함이 있었지만 JPA를 사용하면 JPA가 자동으로 쿼리를 수정하기 때문에 유지보수가 용이
+        3. 패러다임 불일치 해결
+
+- WebSocket
+    - 설명
+        - 실시간 네트워크를 이용한 양방향 통신으로 접속 요청은 HTTP 로 한 뒤, 웹소켓 프로토콜로 변경 후 실시간 통신이 가능하게 된다.
+    - 선정 이유
+        1. 구매와 판매가 빈번하게 이뤄지는데 이를 HTTP 요청을 처리하게 되면 서버 시간과 클라이언트 시간의 오차가 생길 수 있기에 이를 해결하기 위해 WebSocket 채택
+        2. 3개의 토픽을 두어 서버 전체에서 이뤄질 수 있는 동작과 유저의 상호 동작을 분리할 수 있기에 웹소켓이 적합
+
+- MongoDB
+    - 설명
+        - 이벤트의 내용과 유저의 통계 정보를 저장하기 위해 채택, RDB과 성능차이가 있다고 생각하기에 사용
+
+
 ---
 
 # 6. 설계 문서
@@ -321,66 +407,68 @@
 ---
 
 -   ERD 설계도
+![erd](./README_ASSETS/erd.png)
 
 -   API 명세서
 
-        -   참고) Method: Message는 웹 소켓 통신
+    -   참고) Method: Message는 웹 소켓 통신
 
-    | 분류  | Method  | 설명   | URI   | Request  | Response |
-    | --------------- | ------- | ---------------------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-    | 게임-화면/정보  | Message | 게임 휴식 시간 알림 | /private/{webSocketId}   | { type: GET_BREAK_TIME, body: {}}  | { type: GET_BREAK_TIME, isSuccess : Boolean, body: { isBreakTime: Boolean, ingameTime: String, breakTime : String, breakName: String,} } |
-    | 게임-화면/정보  | Message | 게임 휴식 시간 알림| /public |  | { type: GET_BREAK_TIME, isSuccess : Boolean, body: { isBreakTime: Boolean, ingameTime: String, breakTime : String, breakName: String,} }|
-    | 게임-화면/정보  | Message | 신문 정보 조회 | /private/{webSocketId}   | { type: GET_NEWSPAPER, body: {}} | { type: GET_NEWSPAPER, isSuccess : Boolean, body: { publishTurn : Number, articleList : [ { articleHeadline : String }, … ], }}   |
-    | 게임-화면/정보  | Message | 나의 시설 레벨 조회 | /private/{webSocketId} | { type: GET_INFRA_LEVEL, body: {}}  | { type: GET_INFRA_LEVEL, isSuccess : Boolean, body: { warehouseLevel : Number, vehicleLevel: Number, brokerLevel: Number }}  |
-    | 게임-화면/정보  | Message | 적용중 개인 이벤트 조회 | /private/{webSocketId}  | { type: GET_PRIVATE_EVENT, body: {}} | { type: GET_PRIVATE_EVENT, isSuccess : Boolean, body: { gold : Number, privateEventId : Number }} |
-    | 게임-화면/정보  | Message | 신문 발행 | /public  |  | { type: GET_NEWSPAPER, isSuccess : Boolean, body: { publishTurn : Number, articleList : [ { articleHeadline : String }, … ], }} |
-    | 게임-상호작용   | Message | 농산물 판매 | /private/{webSocketId} | { type: SELL_PRODUCT, body: { products : { productId(Number) : { productQuantity: Number, productTotalCost : Number }, … }, currentTurn: Number }} | { type: SELL_PRODUCT, isSuccess : Boolean, body: { gold : Number, productList : [ { productId : Number, productQuantity : Number, productTotalCost : Number }, … ], }}  |
-    | 게임-화면/정보  | Message | 나의 창고 조회 | /private/{webSocketId}   | { type: GET_WAREHOUSE_INFO, body: {}} | { type: GET_WAREHOUSE_INFO, isSuccess : Boolean, body: { warehouseLevel : Number, vehicleLevel: Number, brokerLevel: Number, productList: [ { productId : Number, productQuantity: Number, productTotalCost : Number }, … ], }}  |
-    | 게임-결산 | Message | 반기 결산 데이터 조회 | /private/{webSocketId} | { type: HALF_REPORT, body: {}} | { type: HALF_REPORT, isSuccess : Boolean, body: { turn : Number, gold: Number, rentFeeInfo : { billType: String, rentFee : Number, productList : [ { productId : Number, productQuantity : Number }, … ] }, quarterReport: { quarterProfit : Number, inProductList : [Number, …], titleId : Number, rentFeeInfo : { billType: String, rentFee : Number, productList : [ { productId : Number, productQuantity : Number }, … ] }, }, totalProductIncome : Number, totalProductOutcome : Number, totalBrokerFee : Number, totalUpgradeFee : Number, totalRentFee : Number, eventBonus : Number, participantCount : Number, rankInfoList : [ { rankName : String, rankDescription : String, theFirstUserInfo : { userNickname : String, profileIconId : Number, profileFrameId : Number }, theFirstRecord : Number, myRank : Number, myRecord : Number } ], tteoksangStatistics : { values : [ { productId : Number, value : Number, }, … ], }, tteokrockStatistics : { values : [ { productId : Number, value : Number, }, … ], }, bestSellerStatistics : { values : [ { productId : Number, value : Number, }, { productId : Number, value : Number, } ], }, achievementList: [ Number, … ] }}  |
-    | 게임-화면/정보  | Message | 장시간 접속 경고 알림 | /private/{webSocketId} |  | { type: ALERT_PLAYTIME, isSuccess : Boolean, body: { playTime : Number }}  |
-    | 게임-결산 | Message | 미접속 결산 데이터 조회 | /private/{webSocketId}   | { type: GET_OFFLINE_REPORT, body: {}}  | { type: GET_OFFLINE_REPORT, isSuccess: Boolean, body: { lastGameTurn: Number, gold: Number, rentFeeInfo : { billType: String, rentFee : Number, productList : [ { productId : Number, productQuantity : Number }, … ] }, quarterReport: { quarterProfit : Number, inProductList : [Number, …], titleId : Number, rentFeeInfo : { billType: String, rentFee : Number, productList : [ { productId : Number, productQuantity : Number }, … ] }, }, halfReport : { … }, recentHalfReport: { … }}} |
+    | 분류 | Method | 설명 | URI | Request | Response |
+    | --------------- | ------- | ---------------------------- | ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+    | 게임-화면/정보  | Message | 게임 휴식 시간 알림 | /private/{webSocketId} | { type: GET_BREAK_TIME, body: {}} | { type: GET_BREAK_TIME, isSuccess : Boolean, body: { isBreakTime: Boolean, ingameTime: String, breakTime : String, breakName: String,} }  |
+    | 게임-화면/정보  | Message | 게임 휴식 시간 알림 | /public  |  | { type: GET_BREAK_TIME, isSuccess : Boolean, body: { isBreakTime: Boolean, ingameTime: String, breakTime : String, breakName: String,} }  |
+    | 게임-화면/정보  | Message | 신문 정보 조회 | /private/{webSocketId} | { type: GET_NEWSPAPER, body: {}}   | { type: GET_NEWSPAPER, isSuccess : Boolean, body: { publishTurn : Number, articleList : [ { articleHeadline : String }, … ], }}  |
+    | 게임-화면/정보  | Message | 나의 시설 레벨 조회 | /private/{webSocketId} | { type: GET_INFRA_LEVEL, body: {}} | { type: GET_INFRA_LEVEL, isSuccess : Boolean, body: { warehouseLevel : Number, vehicleLevel: Number, brokerLevel: Number }} |
+    | 게임-화면/정보  | Message | 적용중 개인 이벤트 조회 | /private/{webSocketId} | { type: GET_PRIVATE_EVENT, body: {}} | { type: GET_PRIVATE_EVENT, isSuccess : Boolean, body: { gold : Number, privateEventId : Number }} |
+    | 게임-화면/정보  | Message | 신문 발행 | /public | | { type: GET_NEWSPAPER, isSuccess : Boolean, body: { publishTurn : Number, articleList : [ { articleHeadline : String }, … ], }} |
+    | 게임-상호작용 | Message | 농산물 판매 | /private/{webSocketId}   | { type: SELL_PRODUCT, body: { products : { productId(Number) : { productQuantity: Number, productTotalCost : Number }, … }, currentTurn: Number }} | { type: SELL_PRODUCT, isSuccess : Boolean, body: { gold : Number, productList : [ { productId : Number, productQuantity : Number, productTotalCost : Number }, … ], }}   |
+    | 게임-화면/정보 | Message | 나의 창고 조회 | /private/{webSocketId} | { type: GET_WAREHOUSE_INFO, body: {}} | { type: GET_WAREHOUSE_INFO, isSuccess : Boolean, body: { warehouseLevel : Number, vehicleLevel: Number, brokerLevel: Number, productList: [ { productId : Number, productQuantity: Number, productTotalCost : Number }, … ], }} |
+    | 게임-결산 | Message | 반기 결산 데이터 조회 | /private/{webSocketId} | { type: HALF_REPORT, body: {}} | { type: HALF_REPORT, isSuccess : Boolean, body: { turn : Number, gold: Number, rentFeeInfo : { billType: String, rentFee : Number, productList : [ { productId : Number, productQuantity : Number }, … ] }, quarterReport: { quarterProfit : Number, inProductList : [Number, …], titleId : Number, rentFeeInfo : { billType: String, rentFee : Number, productList : [ { productId : Number, productQuantity : Number }, … ] }, }, totalProductIncome : Number, totalProductOutcome : Number, totalBrokerFee : Number, totalUpgradeFee : Number, totalRentFee : Number, eventBonus : Number, participantCount : Number, rankInfoList : [ { rankName : String, rankDescription : String, theFirstUserInfo : { userNickname : String, profileIconId : Number, profileFrameId : Number }, theFirstRecord : Number, myRank : Number, myRecord : Number } ], tteoksangStatistics : { values : [ { productId : Number, value : Number, }, … ], }, tteokrockStatistics : { values : [ { productId : Number, value : Number, }, … ], }, bestSellerStatistics : { values : [ { productId : Number, value : Number, }, { productId : Number, value : Number, } ], }, achievementList: [ Number, … ] }} |
+    | 게임-화면/정보 | Message | 장시간 접속 경고 알림 | /private/{webSocketId} | | { type: ALERT_PLAYTIME, isSuccess : Boolean, body: { playTime : Number }} |
+    | 게임-결산 | Message | 미접속 결산 데이터 조회 | /private/{webSocketId}  | { type: GET_OFFLINE_REPORT, body: {}} | { type: GET_OFFLINE_REPORT, isSuccess: Boolean, body: { lastGameTurn: Number, gold: Number, rentFeeInfo : { billType: String, rentFee : Number, productList : [ { productId : Number, productQuantity : Number }, … ] }, quarterReport: { quarterProfit : Number, inProductList : [Number, …], titleId : Number, rentFeeInfo : { billType: String, rentFee : Number, productList : [ { productId : Number, productQuantity : Number }, … ] }, }, halfReport : { … }, recentHalfReport: { … }} } |
     | 게임-결산 | Message | 계절 결산 데이터 조회 | /private/{webSocketId} | { type: QUARTER_REPORT, body: {}} | { type: QUARTER_REPORT, isSuccess : Boolean, body: { turn : Number, gold: Number, rentFeeInfo : { billType: String, rentFee : Number, productList : [ { productId : Number, productQuantity : Number }, … ] }, quarterProfit: Number, inProductList: [Number, …], titleId : Number }} |
-    | 게임-결산 | Message | 전체 결산 데이터 조회 | /private/{webSocketId}   | { type: FINAL_REPORT, body: {}} | { type: FINAL_REPORT, isSuccess : Boolean, body: { rentFeeInfo : { billType: String, rentFee : Number, productList : [ { productId : Number, productQuantity : Number }, … ] }, season : Number, privateProductReportList : [ { year : Number, productList : [ { productId : Number, totalAccPrivateProductPurchaseQuantity : Number, totalAccPrivateProductOutcome : Number, totalAccPrivateProductSalesQuantity : Number, totalAccPrivateProductIncome : Number, totalAccPrivateProductProfit : Number, totalAccPrivateBrokerFee : Number }, … ], }, … ], publicProductReportList : [ { year : Number, productList : [ { productId : Number, totalAccProductPurchaseQuantity : Number, totalAccProductOutcome : Number, totalAccProductSalesQuantity : Number, totalAccProductIncome : Number, totalAccProductProfit : Number, totalAccBrokerFee : Number, maxProductPurchaseQuantityPerTurn : Number, maxProductSalesQuantityPerTurn : Number }, … ], }, … ], privateRentReportList : [ { year : Number, totalAccPrivateRentFee : Number }, … ], warehouseLevel : Number, brokerLevel : Number, vehicleLevel : Number, privateUpgradeReportList : [ { year : Number, totalAccPrivateUpgradeFee }, … ], specialEventReportList : [ { specialEventName : String, totalAccSpecialEventOccurCount : Number } ], achievementList : [ achievementId: Number ], privateAccPrivatePlayTime : Number, rankInfoList : [ { rankName : String, rankDescription : String, theFirstUserInfo : { userNickname : String, profileIconId : Number, profileFrameId : Number }, theFirstRecord : Number, myRank : Number, myRecord : Number }, … ] }} |
-    | 게임-채팅  | Message | 채팅 발신   | /chat | { type: CHAT, body: { message : String, }} |
-    | 게임-채팅  | Message | 채팅 수신  | /chat | | { type: CHAT, body: { userNickname : String, message : String, profileIconId : Number, profileFrameId : Number }}  |
-    |    | Message | 웹소켓 핸드셰이크  | /game  |  |  |
-    | 게임-화면/정보  | Message | 게임 초기 정보 조회 | /private/{webSocketId} | { type: GET_TOTAL_INFO, body: {}}  | { type: GET_TOTAL_INFO, isSuccess : Boolean, body: { gold : Number, privateEventId : String specialEventId : String inGameTime : String, turnStartTime: String, turn : Number, themeId: Number, productList: [ { productId : Number, productQuantity: Number, productTotalCost : Number }, … ], productInfoList : [ { productId : Number, productCost : Number productMaxQuantity : Number, productFluctuation : Number }, … ], buyAbleProductIdList: [Number, …], purchasedQuantity: Number, warehouseLevel : Number, vehicleLevel: Number, brokerLevel: Number }}  |
-    | 게임-화면/정보 | Message | 적용중 공통 이벤트 조회 | /public |  | { type: GET_PUBLIC_EVENT, isSuccess : Boolean, body: { inGameTime : String, turnStartTime: String, turn : Number, productInfoList : [ { productId : Number, productCost : Number productMaxQuantity : Number, productFluctuation : Number }, … ], buyableProductIdList: [Number, …], specialEventId : [String,…] }} |
-    | 게임-화면/정보  | Message | 게임 시간 조회 | /private/{webSocketId}   | { type: GET_INGAME_TIME, body: {}} | { type: GET_INGAME_TIME, isSuccess : Boolean, body: { inGameTime : String turnStartTime: String, turn : Number, }}  |
-    | 게임-화면/정보  | Message | 소지금 조회  | /private/{webSocketId}   | { type: GET_MY_GOLD, body: {}} | { type: GET_MY_GOLD, isSuccess : Boolean, body: { gold : Number }} |
-    | 게임-상호작용 | Message | 운송 수단 업그레이드 | /private/{webSocketId}   | { type: UPGRADE_VEHICLE, body: {}} | { type: UPGRADE_VEHICLE, isSuccess : Boolean, body: { gold : Number, vehicleLevel : Number }}  |
-    | 게임-상호작용 | Message | 중개소 업그레이드 | /private/{webSocketId}   | { type: UPGRADE_BROKER, body: {}} | { type: UPGRADE_BROKER, isSuccess : Boolean, body: { gold : Number, brokerLevel : Number }}   |
-    | 게임-상호작용 | Message | 창고 업그레이드 | /private/{webSocketId}   | { type: UPGRADE_WAREHOUSE, body: {}} | { type: UPGRADE_WAREHOUSE, isSuccess : Boolean, body: { gold : Number, warehouseLevel : Number }} |
-    | 게임-상호작용 | Message | 농산물 구매 | /private/{webSocketId}   | { type: BUY_PRODUCT, body: { products : { productId(Number) : { productQuantity: Number, productTotalCost : Number }, … }, currentTurn: Number }}  | { type: BUY_PRODUCT, isSuccess : Boolean, body: { gold : Number, productList: [ { productId : Number, productQuantity: Number, productTotalCost : Number }, … ], purchasedQuantity : Number }}  |
-    | 게임-상호작용   | Message | 칭호 변경  | /private/{webSocketId}   | { type: CHANGE_TITLE, body: { titleId : Number }} | { type: CHANGE_TITLE, isSuccess : Boolean, body: { titleId : Number }} |
-    | 게임-화면/정보  | GET | /game/private 연결 id 발급 | /web-socket  |  | { webSocketId: String} |
-    | 리소스 | GET | 프로필 프레임 조회  | /resources/profile-frame | | { profileFrameList : [ { profileFrameId : Number, profileFrameName : String }, … ]}  |
-    | 리소스 | GET | 프로필 아이콘 조회  | /resources/profile-icon  |  | { profileIconList : [ { profileIconId : Number, profileIconName : String }, … ]}    |
-    | 리소스 | GET | 메세지 타입 조회 | /resources/message-type  |   | { messageTypeList : [ { messageType : String, messageTypeValue : Number }, … ]}  |
-    | 리소스 | GET | 시설물 리소스 조회  | /resources/infra | | { InfraList: { warehouseInfoList : [ { warehouseName: String, warehouseLevel : Number, warehouseUpgradeFee : Number, maxHoldingQuantity : Number, warehouseContent: String }, … ], brokerInfoList : [ { brokerName: String, brokerLevel : Number, brokerUpgradeFee : Number, brokerFee : Number, brokerContent: String }, … ], vehicleInfoList : [ { vehicleName : String, vehicleLevel : Number, vehicleUpgradeFee : Number, maxPurchaseQuantity : Number, vehicleContent: String }, …. ] }}  |
-    | 리소스 | GET | 이벤트 리소스 조회 | /resources/event | | { eventList : [ { eventId : Number, eventName : String, eventType : String, eventContent : String, eventHeadline: String, eventVariance : Number, productId : Number }, … ]} |
-    | 리소스 | GET | 농산물 리소스 조회 | /resources/product | | { productList : [ { productId : Number, productName : String, productType : String, productUnit : String }, … ],} |
-    | 리소스 | GET | 테마 리소스 조회 | /resources/theme | | { themeList : [ { themeId : Number, themeName : String, }, … ],} |
-    | 리소스 | GET | 칭호 리소스 조회 | /resources/title | | { titleList : [ { titleId : Number, titleName : String, titleContent: String }, … ]} |
-    | 리소스 | GET | 도전과제 리소스 조회 | /resources/achievement | | { achievementList : [ { achievementId : Number, achievementName : String, achievementDescription : String, achievementGoalDescription : String }, … ]} |
-    | 리소스 | GET | 게임 리소스 checksum 조회 | /resources/checksum |  | { checksumList : [ { resourceName: String, checksumValue: String }, … ]} |
-    | 게임-화면/정보  | GET | 이전 플레이 기록 조회 | /user/previous | | { isExist : Boolean, previousPlayInfo : { previousPlayDate : String, }} |
-    | 게임-화면/정보  | GET | 랭킹 조회 | /rank  | | { seasonRank : [ { season : Number, rankInfoList : [ { rankName : String, rankDescription : String, userInfoList : [ { userRank : Number, userRecord : Number userNickname : String, profileIconId : Number, profileFrameId : Number }, … ], myRank : Number, myRecord : Number }, … ] } ], totalRank : { rankInfoList : [ { rankName : String, rankDescription : String, userInfoList : [ { userRank : Number, userRecord : Number userNickname : String, profileIconId : Number, profileFrameId : Number }, … ], myRank : Number, myRecord : Number }, … ] }} |
-    | 회원-마이페이지 | GET | 나의 적용중인 상세 정보 조회 | /user | | { userNickname : String, profileIconId : Number, profileFrameId : Number themeId : Number, titleId : Number career : Number}  |
-    | 회원-마이페이지 | GET | 유저의 게임 히스토리 조회 | user/history | | { historyList : [ { historyType : String, historyId : Number, historyDateTime : String, historyDescription : String }, … ]} |
-    | 회원-마이페이지 | GET | 획득한 칭호 조회 | user/title  |  | { acquiredTitleList : [Number, …]} |
-    | 회원-마이페이지 | GET | 달성한 도전과제 조회 | user/achievement | | { acquiredAchievementList : [ { achievementId : Number, achievedDate : String }, … ]} |
-    | 회원-마이페이지 | GET | 로그아웃 | /auth/logout | | |
-    | 회원-인증 | GET | 로그인  | /auth/login|  | { accessToken : String, refreshToken : String} |
-    | 회원-인증 | POST | 토큰 재발급 | /auth/token | { accessToken : String, refreshToken : String}  | { accessToken : String, refreshToken : String} |
-    | 게임-상호작용   | DELETE | 게임 새로 하기 | /user/new-game | | |
-    | 회원-마이페이지 | DELETE| 회원 탈퇴 | /user| | |
-    | 게임-화면/정보  | PUT | 프로필 프레임 변경 | /user/profile-frame | { profileFrameId: Number} | |
-    | 게임-화면/정보  | PUT | 프로필 아이콘 변경 | /user/profile-icon | {profileIconId : Number} | |
-    | 게임-화면/정보  | PUT | 테마 변경 | /user/theme  | { themeId : Number} | |
-    | 회원-마이페이지 | PUT | 닉네임 변경 | /user/nickname | {userNickname : String} | |
+    | 게임-결산  | Message | 전체 결산 데이터 조회 | /private/{webSocketId} | { type: FINAL_REPORT, body: {}}    | { type: FINAL_REPORT, isSuccess : Boolean, body: { rentFeeInfo : { billType: String, rentFee : Number, productList : [ { productId : Number, productQuantity : Number }, … ] }, season : Number, privateProductReportList : [ { year : Number, productList : [ { productId : Number, totalAccPrivateProductPurchaseQuantity : Number, totalAccPrivateProductOutcome : Number, totalAccPrivateProductSalesQuantity : Number, totalAccPrivateProductIncome : Number, totalAccPrivateProductProfit : Number, totalAccPrivateBrokerFee : Number }, … ], }, … ], publicProductReportList : [ { year : Number, productList : [ { productId : Number, totalAccProductPurchaseQuantity : Number, totalAccProductOutcome : Number, totalAccProductSalesQuantity : Number, totalAccProductIncome : Number, totalAccProductProfit : Number, totalAccBrokerFee : Number, maxProductPurchaseQuantityPerTurn : Number, maxProductSalesQuantityPerTurn : Number }, … ], }, … ], privateRentReportList : [ { year : Number, totalAccPrivateRentFee : Number }, … ], warehouseLevel : Number, brokerLevel : Number, vehicleLevel : Number, privateUpgradeReportList : [ { year : Number, totalAccPrivateUpgradeFee }, … ], specialEventReportList : [ { specialEventName : String, totalAccSpecialEventOccurCount : Number } ], achievementList : [ achievementId: Number ], privateAccPrivatePlayTime : Number, rankInfoList : [ { rankName : String, rankDescription : String, theFirstUserInfo : { userNickname : String, profileIconId : Number, profileFrameId : Number }, theFirstRecord : Number, myRank : Number, myRecord : Number }, … ] }} |
+    | 게임-채팅 | Message | 채팅 발신 | /chat  | { type: CHAT, body: { message : String, }}   |
+    | 게임-채팅 | Message | 채팅 수신  | /chat |   | { type: CHAT, body: { userNickname : String, message : String, profileIconId : Number, profileFrameId : Number }}    |
+    |  | Message | 웹소켓 핸드셰이크 | /game   |  | |
+    | 게임-화면/정보 | Message | 게임 초기 정보 조회 | /private/{webSocketId} | { type: GET_TOTAL_INFO, body: {}} | { type: GET_TOTAL_INFO, isSuccess : Boolean, body: { gold : Number, privateEventId : String specialEventId : String inGameTime : String, turnStartTime: String, turn : Number, themeId: Number, productList: [ { productId : Number, productQuantity: Number, productTotalCost : Number }, … ], productInfoList : [ { productId : Number, productCost : Number productMaxQuantity : Number, productFluctuation : Number }, … ], buyAbleProductIdList: [Number, …], purchasedQuantity: Number, warehouseLevel : Number, vehicleLevel: Number, brokerLevel: Number }} |
+    | 게임-화면/정보  | Message | 적용중 공통 이벤트 조회  | /public   |   | { type: GET_PUBLIC_EVENT, isSuccess : Boolean, body: { inGameTime : String, turnStartTime: String, turn : Number, productInfoList : [ { productId : Number, productCost : Number productMaxQuantity : Number, productFluctuation : Number }, … ], buyableProductIdList: [Number, …], specialEventId : [String,…] }}  |
+    | 게임-화면/정보  | Message | 게임 시간 조회 | /private/{webSocketId}   | { type: GET_INGAME_TIME, body: {}} | { type: GET_INGAME_TIME, isSuccess : Boolean, body: { inGameTime : String turnStartTime: String, turn : Number, }} |
+    | 게임-화면/정보 | Message | 소지금 조회 | /private/{webSocketId} | { type: GET_MY_GOLD, body: {}}  | { type: GET_MY_GOLD, isSuccess : Boolean, body: { gold : Number }} |
+    | 게임-상호작용  | Message | 운송 수단 업그레이드 | /private/{webSocketId} | { type: UPGRADE_VEHICLE, body: {}}  | { type: UPGRADE_VEHICLE, isSuccess : Boolean, body: { gold : Number, vehicleLevel : Number }} |
+    | 게임-상호작용 | Message | 중개소 업그레이드  | /private/{webSocketId} | { type: UPGRADE_BROKER, body: {}}   | { type: UPGRADE_BROKER, isSuccess : Boolean, body: { gold : Number, brokerLevel : Number }} |
+    | 게임-상호작용 | Message | 창고 업그레이드 | /private/{webSocketId} | { type: UPGRADE_WAREHOUSE, body: {}}  | { type: UPGRADE_WAREHOUSE, isSuccess : Boolean, body: { gold : Number, warehouseLevel : Number }}   |
+    | 게임-상호작용 | Message | 농산물 구매  | /private/{webSocketId}   | { type: BUY_PRODUCT, body: { products : { productId(Number) : { productQuantity: Number, productTotalCost : Number }, … }, currentTurn: Number }}  | { type: BUY_PRODUCT, isSuccess : Boolean, body: { gold : Number, productList: [ { productId : Number, productQuantity: Number, productTotalCost : Number }, … ], purchasedQuantity : Number }} |
+    | 게임-상호작용 | Message | 칭호 변경 | /private/{webSocketId}   | { type: CHANGE_TITLE, body: { titleId : Number }}  | { type: CHANGE_TITLE, isSuccess : Boolean, body: { titleId : Number }}  |
+    | 게임-화면/정보  | GET | /game/private 연결 id 발급   | /web-socket |    | { webSocketId: String}   |
+    | 리소스 | GET  | 프로필 프레임 조회  | /resources/profile-frame |   | { profileFrameList : [ { profileFrameId : Number, profileFrameName : String }, … ]}  |
+    | 리소스 | GET | 프로필 아이콘 조회  | /resources/profile-icon  |   | { profileIconList : [ { profileIconId : Number, profileIconName : String }, … ]}  |
+    | 리소스  | GET  | 메세지 타입 조회 | /resources/message-type  |   | { messageTypeList : [ { messageType : String, messageTypeValue : Number }, … ]}  |
+    | 리소스 | GET | 시설물 리소스 조회 | /resources/infra | | { InfraList: { warehouseInfoList : [ { warehouseName: String, warehouseLevel : Number, warehouseUpgradeFee : Number, maxHoldingQuantity : Number, warehouseContent: String }, … ], brokerInfoList : [ { brokerName: String, brokerLevel : Number, brokerUpgradeFee : Number, brokerFee : Number, brokerContent: String }, … ], vehicleInfoList : [ { vehicleName : String, vehicleLevel : Number, vehicleUpgradeFee : Number, maxPurchaseQuantity : Number, vehicleContent: String }, …. ] }}  |
+    | 리소스 | GET | 이벤트 리소스 조회  | /resources/event  |   | { eventList : [ { eventId : Number, eventName : String, eventType : String, eventContent : String, eventHeadline: String, eventVariance : Number, productId : Number }, … ]}   |
+    | 리소스  | GET  | 농산물 리소스 조회  | /resources/product |    | { productList : [ { productId : Number, productName : String, productType : String, productUnit : String }, … ],}   |
+    | 리소스 | GET | 테마 리소스 조회 | /resources/theme  |   | { themeList : [ { themeId : Number, themeName : String, }, … ],}  |
+    | 리소스  | GET | 칭호 리소스 조회 | /resources/title |  | { titleList : [ { titleId : Number, titleName : String, titleContent: String }, … ]}  |
+    | 리소스 | GET | 도전과제 리소스 조회  | /resources/achievement |   | { achievementList : [ { achievementId : Number, achievementName : String, achievementDescription : String, achievementGoalDescription : String }, … ]}   |
+    | 리소스 | GET | 게임 리소스 checksum 조회 | /resources/checksum   |    | { checksumList : [ { resourceName: String, checksumValue: String }, … ]}  |
+    | 게임-화면/정보  | GET | 이전 플레이 기록 조회 | /user/previous  |  | { isExist : Boolean, previousPlayInfo : { previousPlayDate : String, }}   |
+    | 게임-화면/정보  | GET | 랭킹 조회   | /rank   |  | { seasonRank : [ { season : Number, rankInfoList : [ { rankName : String, rankDescription : String, userInfoList : [ { userRank : Number, userRecord : Number userNickname : String, profileIconId : Number, profileFrameId : Number }, … ], myRank : Number, myRecord : Number }, … ] } ], totalRank : { rankInfoList : [ { rankName : String, rankDescription : String, userInfoList : [ { userRank : Number, userRecord : Number userNickname : String, profileIconId : Number, profileFrameId : Number }, … ], myRank : Number, myRecord : Number }, … ] }}   |
+    | 회원-마이페이지 | GET | 나의 적용중인 상세 정보 조회 | /user  |   | { userNickname : String, profileIconId : Number, profileFrameId : Number themeId : Number, titleId : Number career : Number}    |
+    | 회원-마이페이지 | GET  | 유저의 게임 히스토리 조회 | user/history  |   | { historyList : [ { historyType : String, historyId : Number, historyDateTime : String, historyDescription : String }, … ]}   |
+    | 회원-마이페이지 | GET | 획득한 칭호 조회  | user/title  |   | { acquiredTitleList : [Number, …]}  |
+    | 회원-마이페이지 | GET | 달성한 도전과제 조회 | user/achievement |   | { acquiredAchievementList : [ { achievementId : Number, achievedDate : String }, … ]}  |
+    | 회원-마이페이지 | GET  | 로그아웃  | /auth/logout  |   |  |
+    | 회원-인증 | GET | 로그인   | /auth/login   |  | { accessToken : String, refreshToken : String} |
+    | 회원-인증 | POST  | 토큰 재발급  | /auth/token | { accessToken : String, refreshToken : String} | { accessToken : String, refreshToken : String}  |
+    | 게임-상호작용   | DELETE  | 게임 새로 하기  | /user/new-game  |   |  |
+    | 회원-마이페이지 | DELETE  | 회원 탈퇴 | /user   |   |  |
+    | 게임-화면/정보  | PUT | 프로필 프레임 변경  | /user/profile-frame  | { profileFrameId: Number}  | |
+    | 게임-화면/정보  | PUT | 프로필 아이콘 변경  | /user/profile-icon | {profileIconId : Number} |
+    | 게임-화면/정보  | PUT | 테마 변경  | /user/theme   | { themeId : Number}   | |
+    | 회원-마이페이지 | PUT  | 닉네임 변경  | /user/nickname  | {userNickname : String}  |
 
 -   아키텍처 구조도
+![architecture](./README_ASSETS/architecture.png)
 
 ---
 
