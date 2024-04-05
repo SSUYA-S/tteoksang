@@ -173,6 +173,13 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         userRepository.save(user);
     }
 
+    @Override
+    public User findTwn(String email) {
+        return userRepository.findByUserEmail(email).orElseThrow(
+                UserNotExistException::new);
+    }
+
+
     public void updateUser(User user) {
         // 인게임 내부에서 프레임 수정하는 경우 레디스에도 반영
         String userInfoKey = RedisPrefix.USERINFO.prefix() + user.getUserId();
