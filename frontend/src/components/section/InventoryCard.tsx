@@ -54,15 +54,19 @@ export default function InventoryCard({
                             <p className="color-text-blue3">
                                 {productFluctuation > 0 ? (
                                     <p className="color-text-blue3">
-                                        {'+' + productFluctuation + 'G'}
+                                        {'+' +
+                                            productFluctuation.toLocaleString() +
+                                            'G'}
                                     </p>
                                 ) : productFluctuation === 0 ? (
                                     <p className="color-text-green1">
-                                        {productFluctuation + 'G'}
+                                        {productFluctuation.toLocaleString() +
+                                            'G'}
                                     </p>
                                 ) : (
                                     <p className="color-text-red1">
-                                        {productFluctuation + 'G'}
+                                        {productFluctuation.toLocaleString() +
+                                            'G'}
                                     </p>
                                 )}
                             </p>
@@ -71,22 +75,24 @@ export default function InventoryCard({
                             <p className="color-text-subbold">
                                 나의 평균 구매가
                             </p>
-                            <p className="color-text-subbold">{myAvg}G</p>
+                            <p className="color-text-subbold">
+                                {myAvg.toLocaleString()}G
+                            </p>
                         </div>
                         <div className="w-full flex justify-between text-[1.3vw] my-[0.8vh] pb-[1vh]">
                             <p className="color-text-subbold">구매 대비 이익</p>
                             <p className="color-text-blue3">
                                 {profit > 0 ? (
                                     <p className="color-text-blue3">
-                                        {'+' + profit + 'G'}
+                                        {'+' + profit.toLocaleString() + 'G'}
                                     </p>
                                 ) : profit === 0 ? (
                                     <p className="color-text-green1">
-                                        {profit + 'G'}
+                                        {profit.toLocaleString() + 'G'}
                                     </p>
                                 ) : (
                                     <p className="color-text-red1">
-                                        {profit + 'G'}
+                                        {profit.toLocaleString() + 'G'}
                                     </p>
                                 )}
                             </p>
