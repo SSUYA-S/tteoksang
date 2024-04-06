@@ -13,6 +13,6 @@ public class Millionaire implements Comparable<Millionaire>{
 
     @Override
     public int compareTo(Millionaire m) {
-        return (int) (m.gold - this.gold);
+        return m.gold.compareTo(this.gold);
     }
 }

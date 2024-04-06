@@ -15,5 +15,7 @@ public interface SeasonHalfPrivateStatisticsService {
 //
 //    Long getAccPrivateEventBonus(String userId);
 
-    SeasonHalfPrivateStatistics getSeasonHalfPrivateStatistics(String mongoDBKey);
+    void saveSeasonHalfPrivateStatistics(SeasonHalfPrivateStatistics seasonHalfPrivateStatistics);
+
+    SeasonHalfPrivateStatistics loadSeasonHalfPrivateStatistics(String mongoDBKey);
 }
