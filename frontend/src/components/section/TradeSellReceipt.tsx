@@ -15,7 +15,8 @@ export default function TradeSellReceipt({
     sellableInfoList.map((product) => {
         totalCost += product.sellingInfo.productTotalCost;
     });
-    const totalFee = (fee / 100) * totalCost;
+    //내림
+    const totalFee = Math.floor((fee / 100) * totalCost);
     const totalProfit = totalCost - totalFee;
 
     return (
