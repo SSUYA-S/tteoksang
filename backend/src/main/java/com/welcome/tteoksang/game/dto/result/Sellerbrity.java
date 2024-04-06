@@ -13,6 +13,6 @@ public class Sellerbrity implements Comparable<Sellerbrity>{
 
     @Override
     public int compareTo(Sellerbrity s) {
-        return (int) (s.totalAccPrivateProductProfit - this.totalAccPrivateProductProfit);
+        return s.totalAccPrivateProductProfit.compareTo(this.totalAccPrivateProductProfit);
     }
 }
