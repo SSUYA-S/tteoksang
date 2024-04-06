@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -25,6 +26,11 @@ public class PrivateScheduleServiceImpl implements PrivateScheduleService {
     private final ScheduleService scheduleService;
     private final RedisService redisService;
     Map<String, CheckPlayTimeInfo> userAlertPlayTimeMap = new HashMap<>();
+
+    @Override
+    public List<String> getConnectedUserId(){
+        return userAlertPlayTimeMap.keySet().stream().toList();
+    }
 
     //gameInfo 초기화
     @Override
