@@ -162,7 +162,7 @@ public interface TestExample {
 //            "    \"achievementList\": [2,5]\n" +
 //            "}\n";
     String half = "{\n" +
-        "    \"turn\": 271,\n" +
+        "    \"turn\": 181,\n" +
         "    \"gold\": 5000,\n" +
         "    \"rentFeeInfo\": {\n" +
         "        \"billType\": \"basic\",\n" +
