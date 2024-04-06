@@ -20,6 +20,7 @@ dependencies {
     implementation ('org.projectlombok:lombok:1.18.28') {
         exclude group:'org.slf4j', module:'slf4j-reload4j'
     }
+    implementation group: 'org.apache.kafka', name: 'kafka_2.13', version: '3.6.2'
     compileOnly 'org.projectlombok:lombok:1.18.28'
     annotationProcessor 'org.projectlombok:lombok:1.18.28'
     testImplementation platform('org.junit:junit-bom:5.9.1')
