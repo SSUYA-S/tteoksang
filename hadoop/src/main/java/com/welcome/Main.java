@@ -4,6 +4,7 @@ package com.welcome;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Properties;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
@@ -372,7 +373,7 @@ public class Main {
 		// Main 함수 시작
 		Configuration conf = new Configuration();
 
-		try {
+		try(FileSystem fs = FileSystem.get(conf)) {
 			String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
 			if (otherArgs.length != 2) {
 				System.err.println("Usage: <in> <out>");
@@ -392,9 +393,15 @@ public class Main {
 			// set number of reduces
 			job.setNumReduceTasks(16);
 
+			Path inputPath = new Path(args[0]);
+			Path outputPath = new Path(args[1]);
+
+			fs.delete(outputPath, true);
+			fs.mkdirs(outputPath);
+
 			// set input and output directories
-			FileInputFormat.addInputPath(job, new Path(otherArgs[0]));
-			FileOutputFormat.setOutputPath(job, new Path(otherArgs[1]));
+			FileInputFormat.addInputPath(job, inputPath);
+			FileOutputFormat.setOutputPath(job, outputPath);
 
 			System.exit(job.waitForCompletion(true) ? 0 : 1);
 		} catch (Exception e) {
