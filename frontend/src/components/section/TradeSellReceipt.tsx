@@ -55,7 +55,7 @@ export default function TradeSellReceipt({
             <div className="w-[80%] text-[1.2vw] pb-[1.2vw]">
                 <p>---------------------</p>
                 <div className="flex items-center justify-between">
-                    <p>수수료</p>
+                    <p>{`수수료 (${fee}%)`}</p>
                     <p>{totalFee.toLocaleString()}</p>
                 </div>
                 <div className="flex items-center justify-between">
