@@ -1,26 +1,26 @@
 package com.welcome.tteoksang.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.welcome.tteoksang.game.dto.result.SeasonHalfPrivateStatistics;
-import com.welcome.tteoksang.game.dto.result.SeasonHalfStatistics;
+import com.welcome.tteoksang.game.dto.result.*;
 import com.welcome.tteoksang.game.dto.result.half.TteokValues;
 import com.welcome.tteoksang.game.dto.server.RedisHalfStatistics;
 import com.welcome.tteoksang.game.dto.server.RedisStatisticsUtil;
+import com.welcome.tteoksang.game.dto.user.RedisGameInfo;
+import com.welcome.tteoksang.game.service.SeasonHalfPrivateStatisticsService;
+import com.welcome.tteoksang.game.service.SeasonHalfStatisticsService;
 import com.welcome.tteoksang.redis.RedisPrefix;
 import com.welcome.tteoksang.redis.RedisService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toList;
 
 /**
  * String 형태의 json을 보낸다
@@ -47,6 +47,9 @@ public class KafkaTest {
     @Value("${KAFKA_TOPIC_LOG}")
     String testTopicName;
 
+    private final Rank rank;
+    private final SeasonHalfPrivateStatisticsService seasonHalfPrivateStatisticsService;
+    private final SeasonHalfStatisticsService seasonHalfStatisticsService;
     private final RedisService redisService;
     private final RedisStatisticsUtil redisStatisticsUtil;
     //tteoksang_log
@@ -90,13 +93,48 @@ public class KafkaTest {
 
     // 여기서 하둡에서 보낸 데이터를 받아서 몽고 디비로 넣음
     @KafkaListener(topics = "tteoksang_hadoop", containerFactory = "kafkaListenerContainerFactory")
-    public void receiveHadoopDataResult(@Payload String hadoopData) {
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            SeasonHalfPrivateStatistics message = mapper.readValue(hadoopData, SeasonHalfPrivateStatistics.class);
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void receiveHadoopDataResult(ConsumerRecord<String, String> consumerRecord) {
+
+        String id = consumerRecord.key();   //userId::gameId 형태로 들어옴
+        String value = consumerRecord.value();  // 통계값
+
+        // id 가공
+
+        // 랭킹
+        List<Sellerbrity> sellerbrityRank = rank.getSellerbrityRank();
+        List<Millionaire> millionaireRank = rank.getMillionaireRank();
+        List<Tteoksang> tteoksangRank = rank.getTteoksangRank();
+
+        if(!value.equals("END")) {
+            // 레디스 불러오기
+            String redisGameInfoKey = RedisPrefix.INGAMEINFO.prefix() + id;
+            RedisGameInfo redisGameInfo = (RedisGameInfo) redisService.getValues(redisGameInfoKey);
+
+            // 몽고디비에 저장
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                // 객체로 변환
+                SeasonHalfPrivateStatistics mongoData = mapper.readValue(value, SeasonHalfPrivateStatistics.class);
+
+                // 객체 넣기
+                sellerbrityRank.add(new Sellerbrity(id, mongoData.getTotalAccPrivateProductProfit()));
+                millionaireRank.add(new Millionaire(id, redisGameInfo.getGold()));
+                tteoksangRank.add(new Tteoksang(id, redisGameInfo.getGold() - redisGameInfo.getLastQuarterGold()));
+
+                // 몽고디비에 저장
+                seasonHalfPrivateStatisticsService.saveSeasonHalfPrivateStatistics(mongoData);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        log.debug("Kafka: {}", hadoopData);
+        else {
+            // end이면 서버 통계 집계후 몽고디비에 저장
+//            seasonHalfPrivateStatisticsService.saveSeasonHalfPrivateStatistics();
+
+            // 랭킹 집계
+            Collections.sort(sellerbrityRank);
+            Collections.sort(millionaireRank);
+            Collections.sort(tteoksangRank);
+        }
     }
 }

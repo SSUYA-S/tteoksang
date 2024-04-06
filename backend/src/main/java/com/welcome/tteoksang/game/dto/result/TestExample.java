@@ -23,144 +23,254 @@ public interface TestExample {
             "    \"titleId\": 1\n" +
             "}";
 
+//    String half = "{\n" +
+//            "    \"turn\": 361,\n" +
+//            "    \"gold\": 600000,\n" +
+//            "    \"rentFeeInfo\": {\n" +
+//            "        \"billType\": \"basic\",\n" +
+//            "        \"rentFee\": 40000,\n" +
+//            "        \"productList\": []\n" +
+//            "    },\n" +
+//            "    \"quarterReport\": {\n" +
+//            "        \"quarterProfit\": 1500000,\n" +
+//            "        \"rentFee\": 20000,\n" +
+//            "        \"inProductList\": [1, 7, 8],\n" +
+//            "        \"titleId\": 2,\n" +
+//            "        \"rentFeeInfo\": {\n" +
+//            "            \"billType\": \"basic\",\n" +
+//            "            \"rentFee\": 20000,\n" +
+//            "            \"productList\": []\n" +
+//            "        }\n" +
+//            "    },\n" +
+//            "    \"totalProductIncome\": 5000000,\n" +
+//            "    \"totalProductOutcome\": 2500000,\n" +
+//            "    \"totalBrokerFee\": 120000,\n" +
+//            "    \"totalUpgradeFee\": 50000,\n" +
+//            "    \"totalRentFee\": 30000,\n" +
+//            "    \"eventBonus\": 100000,\n" +
+//            "    \"participantCount\": 500,\n" +
+//            "    \"rankInfoList\": [\n" +
+//            "        {\n" +
+//            "            \"rankName\": \"판매왕\",\n" +
+//            "            \"rankDescription\": \"가장 많은 순수익을 얻은 사람(반기 기준)\",\n" +
+//            "            \"theFirstUserInfo\": {\n" +
+//            "                \"userNickname\": \"일론 머스크\",\n" +
+//            "                \"profileIconId\": 3,\n" +
+//            "                \"profileFrameId\": 1\n" +
+//            "            },\n" +
+//            "            \"theFirstRecord\": 10000000,\n" +
+//            "            \"myRank\": 53,\n" +
+//            "            \"myRecord\": 2500000\n" +
+//            "        },\n" +
+//            "        {\n" +
+//            "            \"rankName\": \"부자\",\n" +
+//            "            \"rankDescription\": \"현재 보유 금액\",\n" +
+//            "            \"theFirstUserInfo\": {\n" +
+//            "                \"userNickname\": \"젠슨 황\",\n" +
+//            "                \"profileIconId\": 2,\n" +
+//            "                \"profileFrameId\": 2\n" +
+//            "            },\n" +
+//            "            \"theFirstRecord\": 210000000,\n" +
+//            "            \"myRank\": 112,\n" +
+//            "            \"myRecord\": 10000000\n" +
+//            "        },\n" +
+//            "        {\n" +
+//            "            \"rankName\": \"큰 손\",\n" +
+//            "            \"rankDescription\": \"한 번에 돈을 제일 많이 쓴 사람(반기 기준)\",\n" +
+//            "            \"theFirstUserInfo\": {\n" +
+//            "                \"userNickname\": \"김flex\",\n" +
+//            "                \"profileIconId\": 1,\n" +
+//            "                \"profileFrameId\": 1\n" +
+//            "            },\n" +
+//            "            \"theFirstRecord\": 1000000,\n" +
+//            "            \"myRank\": 12,\n" +
+//            "            \"myRecord\": 500000\n" +
+//            "        },\n" +
+//            "        {\n" +
+//            "            \"rankName\": \"벼락부자\",\n" +
+//            "            \"rankDescription\": \"한 번에 제일 많은 돈을 번 사람(반기 기준)\",\n" +
+//            "            \"theFirstUserInfo\": {\n" +
+//            "                \"userNickname\": \"단타 장인\",\n" +
+//            "                \"profileIconId\": 3,\n" +
+//            "                \"profileFrameId\": 3\n" +
+//            "            },\n" +
+//            "            \"theFirstRecord\": 5000000,\n" +
+//            "            \"myRank\": 138,\n" +
+//            "            \"myRecord\": 500000\n" +
+//            "        },\n" +
+//            "        {\n" +
+//            "            \"rankName\": \"떡상\",\n" +
+//            "            \"rankDescription\": \"가장 높은 수익률(반기 기준)\",\n" +
+//            "            \"theFirstUserInfo\": {\n" +
+//            "                \"userNickname\": \"제노\",\n" +
+//            "                \"profileIconId\": 1,\n" +
+//            "                \"profileFrameId\": 2\n" +
+//            "            },\n" +
+//            "            \"theFirstRecord\": 123.5,\n" +
+//            "            \"myRank\": 1,\n" +
+//            "            \"myRecord\": 123.5\n" +
+//            "        }\n" +
+//            "    ],\n" +
+//            "    \"tteoksangStatistics\": {\n" +
+//            "        \"values\": [\n" +
+//            "            {\n" +
+//            "                \"productId\": 3,\n" +
+//            "                \"value\": 12.5\n" +
+//            "            },\n" +
+//            "            {\n" +
+//            "                \"productId\": 7,\n" +
+//            "                \"value\": 11.2\n" +
+//            "            },\n" +
+//            "            {\n" +
+//            "                \"productId\": 5,\n" +
+//            "                \"value\": 9.3\n" +
+//            "            }\n" +
+//            "        ]\n" +
+//            "    },\n" +
+//            "    \"tteokrockStatistics\": {\n" +
+//            "        \"values\": [\n" +
+//            "            {\n" +
+//            "                \"productId\": 3,\n" +
+//            "                \"value\": -20.3\n" +
+//            "            },\n" +
+//            "            {\n" +
+//            "                \"productId\": 1,\n" +
+//            "                \"value\": -17.2\n" +
+//            "            },\n" +
+//            "            {\n" +
+//            "                \"productId\": 6,\n" +
+//            "                \"value\": -11.3\n" +
+//            "            }\n" +
+//            "        ]\n" +
+//            "    },\n" +
+//            "    \"bestSellerStatistics\": {\n" +
+//            "        \"values\": [\n" +
+//            "            {\n" +
+//            "                \"productId\": 3,\n" +
+//            "                \"value\": 15000000\n" +
+//            "            },\n" +
+//            "            {\n" +
+//            "                \"productId\": 7,\n" +
+//            "                \"value\": 12000000\n" +
+//            "            },\n" +
+//            "            {\n" +
+//            "                \"productId\": 1,\n" +
+//            "                \"value\": 9000000\n" +
+//            "            }\n" +
+//            "        ]\n" +
+//            "    },\n" +
+//            "    \"achievementList\": [2,5]\n" +
+//            "}\n";
     String half = "{\n" +
-            "    \"turn\": 361,\n" +
-            "    \"gold\": 600000,\n" +
-            "    \"rentFeeInfo\": {\n" +
-            "        \"billType\": \"basic\",\n" +
-            "        \"rentFee\": 40000,\n" +
-            "        \"productList\": []\n" +
-            "    },\n" +
-            "    \"quarterReport\": {\n" +
-            "        \"quarterProfit\": 1500000,\n" +
-            "        \"rentFee\": 20000,\n" +
-            "        \"inProductList\": [1, 7, 8],\n" +
-            "        \"titleId\": 2,\n" +
-            "        \"rentFeeInfo\": {\n" +
-            "            \"billType\": \"basic\",\n" +
-            "            \"rentFee\": 20000,\n" +
-            "            \"productList\": []\n" +
-            "        }\n" +
-            "    },\n" +
-            "    \"totalProductIncome\": 5000000,\n" +
-            "    \"totalProductOutcome\": 2500000,\n" +
-            "    \"totalBrokerFee\": 120000,\n" +
-            "    \"totalUpgradeFee\": 50000,\n" +
-            "    \"totalRentFee\": 30000,\n" +
-            "    \"eventBonus\": 100000,\n" +
-            "    \"participantCount\": 500,\n" +
-            "    \"rankInfoList\": [\n" +
-            "        {\n" +
-            "            \"rankName\": \"판매왕\",\n" +
-            "            \"rankDescription\": \"가장 많은 순수익을 얻은 사람(반기 기준)\",\n" +
-            "            \"theFirstUserInfo\": {\n" +
-            "                \"userNickname\": \"일론 머스크\",\n" +
-            "                \"profileIconId\": 3,\n" +
-            "                \"profileFrameId\": 1\n" +
-            "            },\n" +
-            "            \"theFirstRecord\": 10000000,\n" +
-            "            \"myRank\": 53,\n" +
-            "            \"myRecord\": 2500000\n" +
-            "        },\n" +
-            "        {\n" +
-            "            \"rankName\": \"부자\",\n" +
-            "            \"rankDescription\": \"현재 보유 금액\",\n" +
-            "            \"theFirstUserInfo\": {\n" +
-            "                \"userNickname\": \"젠슨 황\",\n" +
-            "                \"profileIconId\": 2,\n" +
-            "                \"profileFrameId\": 2\n" +
-            "            },\n" +
-            "            \"theFirstRecord\": 210000000,\n" +
-            "            \"myRank\": 112,\n" +
-            "            \"myRecord\": 10000000\n" +
-            "        },\n" +
-            "        {\n" +
-            "            \"rankName\": \"큰 손\",\n" +
-            "            \"rankDescription\": \"한 번에 돈을 제일 많이 쓴 사람(반기 기준)\",\n" +
-            "            \"theFirstUserInfo\": {\n" +
-            "                \"userNickname\": \"김flex\",\n" +
-            "                \"profileIconId\": 1,\n" +
-            "                \"profileFrameId\": 1\n" +
-            "            },\n" +
-            "            \"theFirstRecord\": 1000000,\n" +
-            "            \"myRank\": 12,\n" +
-            "            \"myRecord\": 500000\n" +
-            "        },\n" +
-            "        {\n" +
-            "            \"rankName\": \"벼락부자\",\n" +
-            "            \"rankDescription\": \"한 번에 제일 많은 돈을 번 사람(반기 기준)\",\n" +
-            "            \"theFirstUserInfo\": {\n" +
-            "                \"userNickname\": \"단타 장인\",\n" +
-            "                \"profileIconId\": 3,\n" +
-            "                \"profileFrameId\": 3\n" +
-            "            },\n" +
-            "            \"theFirstRecord\": 5000000,\n" +
-            "            \"myRank\": 138,\n" +
-            "            \"myRecord\": 500000\n" +
-            "        },\n" +
-            "        {\n" +
-            "            \"rankName\": \"떡상\",\n" +
-            "            \"rankDescription\": \"가장 높은 수익률(반기 기준)\",\n" +
-            "            \"theFirstUserInfo\": {\n" +
-            "                \"userNickname\": \"제노\",\n" +
-            "                \"profileIconId\": 1,\n" +
-            "                \"profileFrameId\": 2\n" +
-            "            },\n" +
-            "            \"theFirstRecord\": 123.5,\n" +
-            "            \"myRank\": 1,\n" +
-            "            \"myRecord\": 123.5\n" +
-            "        }\n" +
-            "    ],\n" +
-            "    \"tteoksangStatistics\": {\n" +
-            "        \"values\": [\n" +
-            "            {\n" +
-            "                \"productId\": 3,\n" +
-            "                \"value\": 12.5\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"productId\": 7,\n" +
-            "                \"value\": 11.2\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"productId\": 5,\n" +
-            "                \"value\": 9.3\n" +
-            "            }\n" +
-            "        ]\n" +
-            "    },\n" +
-            "    \"tteokrockStatistics\": {\n" +
-            "        \"values\": [\n" +
-            "            {\n" +
-            "                \"productId\": 3,\n" +
-            "                \"value\": -20.3\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"productId\": 1,\n" +
-            "                \"value\": -17.2\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"productId\": 6,\n" +
-            "                \"value\": -11.3\n" +
-            "            }\n" +
-            "        ]\n" +
-            "    },\n" +
-            "    \"bestSellerStatistics\": {\n" +
-            "        \"values\": [\n" +
-            "            {\n" +
-            "                \"productId\": 3,\n" +
-            "                \"value\": 15000000\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"productId\": 7,\n" +
-            "                \"value\": 12000000\n" +
-            "            },\n" +
-            "            {\n" +
-            "                \"productId\": 1,\n" +
-            "                \"value\": 9000000\n" +
-            "            }\n" +
-            "        ]\n" +
-            "    },\n" +
-            "    \"achievementList\": [2,5]\n" +
-            "}\n";
+        "    \"turn\": 181,\n" +
+        "    \"gold\": 5000,\n" +
+        "    \"rentFeeInfo\": {\n" +
+        "        \"billType\": \"basic\",\n" +
+        "        \"rentFee\": 20000,\n" +
+        "        \"productList\": []\n" +
+        "    },\n" +
+        "    \"quarterReport\": {\n" +
+        "        \"quarterProfit\": 1500000,\n" +
+        "        \"rentFee\": 20000,\n" +
+        "        \"inProductList\": [0, 1, 3, 4, 5, 6, 8, 12, 19, 28, 32, 35, 37, 38, 39, 40, 42, 43, 44],\n" +
+        "        \"titleId\": 2,\n" +
+        "        \"rentFeeInfo\": {\n" +
+        "            \"billType\": \"basic\",\n" +
+        "            \"rentFee\": 20000,\n" +
+        "            \"productList\": []\n" +
+        "        }\n" +
+        "    },\n" +
+        "    \"totalProductIncome\": 3000000,\n" +
+        "    \"totalProductOutcome\": 1000000,\n" +
+        "    \"totalBrokerFee\": 300000,\n" +
+        "    \"totalUpgradeFee\": 200000,\n" +
+        "    \"totalRentFee\": 40000,\n" +
+        "    \"eventBonus\": 100000,\n" +
+        "    \"participantCount\": 20,\n" +
+        "    \"rankInfoList\": [\n" +
+        "        {\n" +
+        "            \"rankName\": \"판매왕\",\n" +
+        "            \"rankDescription\": \"가장 많은 순수익을 얻은 사람(반기 기준)\",\n" +
+        "            \"theFirstUserInfo\": {\n" +
+        "                \"userNickname\": \"치킨집 닭뼈 도둑\",\n" +
+        "                \"profileIconId\": 3,\n" +
+        "                \"profileFrameId\": 1\n" +
+        "            },\n" +
+        "            \"theFirstRecord\": 6000000,\n" +
+        "            \"myRank\": 53,\n" +
+        "            \"myRecord\": 3000000\n" +
+        "        },\n" +
+        "        {\n" +
+        "            \"rankName\": \"부자\",\n" +
+        "            \"rankDescription\": \"현재 보유 금액\",\n" +
+        "            \"theFirstUserInfo\": {\n" +
+        "                \"userNickname\": \"선재업고 튀어\",\n" +
+        "                \"profileIconId\": 2,\n" +
+        "                \"profileFrameId\": 2\n" +
+        "            },\n" +
+        "            \"theFirstRecord\": 300000000,\n" +
+        "            \"myRank\": 112,\n" +
+        "            \"myRecord\": 13400000\n" +
+        "        },\n" +
+        "        {\n" +
+        "            \"rankName\": \"떡상\",\n" +
+        "            \"rankDescription\": \"가장 높은 수익률(반기 기준)\",\n" +
+        "            \"theFirstUserInfo\": {\n" +
+        "                \"userNickname\": \"제노\",\n" +
+        "                \"profileIconId\": 1,\n" +
+        "                \"profileFrameId\": 2\n" +
+        "            },\n" +
+        "            \"theFirstRecord\": 123.5,\n" +
+        "            \"myRank\": 1,\n" +
+        "            \"myRecord\": 123.5\n" +
+        "        }\n" +
+        "    ],\n" +
+        "    \"tteoksangStatistics\": {\n" +
+        "        \"values\": [\n" +
+        "            {\n" +
+        "                \"productId\": 3,\n" +
+        "                \"value\": 12.5\n" +
+        "            },\n" +
+        "            {\n" +
+        "                \"productId\": 7,\n" +
+        "                \"value\": 11.2\n" +
+        "            },\n" +
+        "            {\n" +
+        "                \"productId\": 5,\n" +
+        "                \"value\": 9.3\n" +
+        "            }\n" +
+        "        ]\n" +
+        "    },\n" +
+        "    \"tteokrockStatistics\": {\n" +
+        "        \"values\": [\n" +
+        "            {\n" +
+        "                \"productId\": 1,\n" +
+        "                \"value\": -20.3\n" +
+        "            },\n" +
+        "            {\n" +
+        "                \"productId\": 4,\n" +
+        "                \"value\": -17.2\n" +
+        "            },\n" +
+        "            {\n" +
+        "                \"productId\": 6,\n" +
+        "                \"value\": -11.3\n" +
+        "            }\n" +
+        "        ]\n" +
+        "    },\n" +
+        "    \"bestSellerStatistics\": {\n" +
+        "        \"values\": [\n" +
+        "            {\n" +
+        "                \"productId\": 22,\n" +
+        "                \"value\": 15342512\n" +
+        "            },\n" +
+        "            {\n" +
+        "                \"productId\": 13,\n" +
+        "                \"value\": 43234\n" +
+        "            }\n" +
+        "        ]\n" +
+        "    },\n" +
+        "    \"achievementList\": [2, 5]\n" +
+        "}\n";
 
     String finalReport = "{\n" +
             "    \"rentFeeInfo\": {\n" +

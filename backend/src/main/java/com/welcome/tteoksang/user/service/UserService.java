@@ -25,4 +25,5 @@ public interface UserService {
 
     void deleteUser(User user) throws URISyntaxException;
 
+    User findTwn(String email);
 }
