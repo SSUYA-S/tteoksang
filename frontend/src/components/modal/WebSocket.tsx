@@ -372,8 +372,15 @@ export default function WebSocket(props: Prop) {
                                         );
                                         //재고가 존재할 때만 업데이트
                                         if (res.productList.length > 0) {
+                                            //개수가 0개인 것 제외
+                                            const newProductList =
+                                                res.productList.filter(
+                                                    (prod: ProductBucket) =>
+                                                        prod.productQuantity !==
+                                                        0
+                                                );
                                             dispatch(
-                                                myProductState(res.productList)
+                                                myProductState(newProductList)
                                             );
                                         } else {
                                             dispatch(myProductState([]));

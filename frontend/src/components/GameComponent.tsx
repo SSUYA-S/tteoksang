@@ -461,14 +461,14 @@ export default function GameComponent(props: GameType) {
         setTradeFlag(true);
         setMyPageFlag(false);
         setFacilityFlag(false);
-        setNewsFlag(false);
+        setShowNews(false);
         setInventoryFlag(false);
     };
     const openFacilityElement = () => {
         setFacilityFlag(true);
         setMyPageFlag(false);
         setTradeFlag(false);
-        setNewsFlag(false);
+        setShowNews(false);
         setInventoryFlag(false);
     };
     const openNewsElement = () => {
@@ -482,7 +482,7 @@ export default function GameComponent(props: GameType) {
     const openSettingElement = () => {
         setTradeFlag(false);
         setFacilityFlag(false);
-        setNewsFlag(false);
+        setShowNews(false);
         setMyPageFlag(false);
         setSettingFlag(true);
         setInventoryFlag(false);
@@ -490,7 +490,7 @@ export default function GameComponent(props: GameType) {
     const openMypageElement = () => {
         setTradeFlag(false);
         setFacilityFlag(false);
-        setNewsFlag(false);
+        setShowNews(false);
         setMyPageFlag(true);
         setInventoryFlag(false);
     };
@@ -499,7 +499,7 @@ export default function GameComponent(props: GameType) {
         setInventoryFlag(true);
         setTradeFlag(false);
         setFacilityFlag(false);
-        setNewsFlag(false);
+        setShowNews(false);
         setMyPageFlag(false);
     };
 
