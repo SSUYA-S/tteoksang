@@ -213,30 +213,6 @@ public interface TestExample {
         "            \"myRecord\": 13400000\n" +
         "        },\n" +
         "        {\n" +
-        "            \"rankName\": \"큰 손\",\n" +
-        "            \"rankDescription\": \"한 번에 돈을 제일 많이 쓴 사람(반기 기준)\",\n" +
-        "            \"theFirstUserInfo\": {\n" +
-        "                \"userNickname\": \"떡상 가자!\",\n" +
-        "                \"profileIconId\": 1,\n" +
-        "                \"profileFrameId\": 1\n" +
-        "            },\n" +
-        "            \"theFirstRecord\": 103020750,\n" +
-        "            \"myRank\": 12,\n" +
-        "            \"myRecord\": 25300210\n" +
-        "        },\n" +
-        "        {\n" +
-        "            \"rankName\": \"벼락부자\",\n" +
-        "            \"rankDescription\": \"한 번에 제일 많은 돈을 번 사람(반기 기준)\",\n" +
-        "            \"theFirstUserInfo\": {\n" +
-        "                \"userNickname\": \"단타 장인\",\n" +
-        "                \"profileIconId\": 3,\n" +
-        "                \"profileFrameId\": 3\n" +
-        "            },\n" +
-        "            \"theFirstRecord\": 5023030,\n" +
-        "            \"myRank\": 138,\n" +
-        "            \"myRecord\": 52040\n" +
-        "        },\n" +
-        "        {\n" +
         "            \"rankName\": \"떡상\",\n" +
         "            \"rankDescription\": \"가장 높은 수익률(반기 기준)\",\n" +
         "            \"theFirstUserInfo\": {\n" +
@@ -268,11 +244,11 @@ public interface TestExample {
         "    \"tteokrockStatistics\": {\n" +
         "        \"values\": [\n" +
         "            {\n" +
-        "                \"productId\": 3,\n" +
+        "                \"productId\": 1,\n" +
         "                \"value\": -20.3\n" +
         "            },\n" +
         "            {\n" +
-        "                \"productId\": 1,\n" +
+        "                \"productId\": 4,\n" +
         "                \"value\": -17.2\n" +
         "            },\n" +
         "            {\n" +
@@ -284,16 +260,12 @@ public interface TestExample {
         "    \"bestSellerStatistics\": {\n" +
         "        \"values\": [\n" +
         "            {\n" +
-        "                \"productId\": 3,\n" +
-        "                \"value\": 15000000\n" +
+        "                \"productId\": 22,\n" +
+        "                \"value\": 15342512\n" +
         "            },\n" +
         "            {\n" +
-        "                \"productId\": 7,\n" +
-        "                \"value\": 12000000\n" +
-        "            },\n" +
-        "            {\n" +
-        "                \"productId\": 1,\n" +
-        "                \"value\": 9000000\n" +
+        "                \"productId\": 13,\n" +
+        "                \"value\": 43234\n" +
         "            }\n" +
         "        ]\n" +
         "    },\n" +
