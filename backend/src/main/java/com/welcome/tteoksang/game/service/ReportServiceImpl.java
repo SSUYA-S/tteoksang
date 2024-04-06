@@ -64,7 +64,7 @@ public class ReportServiceImpl implements ReportService {
 
     // 계절 결산 불러오기
     @Override
-    public GameMessageRes sendQuarterResult(String userId, String webSocketId) {
+    public GameMessageRes sendQuarterResult(String userId) {
         boolean isSuccess = true;
         Object responseBody = "";
         // 레디스에서 결산 데이터 불러오기
@@ -112,7 +112,7 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public GameMessageRes sendHalfResult(String userId, String webSocketId) {
+    public GameMessageRes sendHalfResult(String userId) {
         boolean isSuccess = true;
         Object responseBody = "";
 
@@ -125,7 +125,7 @@ public class ReportServiceImpl implements ReportService {
             long gold = redisGameInfo.getGold();
 
             // 계절 결산 내용
-            GameMessageRes quarterResult = sendQuarterResult(userId, webSocketId);
+            GameMessageRes quarterResult = sendQuarterResult(userId);
             // 계절 정보 가져오기
             Quarter quarter = (Quarter) quarterResult.getBody();
 
@@ -209,6 +209,8 @@ public class ReportServiceImpl implements ReportService {
 
         // 초기 정보
         Map<Integer, UserProductInfo> products = redisGameInfo.getProducts(); // 레디스 안 나의 작물 정보
+        Map<Integer, UserProductInfo> copyProducts = new HashMap<>(products);
+
         Map<Integer, ServerProductInfo> serverProducts = serverInfo.getProductInfoMap(); // 서버의 작물 정보
         List<OverdueProduct> overdueProductList = new ArrayList<>(); // 판매한 작물 목록
         int totalProductQuantity = redisGameInfo.getTotalProductQuantity(); // 창고에 들어간 물품 수
@@ -244,7 +246,7 @@ public class ReportServiceImpl implements ReportService {
                     .orElseThrow(BrokerNotExistException::new);
             int productCharge = currentBroker.getBrokerFeeRate();
 
-            if (products != null) {
+            if (!products.isEmpty()) {
                 // 순이익 최대로 레디스 정렬
                 sortProducts(products, serverProducts);
                 log.debug("가격 정렬하기: {}", products);
@@ -255,8 +257,6 @@ public class ReportServiceImpl implements ReportService {
 
                 // products는 redis 안의 작물 정보 - 순이익이 최대인 농산물부터 판매
                 for (Map.Entry<Integer, UserProductInfo> rentFeeProduct : products.entrySet()) {
-                    if (rentFeeProduct.getValue().getProductQuantity() == 0)
-                        continue;
                     // 현재 작물
                     Integer productId = rentFeeProduct.getKey();
                     // 현재 각각의 나의 작물 정보
@@ -295,6 +295,8 @@ public class ReportServiceImpl implements ReportService {
 
                         productInfo.setProductTotalCost(calculateProductTotalCost);
                         productInfo.setProductQuantity(0);
+
+                        copyProducts.remove(productId);
 
                         // 남은 임대료
                         remainRentFee -= (long) serverProductCost * sellQuantity;
@@ -336,6 +338,12 @@ public class ReportServiceImpl implements ReportService {
                         // 로그 저장
                         sendSellLog(userId, redisGameInfo, productId, logProductIncome, logSoldQuantity, logProductProfit, serverPrice);
 
+                        copyProducts.put(productId, UserProductInfo.builder()
+                                .productQuantity(productInfo.getProductQuantity() - soldQuantity)
+                                .productPurchaseQuantity(productInfo.getProductPurchaseQuantity())
+                                .productTotalCost(calculateProductTotalCost)
+                                .build()
+                        );
                         break; // 임대료를 모두 충당했으므로 반복 중단
                     }
                 }
@@ -343,7 +351,8 @@ public class ReportServiceImpl implements ReportService {
 
             // 레디스 갱신
             redisGameInfo.setGold(redisGold);
-            redisGameInfo.setProducts(products);
+//            redisGameInfo.setProducts(products);
+            redisGameInfo.setProducts(copyProducts);
             redisGameInfo.setTotalProductQuantity(totalProductQuantity);
             redisGameInfo.setRentFee(remainRentFee);
 

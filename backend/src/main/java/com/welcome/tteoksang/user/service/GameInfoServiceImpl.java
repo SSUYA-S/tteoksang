@@ -2,7 +2,6 @@ package com.welcome.tteoksang.user.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.welcome.tteoksang.game.dto.log.DisconnectLogInfo;
 import com.welcome.tteoksang.game.dto.log.LogMessage;
 import com.welcome.tteoksang.game.dto.log.NewgameLogInfo;
 import com.welcome.tteoksang.game.dto.user.RedisGameInfo;
@@ -16,6 +15,7 @@ import com.welcome.tteoksang.user.dto.PreviousPlayInfo;
 import com.welcome.tteoksang.user.repository.GameInfoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -30,6 +30,9 @@ public class GameInfoServiceImpl implements GameInfoService {
     private final GameInfoRepository gameInfoRepository;
     private final RedisService redisService;
     private final ServerInfo serverInfo;
+
+    @Value("${INIT_GAME_GOLD}")
+    long initGold;
 
     @Override
     public PreviousPlayInfo searchPreviousPlayInfo(String userId) {
@@ -61,7 +64,7 @@ public class GameInfoServiceImpl implements GameInfoService {
         GameInfo newGameInfo = GameInfo.builder()
                 .userId(userId)
                 .gameId(newGameId)// 새로운 게임 ID
-                .gold(2000000L)
+                .gold(initGold)
 //                .gold(10000L)
                 .lastQuarterGold(0L)
                 .lastHalfGold(0L)
@@ -141,7 +144,7 @@ public class GameInfoServiceImpl implements GameInfoService {
                 gameInfo = GameInfo.builder()
                         .userId(userId)
                         .gameId(1)// 현재 게임 ID
-                        .gold(2000000L)
+                        .gold(initGold)
                         .lastQuarterGold(0L)
                         .lastHalfGold(0L)
                         .warehouseLevel(1)

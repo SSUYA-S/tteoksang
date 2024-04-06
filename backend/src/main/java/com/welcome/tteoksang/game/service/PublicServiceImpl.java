@@ -53,6 +53,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
     private final RedisService redisService;
     private final PrivateScheduleService privateScheduleService;
     private final RestTemplateService restTemplateService;
+    private final ReportService reportService;
 
     private final GameInfoRepository gameInfoRepository;
     private final ProductRepository productRepository;
@@ -315,6 +316,15 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
                         ).toList())
                         .buyableProductList(serverInfo.getBuyableProducts())
                         .build());
+        // 계절결산
+//        if (serverInfo.getCurrentTurn() != 1 && serverInfo.getCurrentTurn() % quarterYearTurnPeriod == 1) {
+//            privateScheduleService.getConnectedUserId().stream().forEach(
+//                    userId->{
+//                        GameMessageRes quarterResult = reportService.sendQuarterResult(userId);
+//                        sendPrivateMessage(userId,quarterResult.getType(), quarterResult.getBody());
+//                    }
+//            );
+//        }
         if (serverInfo.getCurrentTurn() % 10 == 9) {
             updateFluctuationInfoPer10Days();
         }

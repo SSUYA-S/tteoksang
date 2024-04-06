@@ -50,4 +50,24 @@ public class SeasonHalfStatistics {
 
     @Field("bestSellerStatistics")
     private BestSellerStatistics bestSellerStatistics;
+
+    public void accumulateTotalAccRentFee(Long totalAccRentFee) {
+        if(this.totalAccRentFee == null) this.totalAccRentFee = 0L;
+        this.totalAccRentFee += totalAccRentFee;
+    }
+
+    public void accumulateAccBrokerFee(Long accBrokerFee) {
+        if(this.accBrokerFee == null) this.accBrokerFee = 0L;
+        this.accBrokerFee += accBrokerFee;
+    }
+
+    public void accumulateAccGiveUpCount(Integer accGiveUpCount) {
+        if(this.accGiveUpCount == null) this.accGiveUpCount = 0;
+        this.accGiveUpCount += accGiveUpCount;
+    }
+
+    public void accumulateAccGamePlayCount(Integer accGamePlayCount) {
+        if(this.accGamePlayCount == null) this.accGamePlayCount = 0;
+        this.accGamePlayCount += accGamePlayCount;
+    }
 }

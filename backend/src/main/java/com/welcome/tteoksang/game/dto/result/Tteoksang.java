@@ -12,7 +12,7 @@ public class Tteoksang implements Comparable<Tteoksang>{
     private Long profitGold;
 
     @Override
-    public int compareTo(Tteoksang o) {
-        return (int) (o.profitGold - this.profitGold);
+    public int compareTo(Tteoksang t) {
+        return t.profitGold.compareTo(this.profitGold);
     }
 }

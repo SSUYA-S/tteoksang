@@ -16,6 +16,7 @@ import com.welcome.tteoksang.redis.RedisPrefix;
 import com.welcome.tteoksang.redis.RedisService;
 import com.welcome.tteoksang.resource.type.MessageType;
 import com.welcome.tteoksang.user.dto.User;
+import com.welcome.tteoksang.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +44,7 @@ public class GameController {
     private final RedisService redisService;
     private final ChatService chatService;
     private final ReportService reportService;
+    private final UserService userService;
 
     private final SimpMessagingTemplate simpMessagingTemplate;
 
@@ -83,7 +85,7 @@ public class GameController {
 //
 //        simpMessagingTemplate.convertAndSend("/topic/private/" + webSocketId, quarterResult);
 
-        GameMessageRes quarterResult = reportService.sendQuarterResult(user.getUserId(), webSocketId);
+        GameMessageRes quarterResult = reportService.sendQuarterResult(user.getUserId());
         simpMessagingTemplate.convertAndSend("/topic/private/" + webSocketId, quarterResult);
     }
 
@@ -151,6 +153,63 @@ public class GameController {
                 .build();
 
         simpMessagingTemplate.convertAndSend("/topic/private/" + webSocketId, offlineResult);
+    }
+
+    // TODO: 태운
+    @GetMapping("/quarter/twnkm7089")
+    public void sendQuarterTwnkm() {
+        User twn = userService.findTwn("twnkm7089@gmail.com");
+        String userId = twn.getUserId();
+
+        String twnKey = RedisPrefix.WEBSOCKET.prefix() + userId;
+        String webSocketId = (String) redisService.getValues(twnKey);
+        String responseData = TestExample.half;
+        ObjectMapper mapper = new ObjectMapper();
+        boolean isSuccess = false;
+        Half message = null;
+        try {
+            message = mapper.readValue(responseData, Half.class);
+            isSuccess = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        GameMessageRes halfResult = GameMessageRes.builder()
+                .type(MessageType.HALF_REPORT)
+                .isSuccess(isSuccess)
+                .body(message)
+                .build();
+
+        GameMessageRes quarterResult = reportService.sendQuarterResult(userId);
+        simpMessagingTemplate.convertAndSend("/topic/private/" + webSocketId, quarterResult);
+    }
+
+    // TODO: 태운
+    @GetMapping("/half/twnkm7089")
+    public void sendHalfTwnkm() {
+        User twn = userService.findTwn("twnkm7089@gmail.com");
+        String userId = twn.getUserId();
+
+        String twnKey = RedisPrefix.WEBSOCKET.prefix() + userId;
+        String webSocketId = (String) redisService.getValues(twnKey);
+        String responseData = TestExample.half;
+        ObjectMapper mapper = new ObjectMapper();
+        boolean isSuccess = false;
+        Half message = null;
+        try {
+            message = mapper.readValue(responseData, Half.class);
+            isSuccess = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        GameMessageRes halfResult = GameMessageRes.builder()
+                .type(MessageType.HALF_REPORT)
+                .isSuccess(isSuccess)
+                .body(message)
+                .build();
+
+        simpMessagingTemplate.convertAndSend("/topic/private/" + webSocketId, halfResult);
     }
 
 

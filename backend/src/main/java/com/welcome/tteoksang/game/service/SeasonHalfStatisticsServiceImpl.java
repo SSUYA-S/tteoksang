@@ -16,7 +16,12 @@ public class SeasonHalfStatisticsServiceImpl implements SeasonHalfStatisticsServ
     private final SeasonHalfStatisticsRepository seasonHalfStatisticsRepository;
 
     @Override
-    public SeasonHalfStatistics getSeasonHalfStatistics(String mongoDBKey) {
+    public void saveSeasonHalfStatistics(SeasonHalfStatistics seasonHalfStatistics) {
+        seasonHalfStatisticsRepository.save(seasonHalfStatistics);
+    }
+
+    @Override
+    public SeasonHalfStatistics loadSeasonHalfStatistics(String mongoDBKey) {
         return seasonHalfStatisticsRepository.findById(mongoDBKey).orElse(null);
     }
 
