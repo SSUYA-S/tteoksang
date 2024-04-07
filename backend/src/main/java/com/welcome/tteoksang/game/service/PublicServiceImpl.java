@@ -110,7 +110,15 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
     public void initDemo() {
         redisService.deleteValues(RedisPrefix.SERVER_NEWS.prefix());
         redisService.deleteValues(RedisPrefix.SERVER_INFO.prefix());
-//        redisService.deleteValues(RedisPrefix.SERVER_BREAK.prefix());
+        if (!redisService.hasKey(RedisPrefix.SERVER_BREAK.prefix())) {
+            sendPublicMessage(MessageType.GET_BREAK_TIME, BreakTimeInfo.builder()
+                    .breakName("시즌")
+                    .isBreakTime(false)
+                    .breakTime(LocalDateTime.now())
+                    .ingameTime(LocalDateTime.now())
+                    .build());
+            redisService.deleteValues(RedisPrefix.SERVER_BREAK.prefix());
+        }
         ServerSeasonInfo seasonInfo = serverSeasonInfoRepository.findFirstByOrderBySeasonIdDesc();
         int gameSeason = 1;
         if (seasonInfo != null) {
