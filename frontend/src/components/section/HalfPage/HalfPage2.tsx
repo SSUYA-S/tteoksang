@@ -29,6 +29,8 @@ export default function HalfPage2(props: Prop) {
 
     const options = {
         responsive: true,
+        categoryPercentage: 0.5,
+
         plugins: {
             title: {
                 display: false,

@@ -852,11 +852,11 @@ export default function GameComponent(props: GameType) {
                                     style={{ aspectRatio: 1 / 1 }}
                                 >
                                     <img
-                                        className="absolute h-full cursor-pointer btn-animation p-[0.6vw] object-cover"
+                                        className="absolute h-full cursor-pointer p-[0.6vw] object-cover"
                                         src={`/src/assets/images/profile/icon (${profileIcon}).png`}
                                     />
                                     <img
-                                        className="absolute h-full cursor-pointer btn-animation p-[0.6vw] object-cover"
+                                        className="absolute h-full cursor-pointer p-[0.6vw] object-cover"
                                         src={`/src/assets/images/profile/frame (${profileFrame}).png`}
                                     />
                                 </div>
