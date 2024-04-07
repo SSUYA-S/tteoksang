@@ -419,6 +419,7 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
                 // 남은 금액 확인
                 long remainGold = calculateUpgradeFee(redisGameInfo.getGold(), MessageType.UPGRADE_WAREHOUSE, nextWarehouseLevel);
                 if (remainGold != -1) {
+
                     // 로그 저장
                     saveUpgradeLog(userId, redisGameInfo, remainGold, logList);
 
@@ -524,14 +525,12 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
                 // 남은 금액 확인
                 long remainGold = calculateUpgradeFee(redisGameInfo.getGold(), MessageType.UPGRADE_VEHICLE, nextVehicleLevel);
                 if (remainGold != -1) {
-                    redisGameInfo.setGold(remainGold);
-                    redisGameInfo.setVehicleLevel(nextVehicleLevel + 1);
 
                     // 로그 저장
                     saveUpgradeLog(userId, redisGameInfo, remainGold, logList);
 
                     redisGameInfo.setGold(remainGold);
-                    redisGameInfo.setVehicleLevel(nextVehicleLevel);
+                    redisGameInfo.setVehicleLevel(nextVehicleLevel + 1);
 
                     responseBody = UpgradeVehicleInfo.builder()
                             .gold(redisGameInfo.getGold())
