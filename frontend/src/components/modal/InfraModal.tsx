@@ -1,10 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import {
-    warehouseLevelState,
-    vehicleLevelState,
-    brokerLevelState,
-} from '../../util/myproduct-slice';
+import { useSelector } from 'react-redux';
 
 import { InfraList } from '../../type/types';
 import { Client } from '@stomp/stompjs';
@@ -61,8 +56,6 @@ export default function InfraModal(props: InfraType) {
             setNowLevel(brokerLevel);
         }
     }, [warehouseLevel, vehicleLevel, brokerLevel]);
-
-    const dispatch = useDispatch();
 
     const changeFailityType = (prop: number) => {
         setFacilityType(prop);
@@ -452,32 +445,38 @@ export default function InfraModal(props: InfraType) {
         }
     };
     return (
-        <section className="relative w-[80%] h-[84%] flex justify-center items-center z-50 animation-modal ">
-            <img
-                src="/src/assets/images/layout/ui-board.webp"
-                className="absolute w-full h-full -z-10"
-                alt=""
-            />
+        <>
             <div
-                className="relative w-[90%] h-[80%] rounded-[2vw]"
-                style={{
-                    backgroundImage:
-                        'url(/src/assets/images/etc/facility-bg.webp)',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat',
-                }}
-            >
-                {facilityElement()}
-            </div>
-            <div
-                className="absolute text-[1.6vw] flex items-center justify-center text-white top-[0.4vw] right-[0.4vw] w-[4vw] h-[4vw] border-[0.3vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer"
-                onClick={() => {
-                    closeFacilityModal();
-                }}
-            >
-                X
-            </div>
-        </section>
+                className="w-full h-full absolute top-0 left-0 z-40 opacity-0"
+                onClick={closeFacilityModal}
+            ></div>
+            <section className="relative w-[80%] h-[84%] flex justify-center items-center z-50 animation-modal ">
+                <img
+                    src="/src/assets/images/layout/ui-board.webp"
+                    className="absolute w-full h-full -z-10"
+                    alt=""
+                />
+                <div
+                    className="relative w-[90%] h-[80%] rounded-[2vw]"
+                    style={{
+                        backgroundImage:
+                            'url(/src/assets/images/etc/facility-bg.webp)',
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                    }}
+                >
+                    {facilityElement()}
+                </div>
+                <div
+                    className="absolute text-[1.6vw] flex items-center justify-center text-white top-[0.4vw] right-[0.4vw] w-[4vw] h-[4vw] border-[0.3vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer"
+                    onClick={() => {
+                        closeFacilityModal();
+                    }}
+                >
+                    X
+                </div>
+            </section>
+        </>
     );
 }
