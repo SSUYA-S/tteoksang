@@ -8,6 +8,7 @@ import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -69,5 +70,20 @@ public class SeasonHalfStatistics {
     public void accumulateAccGamePlayCount(Integer accGamePlayCount) {
         if(this.accGamePlayCount == null) this.accGamePlayCount = 0;
         this.accGamePlayCount += accGamePlayCount;
+    }
+
+    public void accumulateAccOnlineTimeSlotCount(List<Integer> accOnlineTimeSlotCount) {
+        if(this.accOnlineTimeSlotCount == null) {
+            this.accOnlineTimeSlotCount = new ArrayList<>();
+            for(int i=0; i<8; i++)
+                this.accOnlineTimeSlotCount.add(0);
+        }
+        for(int i=0; i<8; i++)
+            this.accOnlineTimeSlotCount.set(i, this.accOnlineTimeSlotCount.get(i) + accOnlineTimeSlotCount.get(i));
+    }
+
+    public void findMaxRentFee(Long maxRentFee) {
+        if(this.maxRentFee == null) this.maxRentFee = 0L;
+        this.maxRentFee = Math.max(this.maxRentFee, maxRentFee);
     }
 }

@@ -1,10 +1,8 @@
 package com.welcome.tteoksang.game.service;
 
 import com.welcome.tteoksang.game.dto.result.SeasonHalfPrivateStatistics;
-import com.welcome.tteoksang.game.dto.result.SeasonHalfStatistics;
 
 import com.welcome.tteoksang.game.repository.SeasonHalfPrivateStatisticsRepository;
-import com.welcome.tteoksang.game.repository.SeasonHalfStatisticsRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -17,13 +15,15 @@ public class SeasonHalfPrivateStatisticsServiceImpl implements SeasonHalfPrivate
     private final SeasonHalfPrivateStatisticsRepository seasonHalfPrivateStatisticsRepository;
 
     @Override
-    public void saveSeasonHalfPrivateStatistics(SeasonHalfPrivateStatistics seasonHalfStatistics) {
+    public SeasonHalfPrivateStatistics saveSeasonHalfPrivateStatistics(SeasonHalfPrivateStatistics seasonHalfStatistics) {
+        SeasonHalfPrivateStatistics privateStatistics = null;
         try {
-            seasonHalfPrivateStatisticsRepository.save(seasonHalfStatistics);
+            privateStatistics= seasonHalfPrivateStatisticsRepository.save(seasonHalfStatistics);
         }
         catch (Exception e) {
             log.error(e.getMessage());
         }
+        return privateStatistics;
     }
 
     @Override
