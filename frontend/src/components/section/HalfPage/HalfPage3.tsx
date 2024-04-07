@@ -97,13 +97,13 @@ export default function HalfPage3(props: Prop) {
         <>
             <div className="w-full h-full p-[1.5vw] flex flex-col items-center">
                 {/* 랭킹 라벨 */}
-                <div className="w-full text-left text-[2vw]">랭킹</div>
+                <div className="w-full text-left text-[1.5vw]">랭킹</div>
                 {/* 랭킹 버튼 */}
                 <div className="w-full flex justify-start text-[1.5vw]">
                     {rankInfoList.map((rankInfo, index) => {
                         return (
                             <div
-                                className={`w-[15%] cursor-pointer color-border-subbold border-[0.3vw] ${
+                                className={`w-[15%] cursor-pointer color-border-subbold border-[0.2vw] bg-white rounded-[0.6vw] mx-[0.2vw] ${
                                     rankMode === index
                                         ? 'text-white color-bg-subbold'
                                         : ''
@@ -117,13 +117,13 @@ export default function HalfPage3(props: Prop) {
                     })}
                 </div>
                 {/* 1등과 나의 스코어 보기 */}
-                <div className="w-full h-[40%] flex">
+                <div className="w-full h-[40%] flex justify-between">
                     {/* 1등의 스코어 */}
-                    <div className="w-[50%] h-full p-[0.5vw]">
-                        <p className="w-full h-[20%] ml-[0.5vw] mb-[0.5vh] text-left text-[2vw]">
+                    <div className="w-[48%] h-full p-[0.5vw]">
+                        <p className="w-full h-[20%] ml-[0.5vw] mb-[0.5vh] text-left text-[1.5vw]">
                             1등
                         </p>
-                        <div className="w-full h-[80%] m-[0.5vw] border-[0.3vw] p-[0.3vw] color-border-subbold rounded-[0.6vw] flex">
+                        <div className="w-full h-[80%] m-[0.5vw] border-[0.2vw] bg-white mx-[0.2vw] p-[0.3vw] color-border-subbold rounded-[0.6vw] flex">
                             <div
                                 className="relative w-[30%] m-[0.5vw] rounded-[0.6vw]"
                                 style={{ aspectRatio: 1 / 1 }}
@@ -153,11 +153,11 @@ export default function HalfPage3(props: Prop) {
                         </div>
                     </div>
                     {/* 나의 스코어 */}
-                    <div className="w-[50%] h-full p-[0.5vw]">
-                        <p className="w-full h-[20%] ml-[0.5vw] mb-[0.5vh] text-left text-[2vw]">
+                    <div className="w-[48%] h-full p-[0.5vw]">
+                        <p className="w-full h-[20%] ml-[0.5vw] mb-[0.5vh] text-left text-[1.5vw]">
                             당신
                         </p>
-                        <div className="w-full h-[80%] m-[0.5vw] border-[0.3vw] p-[0.3vw] color-border-subbold rounded-[0.6vw] flex">
+                        <div className="w-full h-[80%] m-[0.5vw] border-[0.2vw] bg-white rounded-[0.6vw] mx-[0.2vw] p-[0.3vw] color-border-subbold rounded-[0.6vw] flex">
                             <div
                                 className="relative w-[30%] m-[0.5vw] rounded-[0.6vw]"
                                 style={{ aspectRatio: 1 / 1 }}
