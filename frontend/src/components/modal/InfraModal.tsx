@@ -108,7 +108,7 @@ export default function InfraModal(props: InfraType) {
             typeMsg = 'UPGRADE_WAREHOUSE';
         } else if (facilityType === 3) {
             if (
-                props.infraInfo.brokerInfoList[brokerLevel - 1].brokerUpgradeFee
+                props.nowMoney < props.infraInfo.brokerInfoList[brokerLevel - 1].brokerUpgradeFee
             ) {
                 props.alertError('금액이 부족합니다.');
                 return;
