@@ -63,7 +63,7 @@ export default function TradeBuyReceipt({
                     </p>
                 </div>
                 <div className="flex items-center justify-between">
-                    <p>총 결재 금액</p>
+                    <p>총 결제 금액</p>
                     <p>{totalCost.toLocaleString()}</p>
                 </div>
                 <div

@@ -248,13 +248,17 @@ export default function HalfReportModal(props: Prop) {
                                 />
                             )}
                         </div>
+
                         <div
-                            className="absolute text-[2vw] flex items-center justify-center text-white -top-[4vw] -right-[4vw] w-[4vw] h-[4vw] border-[0.4vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer z-30"
+                            className="absolute flex items-center justify-center top-[-6vw] right-[-5vw] w-[6vw] h-[6vw] cursor-pointer btn-animation"
                             onClick={() => {
                                 props.setIsHlfReportAvail(false);
                             }}
                         >
-                            X
+                            <img
+                                src="/src/assets/images/layout/ui-icon-closebtn.webp"
+                                alt=""
+                            />
                         </div>
                     </div>
                 </>
