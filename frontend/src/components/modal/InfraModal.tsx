@@ -1,10 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import {
-    warehouseLevelState,
-    vehicleLevelState,
-    brokerLevelState,
-} from '../../util/myproduct-slice';
+import { useSelector } from 'react-redux';
 
 import { InfraList } from '../../type/types';
 import { Client } from '@stomp/stompjs';
@@ -15,6 +10,8 @@ type InfraType = {
     infraInfo: InfraList;
     client: Client;
     webSocketId: string;
+    nowMoney: number;
+    alertError: (a: string) => void;
 };
 
 export default function InfraModal(props: InfraType) {
@@ -62,8 +59,6 @@ export default function InfraModal(props: InfraType) {
         }
     }, [warehouseLevel, vehicleLevel, brokerLevel]);
 
-    const dispatch = useDispatch();
-
     const changeFailityType = (prop: number) => {
         setFacilityType(prop);
         if (prop === 1) {
@@ -92,10 +87,32 @@ export default function InfraModal(props: InfraType) {
         //이게 찐
         let typeMsg: string = '';
         if (facilityType === 1) {
+            if (
+                props.nowMoney <
+                props.infraInfo.vehicleInfoList[vehicleLevel - 1]
+                    .vehicleUpgradeFee
+            ) {
+                props.alertError('금액이 부족합니다.');
+                return;
+            }
             typeMsg = 'UPGRADE_VEHICLE';
         } else if (facilityType === 2) {
+            if (
+                props.nowMoney <
+                props.infraInfo.warehouseInfoList[warehouseLevel - 1]
+                    .warehouseUpgradeFee
+            ) {
+                props.alertError('금액이 부족합니다.');
+                return;
+            }
             typeMsg = 'UPGRADE_WAREHOUSE';
         } else if (facilityType === 3) {
+            if (
+                props.infraInfo.brokerInfoList[brokerLevel - 1].brokerUpgradeFee
+            ) {
+                props.alertError('금액이 부족합니다.');
+                return;
+            }
             typeMsg = 'UPGRADE_BROKER';
         }
 
@@ -512,7 +529,13 @@ export default function InfraModal(props: InfraType) {
         }
     };
     return (
-        <section className="relative w-[80%] h-[84%] flex justify-center items-center z-50 animation-modal ">
+        <>
+          <div
+              className="w-full h-full absolute top-0 left-0 z-40 opacity-0"
+              onClick={closeFacilityModal}
+          ></div>
+          <section
+              className="relative w-[80%] h-[84%] flex justify-center items-center z-50 animation-modal ">
             <img
                 src="/src/assets/images/etc/facility-bg.webp"
                 className="absolute w-full h-full -z-10 object-contain"
@@ -520,19 +543,20 @@ export default function InfraModal(props: InfraType) {
             />
 
             <div className="relative w-[90%] h-[80%] rounded-[2vw]">
-                {facilityElement()}
+              {facilityElement()}
             </div>
             <div
                 className="absolute flex items-center justify-center top-[-1vw] right-[-1vw] w-[6vw] h-[6vw] cursor-pointer btn-animation"
                 onClick={() => {
-                    closeFacilityModal();
+                  closeFacilityModal();
                 }}
             >
-                <img
-                    src="/src/assets/images/layout/ui-icon-closebtn.webp"
-                    alt=""
-                />
+              <img
+                  src="/src/assets/images/layout/ui-icon-closebtn.webp"
+                  alt=""
+              />
             </div>
-        </section>
+          </section>
+        </>
     );
 }
