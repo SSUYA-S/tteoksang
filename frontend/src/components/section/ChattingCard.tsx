@@ -14,12 +14,19 @@ export default function ChattingCard(props: Props) {
                     alt=""
                     style={{ aspectRatio: 1 / 1 }}
                 />
-                <img
-                    className="absolute w-[4vw] h-[4vw] object-cover"
-                    src={`/src/assets/images/profile/frame (${props.chat.profileFrameId}).png`}
-                    alt=""
-                    style={{ aspectRatio: 1 / 1 }}
-                />
+                {props.chat.profileFrameId !== 1 ? (
+                    <img
+                        className="absolute w-[4vw] h-[4vw] object-cover"
+                        src={`/src/assets/images/profile/frame (${props.chat.profileFrameId}).png`}
+                        alt=""
+                        style={{ aspectRatio: 1 / 1 }}
+                    />
+                ) : (
+                    <div
+                        className="absolute w-[4vw] h-[4vw] object-cover"
+                        style={{ aspectRatio: 1 / 1 }}
+                    />
+                )}
             </div>
             <div className="relative flex flex-col w-[80%] h-fit ms-[0.4vw]">
                 <div className="text-[1.2vw] h-[30%] break-all flex justify-start items-center pl-[0.5vw] text-start color-bg-sublight text-white rounded-tr-[0.8vw]">
