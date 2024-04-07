@@ -15,7 +15,7 @@ import java.util.Map;
 public class TotalInfo {
     private Long gold;
     private String privateEventId;
-    private String specialEventId;
+    private List<String> specialEventId;
     private String inGameTime;
     private String turnStartTime;
     private Integer turn;

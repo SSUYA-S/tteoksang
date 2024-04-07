@@ -10,6 +10,7 @@ import com.welcome.tteoksang.game.dto.result.end.FinalResult;
 import com.welcome.tteoksang.game.dto.result.half.Half;
 import com.welcome.tteoksang.game.dto.result.offline.OfflineReport;
 import com.welcome.tteoksang.game.dto.result.quarter.Quarter;
+import com.welcome.tteoksang.game.scheduler.ServerInfo;
 import com.welcome.tteoksang.game.service.ChatService;
 import com.welcome.tteoksang.game.service.ReportService;
 import com.welcome.tteoksang.redis.RedisPrefix;
@@ -45,6 +46,7 @@ public class GameController {
     private final ChatService chatService;
     private final ReportService reportService;
     private final UserService userService;
+    private final ServerInfo serverInfo;
 
     private final SimpMessagingTemplate simpMessagingTemplate;
 
@@ -210,6 +212,25 @@ public class GameController {
                 .build();
 
         simpMessagingTemplate.convertAndSend("/topic/private/" + webSocketId, halfResult);
+    }
+
+    @GetMapping("/event/twnkm7089")
+    public ResponseEntity<?> sendEventTwnkm() {
+        User twn = userService.findTwn("twnkm7089@gmail.com");
+        String userId = twn.getUserId();
+
+        String twnKey = RedisPrefix.WEBSOCKET.prefix() + userId;
+        String webSocketId = (String) redisService.getValues(twnKey);
+
+        GameMessageRes halfResult = GameMessageRes.builder()
+                .type(MessageType.GET_EVENT_LIST)
+                .isSuccess(true)
+                .body(serverInfo.getSpecialEventIdList())
+                .build();
+
+        simpMessagingTemplate.convertAndSend("/topic/private/" + webSocketId, halfResult);
+        return ResponseEntity.ok().
+                body(serverInfo.getSpecialEventIdList());
     }
 
 
