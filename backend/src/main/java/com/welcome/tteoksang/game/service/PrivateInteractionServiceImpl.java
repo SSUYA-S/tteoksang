@@ -423,7 +423,7 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
                     saveUpgradeLog(userId, redisGameInfo, remainGold, logList);
 
                     redisGameInfo.setGold(remainGold);
-                    redisGameInfo.setWarehouseLevel(nextWarehouseLevel);
+                    redisGameInfo.setWarehouseLevel(nextWarehouseLevel + 1);
 
                     responseBody = UpgradeWarehouseInfo.builder()
                             .gold(redisGameInfo.getGold())
@@ -475,7 +475,7 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
                     saveUpgradeLog(userId, redisGameInfo, remainGold, logList);
 
                     redisGameInfo.setGold(remainGold);
-                    redisGameInfo.setBrokerLevel(nextBrokerLevel);
+                    redisGameInfo.setBrokerLevel(nextBrokerLevel + 1);
 
                     responseBody = UpgradeBrokerInfo.builder()
                             .gold(redisGameInfo.getGold())
@@ -525,7 +525,7 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
                 long remainGold = calculateUpgradeFee(redisGameInfo.getGold(), MessageType.UPGRADE_VEHICLE, nextVehicleLevel);
                 if (remainGold != -1) {
                     redisGameInfo.setGold(remainGold);
-                    redisGameInfo.setVehicleLevel(nextVehicleLevel);
+                    redisGameInfo.setVehicleLevel(nextVehicleLevel + 1);
 
                     // 로그 저장
                     saveUpgradeLog(userId, redisGameInfo, remainGold, logList);
