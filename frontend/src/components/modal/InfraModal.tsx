@@ -454,20 +454,12 @@ export default function InfraModal(props: InfraType) {
     return (
         <section className="relative w-[80%] h-[84%] flex justify-center items-center z-50 animation-modal ">
             <img
-                src="/src/assets/images/layout/ui-board.webp"
-                className="absolute w-full h-full -z-10"
+                src="/src/assets/images/etc/facility-bg.webp"
+                className="absolute w-full h-full -z-10 object-contain"
                 alt=""
             />
-            <div
-                className="relative w-[90%] h-[80%] rounded-[2vw]"
-                style={{
-                    backgroundImage:
-                        'url(/src/assets/images/etc/facility-bg.webp)',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat',
-                }}
-            >
+
+            <div className="relative w-[90%] h-[80%] rounded-[2vw]">
                 {facilityElement()}
             </div>
             <div
