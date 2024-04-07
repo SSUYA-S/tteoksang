@@ -262,22 +262,23 @@ self.addEventListener('fetch', (e) => {
     if (
         e.request.url.startsWith('https://accounts.google.com/o/oauth2/v2/auth')
     ) {
-        console.log('요청 account google');
-        console.log(e);
-        e.respondWith(fetch(e.request, { redirect: 'follow' }))
-            .then(function (response) {
-                return response;
-            })
-            .catch(function (error) {
-                console.log(
-                    'Fetch failed; returning offline page instead.',
-                    error
-                );
-                return caches.match('/index.html');
-            });
-    } else if (e.request.headers.get('Accept').includes('text/html') !== -1) {
-        // console.log('요청 Accep text/html');
+        // console.log('요청 account google');
         // console.log(e);
+        // e.respondWith(fetch(e.request, { redirect: 'follow' }))
+        //     .then(function (response) {
+        //         return response;
+        //     })
+        //     .catch(function (error) {
+        //         console.log(
+        //             'Fetch failed; returning offline page instead.',
+        //             error
+        //         );
+        //         return caches.match('/index.html');
+        //     });
+        return;
+    } else if (e.request.headers.get('Accept').includes('text/html') !== -1) {
+        console.log('요청 Accep text/html');
+        console.log(e);
         e.respondWith(
             fetch(e.request, { redirect: 'follow' })
                 .then(function (response) {
