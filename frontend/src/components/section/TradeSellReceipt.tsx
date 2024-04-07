@@ -54,9 +54,13 @@ export default function TradeSellReceipt({
             </div>
             <div className="w-[80%] text-[1.2vw] pb-[1.2vw]">
                 <p>---------------------</p>
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between text-red-500">
                     <p>{`수수료 (${fee}%)`}</p>
-                    <p>{totalFee.toLocaleString()}</p>
+                    {totalFee === 0 ? (
+                        <p>{totalFee.toLocaleString()}</p>
+                    ) : (
+                        <p>- {totalFee.toLocaleString()}</p>
+                    )}
                 </div>
                 <div className="flex items-center justify-between">
                     <p>총 판매 금액</p>

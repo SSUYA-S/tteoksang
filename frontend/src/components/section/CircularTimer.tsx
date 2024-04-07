@@ -31,7 +31,7 @@ const CircularTimer: React.FC<CircularTimerProps> = ({
                 // console.log(newTimer);
                 setTurnTimer(newTimer);
 
-                if (newTimer === 0) {
+                if (newTimer <= 0) {
                     newTimer = duration;
                     setPercent((newTimer / duration) * 100);
                 }
