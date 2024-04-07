@@ -73,7 +73,7 @@ export default function HalfPage3(props: Prop) {
             {
                 label: '1등',
                 data: [rankInfoList[rankMode].theFirstRecord],
-                backgroundColor: 'rgb(255, 0, 0)',
+                backgroundColor: '#FF9586',
             },
             {
                 label: `당신 (${
@@ -88,7 +88,7 @@ export default function HalfPage3(props: Prop) {
                           '%'
                 })`,
                 data: [rankInfoList[rankMode].myRecord],
-                backgroundColor: 'rgb(0, 0, 255)',
+                backgroundColor: '#6474FF',
             },
         ],
     };
@@ -144,11 +144,20 @@ export default function HalfPage3(props: Prop) {
                                             .userNickname
                                     }
                                 </p>
-                                <p className="text-[1.5vw] w-full text-left">
-                                    {rankInfoList[
-                                        rankMode
-                                    ].theFirstRecord.toLocaleString()}
-                                </p>
+                                {rankMode === 2 ? (
+                                    <p className="text-[1.5vw] w-full text-left">
+                                        {rankInfoList[
+                                            rankMode
+                                        ].theFirstRecord.toLocaleString() + ' '}
+                                        %
+                                    </p>
+                                ) : (
+                                    <p className="text-[1.5vw] w-full text-left">
+                                        {rankInfoList[
+                                            rankMode
+                                        ].theFirstRecord.toLocaleString()}
+                                    </p>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -175,11 +184,20 @@ export default function HalfPage3(props: Prop) {
                                 <p className="text-[1.5vw] w-full text-left">
                                     {userNickname}
                                 </p>
-                                <p className="text-[1.5vw] w-full text-left">
-                                    {rankInfoList[
-                                        rankMode
-                                    ].myRecord.toLocaleString()}
-                                </p>
+                                {rankMode === 2 ? (
+                                    <p className="text-[1.5vw] w-full text-left">
+                                        {rankInfoList[
+                                            rankMode
+                                        ].myRecord.toLocaleString() + ' '}
+                                        %
+                                    </p>
+                                ) : (
+                                    <p className="text-[1.5vw] w-full text-left">
+                                        {rankInfoList[
+                                            rankMode
+                                        ].myRecord.toLocaleString()}
+                                    </p>
+                                )}
                             </div>
                         </div>
                     </div>

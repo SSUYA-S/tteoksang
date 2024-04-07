@@ -35,18 +35,18 @@ export default function RentFeeModal(props: Prop) {
     let rentReceipt = <></>;
     if (rentFeeInfo.billType === 'basic') {
         rentReceipt = (
-            <div className="w-[40%] h-[40%] bg-[#FDFFA3] flex flex-col absolute left-[30%] top-[35%] items-center z-10">
+            <div className="relative w-[40%] h-[50%] bg-[#ffffcc] flex flex-col items-center z-10 border-[0.3vw] color-border-subbold rounded-[0.6vw]">
                 <div className="w-full h-[20%] p-[1vw] text-[2vw] text-red-500 flex justify-center items-end">
                     임대료 고지서
                 </div>
                 <hr className="color-bg-subbold w-[90%] h-[0.3vw]"></hr>
-                <div className="text-[2vw] w-full h-[30%] color-text-subbold">
+                <div className="text-[1.8vw] w-full h-[30%] color-text-subbold flex items-center justify-center">
                     {duration}
                 </div>
-                <div className="text-[2vw] text-right w-full h-[30%] p-[1vw] color-text-subbold">{`${rentFeeInfo.rentFee.toLocaleString()}원`}</div>
+                <div className="text-[2vw] text-right w-full h-[30%] p-[1vw] flex items-center justify-end color-text-subbold">{`${rentFeeInfo.rentFee.toLocaleString()}원`}</div>
                 <div
                     onClick={props.showReport}
-                    className="w-[90%] p-[1vw] m-[1vw] border-[0.2vw] color-border-subbold text-[2vw] color-text-subbold cursor-pointer hover:color-bg-subbold hover:text-[#FDFFA3]"
+                    className="w-[50%] p-[0.6vw] m-[1vw] border-[0.2vw] rounded-[0.6vw] color-border-subbold text-[1.8vw] color-text-subbold cursor-pointer hover:color-bg-subbold hover:text-white bg-white"
                 >
                     확인
                 </div>
@@ -54,15 +54,15 @@ export default function RentFeeModal(props: Prop) {
         );
     } else if (rentFeeInfo.billType === 'overdue') {
         rentReceipt = (
-            <div className="w-[40%] h-[60%] bg-[#FFCEC3] flex flex-col absolute left-[30%] top-[20%] items-center z-10">
-                <div className="w-full h-[20%] p-[1vw] text-[3vw] text-red-500 flex justify-center items-end">
+            <div className="relative w-[40%] h-[50%] bg-[#ffd1d1] flex flex-col items-center z-10 border-[0.3vw] color-border-subbold rounded-[0.6vw]">
+                <div className="w-full h-[20%] p-[1vw] text-[2vw] text-red-500 flex justify-center items-end">
                     가압류 고지서
                 </div>
-                <hr className="color-bg-subbold w-[90%] h-[0.4vw]"></hr>
-                <div className="text-[1.8vw] w-full h-[10%] color-text-subbold">
+                <hr className="color-bg-subbold w-[90%] h-[0.3vw]"></hr>
+                <div className="text-[1.8vw] w-full h-[30%] color-text-subbold flex items-center justify-center">
                     {duration}
                 </div>
-                <div className="text-[1.8vw] text-right w-full h-[10%] p-[1vw] color-text-subbold">{`${rentFeeInfo.rentFee.toLocaleString()}원`}</div>
+                <div className="text-[2vw] text-right w-full h-[30%] p-[1vw] flex items-center justify-end color-text-subbold">{`${rentFeeInfo.rentFee.toLocaleString()}원`}</div>
                 <div className="text-[1.8vw] text-center w-full h-[50%] p-[1vw] text-red-500 overflow-y-auto break-words">
                     <span>[</span>
                     {rentFeeInfo.productList.map((product, index) => {
@@ -83,7 +83,7 @@ export default function RentFeeModal(props: Prop) {
                 </div>
                 <div
                     onClick={props.showReport}
-                    className="w-[90%] p-[1vw] h-[10%] m-[1vw] bg-[#FFCEC3] border-[0.2vw] color-border-subbold text-[1.5vw] color-text-subbold flex justify-center items-center cursor-pointer hover:text-[#FFCEC3] hover:color-bg-subbold"
+                    className="w-[50%] p-[0.6vw] m-[1vw] border-[0.2vw] rounded-[0.6vw] color-border-subbold text-[1.8vw] color-text-subbold cursor-pointer hover:color-bg-subbold hover:text-white bg-white"
                 >
                     확인
                 </div>
@@ -91,22 +91,22 @@ export default function RentFeeModal(props: Prop) {
         );
     } else if (rentFeeInfo.billType === 'bankrupt') {
         rentReceipt = (
-            <div className="w-[40%] h-[60%] bg-[#8e8e8e] flex flex-col absolute left-[30%] top-[20%] items-center z-10">
-                <div className="w-full h-[20%] p-[1vw] text-[2vw] text-white flex justify-center items-end">
+            <div className="relative w-[40%] h-[50%] bg-[#ffd1d1] flex flex-col items-center z-10 border-[0.3vw] color-border-subbold rounded-[0.6vw]">
+                <div className="w-full h-[20%] p-[1vw] text-[2vw] text-red-500 flex justify-center items-end">
                     파산 고지서
                 </div>
-                <hr className="bg-white w-[90%] h-[0.3vw]"></hr>
-                <div className="text-[2vw] w-full h-[10%] text-white">
+                <hr className="color-bg-subbold w-[90%] h-[0.3vw]"></hr>
+                <div className="text-[1.8vw] w-full h-[30%] color-text-subbold flex items-center justify-center">
                     {duration}
                 </div>
-                <div className="text-[2vw] text-right w-full h-[10%] p-[1vw] text-white">{`${rentFeeInfo.rentFee.toLocaleString()}원`}</div>
+                <div className="text-[2vw] text-right w-full h-[30%] p-[1vw] flex items-center justify-end color-text-subbold">{`${rentFeeInfo.rentFee.toLocaleString()}원`}</div>
                 <div className="text-[2vw] text-center w-[90%] h-[50%] p-[1vw] text-white overflow-y-auto break-keep flex flex-col justify-around items-center">
                     <p>모든 품목을 압류하더라도 임대료 납부가 불가능합니다.</p>
                     <p>GAME OVER...</p>
                 </div>
                 <div
                     onClick={props.endGame}
-                    className="w-[90%] p-[1vw] h-[10%] m-[1vw] border-[0.2vw] border-white text-[2vw] text-white flex justify-center items-center cursor-pointer hover:bg-white hover:text-[#8e8e8e]"
+                    className="w-[50%] p-[0.6vw] m-[1vw] border-[0.2vw] rounded-[0.6vw] color-border-subbold text-[1.8vw] color-text-subbold cursor-pointer hover:color-bg-subbold hover:text-white bg-white"
                 >
                     다시 시작하기
                 </div>

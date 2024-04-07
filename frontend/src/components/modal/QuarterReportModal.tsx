@@ -103,16 +103,17 @@ export default function QuarterReportModal(props: Prop) {
             ) : mode === 1 ? (
                 <>
                     {/* x버튼 */}
-                    <div
-                        className="w-[60%] h-[70%] absolute left-[20%] top-[15%] color-border-subbold border-[0.5vw] bg-white z-10 flex items-center color-text-subbold"
-                        style={{ transform: 'rotate(-5deg)' }}
-                    ></div>
-                    <div className="w-[60%] h-[70%] absolute left-[20%] top-[15%] color-border-subbold border-[0.5vw] bg-white z-20 flex flex-col items-center color-text-subbold">
-                        <div className="w-full h-[15%] px-[1vw] py-[1vh] flex justify-center items-center">
-                            <p className="text-[2vw]">{`${year}년차 ${season} 결산`}</p>
+                    <img
+                        className="absolute z-20 w-[74%] h-[88%]"
+                        src="/src/assets/images/layout/ui-bookwrap1.png"
+                        alt=""
+                    />
+                    <div className="w-[60%] h-[70%] absolute left-[20%] top-[15%]  z-20 flex flex-col items-center color-text-subbold">
+                        <div className="w-full h-[15%] py-[1vh] flex justify-start items-center">
+                            <p className="text-[2vw] ps-[2vw]">{`${year}년차 ${season} 결산`}</p>
                         </div>
                         <div className="w-full px-[1vw] h-[0.3vh]">
-                            <div className="w-full h-full color-bg-subbold"></div>
+                            <div className="w-[48%] h-full color-bg-subbold"></div>
                         </div>
                         <div className="w-full h-[85%]">
                             <QuarterPage1
