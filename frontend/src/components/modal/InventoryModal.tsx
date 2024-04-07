@@ -71,12 +71,15 @@ export default function InventoryModal(props: inventoryType) {
                 구매/판매 창으로
             </div>
             <div
-                className="absolute text-[2vw] flex items-center justify-center text-white top-[0.4vw] right-[0.4vw] w-[4vw] h-[4vw] border-[0.4vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer"
+                className="absolute flex items-center justify-center top-[-1vw] right-[-1vw] w-[6vw] h-[6vw] cursor-pointer btn-animation"
                 onClick={() => {
                     closeInventoryModal();
                 }}
             >
-                X
+                <img
+                    src="/src/assets/images/layout/ui-icon-closebtn.webp"
+                    alt=""
+                />
             </div>
         </section>
     );
