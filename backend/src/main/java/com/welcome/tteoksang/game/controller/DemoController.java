@@ -1,13 +1,12 @@
 package com.welcome.tteoksang.game.controller;
 
-import com.welcome.tteoksang.game.service.DemoServiceImpl;
+import com.welcome.tteoksang.game.service.DemoService;
 import com.welcome.tteoksang.game.service.PublicService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 @Controller
 @RequiredArgsConstructor
@@ -15,25 +14,30 @@ import org.springframework.web.bind.annotation.RestController;
 public class DemoController {
 
     private final PublicService publicService;
-    private final DemoServiceImpl demoService;
+    private final DemoService demoService;
 
-    @GetMapping("/set-turn/{turnNumber}")
-    public void setTurn(@PathVariable int turnNumber){
-        // turnNumber로 턴 정보 세팅
-        // 그 전 값으로 적용중 이벤트 및 뉴스 세팅
+    @GetMapping("/init-turn")
+    public ResponseEntity<Void> initTurn() {
         demoService.initDemo();
 
+        return ResponseEntity.ok().build();
     }
+
     @GetMapping("/next-turn")
-    public void nextTurn(){
-
+    public ResponseEntity<Void> nextTurn() {
+        demoService.nextTurn();
+        return ResponseEntity.ok().build();
     }
+
     @GetMapping("/take-break")
-    public void takeBreak(){
-
+    public ResponseEntity<Void> takeBreak() {
+        demoService.takeBreak();
+        return ResponseEntity.ok().build();
     }
-    @GetMapping("/finish-break")
-    public void finishBreak(){
 
+    @GetMapping("/finish-break")
+    public ResponseEntity<Void> finishBreak() {
+        demoService.finishBreak();
+        return ResponseEntity.ok().build();
     }
 }
