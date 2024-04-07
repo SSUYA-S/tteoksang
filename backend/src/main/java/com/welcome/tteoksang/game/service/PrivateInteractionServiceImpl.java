@@ -412,7 +412,7 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
         // 로그 저장
         List<String> logList = new ArrayList<>();
         if (redisGameInfo != null) {
-            int nextWarehouseLevel = redisGameInfo.getWarehouseLevel() + 1;
+            int nextWarehouseLevel = redisGameInfo.getWarehouseLevel();
             try {
                 // 다음 레벨이 있는지 확인
                 brokerRepository.findById(nextWarehouseLevel).orElseThrow(BrokerNotExistException::new);
@@ -464,7 +464,7 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
         // 로그 저장
         List<String> logList = new ArrayList<>();
         if (redisGameInfo != null) {
-            int nextBrokerLevel = redisGameInfo.getBrokerLevel() + 1;
+            int nextBrokerLevel = redisGameInfo.getBrokerLevel();
             try {
                 // 다음 레벨이 있는지 확인
                 brokerRepository.findById(nextBrokerLevel).orElseThrow(BrokerNotExistException::new);
@@ -517,7 +517,7 @@ public class PrivateInteractionServiceImpl implements PrivateInteractionService 
         // 로그 저장
         List<String> logList = new ArrayList<>();
         if (redisGameInfo != null) {
-            int nextVehicleLevel = redisGameInfo.getVehicleLevel() + 1;
+            int nextVehicleLevel = redisGameInfo.getVehicleLevel();
             try {
                 // 다음 레벨이 있는지 확인
                 vehicleRepository.findById(nextVehicleLevel).orElseThrow(VehicleNotExistException::new);
