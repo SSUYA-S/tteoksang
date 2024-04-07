@@ -1,16 +1,14 @@
 package com.welcome.tteoksang.game.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.welcome.tteoksang.game.dto.*;
 import com.welcome.tteoksang.game.dto.event.Article;
 import com.welcome.tteoksang.game.dto.event.BreakTimeInfo;
-import com.welcome.tteoksang.game.dto.log.LogMessage;
-import com.welcome.tteoksang.game.dto.log.SpecialEventLogInfo;
 import com.welcome.tteoksang.game.dto.res.GameMessageRes;
 import com.welcome.tteoksang.game.dto.event.NewsInfo;
 import com.welcome.tteoksang.game.dto.event.PublicEventInfo;
-import com.welcome.tteoksang.game.dto.result.half.TteokValues;
+import com.welcome.tteoksang.game.dto.result.TestExample;
+import com.welcome.tteoksang.game.dto.result.half.Half;
 import com.welcome.tteoksang.game.dto.server.*;
 import com.welcome.tteoksang.game.dto.user.PlayTimeInfo;
 import com.welcome.tteoksang.game.exception.AccessToInvalidWebSocketIdException;
@@ -21,7 +19,6 @@ import com.welcome.tteoksang.game.repository.ProductFluctuationRepository;
 import com.welcome.tteoksang.game.repository.ServerSeasonInfoRepository;
 import com.welcome.tteoksang.game.scheduler.ScheduleService;
 import com.welcome.tteoksang.game.scheduler.ServerInfo;
-import com.welcome.tteoksang.kafka.KafkaTest;
 import com.welcome.tteoksang.redis.RedisPrefix;
 import com.welcome.tteoksang.redis.RedisService;
 import com.welcome.tteoksang.resource.dto.Event;
@@ -29,10 +26,13 @@ import com.welcome.tteoksang.resource.repository.EventRepository;
 import com.welcome.tteoksang.resource.repository.ProductRepository;
 import com.welcome.tteoksang.resource.type.MessageType;
 import com.welcome.tteoksang.resource.type.ProductType;
+import com.welcome.tteoksang.user.dto.User;
 import com.welcome.tteoksang.user.repository.GameInfoRepository;
+import com.welcome.tteoksang.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -47,13 +47,14 @@ import java.util.stream.Collectors;
 @Slf4j
 @Validated
 @RequiredArgsConstructor
-public class PublicServiceImpl implements PublicService, PrivateGetPublicService {
+public class PublicServiceImpl implements PublicService, PrivateGetPublicService, DemoService {
 
     private final ScheduleService scheduleService;
     private final RedisService redisService;
     private final PrivateScheduleService privateScheduleService;
     private final RestTemplateService restTemplateService;
     private final ReportService reportService;
+    private final UserService userService;
 
     private final GameInfoRepository gameInfoRepository;
     private final ProductRepository productRepository;
@@ -104,6 +105,200 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
 
     private final int PLAY_LONG_TIME = 3; //3시간
 
+    private final int DEMO_INIT_TURN=179;
+
+    public void initDemo() {
+        redisService.deleteValues(RedisPrefix.SERVER_NEWS.prefix());
+        redisService.deleteValues(RedisPrefix.SERVER_INFO.prefix());
+        if (!redisService.hasKey(RedisPrefix.SERVER_BREAK.prefix())) {
+            sendPublicMessage(MessageType.GET_BREAK_TIME, BreakTimeInfo.builder()
+                    .breakName("시즌")
+                    .isBreakTime(false)
+                    .breakTime(LocalDateTime.now())
+                    .ingameTime(LocalDateTime.now())
+                    .build());
+            redisService.deleteValues(RedisPrefix.SERVER_BREAK.prefix());
+        }
+        ServerSeasonInfo seasonInfo = serverSeasonInfoRepository.findFirstByOrderBySeasonIdDesc();
+        int gameSeason = 1;
+        if (seasonInfo != null) {
+            gameSeason = seasonInfo.getSeasonId() + 1;
+        }
+        serverInfo.setSeasonId(gameSeason);
+        //턴, 이벤트 초기화
+        serverInfo.setCurrentTurn(DEMO_INIT_TURN);
+        serverInfo.setTurnStartTime(LocalDateTime.now());
+        currentEventList = new ArrayList<>();
+        List<Event> allEvent = eventRepository.findAll(Sort.by(
+                Sort.Order.asc("eventType"),
+                Sort.Order.asc("eventName"),
+                Sort.Order.asc("eventVariance")
+        ));
+        currentEventList.add(allEvent.get(193));
+        currentEventList.add(allEvent.get(340));
+        currentEventList.add(allEvent.get(359));
+        currentEventList.add(allEvent.get(369));
+        Set<Integer> buyableProducts = new HashSet<>(BUYABLE_PRODUCT_NUM);
+        serverInfo.setSpecialEventIdList(currentEventList.stream().map(x -> {
+                    buyableProducts.add(x.getProductId());
+                    return x.getEventId();
+
+                }
+        ).collect(Collectors.toList()));
+
+        serverSeasonInfoRepository.save(ServerSeasonInfo.builder().seasonId(gameSeason).startedAt(serverInfo.getTurnStartTime()).build());
+        occurableEventList = new ArrayList<>(); //발생가능한 이벤트 종류: 공통+현재계절
+        occurableProductIdList = new ArrayList<>(); //구매가능한 작물 종류: 공통+현재계절
+        updateQuarterYearList(serverInfo.getCurrentTurn()); //계절마다 발생가능한 이벤트, 작물 초기화 ->처음에 updateTurn으로 시작하면서 진행됨
+
+        int possibleProductNum = occurableProductIdList.size();
+        while (buyableProducts.size() < BUYABLE_PRODUCT_NUM) {
+            int i = random.nextInt(possibleProductNum);
+            int x=occurableProductIdList.get(i);
+            if (!buyableProducts.contains(x)) {
+                buyableProducts.add(x);
+            }
+        }
+        serverInfo.setBuyableProducts(buyableProducts.stream().toList());
+        log.debug(currentEventList.toString());
+        log.debug(buyableProducts.toString());
+
+
+        //뉴스 초기화
+        List<Article> articles = currentEventList.stream().map(x -> Article.builder().articleHeadline(x.getEventHeadline()).build()).toList();
+        redisService.setValues(RedisPrefix.SERVER_NEWS.prefix(), NewsInfo.builder()
+                .publishTurn(167)
+                .articleList(articles)
+                .build());
+
+
+        //작물정보 세팅
+        fluctationInfoMap = new HashMap<>();
+        Map<Integer, ServerProductInfo> productInfoMap = new HashMap<>();
+
+        productRepository.findAll().stream().forEach((product) -> {
+            ProductFluctuation fluctuation = productFluctuationRepository.findById(ProductFluctuationId.builder()
+                            .countPerTenDays((serverInfo.getCurrentTurn()%360)/10).productId(product.getProductId())
+                            .build())
+                    .orElseThrow(ProductFluctuationNotFoundException::new);
+
+            double maxFluctuationRate = fluctuation.getMaxFluctuationRate();
+            double minFluctuationRate = fluctuation.getMinFluctuationRate();
+            if (maxFluctuationRate == 0) {
+                //fluctuation 정보 없는 것들은 전체의 평균 fluctuation 이용
+                List<ProductFluctuation> productFluctuationList = productFluctuationRepository.findByProductId(product.getProductId());
+                maxFluctuationRate = productFluctuationList.stream().filter(productFluctuation -> productFluctuation.getMaxFluctuationRate() > 0)
+                        .mapToDouble(ProductFluctuation::getMaxFluctuationRate).average().getAsDouble();
+                minFluctuationRate = productFluctuationList.stream().filter(productFluctuation -> productFluctuation.getMinFluctuationRate() > 0)
+                        .mapToDouble(ProductFluctuation::getMinFluctuationRate).average().getAsDouble();
+            }
+            fluctationInfoMap.put(product.getProductId(), FluctationInfo.builder()
+                    .productAvgCost(product.getProductAvgCost())
+                    .minFluctuationRate(minFluctuationRate)
+                    .maxFluctuationRate(maxFluctuationRate)
+                    .EventEffect(0.0)
+                    .build());
+
+                int cost = product.getProductDefaultCost();
+                if (cost == 0) {
+                    //default 가격 정보 없는 경우 평균 가격 사용
+                    cost = product.getProductAvgCost().intValue();
+                }
+                productInfoMap.put(product.getProductId(), ServerProductInfo.builder()
+                        .productCost(cost)
+                        .productFluctuation(0)
+                        .productMaxQuantity((int) (C / product.getProductAvgCost()))
+                        .build());
+
+        });
+        currentEventList.stream().forEach(
+                event -> {
+                    fluctationInfoMap.get(event.getProductId()).setEventEffect(event.getEventVariance());
+                }
+        );
+        serverInfo.setProductInfoMap(productInfoMap);
+
+        eventIndexList = new ArrayList<>(NEWS_NUM); //productInfoMap의 인덱스에 해당: 선정한 {NEWS_NUM}개 후보 이벤트
+        nextEventList = new ArrayList<>();
+
+        //이벤트 이름에 따른 이벤트 발생 개수 셀 해시맵 생성
+        Map<String, Integer> eventCountMap = new HashMap<>();
+        eventRepository.findAll().stream()
+                .map(Event::getEventName)
+                .collect(Collectors.toSet())
+                .forEach(eventName -> eventCountMap.put(eventName, 0));
+        Map<Integer, CostRateStatistics> productCostRateMap = serverInfo.getProductInfoMap().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> new CostRateStatistics(entry.getValue().getProductCost(), 0), (a, b) -> b));
+
+        redisService.setValues(RedisPrefix.SERVER_STATISTICS.prefix(), RedisStatistics.builder()
+                .eventCountMap(eventCountMap)
+                .productCostRateMap(productCostRateMap)
+                .build());
+
+
+        redisService.setValues(RedisPrefix.SERVER_HALF_STATISTICS.prefix(), RedisHalfStatistics.builder()
+                .productCostRateMap(serverInfo.getProductInfoMap().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> new CostRateStatistics(entry.getValue().getProductCost(), 0), (a, b) -> b)))
+                .build());
+        fluctuateProduct();
+        log.debug(serverInfo.getCurrentTurn() + "번째 턴 실행 :" + serverInfo.getTurnStartTime());
+        sendPublicMessage(MessageType.GET_PUBLIC_EVENT,
+                PublicEventInfo.builder()
+                        .inGameTime(LocalDateTime.now())
+                        .turn(serverInfo.getCurrentTurn())
+                        .turnStartTime(serverInfo.getTurnStartTime())
+                        .specialEventId(serverInfo.getSpecialEventIdList())
+                        .productInfoList(serverInfo.getProductInfoMap().entrySet().stream().map(entry ->
+                                ProductInfo.builder()
+                                        .productId(entry.getKey())
+                                        .productCost(entry.getValue().getProductCost())
+                                        .productMaxQuantity(entry.getValue().getProductMaxQuantity())
+                                        .productFluctuation(entry.getValue().getProductFluctuation())
+                                        .build()
+                        ).toList())
+                        .buyableProductList(serverInfo.getBuyableProducts())
+                        .build());
+
+    }
+
+    @Override
+    public void nextTurn() {
+        if(serverInfo.getCurrentTurn()%(quarterYearTurnPeriod*2)==0){
+            endHalfYearGame();
+            return;
+        }
+        if(redisService.hasKey(RedisPrefix.SERVER_BREAK.prefix())){
+            return;
+        }
+        executePerTurn();
+    }
+
+    @Override
+    public void takeBreak() {
+        endHalfYearGame();
+    }
+
+    @Override
+    public void finishBreak() {
+        endBreak();
+        redisService.setValues(RedisPrefix.SERVER_HALF_STATISTICS.prefix(), RedisHalfStatistics.builder()
+                .productCostRateMap(serverInfo.getProductInfoMap().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> new CostRateStatistics(entry.getValue().getProductCost(), 0), (a, b) -> b)))
+                .build());
+        executePerTurn();
+        User twn = userService.findTwn("twnkm7089@gmail.com");
+        String userId = twn.getUserId();
+
+        String responseData = TestExample.half;
+        ObjectMapper mapper = new ObjectMapper();
+        Half message = null;
+        try {
+            message = mapper.readValue(responseData, Half.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        sendPrivateMessage(userId,MessageType.HALF_REPORT,message);
+    }
+
+
     private boolean loadServerInfo() {
 //        if(redisService.hasKey(RedisPrefix.SERVER_INFO.prefix())){
 //            ServerInfo loadedServerInfo=(ServerInfo) redisService.getValues(RedisPrefix.SERVER_INFO.prefix());
@@ -136,7 +331,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         boolean hasServerData = loadServerInfo();
         occurableEventList = new ArrayList<>(); //발생가능한 이벤트 종류: 공통+현재계절
         occurableProductIdList = new ArrayList<>(); //구매가능한 작물 종류: 공통+현재계절
-        updateQuarterYearList(); //계절마다 발생가능한 이벤트, 작물 초기화 ->처음에 updateTurn으로 시작하면서 진행됨 
+        updateQuarterYearList(serverInfo.getCurrentTurn()); //계절마다 발생가능한 이벤트, 작물 초기화 ->처음에 updateTurn으로 시작하면서 진행됨
         //TODO - 최적화 확인
         //현재 적용 중 이벤트
         currentEventList = serverInfo.getSpecialEventIdList().stream().map(
@@ -228,7 +423,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         scheduleService.register(NEWSPAPER, newsInitialTurn * turnPeriodSec, eventPeriodSec, () -> {
             createNewspaper();
         });
-        restTemplateService.startHalfYearRequest(serverInfo.getSeasonId(), serverInfo.getCurrentTurn()/(quarterYearTurnPeriod*2)+1);
+//        restTemplateService.startHalfYearRequest(serverInfo.getSeasonId(), serverInfo.getCurrentTurn() / (quarterYearTurnPeriod * 2) + 1);
         redisService.setValues(RedisPrefix.SERVER_HALF_STATISTICS.prefix(), RedisHalfStatistics.builder()
                 .productCostRateMap(serverInfo.getProductInfoMap().entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> new CostRateStatistics(entry.getValue().getProductCost(), 0), (a, b) -> b)))
                 .build());
@@ -239,22 +434,22 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         scheduleService.remove(TURN);
         scheduleService.remove(PUBLIC_EVENT);
         scheduleService.remove(NEWSPAPER);
-        restTemplateService.endHalfYearRequest(serverInfo.getSeasonId(), serverInfo.getCurrentTurn()/(quarterYearTurnPeriod*2));
+//        restTemplateService.endHalfYearRequest(serverInfo.getSeasonId(), serverInfo.getCurrentTurn() / (quarterYearTurnPeriod * 2));
 
         // TODO - redisStatistics에서 떡상,떡락... 하기
         RedisHalfStatistics redisHalfStatistics = (RedisHalfStatistics) redisService.getValues(RedisPrefix.SERVER_HALF_STATISTICS.prefix());
-        RedisStatistics redisStatistics= (RedisStatistics) redisService.getValues(RedisPrefix.SERVER_STATISTICS.prefix());
+        RedisStatistics redisStatistics = (RedisStatistics) redisService.getValues(RedisPrefix.SERVER_STATISTICS.prefix());
         log.debug(redisStatistics.getEventCountMap().toString());
 
         redisHalfStatistics.getProductCostRateMap().entrySet().stream().forEach(entry -> {
 //            productCostRateMap.put(entry.getKey(), redisStatisticsUtil.makeCompact(entry.getValue()));
-            CostRateStatistics costRateStatistics= redisStatisticsUtil.makeCompact(entry.getValue());
+            CostRateStatistics costRateStatistics = redisStatisticsUtil.makeCompact(entry.getValue());
             //통계구하기
 //            long tteoksang=redisStatisticsUtil.getTteoksang(costRateStatistics);
 //            long tteokrock=redisStatisticsUtil.getTteokrock(costRateStatistics);
 //            log.debug(entry.getKey()+": "+tteoksang+" / "+tteokrock);
             //전체통계에 반영
-            redisStatisticsUtil.concatCostRateStatistics(redisStatistics.getProductCostRateMap().get(entry.getKey()),costRateStatistics );
+            redisStatisticsUtil.concatCostRateStatistics(redisStatistics.getProductCostRateMap().get(entry.getKey()), costRateStatistics);
         });
         redisService.setValues(RedisPrefix.SERVER_HALF_STATISTICS.prefix(), redisHalfStatistics);
         redisService.setValues(RedisPrefix.SERVER_STATISTICS.prefix(), redisStatistics);
@@ -280,8 +475,8 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         //레디스 통계정보
         RedisStatistics redisStatistics = (RedisStatistics) redisService.getValues(RedisPrefix.SERVER_STATISTICS.prefix());
         redisStatistics.getProductCostRateMap().entrySet().stream().forEach(
-                entry->{
-                    CostRateStatistics costRateStatistics= redisStatisticsUtil.makeCompact(entry.getValue());
+                entry -> {
+                    CostRateStatistics costRateStatistics = redisStatisticsUtil.makeCompact(entry.getValue());
                     //통계구하기
                     redisStatisticsUtil.getTteoksang(costRateStatistics);
                     redisStatisticsUtil.getTteokrock(costRateStatistics);
@@ -316,15 +511,6 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
                         ).toList())
                         .buyableProductList(serverInfo.getBuyableProducts())
                         .build());
-        // 계절결산
-//        if (serverInfo.getCurrentTurn() != 1 && serverInfo.getCurrentTurn() % quarterYearTurnPeriod == 1) {
-//            privateScheduleService.getConnectedUserId().stream().forEach(
-//                    userId->{
-//                        GameMessageRes quarterResult = reportService.sendQuarterResult(userId);
-//                        sendPrivateMessage(userId,quarterResult.getType(), quarterResult.getBody());
-//                    }
-//            );
-//        }
         if (serverInfo.getCurrentTurn() % 10 == 9) {
             updateFluctuationInfoPer10Days();
         }
@@ -332,9 +518,9 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
 
 
     //계절마다 나타나는 작물, 이벤트 리스트 변경
-    public void updateQuarterYearList() {
+    public void updateQuarterYearList(int currentTurn) {
         ProductType currentSeason;
-        switch ((serverInfo.getCurrentTurn() % (quarterYearTurnPeriod * 4)) / quarterYearTurnPeriod) {
+        switch ((currentTurn % (quarterYearTurnPeriod * 4)) / quarterYearTurnPeriod) {
             case 0:
                 currentSeason = ProductType.SPRING;
                 break;
@@ -407,7 +593,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
 
     public void updateTurn() {
         if (serverInfo.getCurrentTurn() % quarterYearTurnPeriod == 0) { //계절 변경. 0이라는 의미는..  이제
-            updateQuarterYearList();
+            updateQuarterYearList(serverInfo.getCurrentTurn());
         }
         serverInfo.setCurrentTurn(serverInfo.getCurrentTurn() + 1);
         serverInfo.setTurnStartTime(LocalDateTime.now());
@@ -438,7 +624,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
 
     //가격 변동
     public void fluctuateProduct() {
-        RedisHalfStatistics redisHalfStatistics=(RedisHalfStatistics) redisService.getValues(RedisPrefix.SERVER_HALF_STATISTICS.prefix());
+        RedisHalfStatistics redisHalfStatistics = (RedisHalfStatistics) redisService.getValues(RedisPrefix.SERVER_HALF_STATISTICS.prefix());
         //FluctMap에 따라 각 작물 가격 변동
         Map<Integer, ServerProductInfo> tempFluctMap = new HashMap<>();
         for (Map.Entry<Integer, ServerProductInfo> entry : serverInfo.getProductInfoMap().entrySet()) {
@@ -447,7 +633,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
             FluctationInfo fluctationInfo = fluctationInfoMap.get(productId);
             //random값 생성
             double randomRate;
-            double offset=0.0;
+            double offset = 0.0;
             double eventEffectRate = 1 + fluctationInfo.getEventEffect() / 100;
             if (productInfo.getProductCost() >= fluctationInfo.getProductAvgCost() * eventEffectRate * MAX_AVG_MULTIPLE_LIMIT) {
                 //평균값의 N배 이상인 경우, min, maxRate 값 변동! -> 변동폭 만큼 각 rate에서 준다
@@ -456,7 +642,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
                 randomRate = random.nextDouble(minRate, maxRate);
 //                log.debug(productId + "@@@@@너무 비싸요@@@@@" + minRate + ">" + randomRate + "<" + maxRate);
                 //TODO- 그럼에도 계속 올라가는 경우 조정해줘야 할지 논의 필요-> 해줘야 한다...
-                offset=fluctationInfo.getProductAvgCost()*randomRate*(1+CORRECTION_VALUE);
+                offset = fluctationInfo.getProductAvgCost() * randomRate * (1 + CORRECTION_VALUE);
             } else if (fluctationInfo.getMinFluctuationRate() > 1) {
                 //증가만 하는 경우
                 randomRate = random.nextDouble(fluctationInfo.getMinFluctuationRate() * eventEffectRate * (1 - CORRECTION_VALUE), (fluctationInfo.getMaxFluctuationRate() + 0.001) * eventEffectRate);
@@ -464,13 +650,13 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
                 //평균적인 경우
                 randomRate = random.nextDouble(fluctationInfo.getMinFluctuationRate() * eventEffectRate * (1 - CORRECTION_VALUE), (fluctationInfo.getMaxFluctuationRate() + 0.001) * eventEffectRate * (1 + CORRECTION_VALUE));
             }
-            int newCost = (int) (productInfo.getProductCost() * randomRate-offset);
+            int newCost = (int) (productInfo.getProductCost() * randomRate - offset);
             if (productInfo.getProductCost() <= fluctationInfo.getProductAvgCost() * MIN_AVG_MULTIPLE_LIMIT) {
                 //가격이 너무 작은 경우, 평균 가격의 일부 얻으므로써 보정
                 newCost += (int) (fluctationInfo.getProductAvgCost() * randomRate * MIN_AVG_MULTIPLE_LIMIT);
             }
             //TODO 가격 변동 저장...
-            redisStatisticsUtil.addCostInfo(redisHalfStatistics.getProductCostRateMap().get(productId),new CostInfo(newCost, serverInfo.getCurrentTurn()));
+            redisStatisticsUtil.addCostInfo(redisHalfStatistics.getProductCostRateMap().get(productId), new CostInfo(newCost, serverInfo.getCurrentTurn()));
             //임시 배열에 저장, 한 번에 값들 업데이트 하기 위함!
             tempFluctMap.put(productId, ServerProductInfo.builder()
                     .productCost(newCost)
@@ -512,15 +698,16 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
                 }
         );
     }
-//TODO- PlayTIME ALERT
-        @Scheduled(cron = "0 0  * * * *")
+
+    //TODO- PlayTIME ALERT
+    @Scheduled(cron = "0 0  * * * *")
 //    @Scheduled(cron = "0 * * * * *")
     public void checkLongPlayTime() {
         LocalDateTime currentTime = LocalDateTime.now();
         privateScheduleService.getUserAlertPlayTimeMap().entrySet().stream().forEach(
                 entry -> {
 //                    if (Duration.between(entry.getValue().getChecked(), currentTime).toMinutes() >= PLAY_LONG_TIME) {
-                    if (Duration.between(entry.getValue().getChecked(),currentTime).toHours() >= PLAY_LONG_TIME) {
+                    if (Duration.between(entry.getValue().getChecked(), currentTime).toHours() >= PLAY_LONG_TIME) {
 
                         String userId = entry.getKey();
                         sendPrivateMessage(userId, MessageType.ALERT_PLAYTIME, PlayTimeInfo.builder()
@@ -619,7 +806,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
             articles.add(Article.builder().articleHeadline("[단독] 신문을 통해 곧 발생할 이벤트에 대한 정보를 얻을 수 있다 전해..").build());
             articles.add(Article.builder().articleHeadline("합숙하며 플젝하는 팀이 있다? '충격 실화' 또는 '만우절 거짓말' 대중 의견 분분..").build());
             articles.add(Article.builder().articleHeadline("오늘의 노래 추천: 첫만남은 계획대로 되지 않아").build());
-            articles.add(Article.builder().articleHeadline("떡상 화이화이팅ㅠ").build());
+            articles.add(Article.builder().articleHeadline("떡잎부터 시작하는 상인생활 떡상 기원!").build());
             return NewsInfo.builder()
                     .publishTurn(0)
                     .articleList(articles)
