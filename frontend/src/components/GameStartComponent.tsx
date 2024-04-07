@@ -95,22 +95,11 @@ export default function GameStartComponent(props: startType) {
     const cookies = new Cookies();
 
     useEffect(() => {
-        playing ? audio.play() : audio.pause();
-    }, [playing, audio]);
-
-    useEffect(() => {
         audio.addEventListener('ended', () => setPlaying(false));
         return () => {
             audio.removeEventListener('ended', () => setPlaying(false));
         };
     }, [audio]);
-
-    const toggle = () => {
-        if (playing) setPlaying(false);
-        else {
-            setPlaying(true);
-        }
-    };
 
     const onClickLogin = () => {
         //로그인 표시
@@ -173,7 +162,6 @@ export default function GameStartComponent(props: startType) {
 
     /**게임 시작 */
     const onReady = () => {
-        audio.pause();
         props.setStartFlag(true);
         setIsTryToReset(false);
     };
@@ -351,7 +339,6 @@ export default function GameStartComponent(props: startType) {
                     <div
                         className=" rounded-full flex items-center justify-center my-[4vw] px-[1vw] py-[0.4vw] text-[2vw] font-bold cursor-pointer btn-animation"
                         onClick={() => {
-                            toggle();
                             onClickLogin();
                         }}
                     >
@@ -367,11 +354,11 @@ export default function GameStartComponent(props: startType) {
     };
     return (
         <section
-            className="relative w-full h-full flex flex-col justify-center items-center"
+            className="relative w-full h-full flex flex-col justify-center items-center "
             style={{
                 backgroundImage:
                     'url(/src/assets/images/background/bg-start.webp)',
-                backgroundSize: 'contain ',
+                backgroundSize: 'cover ',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',
             }}
@@ -439,35 +426,6 @@ export default function GameStartComponent(props: startType) {
                     onClick={() => setIsMyPageOpen(true)}
                 />
                 <div className="h-[5%]" />
-                {playing ? (
-                    <div
-                        className="w-[50%] h-[30%] cursor-pointer btn-animation"
-                        style={{
-                            backgroundImage:
-                                'url(/src/assets/images/icon/ui-icon-volumeon.png)',
-                            backgroundSize: 'contain ',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat',
-                        }}
-                        onClick={() => {
-                            toggle();
-                        }}
-                    ></div>
-                ) : (
-                    <div
-                        className="w-[50%] h-[30%] cursor-pointer btn-animation"
-                        style={{
-                            backgroundImage:
-                                'url(/src/assets/images/icon/ui-icon-volumeoff.png)',
-                            backgroundSize: 'contain ',
-                            backgroundPosition: 'center',
-                            backgroundRepeat: 'no-repeat',
-                        }}
-                        onClick={() => {
-                            toggle();
-                        }}
-                    ></div>
-                )}
             </div>
             <div className="relative w-full h-[80%] flex flex-col justify-center items-center z-10">
                 <div

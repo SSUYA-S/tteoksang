@@ -36,7 +36,7 @@ interface Prop {
     setWebSocketClient: Dispatch<SetStateAction<Client>>;
     setIngameTurn: React.Dispatch<React.SetStateAction<number>>;
     setIngameTime: React.Dispatch<React.SetStateAction<string>>;
-    setTurnStartTime: React.Dispatch<React.SetStateAction<string>>;
+    setTurnStartTime: React.Dispatch<React.SetStateAction<number>>;
     setNewsPublishTurn: React.Dispatch<React.SetStateAction<number>>;
     setNewsArticleList: React.Dispatch<React.SetStateAction<Article[]>>;
     setNewsFlag: React.Dispatch<React.SetStateAction<boolean>>;
@@ -66,7 +66,7 @@ export default function WebSocket(props: Prop) {
             .then((res) => {
                 if (res.status === httpStatusCode.OK) {
                     const id = res.data.webSocketId;
-                    // console.log('websocketId : ' + id);
+                    console.log('websocketId : ' + id);
                     const client = handshake(id);
                     // console.log('websocketId : ' + id);
                     client.onConnect = () => {
@@ -104,9 +104,40 @@ export default function WebSocket(props: Prop) {
 
                                         props.setIngameTurn(info.turn);
                                         props.setIngameTime(info.inGameTime);
-                                        props.setTurnStartTime(
-                                            info.turnStartTime
-                                        );
+
+                                        const numberTurnStartTime =
+                                            info.turnStartTime.slice(11, 19);
+                                        const numberInGameTime =
+                                            info.inGameTime.slice(11, 19);
+                                        //분이 같으면
+                                        if (
+                                            numberTurnStartTime.slice(3, 5) ===
+                                            numberInGameTime.slice(3, 5)
+                                        ) {
+                                            const timeA =
+                                                +numberInGameTime.slice(6, 9);
+                                            const timeB =
+                                                +numberTurnStartTime.slice(
+                                                    6,
+                                                    9
+                                                );
+                                            console.log(timeA - timeB);
+                                            props.setTurnStartTime(
+                                                timeA - timeB
+                                            );
+                                        } else {
+                                            const timeA =
+                                                +numberInGameTime.slice(6, 9) +
+                                                60;
+                                            const timeB =
+                                                +numberTurnStartTime.slice(
+                                                    6,
+                                                    9
+                                                );
+                                            props.setTurnStartTime(
+                                                timeA - timeB
+                                            );
+                                        }
 
                                         if (info.turn === 1) {
                                             client.publish({
@@ -287,6 +318,33 @@ export default function WebSocket(props: Prop) {
                                     break;
                                 case 'GET_INGAME_TIME':
                                     //추가할 것) 시간 관련 로직
+                                    console.log('작동');
+                                    const res = msg.body;
+                                    const numberTurnStartTime =
+                                        res.turnStartTime.slice(11, 19);
+                                    const numberInGameTime =
+                                        res.inGameTime.slice(11, 19);
+                                    //분이 같으면
+                                    if (
+                                        numberTurnStartTime.slice(3, 5) ===
+                                        numberInGameTime.slice(3, 5)
+                                    ) {
+                                        const timeA = +numberInGameTime.slice(
+                                            6,
+                                            9
+                                        );
+                                        const timeB =
+                                            +numberTurnStartTime.slice(6, 9);
+                                        props.setTurnStartTime(timeA - timeB);
+                                    } else {
+                                        const timeA =
+                                            +numberInGameTime.slice(6, 9) + 60;
+                                        const timeB =
+                                            +numberTurnStartTime.slice(6, 9);
+                                        props.setTurnStartTime(timeA - timeB);
+                                    }
+                                    props.setIngameTurn(res.turn);
+                                    props.setIngameTime(numberInGameTime);
                                     break;
                                 case 'GET_PRIVATE_EVENT':
                                     //개인 이벤트 발생
@@ -512,6 +570,14 @@ export default function WebSocket(props: Prop) {
                 destination: `/app/private/${props.webSocketId}`,
                 body: JSON.stringify({
                     type: 'GET_NEWSPAPER',
+                    body: {},
+                }),
+            });
+            //지금 현재시간은?
+            props.client.publish({
+                destination: `/app/private/${props.webSocketId}`,
+                body: JSON.stringify({
+                    type: 'GET_INGAME_TIME',
                     body: {},
                 }),
             });

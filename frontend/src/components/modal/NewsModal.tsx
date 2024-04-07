@@ -25,8 +25,8 @@ export default function NewsModal(props: NewsType) {
                 props.setShowNews(false); // ESC 키가 눌리면 컴포넌트를 안 보이게 설정
             }
         };
-        // console.log('뉴스임미다');
-        // console.log(props.newsArticleList);
+        console.log('뉴스임미다');
+        console.log(props.newsArticleList);
         setDate(props.newsPublishTurn);
         // 컴포넌트가 마운트될 때 keydown 이벤트 리스너 추가
         document.addEventListener('keydown', handleKeyDown);
@@ -38,8 +38,8 @@ export default function NewsModal(props: NewsType) {
     }, []);
 
     useEffect(() => {
-        // console.log('새신문 도착');
-        // console.log(props.newsArticleList);
+        console.log('새신문 도착');
+        console.log(props.newsArticleList);
         setDate(props.newsPublishTurn);
         setCurrentNews(props.newsArticleList);
     }, [props.newsArticleList]);
@@ -48,7 +48,7 @@ export default function NewsModal(props: NewsType) {
         <div className="absolute w-[70%] h-[95%] animation-modal z-20">
             <div className="h-[15%]"></div>
             <div
-                className="relative w-full h-[85%] flex flex-col items-center justify-start text-black rounded-[0.8vw] pb-[2vw] border-[0.3vw] border-slate-800"
+                className="relative w-full h-[85%] flex flex-col items-center justify-start text-black rounded-[0.8vw] pb-[2vw] border-[0.3vw] border-gray-500"
                 style={{ backgroundColor: '#ececec' }}
             >
                 <div className="relative w-[90%] h-[35%] flex flex-col items-center">
@@ -65,7 +65,7 @@ export default function NewsModal(props: NewsType) {
                         <p className="w-full h-[0.2vw] bg-black"></p>
                     </div>
                     <div
-                        className="absolute text-[2.6vw] cursor-pointer btn-animation top-[1.6vw] right-[0vw]"
+                        className="absolute text-[2.6vw] cursor-pointer top-[1.6vw] right-[0vw]"
                         onClick={() => {
                             closeNewsModal();
                         }}
