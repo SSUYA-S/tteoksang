@@ -7,6 +7,7 @@ import com.welcome.tteoksang.game.scheduler.ServerInfo;
 import com.welcome.tteoksang.game.service.PrivateGetPublicService;
 import com.welcome.tteoksang.game.service.PrivateInfoService;
 import com.welcome.tteoksang.game.service.PrivateInteractionService;
+import com.welcome.tteoksang.resource.type.MessageType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -205,7 +206,16 @@ public class PrivateGameController {
                 responseBody=privateGetPublicService.searchNewspaper();
                 break;
             }
-
+            // 적용중인 이벤트 불러오기
+            case GET_EVENT_LIST: {
+                simpMessagingTemplate.convertAndSend("/topic/private/" + webSocketId,
+                        GameMessageRes.builder()
+                                .type(MessageType.GET_PUBLIC_EVENT)
+                                .isSuccess(true)
+                                .body(serverInfo.getSpecialEventIdList())
+                                .build());
+                return null;
+            }
             case GET_BREAK_TIME:
                 isSuccess=true;
                 responseBody=privateGetPublicService.searchBreakTime();
