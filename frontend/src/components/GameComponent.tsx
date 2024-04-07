@@ -131,9 +131,21 @@ export default function GameComponent(props: GameType) {
     const nowArticleIdx = useRef<number>(0);
 
     //신문이 왼쪽으로 흘러간다
+    //새 뉴스 오면 초기화
     useEffect(() => {
-        articleFlowLeft();
-    }, [newsArticleList, nowArticleIdx.current]);
+        if (articleBoxRef.current) {
+            articleBoxRef.current.style.animation = '';
+            nowArticleIdx.current = 0;
+            articleFlowLeft();
+        }
+    }, [newsArticleList]);
+
+    //애니메이션 끝날 때마다 반복 실행
+    useEffect(() => {
+        if (articleBoxRef.current) {
+            articleFlowLeft();
+        }
+    }, [nowArticleIdx.current]);
 
     /** articleFlowLeft()
      *  왼쪽으로 흘러가는 aritcle
@@ -149,11 +161,11 @@ export default function GameComponent(props: GameType) {
                     if (articleBoxRef.current) {
                         articleBoxRef.current.style.animation = '';
                         nowArticleIdx.current++;
+                        if (nowArticleIdx.current >= newsArticleList.length) {
+                            nowArticleIdx.current = 0;
+                        }
                     }
                 };
-            } else {
-                nowArticleIdx.current = 0;
-                return;
             }
         }
     };
@@ -591,75 +603,83 @@ export default function GameComponent(props: GameType) {
     /** 현재 이벤트를 보여주는 Element */
     const currentViewElement = () => {
         return (
-            <div className="absolute w-[60%] h-[60%]  flex flex-col items-center overflow-y-auto z-50">
-                <img
-                    src="/src/assets/images/layout/ui-board.webp"
-                    className="absolute w-full h-full -z-10"
-                    alt=""
-                />
-                {currentViewEvent.length > 0 ? (
-                    <div className="w-full text-center color-text-textcolor text-[3vw] mt-[2vw]">
-                        {currentViewEvent[0].eventName}
-                    </div>
-                ) : (
-                    <></>
-                )}
-                <div className="relative w-[90%] h-full flex flex-col items-center overflow-y-auto color-text-textcolor px-[2vw] mb-[2.4vw]">
-                    {currentViewEvent.map((item, index) => {
-                        return (
-                            <div
-                                className="relative w-full flex items-center justify-center my-[0.4vw] bg-white border-[0.4vw] color-border-subbold py-[1vw] rounded-[1vw]"
-                                key={'event key : ' + index}
-                            >
-                                <div className="w-[15%]">
-                                    <div
-                                        className={
-                                            'bg-no-repeat mx-auto sprite-img-crop ' +
-                                            `crop-img-${item.productId}`
-                                        }
-                                        style={{
-                                            aspectRatio: 1 / 1,
-                                        }}
-                                    ></div>
-                                </div>
-                                <div className="w-[85%] ms-[2vw] text-start flex flex-col justify-start overflow-y-auto">
-                                    <p className="text-[1.6vw] pe-[2vw]">
-                                        {item.eventHeadline}
-                                    </p>
-                                    <p className="text-[1vw] my-[1vw] pe-[2vw]">
-                                        {item.eventContent}
-                                    </p>
-                                    <div className="flex items-center text-[1.6vw]">
-                                        <p>
-                                            {loadProduct(
-                                                item.productId,
-                                                initialData.productList
-                                            )}
-                                        </p>
-                                        {item.eventVariance >= 0 ? (
-                                            <p className=" mx-[2vw] text-green-400">
-                                                +{item.eventVariance}%
-                                            </p>
-                                        ) : (
-                                            <p className=" mx-[2vw] text-red-400">
-                                                {item.eventVariance}%
-                                            </p>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
+            <>
                 <div
-                    className="absolute text-[2vw] flex items-center justify-center text-white top-[2.2vw] right-[3vw] w-[4vw] h-[4vw] border-[0.4vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer btn-animation"
+                    className="w-full h-full absolute top-0 left-0 z-40 opacity-0"
                     onClick={() => {
                         setCurrentViewEvent([]);
                     }}
-                >
-                    X
+                ></div>
+                <div className="absolute w-[60%] h-[60%]  flex flex-col items-center overflow-y-auto z-50">
+                    <img
+                        src="/src/assets/images/layout/ui-board.webp"
+                        className="absolute w-full h-full -z-10"
+                        alt=""
+                    />
+                    {currentViewEvent.length > 0 ? (
+                        <div className="w-full text-center color-text-textcolor text-[3vw] mt-[2vw]">
+                            {currentViewEvent[0].eventName}
+                        </div>
+                    ) : (
+                        <></>
+                    )}
+                    <div className="relative w-[90%] h-full flex flex-col items-center overflow-y-auto color-text-textcolor px-[2vw] mb-[2.4vw]">
+                        {currentViewEvent.map((item, index) => {
+                            return (
+                                <div
+                                    className="relative w-full flex items-center justify-center my-[0.4vw] bg-white border-[0.4vw] color-border-subbold py-[1vw] rounded-[1vw]"
+                                    key={'event key : ' + index}
+                                >
+                                    <div className="w-[15%]">
+                                        <div
+                                            className={
+                                                'bg-no-repeat mx-auto sprite-img-crop ' +
+                                                `crop-img-${item.productId}`
+                                            }
+                                            style={{
+                                                aspectRatio: 1 / 1,
+                                            }}
+                                        ></div>
+                                    </div>
+                                    <div className="w-[85%] ms-[2vw] text-start flex flex-col justify-start overflow-y-auto">
+                                        <p className="text-[1.6vw] pe-[2vw]">
+                                            {item.eventHeadline}
+                                        </p>
+                                        <p className="text-[1vw] my-[1vw] pe-[2vw]">
+                                            {item.eventContent}
+                                        </p>
+                                        <div className="flex items-center text-[1.6vw]">
+                                            <p>
+                                                {loadProduct(
+                                                    item.productId,
+                                                    initialData.productList
+                                                )}
+                                            </p>
+                                            {item.eventVariance >= 0 ? (
+                                                <p className=" mx-[2vw] text-green-400">
+                                                    +{item.eventVariance}%
+                                                </p>
+                                            ) : (
+                                                <p className=" mx-[2vw] text-red-400">
+                                                    {item.eventVariance}%
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                    <div
+                        className="absolute text-[2vw] flex items-center justify-center text-white top-[2.2vw] right-[3vw] w-[4vw] h-[4vw] border-[0.4vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer btn-animation"
+                        onClick={() => {
+                            setCurrentViewEvent([]);
+                        }}
+                    >
+                        X
+                    </div>
                 </div>
-            </div>
+            </>
         );
     };
 
@@ -1198,6 +1218,8 @@ export default function GameComponent(props: GameType) {
                             infraInfo={initialData.infraList}
                             client={webSocketClient}
                             webSocketId={webSocketId}
+                            nowMoney={nowMoney}
+                            alertError={alertError}
                         />
                     ) : (
                         <></>
