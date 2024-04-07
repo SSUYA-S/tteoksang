@@ -157,44 +157,50 @@ export default function HalfReportModal(props: Prop) {
             ) : mode === 1 ? (
                 <>
                     {/* x버튼 */}
-                    <div
+                    <img
+                        className="absolute z-20 w-[74%] h-[88%]"
+                        src="/src/assets/images/layout/ui-bookwrap1.png"
+                        alt=""
+                    />
+                    {/* <div
                         className="w-[60%] h-[70%] absolute left-[20%] top-[15%] color-border-subbold border-[0.5vw] bg-white z-10 flex items-center color-text-subbold"
                         style={{ transform: 'rotate(-5deg)' }}
-                    ></div>
-                    <div className="w-[60%] h-[70%] absolute left-[20%] top-[15%] color-border-subbold border-[0.5vw] bg-white z-20 flex flex-col items-center color-text-subbold">
-                        <div className="w-full h-[15%] px-[1vw] py-[1vh] flex justify-between items-center">
+                    ></div> */}
+
+                    <div className="w-[60%] h-[70%] absolute left-[20%] top-[15%]  z-20 flex flex-col items-center color-text-subbold">
+                        <div className="w-full h-[15%] py-[1vh] flex justify-start items-center">
                             {page === 1 ? (
-                                <div className="w-[10%] h-full mx-[1.2vw] my-[1vh]"></div>
+                                <div className="w-[8%] h-[80%] mx-[1.2vw] my-[1vh] "></div>
                             ) : (
                                 <div
-                                    className="w-[10%] h-full mx-[1.2vw] my-[1vh] border-[0.3vw] color-border-subbold cursor-pointer flex justify-center items-center rounded-[0.6vw] hover:color-bg-subbold hover:text-white"
+                                    className="w-[8%] h-[80%] mx-[1.2vw] my-[1vh] border-[0.2vw] bg-white color-border-subbold cursor-pointer flex justify-center items-center rounded-[0.6vw] hover:color-bg-subbold hover:text-white"
                                     onClick={() => {
                                         if (page > 1) {
                                             setPage((prev) => prev - 1);
                                         }
                                     }}
                                 >
-                                    <p className="text-[1.5vw]">이전</p>
+                                    <p className="text-[1.3vw]">이전</p>
                                 </div>
                             )}
-                            <p className="text-[2vw]">{`${year}년차 ${whatHalf}반기 결산`}</p>
+                            <p className="text-[1.8vw]">{`${year}년차 ${whatHalf}반기 결산`}</p>
                             {page === 4 ? (
-                                <div className="w-[10%] h-full mx-[1.2vw] my-[1vh]"></div>
+                                <div className="w-[10%] h-full my-[1vh]"></div>
                             ) : (
                                 <div
-                                    className="w-[10%] h-full mx-[1.2vw] my-[1vh] border-[0.3vw] color-border-subbold cursor-pointer flex justify-center items-center rounded-[0.6vw] hover:color-bg-subbold hover:text-white"
+                                    className="w-[8%] h-[80%] mx-[1.2vw] my-[1vh] border-[0.2vw] bg-white color-border-subbold cursor-pointer flex justify-center items-center rounded-[0.6vw] hover:color-bg-subbold hover:text-white"
                                     onClick={() => {
                                         if (page < 4) {
                                             setPage((prev) => prev + 1);
                                         }
                                     }}
                                 >
-                                    <p className="text-[1.5vw]">다음</p>
+                                    <p className="text-[1.3vw]">다음</p>
                                 </div>
                             )}
                         </div>
                         <div className="w-full px-[1vw] h-[0.3vh]">
-                            <div className="w-full h-full color-bg-subbold"></div>
+                            <div className="w-[48%] h-full color-bg-subbold"></div>
                         </div>
                         <div className="w-full h-[85%]">
                             {page === 1 ? (
@@ -237,7 +243,7 @@ export default function HalfReportModal(props: Prop) {
                             )}
                         </div>
                         <div
-                            className="absolute text-[2vw] flex items-center justify-center text-white -top-[1.6vw] -right-[2vw] w-[4vw] h-[4vw] border-[0.4vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer z-30"
+                            className="absolute text-[2vw] flex items-center justify-center text-white -top-[4vw] -right-[4vw] w-[4vw] h-[4vw] border-[0.4vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer z-30"
                             onClick={() => {
                                 props.setIsHlfReportAvail(false);
                             }}

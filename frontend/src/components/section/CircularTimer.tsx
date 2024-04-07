@@ -6,19 +6,19 @@ interface CircularTimerProps {
     duration: number;
     ingameTime: string;
     setTurnTimer: React.Dispatch<React.SetStateAction<number>>;
-    setIngameTurn: React.Dispatch<React.SetStateAction<number>>;
+    turnStartTime: number;
 }
 
 const CircularTimer: React.FC<CircularTimerProps> = ({
     duration,
     ingameTime,
     setTurnTimer,
-    setIngameTurn,
+    turnStartTime,
 }) => {
     const [timer, setTimer] = useState<number>(duration);
     const [percent, setPercent] = useState<number>(100);
     useEffect(() => {
-        setTimer(duration);
+        setTimer(duration - turnStartTime);
         setPercent(100);
         setTurnTimer(duration);
         const intervalId = setInterval(() => {

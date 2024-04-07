@@ -60,7 +60,7 @@ export default function GameComponent(props: GameType) {
     );
     const [ingameTurn, setIngameTurn] = useState<number>(1);
     const [ingameTime, setIngameTime] = useState<string>('00:03:00');
-    const [turnStartTime, setTurnStartTime] = useState<string>('00:03:00');
+    const [turnStartTime, setTurnStartTime] = useState<number>(0);
     const [gameYear, setGameYear] = useState<number>(0);
     const [gameMonth, setGameMonth] = useState<number>(3);
     const [gameDay, setGameDay] = useState<number>(1);
@@ -958,7 +958,7 @@ export default function GameComponent(props: GameType) {
                                     duration={duration}
                                     ingameTime={ingameTime}
                                     setTurnTimer={setTurnTimer}
-                                    setIngameTurn={setIngameTurn}
+                                    turnStartTime={turnStartTime}
                                 />
                                 <div className="absolute w-full h-full rounded-full border-[0.4vw] border-white flex items-center justify-center">
                                     <div
@@ -1066,17 +1066,17 @@ export default function GameComponent(props: GameType) {
                                 />
                             </div>
                             <div
-                                className={`relative w-[19%] h-[100%] cursor-pointer btn-animation ${
-                                    newsFlag
-                                        ? 'border-red-500 border-[0.2vw] rounded-[0.6vw] bg-white'
-                                        : ''
-                                }`}
+                                className={`relative w-[19%] h-[100%] cursor-pointer btn-animation `}
                                 onClick={() => {
                                     openNewsElement();
                                 }}
                             >
                                 <img
-                                    className="w-full"
+                                    className={`w-full ${
+                                        newsFlag
+                                            ? 'border-red-500 border-[0.2vw] rounded-[0.6vw] bg-white'
+                                            : ''
+                                    }`}
                                     src="/src/assets/images/icon/ui-icon-newspaper.webp"
                                     alt=""
                                     style={{ aspectRatio: 1 / 1 }}
@@ -1086,7 +1086,7 @@ export default function GameComponent(props: GameType) {
                                     alt=""
                                 />
                                 {newsFlag ? (
-                                    <div className="absolute w-[100%] h-[12%] left-[0%] top-[-6%]  bg-red-500 text-white text-[1vw] rounded-[0.6vw]">
+                                    <div className="absolute w-[100%] h-[16%] left-[0%] top-[-12%]  bg-red-500 text-white text-[1vw] rounded-[0.2vw]">
                                         새 신문 도착
                                     </div>
                                 ) : (

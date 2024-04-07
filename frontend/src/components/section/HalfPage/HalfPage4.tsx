@@ -14,11 +14,11 @@ export default function HalfPage4(props: Prop) {
         <>
             <div className="w-full h-full flex items-center">
                 <div className="w-[50%] h-full flex flex-col p-[1vw]">
-                    <div className="w-full h-[10%] text-[2vw] text-left color-text-subbold">
+                    <div className="w-full h-[10%] text-[1.8vw] text-left color-text-subbold">
                         통계
                     </div>
                     {/* 이번 반기 최대 떡상/떡락 */}
-                    <div className="w-full h-[10%] text-[1.5vw] text-left color-text-subbold">
+                    <div className="w-full h-[10%] text-[1.2vw] text-left color-text-subbold">
                         이번 반기 최대 떡상/떡락
                     </div>
                     <div className="w-full h-[35%] flex justify-around">
@@ -33,7 +33,7 @@ export default function HalfPage4(props: Prop) {
                                 }}
                             ></div>
                             <p className="text-[1vw]">최다 떡상</p>
-                            <p className="text-[1.5vw]">
+                            <p className="text-[1.2vw]">
                                 {`${
                                     props.productList[
                                         props.tteoksangStatistics.values[0]
@@ -55,7 +55,7 @@ export default function HalfPage4(props: Prop) {
                                 }}
                             ></div>
                             <p className="text-[1vw]">최다 떡락</p>
-                            <p className="text-[1.5vw]">
+                            <p className="text-[1.2vw]">
                                 {`${
                                     props.productList[
                                         props.tteokrockStatistics.values[0]
@@ -68,7 +68,7 @@ export default function HalfPage4(props: Prop) {
                         </div>
                     </div>
                     {/* 최다, 최소 거래량 */}
-                    <div className="w-full h-[10%] text-[1.5vw] text-left color-text-subbold">
+                    <div className="w-full h-[10%] text-[1.2vw] text-left color-text-subbold">
                         이번 반기 최다 거래 작물
                     </div>
                     <div className="w-full h-[35%] flex justify-around">
@@ -83,7 +83,7 @@ export default function HalfPage4(props: Prop) {
                                 }}
                             ></div>
                             <p className="text-[1vw]">최다 거래</p>
-                            <p className="text-[1.5vw]">
+                            <p className="text-[1.2vw]">
                                 {`${
                                     props.productList[
                                         props.bestSellerStatistics.values[0]
@@ -108,7 +108,7 @@ export default function HalfPage4(props: Prop) {
                                 }}
                             ></div>
                             <p className="text-[1vw]">최소 거래</p>
-                            <p className="text-[1.5vw]">
+                            <p className="text-[1.2vw]">
                                 {`${
                                     props.productList[
                                         props.bestSellerStatistics.values[
@@ -123,17 +123,16 @@ export default function HalfPage4(props: Prop) {
                         </div>
                     </div>
                 </div>
-                <div className="w-[0.2vw] h-[90%] color-bg-subbold"></div>
-                <div className="w-[50%] h-full flex flex-col p-[1vw]">
-                    <div className="w-full h-[15%] text-[2vw] text-left">
+                <div className="w-[50%] h-full flex flex-col ps-[2.4vw]">
+                    <div className="w-full h-[15%] text-[1.8vw] text-left">
                         달성 도전과제
                     </div>
                     <div className="w-full h-[85%] flex flex-col overflow-y-auto">
                         {props.achievementList.map((achievementId) => {
                             return (
-                                <div className="w-[90%] h-[10vh] border-[0.3vw] color-border-subbold flex justify-start my-[1vh] p-[1vh] items-center rounded-[0.6vw]">
+                                <div className="w-[90%] h-[10vh] border-[0.3vw] color-border-subbold bg-white flex justify-start my-[1vh] p-[1vh] items-center rounded-[0.6vw]">
                                     <img
-                                        className="w-[4vw] h-[4vw] m-[0.8vw]"
+                                        className="w-[20%] h-full m-[0.8vw]"
                                         src={`/src/assets/images/profile/achivement (${achievementId}).png`}
                                         alt=""
                                         style={{
