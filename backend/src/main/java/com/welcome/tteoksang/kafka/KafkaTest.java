@@ -6,6 +6,7 @@ import com.welcome.tteoksang.game.dto.result.half.TteokValues;
 import com.welcome.tteoksang.game.dto.server.RedisHalfStatistics;
 import com.welcome.tteoksang.game.dto.server.RedisStatisticsUtil;
 import com.welcome.tteoksang.game.dto.user.RedisGameInfo;
+import com.welcome.tteoksang.game.scheduler.ServerInfo;
 import com.welcome.tteoksang.game.service.SeasonHalfPrivateStatisticsService;
 import com.welcome.tteoksang.game.service.SeasonHalfStatisticsService;
 import com.welcome.tteoksang.redis.RedisPrefix;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
 /**
@@ -52,6 +54,7 @@ public class KafkaTest {
     private final SeasonHalfStatisticsService seasonHalfStatisticsService;
     private final RedisService redisService;
     private final RedisStatisticsUtil redisStatisticsUtil;
+    private final ServerInfo serverInfo;
     //tteoksang_log
     //tteoksang_hadoop
     @KafkaListener(topics = "${KAFKA_TOPIC_LOG}", containerFactory = "kafkaListenerContainerFactory")
@@ -98,8 +101,6 @@ public class KafkaTest {
         String id = consumerRecord.key();   //userId::gameId 형태로 들어옴
         String value = consumerRecord.value();  // 통계값
 
-        // id 가공
-
         // 랭킹
         List<Sellerbrity> sellerbrityRank = rank.getSellerbrityRank();
         List<Millionaire> millionaireRank = rank.getMillionaireRank();
@@ -114,7 +115,13 @@ public class KafkaTest {
             ObjectMapper mapper = new ObjectMapper();
             try {
                 // 객체로 변환
+                // id 가공
+                String[] parts = id.split("::");
+                String mongoKey = serverInfo.getSeasonId() + "," + serverInfo.getCurrentTurn()/180
+                        + "," + parts[0] + "," + parts[1];
+
                 SeasonHalfPrivateStatistics mongoData = mapper.readValue(value, SeasonHalfPrivateStatistics.class);
+                mongoData.setId(mongoKey);
 
                 // 객체 넣기
                 sellerbrityRank.add(new Sellerbrity(id, mongoData.getTotalAccPrivateProductProfit()));
@@ -129,7 +136,7 @@ public class KafkaTest {
         }
         else {
             // end이면 서버 통계 집계후 몽고디비에 저장
-//            seasonHalfPrivateStatisticsService.saveSeasonHalfPrivateStatistics();
+//            seasonHalfStatisticsService.saveSeasonHalfStatistics();
 
             // 랭킹 집계
             Collections.sort(sellerbrityRank);
