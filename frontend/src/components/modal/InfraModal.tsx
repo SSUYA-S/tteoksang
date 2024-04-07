@@ -10,6 +10,8 @@ type InfraType = {
     infraInfo: InfraList;
     client: Client;
     webSocketId: string;
+    nowMoney: number;
+    alertError: (a: string) => void;
 };
 
 export default function InfraModal(props: InfraType) {
@@ -85,10 +87,32 @@ export default function InfraModal(props: InfraType) {
         //이게 찐
         let typeMsg: string = '';
         if (facilityType === 1) {
+            if (
+                props.nowMoney <
+                props.infraInfo.vehicleInfoList[vehicleLevel - 1]
+                    .vehicleUpgradeFee
+            ) {
+                props.alertError('금액이 부족합니다.');
+                return;
+            }
             typeMsg = 'UPGRADE_VEHICLE';
         } else if (facilityType === 2) {
+            if (
+                props.nowMoney <
+                props.infraInfo.warehouseInfoList[warehouseLevel - 1]
+                    .warehouseUpgradeFee
+            ) {
+                props.alertError('금액이 부족합니다.');
+                return;
+            }
             typeMsg = 'UPGRADE_WAREHOUSE';
         } else if (facilityType === 3) {
+            if (
+                props.infraInfo.brokerInfoList[brokerLevel - 1].brokerUpgradeFee
+            ) {
+                props.alertError('금액이 부족합니다.');
+                return;
+            }
             typeMsg = 'UPGRADE_BROKER';
         }
 
@@ -326,14 +350,14 @@ export default function InfraModal(props: InfraType) {
                                 {facilityType === 1
                                     ? props.infraInfo.vehicleInfoList[
                                           vehicleLevel - 1
-                                      ].vehicleUpgradeFee
+                                      ].vehicleUpgradeFee.toLocaleString()
                                     : facilityType === 2
                                     ? props.infraInfo.warehouseInfoList[
                                           warehouseLevel - 1
-                                      ].warehouseUpgradeFee
+                                      ].warehouseUpgradeFee.toLocaleString()
                                     : props.infraInfo.brokerInfoList[
                                           brokerLevel - 1
-                                      ].brokerUpgradeFee}
+                                      ].brokerUpgradeFee.toLocaleString()}
                             </p>
                         </div>
                         <div
