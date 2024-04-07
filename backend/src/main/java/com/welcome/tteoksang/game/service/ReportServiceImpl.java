@@ -188,6 +188,11 @@ public class ReportServiceImpl implements ReportService {
             isSuccess = false;
         }
 
+        // 랭킹 초기화
+        severRank.getSellerbrityRank().clear();
+        severRank.getMillionaireRank().clear();
+        severRank.getTteoksangRank().clear();
+
         return GameMessageRes.builder()
                 .type(MessageType.QUARTER_REPORT)
                 .isSuccess(isSuccess)

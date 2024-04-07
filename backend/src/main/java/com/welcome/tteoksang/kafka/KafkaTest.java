@@ -2,7 +2,10 @@ package com.welcome.tteoksang.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.welcome.tteoksang.game.dto.result.*;
+import com.welcome.tteoksang.game.dto.result.half.BestSellerStatistics;
 import com.welcome.tteoksang.game.dto.result.half.TteokValues;
+import com.welcome.tteoksang.game.dto.result.half.TteokrockStatistics;
+import com.welcome.tteoksang.game.dto.result.half.TteoksangStatistics;
 import com.welcome.tteoksang.game.dto.server.RedisHalfStatistics;
 import com.welcome.tteoksang.game.dto.server.RedisStatisticsUtil;
 import com.welcome.tteoksang.game.dto.user.RedisGameInfo;
@@ -142,11 +145,20 @@ public class KafkaTest {
                 seasonHalfStatistics.accumulateAccGiveUpCount(privateStatistics.getAccPrivateGiveUpCount());
                 seasonHalfStatistics.accumulateAccOnlineTimeSlotCount(privateStatistics
                         .getAccPrivateOnlineTimeSlotCount());
+                seasonHalfStatistics.findMaxRentFee(privateStatistics.getMaxPrivateRentFee());
+                seasonHalfStatistics.updateProductStatics(privateStatistics.getProductStatistics());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         else {
+            // 떡상 추가
+            seasonHalfStatistics.setTteoksangStatistics(TteoksangStatistics.builder().values(getTteoksangStatistics()).build());
+            // 떡락 추가
+            seasonHalfStatistics.setTteokrockStatistics(TteokrockStatistics.builder().values(getTteokrockStatistics()).build());
+            // 베스트 셀러
+            seasonHalfStatistics.findBestSeller();
+
             // end이면 서버 통계 집계후 몽고디비에 저장
             seasonHalfStatisticsService.saveSeasonHalfStatistics(seasonHalfStatistics);
 
