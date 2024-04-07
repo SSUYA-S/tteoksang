@@ -1218,6 +1218,8 @@ export default function GameComponent(props: GameType) {
                             infraInfo={initialData.infraList}
                             client={webSocketClient}
                             webSocketId={webSocketId}
+                            nowMoney={nowMoney}
+                            alertError={alertError}
                         />
                     ) : (
                         <></>
