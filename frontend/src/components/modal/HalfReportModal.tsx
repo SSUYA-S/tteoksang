@@ -173,14 +173,17 @@ export default function HalfReportModal(props: Prop) {
                                 <div className="w-[8%] h-[80%] mx-[1.2vw] my-[1vh] "></div>
                             ) : (
                                 <div
-                                    className="w-[8%] h-[80%] mx-[1.2vw] my-[1vh] border-[0.2vw] bg-white color-border-subbold cursor-pointer flex justify-center items-center rounded-[0.6vw] hover:color-bg-subbold hover:text-white"
+                                    className="relative bottom-[6%] w-[8%] h-[80%] mx-[1.2vw] my-[1vh] cursor-pointer btn-animation"
                                     onClick={() => {
                                         if (page > 1) {
                                             setPage((prev) => prev - 1);
                                         }
                                     }}
                                 >
-                                    <p className="text-[1.3vw]">이전</p>
+                                    <img
+                                        src="/src/assets/images/layout/ui-arrow-left.webp"
+                                        alt=""
+                                    />
                                 </div>
                             )}
                             <p className="text-[1.8vw]">{`${year}년차 ${whatHalf}반기 결산`}</p>
@@ -188,14 +191,17 @@ export default function HalfReportModal(props: Prop) {
                                 <div className="w-[10%] h-full my-[1vh]"></div>
                             ) : (
                                 <div
-                                    className="w-[8%] h-[80%] mx-[1.2vw] my-[1vh] border-[0.2vw] bg-white color-border-subbold cursor-pointer flex justify-center items-center rounded-[0.6vw] hover:color-bg-subbold hover:text-white"
+                                    className="relative bottom-[6%] w-[8%] h-[80%] mx-[1.2vw] my-[1vh] cursor-pointer btn-animation"
                                     onClick={() => {
                                         if (page < 4) {
                                             setPage((prev) => prev + 1);
                                         }
                                     }}
                                 >
-                                    <p className="text-[1.3vw]">다음</p>
+                                    <img
+                                        src="/src/assets/images/layout/ui-arrow-right.webp"
+                                        alt=""
+                                    />
                                 </div>
                             )}
                         </div>
