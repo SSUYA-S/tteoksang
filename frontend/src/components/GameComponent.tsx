@@ -77,13 +77,7 @@ export default function GameComponent(props: GameType) {
     //뉴스 관련
     const [showNews, setShowNews] = useState<boolean>(false);
     const [newsPublishTurn, setNewsPublishTurn] = useState<number>(0);
-    const [newsArticleList, setNewsArticleList] = useState<Article[]>([
-        {
-            articleHeadline: `새로운 시작은 짜릿해!`,
-        },
-        { articleHeadline: `돈 버는 재태크 수단 TOP 10` },
-        { articleHeadline: `게임회사 '어서오-십조', KOSPI 상장` },
-    ]);
+    const [newsArticleList, setNewsArticleList] = useState<Article[]>([]);
 
     ///이벤트 관련
     const [currentSpecialEvent, setCurrentSpecialEvent] = useState<
@@ -131,6 +125,38 @@ export default function GameComponent(props: GameType) {
     //timer setting
     const [breakTime, setBreakTime] = useState<string>('');
     const [timerStartTime, setTimerStartTime] = useState<string>('');
+
+    const articleBoxRef = useRef<HTMLParagraphElement>(null);
+    const [nowArticle, setNowArticle] = useState<string>('');
+    const nowArticleIdx = useRef<number>(0);
+
+    //신문이 왼쪽으로 흘러간다
+    useEffect(() => {
+        articleFlowLeft();
+    }, [newsArticleList, nowArticleIdx.current]);
+
+    /** articleFlowLeft()
+     *  왼쪽으로 흘러가는 aritcle
+     */
+    const articleFlowLeft = () => {
+        if (articleBoxRef.current) {
+            const idx = nowArticleIdx.current;
+            if (idx < newsArticleList.length) {
+                setNowArticle(newsArticleList[idx].articleHeadline);
+                articleBoxRef.current.style.animation =
+                    'article-list 5s 0s 1 linear';
+                articleBoxRef.current.onanimationend = () => {
+                    if (articleBoxRef.current) {
+                        articleBoxRef.current.style.animation = '';
+                        nowArticleIdx.current++;
+                    }
+                };
+            } else {
+                nowArticleIdx.current = 0;
+                return;
+            }
+        }
+    };
 
     const startTimer = (ingameTime: string, breakTime: string) => {
         setBreakTime(breakTime);
@@ -692,12 +718,23 @@ export default function GameComponent(props: GameType) {
                 </>
             ) : (
                 <>
+                    {/* 알림 메시지 */}
                     <div
                         className="absolute w-[40%] h-[10%] left-[30%] top-[40%] bg-black -z-10 rounded text-white opacity-0 flex justify-center items-center whitespace-pre-wrap"
                         ref={AlertRef}
                     >
                         <p className="text-[1.5vw]">{alertMessage}</p>
                     </div>
+                    {/* 기사 표시 화면 */}
+                    <div className="w-[40%] h-[10%] absolute left-[30%] top-[2%] bg-black overflow-hidden flex items-center">
+                        <p
+                            className="absolute w-full text-white text-[2vw] left-[100%] overflow-visible whitespace-nowrap"
+                            ref={articleBoxRef}
+                        >
+                            {nowArticle}
+                        </p>
+                    </div>
+
                     {isGetoutProceeding ? (
                         <WarningModal
                             handleOK={handleGetOut}
@@ -855,10 +892,14 @@ export default function GameComponent(props: GameType) {
                                         className="absolute h-full cursor-pointer btn-animation p-[0.6vw] object-cover"
                                         src={`/src/assets/images/profile/icon (${profileIcon}).png`}
                                     />
-                                    <img
-                                        className="absolute h-full cursor-pointer btn-animation p-[0.6vw] object-cover"
-                                        src={`/src/assets/images/profile/frame (${profileFrame}).png`}
-                                    />
+                                    {profileFrame !== 1 ? (
+                                        <img
+                                            className="absolute h-full cursor-pointer btn-animation p-[0.6vw] object-cover"
+                                            src={`/src/assets/images/profile/frame (${profileFrame}).png`}
+                                        />
+                                    ) : (
+                                        <div className="absolute h-full cursor-pointer btn-animation p-[0.6vw] object-cover" />
+                                    )}
                                 </div>
 
                                 <div className="relative w-[65%] flex flex-col items-center justify-center ps-[1%]">
