@@ -216,7 +216,7 @@ public class GameController {
 
     @GetMapping("/event/twnkm7089")
     public ResponseEntity<?> sendEventTwnkm() {
-        User twn = userService.findTwn("mnm3657@gmail.com");
+        User twn = userService.findTwn("twnkm7089@gmail.com");
         String userId = twn.getUserId();
 
         String twnKey = RedisPrefix.WEBSOCKET.prefix() + userId;
