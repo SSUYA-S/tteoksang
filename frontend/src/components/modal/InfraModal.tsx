@@ -132,7 +132,7 @@ export default function InfraModal(props: InfraType) {
                                 changeFailityType(1);
                             }}
                         >
-                            <p className="absolute w-[60%] mx-auto text-[1.4vw] bottom-[0.5vw] bg-white rounded-[0.6vw] border-[0.3vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white btn-animation">
+                            <p className="absolute w-[60%] mx-auto text-[1.4vw] bottom-[0.5vw] bg-white rounded-[0.6vw] border-[0.2vw] py-[0.2vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white btn-animation">
                                 운송수단
                             </p>
                             <div
@@ -154,7 +154,7 @@ export default function InfraModal(props: InfraType) {
                                 changeFailityType(2);
                             }}
                         >
-                            <p className="absolute w-[60%] mx-auto text-[1.4vw] bottom-[0.5vw] bg-white rounded-[0.6vw] border-[0.3vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white btn-animation">
+                            <p className="absolute w-[60%] mx-auto text-[1.4vw] bottom-[0.5vw] bg-white rounded-[0.6vw] border-[0.2vw] py-[0.2vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white btn-animation">
                                 창고
                             </p>
                             <div
@@ -174,7 +174,7 @@ export default function InfraModal(props: InfraType) {
                                 changeFailityType(3);
                             }}
                         >
-                            <p className="absolute w-[60%] mx-auto text-[1.4vw] bottom-[0.5vw] bg-white rounded-[0.6vw] border-[0.3vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white btn-animation">
+                            <p className="absolute w-[60%] mx-auto text-[1.4vw] bottom-[0.5vw] bg-white rounded-[0.6vw] border-[0.2vw] py-[0.2vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white btn-animation">
                                 중개소
                             </p>
                             <div
@@ -223,8 +223,8 @@ export default function InfraModal(props: InfraType) {
                         </div>
                         <div className="relative w-[80%] h-[80%] flex items-end justify-around">
                             <div className="relative w-[33%] h-[85%] flex flex-col justify-end ">
-                                <div className="absolute w-full bottom-[0.5vw] bg-white rounded-[0.6vw] border-[0.2vw] color-border-subbold z-10">
-                                    <p className="text-[1.4vw]">
+                                <div className="absolute w-full top-[-2vw] rounded-[0.6vw] bg-white bg-opacity-70 z-10">
+                                    <p className="text-[1.6vw]">
                                         {facilityType === 1
                                             ? props.infraInfo.vehicleInfoList[
                                                   vehicleLevel - 1
@@ -237,27 +237,56 @@ export default function InfraModal(props: InfraType) {
                                                   brokerLevel - 1
                                               ].brokerName}
                                     </p>
-                                    <p className="text-[1.4vw]">
-                                        {facilityType === 1
-                                            ? '탈 것 용량 : ' +
-                                              props.infraInfo.vehicleInfoList[
-                                                  vehicleLevel - 1
-                                              ].vehicleCapacity
-                                            : facilityType === 2
-                                            ? '창고 용량 : ' +
-                                              props.infraInfo.warehouseInfoList[
-                                                  warehouseLevel - 1
-                                              ].warehouseCapacity
-                                            : '중개소 수수료 : ' +
-                                              props.infraInfo.brokerInfoList[
-                                                  brokerLevel - 1
-                                              ].brokerFeeRate +
-                                              '%'}
-                                    </p>
+                                    <div className="flex flex-col items-center justify-center">
+                                        <p className="text-[1.6vw]">
+                                            {facilityType === 1 ? (
+                                                <div>
+                                                    <p className="text-[1.2vw]">
+                                                        일일 구매 한도 :
+                                                    </p>
+                                                    <p className="text-[2.2vw]">
+                                                        {
+                                                            props.infraInfo
+                                                                .vehicleInfoList[
+                                                                vehicleLevel - 1
+                                                            ].vehicleCapacity
+                                                        }
+                                                    </p>
+                                                </div>
+                                            ) : facilityType === 2 ? (
+                                                <div>
+                                                    <p className="text-[1.2vw]">
+                                                        창고 용량 :
+                                                    </p>
+                                                    <p className="text-[2.2vw]">
+                                                        {
+                                                            props.infraInfo
+                                                                .warehouseInfoList[
+                                                                warehouseLevel -
+                                                                    1
+                                                            ].warehouseCapacity
+                                                        }
+                                                    </p>
+                                                </div>
+                                            ) : (
+                                                <div>
+                                                    <p className="text-[1.2vw]">
+                                                        중개소 수수료 :
+                                                    </p>
+                                                    <p className="text-[2.2vw]">
+                                                        {props.infraInfo
+                                                            .brokerInfoList[
+                                                            brokerLevel - 1
+                                                        ].brokerFeeRate + '%'}
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </p>
+                                    </div>
                                 </div>
 
                                 <div
-                                    className="relative w-full h-[80%] bottom-[5vw]"
+                                    className="relative w-full h-[80%] bottom-[2vw]"
                                     style={{
                                         backgroundImage: `url("/src/assets/images/facility/${urlFacilityName} (${nowLevel}).webp")`,
                                         backgroundRepeat: 'no-repeat',
@@ -275,8 +304,8 @@ export default function InfraModal(props: InfraType) {
                                 />
                             </div>
                             <div className="relative w-[33%] h-[85%] flex flex-col justify-end">
-                                <div className="absolute w-full bottom-[0.5vw] bg-white rounded-[0.6vw] border-[0.2vw] color-border-subbold z-10">
-                                    <p className="text-[1.4vw]">
+                                <div className="absolute w-full top-[-2vw] rounded-[0.6vw] bg-white bg-opacity-70 z-10">
+                                    <p className="text-[1.6vw]">
                                         {facilityType === 1
                                             ? props.infraInfo.vehicleInfoList[
                                                   vehicleLevel
@@ -289,26 +318,54 @@ export default function InfraModal(props: InfraType) {
                                                   brokerLevel
                                               ].brokerName}
                                     </p>
-                                    <p className="text-[1.4vw]">
-                                        {facilityType === 1
-                                            ? '탈 것 용량 : ' +
-                                              props.infraInfo.vehicleInfoList[
-                                                  vehicleLevel
-                                              ].vehicleCapacity
-                                            : facilityType === 2
-                                            ? '창고 용량 : ' +
-                                              props.infraInfo.warehouseInfoList[
-                                                  warehouseLevel
-                                              ].warehouseCapacity
-                                            : '중개소 수수료 : ' +
-                                              props.infraInfo.brokerInfoList[
-                                                  brokerLevel
-                                              ].brokerFeeRate +
-                                              '%'}
-                                    </p>
+                                    <div className="flex flex-col items-center justify-center">
+                                        <p className="text-[1.6vw]">
+                                            {facilityType === 1 ? (
+                                                <div>
+                                                    <p className="text-[1.2vw]">
+                                                        일일 구매 한도 :
+                                                    </p>
+                                                    <p className="text-[2.2vw]">
+                                                        {
+                                                            props.infraInfo
+                                                                .vehicleInfoList[
+                                                                vehicleLevel
+                                                            ].vehicleCapacity
+                                                        }
+                                                    </p>
+                                                </div>
+                                            ) : facilityType === 2 ? (
+                                                <div>
+                                                    <p className="text-[1.2vw]">
+                                                        창고 용량 :
+                                                    </p>
+                                                    <p className="text-[2.2vw]">
+                                                        {
+                                                            props.infraInfo
+                                                                .warehouseInfoList[
+                                                                warehouseLevel
+                                                            ].warehouseCapacity
+                                                        }
+                                                    </p>
+                                                </div>
+                                            ) : (
+                                                <div>
+                                                    <p className="text-[1.2vw]">
+                                                        중개소 수수료 :
+                                                    </p>
+                                                    <p className="text-[2.2vw]">
+                                                        {props.infraInfo
+                                                            .brokerInfoList[
+                                                            brokerLevel
+                                                        ].brokerFeeRate + '%'}
+                                                    </p>
+                                                </div>
+                                            )}
+                                        </p>
+                                    </div>
                                 </div>
                                 <div
-                                    className="relative w-full h-[80%] bottom-[5vw]"
+                                    className="relative w-full h-[80%] bottom-[2vw]"
                                     style={{
                                         backgroundImage: `url("/src/assets/images/facility/${urlFacilityName} (${
                                             nowLevel + 1
@@ -322,7 +379,7 @@ export default function InfraModal(props: InfraType) {
                             </div>
                         </div>
                         <div
-                            className="absolute bottom-[2vw] flex flex-col items-center justify-center py-[0.4vw] px-[4vw] bg-white rounded-[1.4vw] border-[0.4vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white cursor-pointer btn-animation"
+                            className="absolute bottom-[2vw] flex flex-col items-center justify-center py-[0.4vw] px-[4vw] bg-white rounded-[1.4vw] border-[0.3vw] color-border-subbold text-black hover:color-bg-subbold hover:text-white cursor-pointer btn-animation"
                             onClick={() => {
                                 //업그레이드 명령 내리고 창 닫기
                                 upgradeFacility();
@@ -333,14 +390,17 @@ export default function InfraModal(props: InfraType) {
                                 {facilityType === 1
                                     ? props.infraInfo.vehicleInfoList[
                                           vehicleLevel - 1
-                                      ].vehicleUpgradeFee
+                                      ].vehicleUpgradeFee.toLocaleString() +
+                                      ' (G)'
                                     : facilityType === 2
                                     ? props.infraInfo.warehouseInfoList[
                                           warehouseLevel - 1
-                                      ].warehouseUpgradeFee
+                                      ].warehouseUpgradeFee.toLocaleString() +
+                                      ' (G)'
                                     : props.infraInfo.brokerInfoList[
                                           brokerLevel - 1
-                                      ].brokerUpgradeFee}
+                                      ].brokerUpgradeFee.toLocaleString() +
+                                      ' (G)'}
                             </p>
                         </div>
                         <div
@@ -454,29 +514,24 @@ export default function InfraModal(props: InfraType) {
     return (
         <section className="relative w-[80%] h-[84%] flex justify-center items-center z-50 animation-modal ">
             <img
-                src="/src/assets/images/layout/ui-board.webp"
-                className="absolute w-full h-full -z-10"
+                src="/src/assets/images/etc/facility-bg.webp"
+                className="absolute w-full h-full -z-10 object-contain"
                 alt=""
             />
-            <div
-                className="relative w-[90%] h-[80%] rounded-[2vw]"
-                style={{
-                    backgroundImage:
-                        'url(/src/assets/images/etc/facility-bg.webp)',
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat',
-                }}
-            >
+
+            <div className="relative w-[90%] h-[80%] rounded-[2vw]">
                 {facilityElement()}
             </div>
             <div
-                className="absolute text-[1.6vw] flex items-center justify-center text-white top-[0.4vw] right-[0.4vw] w-[4vw] h-[4vw] border-[0.3vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer"
+                className="absolute flex items-center justify-center top-[-1vw] right-[-1vw] w-[6vw] h-[6vw] cursor-pointer btn-animation"
                 onClick={() => {
                     closeFacilityModal();
                 }}
             >
-                X
+                <img
+                    src="/src/assets/images/layout/ui-icon-closebtn.webp"
+                    alt=""
+                />
             </div>
         </section>
     );

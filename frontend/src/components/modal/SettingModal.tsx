@@ -178,13 +178,17 @@ export default function SettingModal(props: settingType) {
                     <p>시간에 따라 배경 화면이 변합니다.</p>
                 </div>
             </div>
+
             <div
-                className="absolute text-[1.6vw] flex items-center justify-center text-white -top-[1.6vw] -right-[2vw] w-[3.4vw] h-[3.4vw] border-[0.4vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer"
+                className="absolute flex items-center justify-center top-[-1.6vw] right-[-1.6vw] w-[4vw] h-[4vw] cursor-pointer btn-animation"
                 onClick={() => {
                     closeResultModal();
                 }}
             >
-                X
+                <img
+                    src="/src/assets/images/layout/ui-icon-closebtn.webp"
+                    alt=""
+                />
             </div>
         </div>
     );
