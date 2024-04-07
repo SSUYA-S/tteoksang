@@ -42,7 +42,7 @@ public class PrivateInfoServiceImpl implements PrivateInfoService {
             responseBody = TotalInfo.builder()
                     .gold(redisGameInfo.getGold())
                     .privateEventId(redisGameInfo.getPrivateEventId())
-                    .specialEventId("없음")   // 서버의 특수 이벤트
+                    .specialEventId(serverInfo.getSpecialEventIdList())   // 서버의 특수 이벤트
                     .inGameTime(LocalDateTime.now().toString())
                     .turnStartTime(serverInfo.getTurnStartTime().toString())    // 턴 시작 시간 => 서버에서 가져옴
                     .turn(serverInfo.getCurrentTurn())    // 서버의 턴 정보
