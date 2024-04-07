@@ -132,7 +132,7 @@ export default function InfraModal(props: InfraType) {
                                 changeFailityType(1);
                             }}
                         >
-                            <p className="absolute w-[60%] mx-auto text-[1.4vw] bottom-[0.5vw] bg-white rounded-[0.6vw] border-[0.3vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white btn-animation">
+                            <p className="absolute w-[60%] mx-auto text-[1.4vw] bottom-[0.5vw] bg-white rounded-[0.6vw] border-[0.2vw] py-[0.2vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white btn-animation">
                                 운송수단
                             </p>
                             <div
@@ -154,7 +154,7 @@ export default function InfraModal(props: InfraType) {
                                 changeFailityType(2);
                             }}
                         >
-                            <p className="absolute w-[60%] mx-auto text-[1.4vw] bottom-[0.5vw] bg-white rounded-[0.6vw] border-[0.3vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white btn-animation">
+                            <p className="absolute w-[60%] mx-auto text-[1.4vw] bottom-[0.5vw] bg-white rounded-[0.6vw] border-[0.2vw] py-[0.2vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white btn-animation">
                                 창고
                             </p>
                             <div
@@ -174,7 +174,7 @@ export default function InfraModal(props: InfraType) {
                                 changeFailityType(3);
                             }}
                         >
-                            <p className="absolute w-[60%] mx-auto text-[1.4vw] bottom-[0.5vw] bg-white rounded-[0.6vw] border-[0.3vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white btn-animation">
+                            <p className="absolute w-[60%] mx-auto text-[1.4vw] bottom-[0.5vw] bg-white rounded-[0.6vw] border-[0.2vw] py-[0.2vw] color-border-subbold color-text-textcolor hover:color-bg-subbold hover:text-white btn-animation">
                                 중개소
                             </p>
                             <div
