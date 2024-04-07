@@ -397,7 +397,6 @@ public class Main {
 			Path outputPath = new Path(args[1]);
 
 			fs.delete(outputPath, true);
-			fs.mkdirs(outputPath);
 
 			// set input and output directories
 			FileInputFormat.addInputPath(job, inputPath);
