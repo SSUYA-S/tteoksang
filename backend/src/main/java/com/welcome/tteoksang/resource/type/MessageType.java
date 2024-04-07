@@ -24,7 +24,10 @@ public enum MessageType {
     FINAL_REPORT(21),
     OFFLINE_REPORT(22),
 
-    GET_BREAK_TIME(23);
+    GET_BREAK_TIME(23),
+
+    GET_EVENT_LIST(24);
+
 
     private int code;
     MessageType(int code){
