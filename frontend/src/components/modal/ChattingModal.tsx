@@ -153,5 +153,17 @@ export default function ChattingModal(props: Props) {
         );
     }
 
-    return <>{renderingComponent}</>;
+    return (
+        <>
+            {mode === 1 ? (
+                <div
+                    className="w-full h-full absolute top-0 left-0 opacity-0 z-20"
+                    onClick={() => setMode(0)}
+                ></div>
+            ) : (
+                <></>
+            )}
+            {renderingComponent}
+        </>
+    );
 }
