@@ -31,3 +31,12 @@
         z-index: -10;
     }
 }
+
+@keyframes article-list {
+    0% {
+        left: 100%;
+    }
+    100% {
+        left: -150%;
+    }
+}
