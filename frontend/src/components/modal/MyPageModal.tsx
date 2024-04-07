@@ -467,7 +467,7 @@ export default function MyPageModal(props: MyPageType) {
                             {littleMenu === 0 ? (
                                 <>
                                     {props.profileFrameInfo.map((frame) => {
-                                        return (
+                                        return frame.profileFrameId !== 1 ? (
                                             <img
                                                 key={frame.profileFrameId}
                                                 className={
@@ -479,6 +479,25 @@ export default function MyPageModal(props: MyPageType) {
                                                 }
                                                 src={`/src/assets/images/profile/frame (${frame.profileFrameId}).png`}
                                                 alt=""
+                                                style={{
+                                                    aspectRatio: 1 / 1,
+                                                }}
+                                                onClick={() => {
+                                                    changeTempFrame(
+                                                        frame.profileFrameId
+                                                    );
+                                                }}
+                                            />
+                                        ) : (
+                                            <div
+                                                key={frame.profileFrameId}
+                                                className={
+                                                    'w-[7vw] h-[7vw] m-[0.8vw] cursor-pointer ' +
+                                                    (tempFrame ===
+                                                    frame.profileFrameId
+                                                        ? 'border-[0.2vw] border-green-400'
+                                                        : '')
+                                                }
                                                 style={{
                                                     aspectRatio: 1 / 1,
                                                 }}
@@ -578,12 +597,19 @@ export default function MyPageModal(props: MyPageType) {
                         alt=""
                         style={{ aspectRatio: 1 / 1 }}
                     />
-                    <img
-                        className="absolute w-full h-full object-cover "
-                        src={`/src/assets/images/profile/frame (${tempFrame}).png`}
-                        alt=""
-                        style={{ aspectRatio: 1 / 1 }}
-                    />
+                    {tempFrame !== 1 ? (
+                        <img
+                            className="absolute w-full h-full object-cover "
+                            src={`/src/assets/images/profile/frame (${tempFrame}).png`}
+                            alt=""
+                            style={{ aspectRatio: 1 / 1 }}
+                        />
+                    ) : (
+                        <div
+                            className="absolute w-full h-full object-cover "
+                            style={{ aspectRatio: 1 / 1 }}
+                        />
+                    )}
                 </div>
                 <div className="flex flex-col w-[80%] h-[25%] ">
                     <div className="flex w-full justify-between items-center mt-[0.8vw]">
@@ -636,12 +662,19 @@ export default function MyPageModal(props: MyPageType) {
                                 changeLittleMenu(0);
                             }}
                         >
-                            <img
-                                className="w-full h-full object-cover "
-                                src={`/src/assets/images/profile/frame (${tempFrame}).png`}
-                                alt=""
-                                style={{ aspectRatio: 1 / 1 }}
-                            />
+                            {tempFrame !== 1 ? (
+                                <img
+                                    className="w-full h-full object-cover "
+                                    src={`/src/assets/images/profile/frame (${tempFrame}).png`}
+                                    alt=""
+                                    style={{ aspectRatio: 1 / 1 }}
+                                />
+                            ) : (
+                                <div
+                                    className="w-full h-full object-cover "
+                                    style={{ aspectRatio: 1 / 1 }}
+                                />
+                            )}
                         </div>
                         <div
                             className="relative w-[30%] bg-white border-[0.1vw] border-black mx-[0.8vw] my-[1.2vw] cursor-pointer"
