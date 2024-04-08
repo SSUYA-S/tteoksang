@@ -7,10 +7,8 @@ public class Driver {
         int exitCode = -1;
         ProgramDriver pgd = new ProgramDriver();
         try {
-
             pgd.addClass("statistics", Main.class, "A map/reduce program that performs calculate statistics");
-            pgd.driver(args);
-            exitCode = 0;
+            exitCode = pgd.run(args);
         }
         catch(Throwable e) {
             e.printStackTrace();
