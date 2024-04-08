@@ -302,16 +302,12 @@ public class Main {
 		Configuration conf = new Configuration();
 
 		try(FileSystem fs = FileSystem.get(conf)) {
-			String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
+//			String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
 
-			for(String arg : otherArgs) {
-				log.info("{}", arg);
-			}
-
-			if (otherArgs.length != 2) {
-				System.err.println("Usage: <in> <out>");
-				System.exit(2);
-			}
+//			if (otherArgs.length != 2) {
+//				System.err.println("Usage: <in> <out>");
+//				System.exit(2);
+//			}
 
 			Job job = Job.getInstance(conf, "logCal");
 			job.setJarByClass(Main.class);
