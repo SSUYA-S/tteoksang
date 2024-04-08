@@ -15,7 +15,7 @@ import com.welcome.tteoksang.game.dto.trade.SellProductInfo;
 import com.welcome.tteoksang.game.dto.user.RedisGameInfo;
 import com.welcome.tteoksang.game.dto.user.UserProductInfo;
 import com.welcome.tteoksang.game.exception.*;
-import com.welcome.tteoksang.game.scheduler.ServerInfo;
+import com.welcome.tteoksang.game.dto.server.ServerInfo;
 import com.welcome.tteoksang.redis.RedisPrefix;
 import com.welcome.tteoksang.redis.RedisService;
 import com.welcome.tteoksang.resource.dto.Broker;

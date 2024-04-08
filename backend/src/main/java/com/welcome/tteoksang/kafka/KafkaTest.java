@@ -2,14 +2,13 @@ package com.welcome.tteoksang.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.welcome.tteoksang.game.dto.result.*;
-import com.welcome.tteoksang.game.dto.result.half.BestSellerStatistics;
 import com.welcome.tteoksang.game.dto.result.half.TteokValues;
 import com.welcome.tteoksang.game.dto.result.half.TteokrockStatistics;
 import com.welcome.tteoksang.game.dto.result.half.TteoksangStatistics;
 import com.welcome.tteoksang.game.dto.server.RedisHalfStatistics;
 import com.welcome.tteoksang.game.dto.server.RedisStatisticsUtil;
 import com.welcome.tteoksang.game.dto.user.RedisGameInfo;
-import com.welcome.tteoksang.game.scheduler.ServerInfo;
+import com.welcome.tteoksang.game.dto.server.ServerInfo;
 import com.welcome.tteoksang.game.service.SeasonHalfPrivateStatisticsService;
 import com.welcome.tteoksang.game.service.SeasonHalfStatisticsService;
 import com.welcome.tteoksang.redis.RedisPrefix;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
 /**
@@ -112,10 +110,6 @@ public class KafkaTest {
         List<Tteoksang> tteoksangRank = rank.getTteoksangRank();
 
         if(!value.equals("END")) {
-            // 레디스 불러오기
-            String redisGameInfoKey = RedisPrefix.INGAMEINFO.prefix() + id;
-            RedisGameInfo redisGameInfo = (RedisGameInfo) redisService.getValues(redisGameInfoKey);
-
             // 몽고디비에 저장
             ObjectMapper mapper = new ObjectMapper();
             try {
@@ -123,6 +117,12 @@ public class KafkaTest {
                 // id 가공
                 String[] parts = id.split("::");
                 log.debug("하둡에서 온 ID:{}", id);
+
+                // 레디스 불러오기
+                String redisGameInfoKey = RedisPrefix.INGAMEINFO.prefix() + parts[0];
+                log.debug("사용자 ID:{}", parts[0]);
+                RedisGameInfo redisGameInfo = (RedisGameInfo) redisService.getValues(redisGameInfoKey);
+
                 String mongoKey = serverInfo.getSeasonId() + "," + serverInfo.getCurrentTurn()/180
                         + "," + parts[0] + "," + parts[1];
                 log.debug("몽고디비 ID:{}", mongoKey);
@@ -142,11 +142,11 @@ public class KafkaTest {
                 seasonHalfStatistics.accumulateTotalAccRentFee(privateStatistics.getAccPrivateRentFee());
                 seasonHalfStatistics.accumulateAccBrokerFee(privateStatistics.getTotalAccPrivateBrokerFee());
                 seasonHalfStatistics.accumulateAccGamePlayCount(Integer.parseInt(parts[1]));
-                seasonHalfStatistics.accumulateAccGiveUpCount(privateStatistics.getAccPrivateGiveUpCount());
+                seasonHalfStatistics.accumulateAccGiveUpCount(privateStatistics.getAccPrivateGamePlayCount() - 1);
                 seasonHalfStatistics.accumulateAccOnlineTimeSlotCount(privateStatistics
                         .getAccPrivateOnlineTimeSlotCount());
-                seasonHalfStatistics.findMaxRentFee(privateStatistics.getMaxPrivateRentFee());
-                seasonHalfStatistics.updateProductStatics(privateStatistics.getProductStatistics());
+//                seasonHalfStatistics.findMaxRentFee(privateStatistics.get);
+                seasonHalfStatistics.updateProductStatics(privateStatistics.getReduceProductInfoMap());
             } catch (Exception e) {
                 e.printStackTrace();
             }

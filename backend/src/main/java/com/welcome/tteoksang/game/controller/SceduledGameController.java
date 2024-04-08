@@ -1,5 +1,6 @@
-package com.welcome.tteoksang.game.scheduler;
+package com.welcome.tteoksang.game.controller;
 
+import com.welcome.tteoksang.game.scheduler.ScheduleService;
 import com.welcome.tteoksang.game.service.PublicService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
