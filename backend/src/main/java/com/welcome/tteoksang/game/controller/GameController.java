@@ -46,8 +46,6 @@ public class GameController {
     private final RedisService redisService;
     private final ChatService chatService;
     private final ReportService reportService;
-    private final UserService userService;
-    private final ServerInfo serverInfo;
 
     private final SimpMessagingTemplate simpMessagingTemplate;
 
@@ -156,82 +154,6 @@ public class GameController {
                 .build();
 
         simpMessagingTemplate.convertAndSend("/topic/private/" + webSocketId, offlineResult);
-    }
-
-    // TODO: 태운
-    @GetMapping("/quarter/twnkm7089")
-    public void sendQuarterTwnkm() {
-        User twn = userService.findTwn("twnkm7089@gmail.com");
-        String userId = twn.getUserId();
-
-        String twnKey = RedisPrefix.WEBSOCKET.prefix() + userId;
-        String webSocketId = (String) redisService.getValues(twnKey);
-        String responseData = TestExample.half;
-        ObjectMapper mapper = new ObjectMapper();
-        boolean isSuccess = false;
-        Half message = null;
-        try {
-            message = mapper.readValue(responseData, Half.class);
-            isSuccess = true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        GameMessageRes halfResult = GameMessageRes.builder()
-                .type(MessageType.HALF_REPORT)
-                .isSuccess(isSuccess)
-                .body(message)
-                .build();
-
-        GameMessageRes quarterResult = reportService.sendQuarterResult(userId);
-        simpMessagingTemplate.convertAndSend("/topic/private/" + webSocketId, quarterResult);
-    }
-
-    // TODO: 태운
-    @GetMapping("/half/twnkm7089")
-    public void sendHalfTwnkm() {
-        User twn = userService.findTwn("twnkm7089@gmail.com");
-        String userId = twn.getUserId();
-
-        String twnKey = RedisPrefix.WEBSOCKET.prefix() + userId;
-        String webSocketId = (String) redisService.getValues(twnKey);
-        String responseData = TestExample.half;
-        ObjectMapper mapper = new ObjectMapper();
-        boolean isSuccess = false;
-        Half message = null;
-        try {
-            message = mapper.readValue(responseData, Half.class);
-            isSuccess = true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        GameMessageRes halfResult = GameMessageRes.builder()
-                .type(MessageType.HALF_REPORT)
-                .isSuccess(isSuccess)
-                .body(message)
-                .build();
-
-        simpMessagingTemplate.convertAndSend("/topic/private/" + webSocketId, halfResult);
-    }
-
-    @GetMapping("/event/twnkm7089")
-    public ResponseEntity<?> sendEventTwnkm() {
-        User twn = userService.findTwn("twnkm7089@gmail.com");
-        String userId = twn.getUserId();
-
-        String twnKey = RedisPrefix.WEBSOCKET.prefix() + userId;
-        String webSocketId = (String) redisService.getValues(twnKey);
-
-        GameMessageRes halfResult = GameMessageRes.builder()
-                .type(MessageType.GET_EVENT_LIST)
-                .isSuccess(true)
-                .body(serverInfo.getSpecialEventIdList())
-                .build();
-
-        simpMessagingTemplate.convertAndSend("/topic/private/" + webSocketId, halfResult);
-        return ResponseEntity.ok().
-                body(serverInfo.getSpecialEventIdList());
     }
 
     @GetMapping("/hello")
