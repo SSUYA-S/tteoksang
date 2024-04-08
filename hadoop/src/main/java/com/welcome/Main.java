@@ -306,7 +306,7 @@ public class Main {
 				System.exit(2);
 			}
 
-			Job job = Job.getInstance(conf, "log calculate");
+			Job job = Job.getInstance(conf, "logCal");
 			job.setJarByClass(Main.class);
 
 			// let hadoop know map and reduce classes
