@@ -467,6 +467,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
                 offset = fluctationInfo.getProductAvgCost() * randomRate * (1 + CORRECTION_VALUE);
             } else if (fluctationInfo.getMinFluctuationRate() > 1 && eventEffectRate>1) {
                 //증가만 하는 경우
+                //FIXME- randomERROR
                 randomRate = random.nextDouble(fluctationInfo.getMinFluctuationRate() * eventEffectRate * (1 - CORRECTION_VALUE), (fluctationInfo.getMaxFluctuationRate() + 0.001) * eventEffectRate);
             } else {
                 //평균적인 경우
