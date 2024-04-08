@@ -660,9 +660,11 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
                 //가격이 너무 작은 경우, 평균 가격의 일부 얻으므로써 보정
                 newCost += (int) (fluctationInfo.getProductAvgCost() * randomRate * MIN_AVG_MULTIPLE_LIMIT);
             }
-            //For Demo: 배추 가격 상승
-            if(productId==8){
-                newCost+=(int) (productInfo.getProductCost() * randomRate);
+            if(newCost<=0){
+                newCost=(int) (fluctationInfo.getProductAvgCost() * MIN_AVG_MULTIPLE_LIMIT);
+            }
+            while(newCost>=1_000_000) {
+                newCost-=(int) (fluctationInfo.getProductAvgCost() * randomRate * MIN_AVG_MULTIPLE_LIMIT);
             }
             //TODO 가격 변동 저장...
             redisStatisticsUtil.addCostInfo(redisHalfStatistics.getProductCostRateMap().get(productId), new CostInfo(newCost, serverInfo.getCurrentTurn()));
