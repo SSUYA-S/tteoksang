@@ -301,6 +301,11 @@ public class Main {
 
 		try(FileSystem fs = FileSystem.get(conf)) {
 			String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
+
+			for(String arg : otherArgs) {
+				System.out.println(arg);
+			}
+
 			if (otherArgs.length != 2) {
 				System.err.println("Usage: <in> <out>");
 				System.exit(2);
@@ -319,8 +324,8 @@ public class Main {
 			// set number of reduces
 			job.setNumReduceTasks(16);
 
-			Path inputPath = new Path(args[0]);
-			Path outputPath = new Path(args[1]);
+			Path inputPath = new Path(args[2]);
+			Path outputPath = new Path(args[3]);
 
 			fs.delete(outputPath, true);
 
