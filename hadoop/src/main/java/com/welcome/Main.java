@@ -302,12 +302,12 @@ public class Main {
 		Configuration conf = new Configuration();
 
 		try(FileSystem fs = FileSystem.get(conf)) {
-//			String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
+			String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
 
-//			if (otherArgs.length != 2) {
-//				System.err.println("Usage: <in> <out>");
-//				System.exit(2);
-//			}
+			if (otherArgs.length != 2) {
+				System.err.println("Usage: <in> <out>");
+				System.exit(2);
+			}
 
 			Job job = Job.getInstance(conf, "logCal");
 			job.setJarByClass(Main.class);
@@ -322,8 +322,8 @@ public class Main {
 			// set number of reduces
 			job.setNumReduceTasks(16);
 
-			Path inputPath = new Path(args[0]);
-			Path outputPath = new Path(args[1]);
+			Path inputPath = new Path(otherArgs[0]);
+			Path outputPath = new Path(otherArgs[1]);
 
 			fs.delete(outputPath, true);
 
