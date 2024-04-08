@@ -304,6 +304,7 @@ public class Main {
 		try(FileSystem fs = FileSystem.get(conf)) {
 			String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
 			System.err.println(otherArgs[0] + otherArgs[1] + otherArgs[2] + otherArgs[3]);
+			System.exit(2);
 			if (otherArgs.length != 2) {
 				System.err.println("Usage: <in> <out>");
 				System.exit(2);
