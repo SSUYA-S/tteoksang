@@ -309,7 +309,7 @@ public class Main {
 				System.exit(2);
 			}
 
-			Job job = Job.getInstance(conf, "logCal");
+			Job job = Job.getInstance(conf, "main");
 			job.setJarByClass(Main.class);
 
 			// let hadoop know map and reduce classes
@@ -319,11 +319,8 @@ public class Main {
 			job.setOutputKeyClass(Text.class);
 			job.setOutputValueClass(Text.class);
 
-			// set number of reduces
-			job.setNumReduceTasks(16);
-
-			Path inputPath = new Path(args[1]);
-			Path outputPath = new Path(args[3]);
+			Path inputPath = new Path(otherArgs[0]);
+			Path outputPath = new Path(otherArgs[1]);
 
 			fs.delete(outputPath, true);
 
