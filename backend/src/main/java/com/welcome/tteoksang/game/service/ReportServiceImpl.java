@@ -18,7 +18,7 @@ import com.welcome.tteoksang.game.dto.user.UserProductInfo;
 import com.welcome.tteoksang.game.exception.BrokerNotExistException;
 import com.welcome.tteoksang.game.repository.SeasonHalfPrivateStatisticsRepository;
 import com.welcome.tteoksang.game.repository.SeasonHalfStatisticsRepository;
-import com.welcome.tteoksang.game.scheduler.ServerInfo;
+import com.welcome.tteoksang.game.dto.server.ServerInfo;
 import com.welcome.tteoksang.redis.RedisPrefix;
 import com.welcome.tteoksang.redis.RedisService;
 import com.welcome.tteoksang.resource.dto.Broker;

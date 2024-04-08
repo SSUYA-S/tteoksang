@@ -2,14 +2,13 @@ package com.welcome.tteoksang.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.welcome.tteoksang.game.dto.result.*;
-import com.welcome.tteoksang.game.dto.result.half.BestSellerStatistics;
 import com.welcome.tteoksang.game.dto.result.half.TteokValues;
 import com.welcome.tteoksang.game.dto.result.half.TteokrockStatistics;
 import com.welcome.tteoksang.game.dto.result.half.TteoksangStatistics;
 import com.welcome.tteoksang.game.dto.server.RedisHalfStatistics;
 import com.welcome.tteoksang.game.dto.server.RedisStatisticsUtil;
 import com.welcome.tteoksang.game.dto.user.RedisGameInfo;
-import com.welcome.tteoksang.game.scheduler.ServerInfo;
+import com.welcome.tteoksang.game.dto.server.ServerInfo;
 import com.welcome.tteoksang.game.service.SeasonHalfPrivateStatisticsService;
 import com.welcome.tteoksang.game.service.SeasonHalfStatisticsService;
 import com.welcome.tteoksang.redis.RedisPrefix;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.stream.Collectors;
 
 /**

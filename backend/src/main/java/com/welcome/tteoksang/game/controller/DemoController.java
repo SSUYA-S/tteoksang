@@ -8,9 +8,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@Controller
+//@Controller
 @RequiredArgsConstructor
-@RequestMapping("/we1c0mettoeksang")
+//@RequestMapping("/we1c0mettoeksang")
 public class DemoController {
 
     private final PublicService publicService;

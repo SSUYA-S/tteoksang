@@ -18,7 +18,7 @@ import com.welcome.tteoksang.game.exception.ProductFluctuationNotFoundException;
 import com.welcome.tteoksang.game.repository.ProductFluctuationRepository;
 import com.welcome.tteoksang.game.repository.ServerSeasonInfoRepository;
 import com.welcome.tteoksang.game.scheduler.ScheduleService;
-import com.welcome.tteoksang.game.scheduler.ServerInfo;
+import com.welcome.tteoksang.game.dto.server.ServerInfo;
 import com.welcome.tteoksang.redis.RedisPrefix;
 import com.welcome.tteoksang.redis.RedisService;
 import com.welcome.tteoksang.resource.dto.Event;
@@ -47,7 +47,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Validated
 @RequiredArgsConstructor
-public class PublicServiceImpl implements PublicService, PrivateGetPublicService, DemoService {
+public class PublicServiceImpl implements PublicService, PrivateGetPublicService {
 
     private final ScheduleService scheduleService;
     private final RedisService redisService;
@@ -67,6 +67,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
     private final RedisStatisticsUtil redisStatisticsUtil;
     private final Random random = new Random();
 
+    //Turn과 주기 관련..
     @Value("${TURN_PERIOD_SEC}")
     private long turnPeriodSec;
 
@@ -101,9 +102,10 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
 
     //게임 내 필요 상수 정의
     private int NEWS_NUM = 4;
-    private int BUYABLE_PRODUCT_NUM = 6;
-
-    private final int PLAY_LONG_TIME = 3; //3시간
+    @Value("${BUYABLE_PRODUCT_NUM}")
+    private int BUYABLE_PRODUCT_NUM;
+    @Value("${PLAY_LONG_TIME_HOUR}")
+    private int PLAY_LONG_TIME_HOUR; //3시간
 
     private final int DEMO_INIT_TURN=179;
 
@@ -259,7 +261,6 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
 
     }
 
-    @Override
     public void nextTurn() {
         if(serverInfo.getCurrentTurn()%(quarterYearTurnPeriod*2)==0){
             endHalfYearGame();
@@ -271,12 +272,10 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         executePerTurn();
     }
 
-    @Override
     public void takeBreak() {
         endHalfYearGame();
     }
 
-    @Override
     public void finishBreak() {
         endBreak();
         redisService.setValues(RedisPrefix.SERVER_HALF_STATISTICS.prefix(), RedisHalfStatistics.builder()
@@ -718,13 +717,13 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         privateScheduleService.getUserAlertPlayTimeMap().entrySet().stream().forEach(
                 entry -> {
 //                    if (Duration.between(entry.getValue().getChecked(), currentTime).toMinutes() >= PLAY_LONG_TIME) {
-                    if (Duration.between(entry.getValue().getChecked(), currentTime).toHours() >= PLAY_LONG_TIME) {
+                    if (Duration.between(entry.getValue().getChecked(), currentTime).toHours() >= PLAY_LONG_TIME_HOUR) {
 
                         String userId = entry.getKey();
                         sendPrivateMessage(userId, MessageType.ALERT_PLAYTIME, PlayTimeInfo.builder()
-                                .playTime(PLAY_LONG_TIME * entry.getValue().getAlertCount())
+                                .playTime(PLAY_LONG_TIME_HOUR * entry.getValue().getAlertCount())
                                 .build());
-                        privateScheduleService.updateUserAlertPlayTimeMap(userId, PLAY_LONG_TIME);
+                        privateScheduleService.updateUserAlertPlayTimeMap(userId, PLAY_LONG_TIME_HOUR);
 
                     }
                 }

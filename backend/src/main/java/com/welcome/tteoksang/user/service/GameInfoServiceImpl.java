@@ -6,7 +6,7 @@ import com.welcome.tteoksang.game.dto.log.LogMessage;
 import com.welcome.tteoksang.game.dto.log.NewgameLogInfo;
 import com.welcome.tteoksang.game.dto.user.RedisGameInfo;
 import com.welcome.tteoksang.game.dto.user.UserProductInfo;
-import com.welcome.tteoksang.game.scheduler.ServerInfo;
+import com.welcome.tteoksang.game.dto.server.ServerInfo;
 import com.welcome.tteoksang.redis.RedisPrefix;
 import com.welcome.tteoksang.redis.RedisSerializationUtil;
 import com.welcome.tteoksang.redis.RedisService;
