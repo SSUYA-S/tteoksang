@@ -105,7 +105,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
     @Value("${BUYABLE_PRODUCT_NUM}")
     private int BUYABLE_PRODUCT_NUM;
     @Value("${PLAY_LONG_TIME_HOUR}")
-    private int PLAY_LONG_TIME_HOUR; //3시간
+    private int PLAY_LONG_TIME_HOUR;
 
     private final int DEMO_INIT_TURN=179;
 
@@ -463,8 +463,6 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         gameInfoRepository.deleteAll();
         redisService.deleteValues(RedisPrefix.SERVER_NEWS.prefix());
         redisService.deleteValues(RedisPrefix.SERVER_INFO.prefix());
-//        log.debug("delete news...."+redisService.hasKey(RedisPrefix.SERVER_NEWS.prefix()));
-//        log.debug("delete info...."+redisService.hasKey(RedisPrefix.SERVER_INFO.prefix()));
 
         //TODO-전체결산 해야 함!
     }
@@ -488,10 +486,10 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
 
     //1턴마다 실행: 가격 변동, 구매 가능 리스트 변동
     private void executePerTurn() {
-        if (serverInfo.getCurrentTurn() % buyableProductTurnPeriod == 0) {
+        if (serverInfo.getCurrentTurn() % buyableProductTurnPeriod == 0) { //살 수 있는 작물 설정
             updateBuyableProduct();
         }
-        fluctuateProduct();
+        fluctuateProduct(); //가격변동
         updateTurn();
         log.debug(serverInfo.getCurrentTurn() + "번째 턴 실행 :" + serverInfo.getTurnStartTime());
         sendPublicMessage(MessageType.GET_PUBLIC_EVENT,
@@ -510,7 +508,19 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
                         ).toList())
                         .buyableProductList(serverInfo.getBuyableProducts())
                         .build());
-        if (serverInfo.getCurrentTurn() % 10 == 9) {
+        // 계절결산 전송
+        if (serverInfo.getCurrentTurn() != 1 && serverInfo.getCurrentTurn() % quarterYearTurnPeriod == 1) {
+            privateScheduleService.getConnectedUserId().stream().forEach(
+                    userId->{
+                        GameMessageRes quarterResult = reportService.sendQuarterResult(userId);
+                        sendPrivateMessage(userId,quarterResult.getType(), quarterResult.getBody());
+                    }
+            );
+        }
+        if (serverInfo.getCurrentTurn() % quarterYearTurnPeriod == 0) { //계절 변경. 0이라는 의미는..  이제 다음 턴부터 바뀐다는 것!
+            updateQuarterYearList(serverInfo.getCurrentTurn());
+        }
+        if (serverInfo.getCurrentTurn() % 10 == 0) { //10*k번째 턴 실행시켜두고, 그 사이에 다음 fluctMap으로 업데이트
             updateFluctuationInfoPer10Days();
         }
     }
@@ -591,20 +601,14 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
     }
 
     public void updateTurn() {
-        if (serverInfo.getCurrentTurn() % quarterYearTurnPeriod == 0) { //계절 변경. 0이라는 의미는..  이제
-            updateQuarterYearList(serverInfo.getCurrentTurn());
-        }
         serverInfo.setCurrentTurn(serverInfo.getCurrentTurn() + 1);
         serverInfo.setTurnStartTime(LocalDateTime.now());
-        if (serverInfo.getCurrentTurn() % eventTurnPeriod == 1) { //DEMO 를 위해 0->1로 변경
+        //턴 바뀐 이후
+        if (serverInfo.getCurrentTurn() % eventTurnPeriod == 1) { 
+            //1일일 때마다 실행..
             RedisStatistics redisStatistics = (RedisStatistics) redisService.getValues(RedisPrefix.SERVER_STATISTICS.prefix());
             Map<String, Integer> eventCountMap = redisStatistics.getEventCountMap();
-            currentEventList.stream().forEach(
-                    event->{
-                        fluctationInfoMap.get(event.getProductId())
-                                .setEventEffect(fluctationInfoMap.get(event.getProductId()).getEventEffect() + event.getEventVariance());
-                    }
-            );
+
             serverInfo.setSpecialEventIdList(nextEventList.stream().map(event -> {
                 //이벤트 발생횟수 업데이트
                 String eventName = event.getEventName();
@@ -613,6 +617,12 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
                 return event.getEventId();
             }).toList());
             currentEventList = nextEventList;
+            currentEventList.stream().forEach(
+                    event->{
+                        fluctationInfoMap.get(event.getProductId())
+                                .setEventEffect(fluctationInfoMap.get(event.getProductId()).getEventEffect() + event.getEventVariance());
+                    }
+            );
             nextEventList = new ArrayList<>();
             //레디스에 통계 저장
             redisService.setValues(RedisPrefix.SERVER_STATISTICS.prefix(), redisStatistics);
@@ -645,7 +655,6 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
                 double minRate = (fluctationInfo.getMinFluctuationRate() * 2 - fluctationInfo.getMaxFluctuationRate()) * (1 - CORRECTION_VALUE);
                 randomRate = random.nextDouble(minRate, maxRate);
 //                log.debug(productId + "@@@@@너무 비싸요@@@@@" + minRate + ">" + randomRate + "<" + maxRate);
-                //TODO- 그럼에도 계속 올라가는 경우 조정해줘야 할지 논의 필요-> 해줘야 한다...
                 offset = fluctationInfo.getProductAvgCost() * randomRate * (1 + CORRECTION_VALUE);
             } else if (fluctationInfo.getMinFluctuationRate() > 1) {
                 //증가만 하는 경우
@@ -697,26 +706,36 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         int countPerTenDays = (serverInfo.getCurrentTurn() % (quarterYearTurnPeriod * 4)) / 10;
         fluctationInfoMap.entrySet().stream().forEach(
                 (entry) -> {
+                    int productId=entry.getKey();
                     ProductFluctuation fluctuation = productFluctuationRepository.findById(ProductFluctuationId.builder()
-                            .productId(entry.getKey()).countPerTenDays(countPerTenDays).build()
+                            .productId(productId).countPerTenDays(countPerTenDays).build()
                     ).orElseThrow(ProductFluctuationNotFoundException::new);
 
-                    if (fluctuation.getMaxFluctuationRate() != 0) { //변동 폭이 0일 때는 pass
-                        entry.getValue().setMinFluctuationRate(fluctuation.getMinFluctuationRate());
-                        entry.getValue().setMaxFluctuationRate(fluctuation.getMaxFluctuationRate());
+//                    if (fluctuation.getMaxFluctuationRate() != 0) { //변동 폭이 0일 때는 pass
+//                        entry.getValue().setMinFluctuationRate(fluctuation.getMinFluctuationRate());
+//                        entry.getValue().setMaxFluctuationRate(fluctuation.getMaxFluctuationRate());
+//                    }
+                    double maxFluctuationRate = fluctuation.getMaxFluctuationRate();
+                    double minFluctuationRate = fluctuation.getMinFluctuationRate();
+                    if (maxFluctuationRate == 0) { //fluctuation 정보 없는 것들은 전체의 평균 fluctuation 이용
+                        List<ProductFluctuation> productFluctuationList = productFluctuationRepository.findByProductId(productId);
+                        maxFluctuationRate = productFluctuationList.stream().filter(productFluctuation -> productFluctuation.getMaxFluctuationRate() > 0)
+                                .mapToDouble(ProductFluctuation::getMaxFluctuationRate).average().getAsDouble();
+                        minFluctuationRate = productFluctuationList.stream().filter(productFluctuation -> productFluctuation.getMinFluctuationRate() > 0)
+                                .mapToDouble(ProductFluctuation::getMinFluctuationRate).average().getAsDouble();
                     }
+                    entry.getValue().setMinFluctuationRate(maxFluctuationRate);
+                    entry.getValue().setMaxFluctuationRate(minFluctuationRate);
                 }
         );
     }
 
-    //TODO- PlayTIME ALERT
+    //TODO- PlayTIME ALERT: 현재 정각 단위로 장시간 플레이 경고.. 로직 바꾸고 싶으면 바꾸기
     @Scheduled(cron = "0 0  * * * *")
-//    @Scheduled(cron = "0 * * * * *")
     public void checkLongPlayTime() {
         LocalDateTime currentTime = LocalDateTime.now();
         privateScheduleService.getUserAlertPlayTimeMap().entrySet().stream().forEach(
                 entry -> {
-//                    if (Duration.between(entry.getValue().getChecked(), currentTime).toMinutes() >= PLAY_LONG_TIME) {
                     if (Duration.between(entry.getValue().getChecked(), currentTime).toHours() >= PLAY_LONG_TIME_HOUR) {
 
                         String userId = entry.getKey();
@@ -783,6 +802,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         }
         BreakTimeInfo breakTimeInfo = (BreakTimeInfo) redisService.getValues(RedisPrefix.SERVER_BREAK.prefix());
         breakTimeInfo.setIsBreakTime(false);
+        //FIXME- breakTime 체크
         LocalDateTime testNow = LocalDateTime.now();
 //        log.debug("휴식시간은.."+breakTimeInfo.getBreakTime());
 //        log.debug("휴식시간 체크1.."+breakTimeInfo.getBreakTime().isBefore(testNow));
@@ -811,12 +831,12 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
 
 
     public NewsInfo searchNewspaper() {
-        if (!redisService.hasKey(RedisPrefix.SERVER_NEWS.prefix())) {
+        if (!redisService.hasKey(RedisPrefix.SERVER_NEWS.prefix())) { //뉴스가 없다는 것은 아직 시작한 이벤트가 없는 것!
             List<Article> articles = new ArrayList<>();
             articles.add(Article.builder().articleHeadline("[단독] 신문을 통해 곧 발생할 이벤트에 대한 정보를 얻을 수 있다 전해..").build());
             articles.add(Article.builder().articleHeadline("합숙하며 플젝하는 팀이 있다? '충격 실화' 또는 '만우절 거짓말' 대중 의견 분분..").build());
             articles.add(Article.builder().articleHeadline("오늘의 노래 추천: 첫만남은 계획대로 되지 않아").build());
-            articles.add(Article.builder().articleHeadline("떡잎부터 시작하는 상인생활 떡상 기원!").build());
+            articles.add(Article.builder().articleHeadline("<떡>잎부터 시작하는 <상>인생활, 떡상 기원!").build());
             return NewsInfo.builder()
                     .publishTurn(0)
                     .articleList(articles)
