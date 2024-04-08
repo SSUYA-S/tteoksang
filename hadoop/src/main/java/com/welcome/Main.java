@@ -3,6 +3,7 @@ package com.welcome;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Properties;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -24,6 +25,7 @@ import org.apache.hadoop.util.ProgramDriver;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
+@Slf4j
 public class Main {
 
 	// map function
@@ -303,7 +305,7 @@ public class Main {
 			String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
 
 			for(String arg : otherArgs) {
-				System.out.println(arg);
+				log.info("{}", arg);
 			}
 
 			if (otherArgs.length != 2) {
