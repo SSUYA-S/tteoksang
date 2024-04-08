@@ -300,11 +300,12 @@ public class Main {
 	public static void main(String[] args) {
 		// Main 함수 시작
 		Configuration conf = new Configuration();
+		conf.set("mapreduce.job.classpath.files", "/home/hdfs/jars/kafka-clients.jar");
+		conf.set("mapreduce.job.classpath.files", "/home/hdfs/jars/kafka_2.13-3.6.2.jar");
 
 		try(FileSystem fs = FileSystem.get(conf)) {
 			String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
-			System.err.println(otherArgs[0] + otherArgs[1] + otherArgs[2] + otherArgs[3]);
-			System.exit(2);
+
 			if (otherArgs.length != 2) {
 				System.err.println("Usage: <in> <out>");
 				System.exit(2);
