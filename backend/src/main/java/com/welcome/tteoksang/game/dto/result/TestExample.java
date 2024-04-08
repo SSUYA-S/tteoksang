@@ -163,14 +163,14 @@ public interface TestExample {
 //            "}\n";
     String half = "{\n" +
         "    \"turn\": 181,\n" +
-        "    \"gold\": 5000,\n" +
+        "    \"gold\": 2134020,\n" +
         "    \"rentFeeInfo\": {\n" +
         "        \"billType\": \"basic\",\n" +
         "        \"rentFee\": 20000,\n" +
         "        \"productList\": []\n" +
         "    },\n" +
         "    \"quarterReport\": {\n" +
-        "        \"quarterProfit\": 1500000,\n" +
+        "        \"quarterProfit\": 15030032,\n" +
         "        \"rentFee\": 20000,\n" +
         "        \"inProductList\": [0, 1, 3, 4, 5, 6, 8, 12, 19, 28, 32, 35, 37, 38, 39, 40, 42, 43, 44],\n" +
         "        \"titleId\": 2,\n" +
@@ -180,11 +180,11 @@ public interface TestExample {
         "            \"productList\": []\n" +
         "        }\n" +
         "    },\n" +
-        "    \"totalProductIncome\": 3000000,\n" +
-        "    \"totalProductOutcome\": 1000000,\n" +
-        "    \"totalBrokerFee\": 300000,\n" +
+        "    \"totalProductIncome\": 32040207,\n" +
+        "    \"totalProductOutcome\": 1204020,\n" +
+        "    \"totalBrokerFee\": 340200,\n" +
         "    \"totalUpgradeFee\": 200000,\n" +
-        "    \"totalRentFee\": 40000,\n" +
+        "    \"totalRentFee\": 40200,\n" +
         "    \"eventBonus\": 100000,\n" +
         "    \"participantCount\": 20,\n" +
         "    \"rankInfoList\": [\n" +
@@ -196,9 +196,9 @@ public interface TestExample {
         "                \"profileIconId\": 3,\n" +
         "                \"profileFrameId\": 1\n" +
         "            },\n" +
-        "            \"theFirstRecord\": 6000000,\n" +
+        "            \"theFirstRecord\": 6103020,\n" +
         "            \"myRank\": 53,\n" +
-        "            \"myRecord\": 3000000\n" +
+        "            \"myRecord\": 3200310\n" +
         "        },\n" +
         "        {\n" +
         "            \"rankName\": \"부자\",\n" +
@@ -208,9 +208,9 @@ public interface TestExample {
         "                \"profileIconId\": 2,\n" +
         "                \"profileFrameId\": 2\n" +
         "            },\n" +
-        "            \"theFirstRecord\": 300000000,\n" +
+        "            \"theFirstRecord\": 303002060,\n" +
         "            \"myRank\": 112,\n" +
-        "            \"myRecord\": 13400000\n" +
+        "            \"myRecord\": 13402020\n" +
         "        },\n" +
         "        {\n" +
         "            \"rankName\": \"떡상\",\n" +
@@ -220,9 +220,9 @@ public interface TestExample {
         "                \"profileIconId\": 1,\n" +
         "                \"profileFrameId\": 2\n" +
         "            },\n" +
-        "            \"theFirstRecord\": 123.5,\n" +
+        "            \"theFirstRecord\": 132.5,\n" +
         "            \"myRank\": 1,\n" +
-        "            \"myRecord\": 123.5\n" +
+        "            \"myRecord\": 132.5\n" +
         "        }\n" +
         "    ],\n" +
         "    \"tteoksangStatistics\": {\n" +

@@ -38,46 +38,57 @@ export default function InventoryModal(props: inventoryType) {
     );
 
     return (
-        <section className="absolute w-[80%] h-[80%] flex justify-center items-center z-50 animation-modal mt-[1vw]">
+        <>
+            <div
+                className="w-full h-full absolute top-0 left-0 opacity-0 z-40"
+                onClick={closeInventoryModal}
+            ></div>
+          <section
+              className="absolute w-[80%] h-[80%] flex justify-center items-center z-50 animation-modal mt-[1vw]">
             <img
                 src="/src/assets/images/layout/ui-board.webp"
                 className="absolute w-full h-full -z-10"
                 alt=""
             />
-            <div className="absolute left-[1vw] w-[95%] h-[90%] items-start justify-start flex flex-wrap overflow-y-auto px-[3vw] py-[2vw]">
-                {myProduct.map((product: ProductBucket) => {
-                    return (
-                        <InventoryCard
-                            myProduct={product}
-                            productName={
-                                props.productSource[product.productId]
-                                    .productName
-                            }
-                            productTodayCost={
-                                productInfoList[product.productId].productCost
-                            }
-                            productFluctuation={
-                                productInfoList[product.productId]
-                                    .productFluctuation
-                            }
-                        />
-                    );
-                })}
+            <div
+                className="absolute left-[1vw] w-[95%] h-[90%] items-start justify-start flex flex-wrap overflow-y-auto px-[3vw] py-[2vw]">
+              {myProduct.map((product: ProductBucket) => {
+                return (
+                    <InventoryCard
+                        myProduct={product}
+                        productName={
+                          props.productSource[product.productId]
+                              .productName
+                        }
+                        productTodayCost={
+                          productInfoList[product.productId].productCost
+                        }
+                        productFluctuation={
+                          productInfoList[product.productId]
+                              .productFluctuation
+                        }
+                    />
+                );
+              })}
             </div>
             <div
                 className="absolute w-[17%] h-[10%] right-[5%] top-[10%] bg-white rounded-[0.6vw] cursor-pointer color-border-subbold border-[0.2vw] flex justify-center items-center color-text-subbold text-[1.5vw]"
                 onClick={props.openTradeElement}
             >
-                구매/판매 창으로
+              구매/판매 창으로
             </div>
             <div
-                className="absolute text-[2vw] flex items-center justify-center text-white top-[0.4vw] right-[0.4vw] w-[4vw] h-[4vw] border-[0.4vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer"
+                className="absolute flex items-center justify-center top-[-1vw] right-[-1vw] w-[6vw] h-[6vw] cursor-pointer btn-animation"
                 onClick={() => {
-                    closeInventoryModal();
+                  closeInventoryModal();
                 }}
             >
-                X
+              <img
+                  src="/src/assets/images/layout/ui-icon-closebtn.webp"
+                  alt=""
+              />
             </div>
-        </section>
+          </section>
+        </>
     );
 }

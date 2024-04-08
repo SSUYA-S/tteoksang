@@ -577,158 +577,163 @@ export default function MyPageModal(props: MyPageType) {
         }
     };
     return (
-        <div className="absolute w-[90%] h-[95%] flex items-center justify-center color-text-textcolor border-[0.2vw] color-border-brown1 color-bg-main z-50 animation-modal rounded-[1vw]">
-            {isNicknameChanging ? (
-                <NicknameChangeModal
-                    closeModal={closeNicknameModal}
-                    nickName={userNickname}
-                />
-            ) : (
-                <></>
-            )}
-            <div className="w-[32%] h-[85%] flex flex-col py-[1vw] items-center bg-white border-[0.2vw] color-border-brown1 rounded-[1vw]">
-                <div
-                    className="relative w-[12vw] h-[35%] border-[0.2vw]"
-                    style={{ aspectRatio: 1 / 1 }}
-                >
-                    <img
-                        className="absolute w-full h-full object-cover "
-                        src={`/src/assets/images/profile/icon (${tempIcon}).png`}
-                        alt=""
-                        style={{ aspectRatio: 1 / 1 }}
+        <>
+            <div
+                className="w-full h-full absolute top-0 left-0 z-40 opacity-0"
+                onClick={closeMypageModal}
+            ></div>
+            <div className="absolute w-[90%] h-[95%] flex items-center justify-center color-text-textcolor border-[0.2vw] color-border-brown1 color-bg-main z-50 animation-modal rounded-[1vw]">
+                {isNicknameChanging ? (
+                    <NicknameChangeModal
+                        closeModal={closeNicknameModal}
+                        nickName={userNickname}
                     />
-                    {tempFrame !== 1 ? (
+                ) : (
+                    <></>
+                )}
+                <div className="w-[32%] h-[85%] flex flex-col py-[1vw] items-center bg-white border-[0.2vw] color-border-brown1 rounded-[1vw]">
+                    <div
+                        className="relative w-[12vw] h-[35%] border-[0.2vw]"
+                        style={{ aspectRatio: 1 / 1 }}
+                    >
                         <img
                             className="absolute w-full h-full object-cover "
-                            src={`/src/assets/images/profile/frame (${tempFrame}).png`}
+                            src={`/src/assets/images/profile/icon (${tempIcon}).png`}
                             alt=""
                             style={{ aspectRatio: 1 / 1 }}
                         />
-                    ) : (
-                        <div
-                            className="absolute w-full h-full object-cover "
-                            style={{ aspectRatio: 1 / 1 }}
-                        />
-                    )}
-                </div>
-                <div className="flex flex-col w-[80%] h-[25%] ">
-                    <div className="flex w-full justify-between items-center mt-[0.8vw]">
-                        <p className="text-[1.5vw] text-green-500">칭호</p>
-                        {titleId === 1 ? (
-                            <p className="text-[1.2vw]  text-gray-400">
-                                칭호 없음
-                            </p>
+                        {tempFrame !== 1 ? (
+                            <img
+                                className="absolute w-full h-full object-cover "
+                                src={`/src/assets/images/profile/frame (${tempFrame}).png`}
+                                alt=""
+                                style={{ aspectRatio: 1 / 1 }}
+                            />
                         ) : (
-                            <p className="text-[1.2vw] text-green-500">
-                                {props.titleInfo[titleId - 1].titleName}
-                            </p>
+                            <div
+                                className="absolute w-full h-full object-cover "
+                                style={{ aspectRatio: 1 / 1 }}
+                            />
                         )}
                     </div>
-                    <div className="flex w-full justify-between items-center my-[0.6vw]">
-                        <div
-                            className="w-[30%] text-[1.5vw] cursor-pointer"
-                            onClick={() => setIsNicknameChanging(true)}
-                        >
-                            닉네임
+                    <div className="flex flex-col w-[80%] h-[25%] ">
+                        <div className="flex w-full justify-between items-center mt-[0.8vw]">
+                            <p className="text-[1.5vw] text-green-500">칭호</p>
+                            {titleId === 1 ? (
+                                <p className="text-[1.2vw]  text-gray-400">
+                                    칭호 없음
+                                </p>
+                            ) : (
+                                <p className="text-[1.2vw] text-green-500">
+                                    {props.titleInfo[titleId - 1].titleName}
+                                </p>
+                            )}
                         </div>
-                        <div
-                            className="text-[1.2vw] text-start cursor-pointer  overflow-hidden text-ellipsis whitespace-nowrap "
-                            onClick={() => setIsNicknameChanging(true)}
-                        >
-                            {userNickname}
+                        <div className="flex w-full justify-between items-center my-[0.6vw]">
+                            <div
+                                className="w-[30%] text-[1.5vw] cursor-pointer"
+                                onClick={() => setIsNicknameChanging(true)}
+                            >
+                                닉네임
+                            </div>
+                            <div
+                                className="text-[1.2vw] text-start cursor-pointer  overflow-hidden text-ellipsis whitespace-nowrap "
+                                onClick={() => setIsNicknameChanging(true)}
+                            >
+                                {userNickname}
+                            </div>
+                            <div
+                                className="w-[24%] flex justify-center text-[1.2vw] text-center cursor-pointer border-[0.2vw] rounded-[0.8vw] color-border-subbold hover:color-bg-subbold hover:text-white"
+                                onClick={() => setIsNicknameChanging(true)}
+                            >
+                                수정
+                            </div>
                         </div>
-                        <div
-                            className="w-[24%] flex justify-center text-[1.2vw] text-center cursor-pointer border-[0.2vw] rounded-[0.8vw] color-border-subbold hover:color-bg-subbold hover:text-white"
-                            onClick={() => setIsNicknameChanging(true)}
-                        >
-                            수정
+                        <div className="flex w-full justify-between items-center">
+                            <p className="text-[1.3vw]">경력</p>
+                            <p className="text-[1.3vw]">{`${career}년차`}</p>
                         </div>
                     </div>
-                    <div className="flex w-full justify-between items-center">
-                        <p className="text-[1.3vw]">경력</p>
-                        <p className="text-[1.3vw]">{`${career}년차`}</p>
-                    </div>
-                </div>
-                <div className="w-[80%] h-[30%]  flex flex-col color-border-subbold border-[0.2vw] mt-[1vw] px-[0.5vw]">
-                    <div className="pt-[0.2vw] text-[1vw] text-left pl-[1vw]">
-                        현재 착용 중인 아이템
-                    </div>
-                    <div className="w-full flex items-center justify-center">
-                        <div
-                            className="relative w-[30%] bg-white border-[0.1vw] border-black cursor-pointer"
-                            style={{ aspectRatio: 1 / 1 }}
-                            onClick={() => {
-                                changeMenu(2);
-                                changeLittleMenu(0);
-                            }}
-                        >
-                            {tempFrame !== 1 ? (
+                    <div className="w-[80%] h-[30%]  flex flex-col color-border-subbold border-[0.2vw] mt-[1vw] px-[0.5vw]">
+                        <div className="pt-[0.2vw] text-[1vw] text-left pl-[1vw]">
+                            현재 착용 중인 아이템
+                        </div>
+                        <div className="w-full flex items-center justify-center">
+                            <div
+                                className="relative w-[30%] bg-white border-[0.1vw] border-black cursor-pointer"
+                                style={{ aspectRatio: 1 / 1 }}
+                                onClick={() => {
+                                    changeMenu(2);
+                                    changeLittleMenu(0);
+                                }}
+                            >
+                                {tempFrame !== 1 ? (
+                                    <img
+                                        className="w-full h-full object-cover "
+                                        src={`/src/assets/images/profile/frame (${tempFrame}).png`}
+                                        alt=""
+                                        style={{ aspectRatio: 1 / 1 }}
+                                    />
+                                ) : (
+                                    <div
+                                        className="w-full h-full object-cover "
+                                        style={{ aspectRatio: 1 / 1 }}
+                                    />
+                                )}
+                            </div>
+                            <div
+                                className="relative w-[30%] bg-white border-[0.1vw] border-black mx-[0.8vw] my-[1.2vw] cursor-pointer"
+                                style={{ aspectRatio: 1 / 1 }}
+                                onClick={() => {
+                                    changeMenu(2);
+                                    changeLittleMenu(1);
+                                }}
+                            >
                                 <img
                                     className="w-full h-full object-cover "
-                                    src={`/src/assets/images/profile/frame (${tempFrame}).png`}
+                                    src={`/src/assets/images/profile/icon (${tempIcon}).png`}
                                     alt=""
                                     style={{ aspectRatio: 1 / 1 }}
                                 />
-                            ) : (
-                                <div
+                            </div>
+                            <div
+                                className="relative w-[30%] bg-white border-[0.1vw] border-black cursor-pointer"
+                                style={{ aspectRatio: 1 / 1 }}
+                                onClick={() => {
+                                    changeMenu(2);
+                                    changeLittleMenu(2);
+                                }}
+                            >
+                                <img
                                     className="w-full h-full object-cover "
+                                    src={`/src/assets/images/background/bg-${tempTheme}-morning.webp`}
+                                    alt=""
                                     style={{ aspectRatio: 1 / 1 }}
                                 />
-                            )}
-                        </div>
-                        <div
-                            className="relative w-[30%] bg-white border-[0.1vw] border-black mx-[0.8vw] my-[1.2vw] cursor-pointer"
-                            style={{ aspectRatio: 1 / 1 }}
-                            onClick={() => {
-                                changeMenu(2);
-                                changeLittleMenu(1);
-                            }}
-                        >
-                            <img
-                                className="w-full h-full object-cover "
-                                src={`/src/assets/images/profile/icon (${tempIcon}).png`}
-                                alt=""
-                                style={{ aspectRatio: 1 / 1 }}
-                            />
-                        </div>
-                        <div
-                            className="relative w-[30%] bg-white border-[0.1vw] border-black cursor-pointer"
-                            style={{ aspectRatio: 1 / 1 }}
-                            onClick={() => {
-                                changeMenu(2);
-                                changeLittleMenu(2);
-                            }}
-                        >
-                            <img
-                                className="w-full h-full object-cover "
-                                src={`/src/assets/images/background/bg-${tempTheme}-morning.webp`}
-                                alt=""
-                                style={{ aspectRatio: 1 / 1 }}
-                            />
+                            </div>
                         </div>
                     </div>
+                    <div className="w-[80%] h-[10%]  flex items-center justify-between mt-[0.4vw]">
+                        <p
+                            className="h-fit text-[1.3vw] border-[0.1vw] py-[0.4vw] px-[1.6vw] rounded-[0.6vw] color-border-orange1 color-text-orange1 bg-white cursor-pointer hover:color-bg-orange1 hover:text-white btn-animation"
+                            onClick={props.proceedLogout}
+                        >
+                            로그아웃
+                        </p>
+                        <p
+                            className="h-fit text-[1.3vw] border-[0.1vw] py-[0.4vw] px-[1.6vw] rounded-[0.6vw] border-white bg-red-600 text-white cursor-pointer hover:text-red-600 hover:bg-white hover:border-red-600 btn-animation"
+                            onClick={props.proceedWithdrawal}
+                        >
+                            회원탈퇴
+                        </p>
+                    </div>
                 </div>
-                <div className="w-[80%] h-[10%]  flex items-center justify-between mt-[0.4vw]">
-                    <p
-                        className="h-fit text-[1.3vw] border-[0.1vw] py-[0.4vw] px-[1.6vw] rounded-[0.6vw] color-border-orange1 color-text-orange1 bg-white cursor-pointer hover:color-bg-orange1 hover:text-white btn-animation"
-                        onClick={props.proceedLogout}
-                    >
-                        로그아웃
-                    </p>
-                    <p
-                        className="h-fit text-[1.3vw] border-[0.1vw] py-[0.4vw] px-[1.6vw] rounded-[0.6vw] border-white bg-red-600 text-white cursor-pointer hover:text-red-600 hover:bg-white hover:border-red-600 btn-animation"
-                        onClick={props.proceedWithdrawal}
-                    >
-                        회원탈퇴
-                    </p>
-                </div>
-            </div>
-            <div className="w-[1%]"></div>
-            <div className="relative w-[64%] h-[85%] bg-white border-[0.2vw] color-border-brown1 rounded-[1vw] ">
-                {menuElement()}
+                <div className="w-[1%]"></div>
+                <div className="relative w-[64%] h-[85%] bg-white border-[0.2vw] color-border-brown1 rounded-[1vw] ">
+                    {menuElement()}
 
-                <div className="absolute -top-[2.1vw] left-[10%] flex">
-                    {/* <div
+                    <div className="absolute -top-[2.1vw] left-[10%] flex">
+                        {/* <div
                         className={
                             'w-[9vw]  text-white bg-red-500 pt-[0.2vw] text-[1.4vw] cursor-pointer rounded-t-[1vw] ' +
                             (menu === 0 ? 'h-[4.2vw]' : 'h-[2.1vw]')
@@ -737,7 +742,7 @@ export default function MyPageModal(props: MyPageType) {
                     >
                         도전과제
                     </div> */}
-                    {/* <div
+                        {/* <div
                         className={
                             'w-[9vw]  text-white bg-blue-500 pt-[0.2vw] text-[1.4vw] mx-[2vw] cursor-pointer rounded-t-[1vw] ' +
                             (menu === 1 ? 'h-[4.2vw]' : 'h-[2.1vw]')
@@ -746,33 +751,34 @@ export default function MyPageModal(props: MyPageType) {
                     >
                         히스토리
                     </div> */}
+                        <div
+                            className={
+                                'w-[9vw]  text-white bg-purple-500 pt-[0.2vw] ms-[2vw] text-[1.4vw] cursor-pointer rounded-t-[1vw] ' +
+                                (menu === 2 ? 'h-[4.2vw]' : 'h-[2.1vw]')
+                            }
+                            onClick={() => changeMenu(2)}
+                        >
+                            꾸미기
+                        </div>
+                    </div>
                     <div
                         className={
-                            'w-[9vw]  text-white bg-purple-500 pt-[0.2vw] ms-[2vw] text-[1.4vw] cursor-pointer rounded-t-[1vw] ' +
-                            (menu === 2 ? 'h-[4.2vw]' : 'h-[2.1vw]')
+                            'absolute right-[5%] bottom-[5%] w-[9vw] border-[0.2vw] color-border-subbold text-white color-bg-subbold p-[0.6vw] text-[1.4vw] cursor-pointer rounded-[0.8vw] hover:bg-white hover:color-text-subbold hover:color-border-subbold '
                         }
-                        onClick={() => changeMenu(2)}
+                        onClick={() => saveSettings()}
                     >
-                        꾸미기
+                        적용하기
                     </div>
                 </div>
                 <div
-                    className={
-                        'absolute right-[5%] bottom-[5%] w-[9vw] border-[0.2vw] color-border-subbold text-white color-bg-subbold p-[0.6vw] text-[1.4vw] cursor-pointer rounded-[0.8vw] hover:bg-white hover:color-text-subbold hover:color-border-subbold '
-                    }
-                    onClick={() => saveSettings()}
+                    className="absolute text-[1.3vw] flex items-center justify-center text-white top-[0.2vw] right-[0.2vw] w-[3vw] h-[3vw] border-[0.2vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer"
+                    onClick={() => {
+                        closeMypageModal();
+                    }}
                 >
-                    적용하기
+                    X
                 </div>
             </div>
-            <div
-                className="absolute text-[1.3vw] flex items-center justify-center text-white top-[0.2vw] right-[0.2vw] w-[3vw] h-[3vw] border-[0.2vw] color-border-sublight color-bg-orange1 rounded-full cursor-pointer"
-                onClick={() => {
-                    closeMypageModal();
-                }}
-            >
-                X
-            </div>
-        </div>
+        </>
     );
 }

@@ -19,7 +19,7 @@ export interface SettingState {
     profileFrame: number;
 }
 const initialState: SettingState = {
-    bgmFlag: true,
+    bgmFlag: false,
     effectFlag: true,
     themeType: 'auto',
     themeMode: 0,
