@@ -322,8 +322,8 @@ public class Main {
 			// set number of reduces
 			job.setNumReduceTasks(16);
 
-			Path inputPath = new Path(otherArgs[0]);
-			Path outputPath = new Path(otherArgs[1]);
+			Path inputPath = new Path(args[0]);
+			Path outputPath = new Path(args[1]);
 
 			fs.delete(outputPath, true);
 
