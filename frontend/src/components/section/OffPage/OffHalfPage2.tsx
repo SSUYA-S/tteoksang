@@ -149,20 +149,20 @@ export default function OffHalfPage2(props: Prop) {
                 <div className="w-[50%] h-full flex flex-col px-[2vw] py-[1vh]">
                     <div className="w-full flex justify-between text-[1.5vw] mt-[1vh]">
                         <p>총 수입</p>
-                        <p>{`+${receipt.totalIncome}G`}</p>
+                        <p>{`+${receipt.totalIncome.toLocaleString()}G`}</p>
                     </div>
                     <div className="w-full flex justify-between text-[1.5vw]">
                         <p>총 지출</p>
-                        <p>{`-${receipt.totalOutcome}G`}</p>
+                        <p>{`-${receipt.totalOutcome.toLocaleString()}G`}</p>
                     </div>
                     <div className="w-full h-[0.2vh]">
                         <div className="w-full h-full color-bg-subbold"></div>
                     </div>
                     <div className="w-full flex justify-between text-[1.5vw] mb-[3vh]">
                         <p>총 결산</p>
-                        <p>{`${
+                        <p>{`${(
                             receipt.totalIncome - receipt.totalOutcome
-                        }G`}</p>
+                        ).toLocaleString()}G`}</p>
                     </div>
                     <Bar options={options} data={data} height={'200%'} />
                 </div>

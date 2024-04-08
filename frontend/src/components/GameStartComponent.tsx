@@ -68,10 +68,10 @@ export default function GameStartComponent(props: startType) {
     const themeData = props.themeData;
 
     const [loginFlag, setLoginFlag] = useState<boolean>(false);
-    const [playing, setPlaying] = useState<boolean>(false);
-    const [audio, setAudio] = useState(
-        new Audio('/src/assets/bgm/start_theme_bgm.mp3')
-    );
+    // const [playing, setPlaying] = useState<boolean>(false);
+    // const [audio, setAudio] = useState(
+    //     new Audio('/src/assets/bgm/start_theme_bgm.mp3')
+    // );
 
     //마이페이지
     const [isMyPageOpen, setIsMyPageOpen] = useState<boolean>(false);
@@ -94,12 +94,12 @@ export default function GameStartComponent(props: startType) {
 
     const cookies = new Cookies();
 
-    useEffect(() => {
-        audio.addEventListener('ended', () => setPlaying(false));
-        return () => {
-            audio.removeEventListener('ended', () => setPlaying(false));
-        };
-    }, [audio]);
+    // useEffect(() => {
+    //     audio.addEventListener('ended', () => setPlaying(false));
+    //     return () => {
+    //         audio.removeEventListener('ended', () => setPlaying(false));
+    //     };
+    // }, [audio]);
 
     const onClickLogin = () => {
         //로그인 표시

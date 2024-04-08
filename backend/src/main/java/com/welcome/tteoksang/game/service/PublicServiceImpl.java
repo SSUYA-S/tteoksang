@@ -178,7 +178,7 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
 
         productRepository.findAll().stream().forEach((product) -> {
             ProductFluctuation fluctuation = productFluctuationRepository.findById(ProductFluctuationId.builder()
-                            .countPerTenDays((serverInfo.getCurrentTurn()%360)/10).productId(product.getProductId())
+                            .countPerTenDays((serverInfo.getCurrentTurn()%(quarterYearTurnPeriod * 4))/10).productId(product.getProductId())
                             .build())
                     .orElseThrow(ProductFluctuationNotFoundException::new);
 
@@ -597,10 +597,15 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
         }
         serverInfo.setCurrentTurn(serverInfo.getCurrentTurn() + 1);
         serverInfo.setTurnStartTime(LocalDateTime.now());
-        if (serverInfo.getCurrentTurn() % eventTurnPeriod == 0) {
+        if (serverInfo.getCurrentTurn() % eventTurnPeriod == 1) { //DEMO 를 위해 0->1로 변경
             RedisStatistics redisStatistics = (RedisStatistics) redisService.getValues(RedisPrefix.SERVER_STATISTICS.prefix());
             Map<String, Integer> eventCountMap = redisStatistics.getEventCountMap();
-
+            currentEventList.stream().forEach(
+                    event->{
+                        fluctationInfoMap.get(event.getProductId())
+                                .setEventEffect(fluctationInfoMap.get(event.getProductId()).getEventEffect() + event.getEventVariance());
+                    }
+            );
             serverInfo.setSpecialEventIdList(nextEventList.stream().map(event -> {
                 //이벤트 발생횟수 업데이트
                 String eventName = event.getEventName();
@@ -654,6 +659,10 @@ public class PublicServiceImpl implements PublicService, PrivateGetPublicService
             if (productInfo.getProductCost() <= fluctationInfo.getProductAvgCost() * MIN_AVG_MULTIPLE_LIMIT) {
                 //가격이 너무 작은 경우, 평균 가격의 일부 얻으므로써 보정
                 newCost += (int) (fluctationInfo.getProductAvgCost() * randomRate * MIN_AVG_MULTIPLE_LIMIT);
+            }
+            //For Demo: 배추 가격 상승
+            if(productId==8){
+                newCost+=(int) (productInfo.getProductCost() * randomRate);
             }
             //TODO 가격 변동 저장...
             redisStatisticsUtil.addCostInfo(redisHalfStatistics.getProductCostRateMap().get(productId), new CostInfo(newCost, serverInfo.getCurrentTurn()));
