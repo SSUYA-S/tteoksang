@@ -23,6 +23,10 @@ public class ScheduleService {
     @Autowired
     private TaskScheduler taskScheduler;
 
+    public boolean hasRegistered(String key){
+        return scheduledTasks.containsKey(key);
+    }
+
     //스케쥴 등록================
 
     /**
@@ -111,6 +115,12 @@ public class ScheduleService {
         }
     }
 
+    public void removeAllScheduleExceptKey(String remainKey){
+        for (String key : scheduledTasks.keySet()) {
+            if(key.equals(remainKey)) continue;
+            remove(key);
+        }
+    }
 
     //utils==================
 
