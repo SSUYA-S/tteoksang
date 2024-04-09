@@ -746,9 +746,9 @@ export default function GameComponent(props: GameType) {
                         <p className="text-[1.5vw]">{alertMessage}</p>
                     </div>
                     {/* 기사 표시 화면 */}
-                    <div className="w-[40%] h-[10%] absolute left-[30%] top-[2%] bg-black overflow-hidden flex items-center">
+                    <div className="w-[40%] h-[10%] absolute left-[30%] top-[2%] bg-black overflow-hidden flex items-center z-20">
                         <p
-                            className="absolute w-full text-white text-[2vw] left-[100%] overflow-visible whitespace-nowrap z-20"
+                            className="absolute w-full text-white text-[2vw] left-[100%] overflow-visible whitespace-nowrap"
                             ref={articleBoxRef}
                         >
                             {nowArticle}
