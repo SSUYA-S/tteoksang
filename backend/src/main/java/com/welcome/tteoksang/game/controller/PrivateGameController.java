@@ -3,7 +3,7 @@ package com.welcome.tteoksang.game.controller;
 import com.welcome.tteoksang.game.dto.*;
 import com.welcome.tteoksang.game.dto.req.GameMessageReq;
 import com.welcome.tteoksang.game.dto.res.GameMessageRes;
-import com.welcome.tteoksang.game.scheduler.ServerInfo;
+import com.welcome.tteoksang.game.dto.server.ServerInfo;
 import com.welcome.tteoksang.game.service.PrivateGetPublicService;
 import com.welcome.tteoksang.game.service.PrivateInfoService;
 import com.welcome.tteoksang.game.service.PrivateInteractionService;
