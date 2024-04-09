@@ -1,4 +1,4 @@
-package com.welcome.tteoksang.game.scheduler;
+package com.welcome.tteoksang.game.dto.server;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

@@ -40,8 +40,8 @@ public class SeasonHalfStatistics {
     @Field("accOnlineTimeSlotCount")
     private List<Integer> accOnlineTimeSlotCount;
 
-    @Field("maxRentFee")
-    private Long maxRentFee;
+//    @Field("maxRentFee")
+//    private Long maxRentFee;
 
     @Field("productStatistics")
     private Map<Integer, ServerProductStatistic> productStatistics;
@@ -85,10 +85,10 @@ public class SeasonHalfStatistics {
             this.accOnlineTimeSlotCount.set(i, this.accOnlineTimeSlotCount.get(i) + accOnlineTimeSlotCount.get(i));
     }
 
-    public void findMaxRentFee(Long maxRentFee) {
-        if(this.maxRentFee == null) this.maxRentFee = 0L;
-        this.maxRentFee = Math.max(this.maxRentFee, maxRentFee);
-    }
+//    public void findMaxRentFee(Long maxRentFee) {
+//        if(this.maxRentFee == null) this.maxRentFee = 0L;
+//        this.maxRentFee = Math.max(this.maxRentFee, maxRentFee);
+//    }
 
     public void updateProductStatics(Map<Integer, ProductStatistic> productStatistics) {
         if(this.productStatistics == null) this.productStatistics = new HashMap<>();
@@ -124,6 +124,7 @@ public class SeasonHalfStatistics {
     }
 
     public void findBestSeller() {
+        if(this.bestSellerStatistics == null) this.bestSellerStatistics = new BestSellerStatistics(new ArrayList<>());
         List<TteokValues> bestSellers = this.productStatistics.entrySet().stream()
                 .map(entry -> new TteokValues(entry.getKey(), entry.getValue().getAccProductSalesQuantity()))
                 .sorted((a, b) -> b.getValue().compareTo(a.getValue())) // 내림차순 정렬

@@ -18,7 +18,7 @@ import com.welcome.tteoksang.game.exception.ProductFluctuationNotFoundException;
 import com.welcome.tteoksang.game.repository.ProductFluctuationRepository;
 import com.welcome.tteoksang.game.repository.ServerSeasonInfoRepository;
 import com.welcome.tteoksang.game.scheduler.ScheduleService;
-import com.welcome.tteoksang.game.scheduler.ServerInfo;
+import com.welcome.tteoksang.game.dto.server.ServerInfo;
 import com.welcome.tteoksang.redis.RedisPrefix;
 import com.welcome.tteoksang.redis.RedisService;
 import com.welcome.tteoksang.resource.dto.Event;

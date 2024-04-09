@@ -3,6 +3,7 @@ package com.welcome.tteoksang.game.dto.result;
 import jakarta.persistence.Id;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
 import java.util.Map;
@@ -21,9 +22,13 @@ public class SeasonHalfPrivateStatistics {
 
     private Long accPrivateUpgradeFee;
 
+    private Integer accPrivateEventOccurId;
+
     private Long accPrivateEventBonus;
 
-    private Integer accPrivateGiveUpCount;
+    private int accPrivateGamePlayCount;
+
+//    private Integer accPrivateGiveUpCount;
 
     private Integer accPrivatePlayTime;
 
@@ -45,7 +50,9 @@ public class SeasonHalfPrivateStatistics {
 
     private Long maxPrivateRentFee;
 
-    private Map<Integer, ProductStatistic> productStatistics;
+//    private Map<Integer, ProductStatistic> productStatistics;
+    @Field("productStatistics")
+    private Map<Integer, ProductStatistic> reduceProductInfoMap;
 
 //    private EventStatistics eventStatistics;
 }
